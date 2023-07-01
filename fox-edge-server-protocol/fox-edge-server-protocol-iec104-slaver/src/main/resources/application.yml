@@ -1,0 +1,22 @@
+# 开发环境配置
+server:
+  port: 9201
+
+spring:
+  application:
+    name: mongoHelper项目示例
+  session:
+    store-type: mongodb
+  devtools:
+    restart:
+      enabled: false
+  jackson:
+    default-property-inclusion: NON_NULL
+  jmx:
+    enabled: true
+  data:
+    mongodb:
+      uri:  mongodb://192.168.241.128:27017/test
+      #print : true
+      slowQuery : true  #是否记录慢查询到数据库中
+      slowTime : 2000 #慢查询最短时间,默认为1000毫秒

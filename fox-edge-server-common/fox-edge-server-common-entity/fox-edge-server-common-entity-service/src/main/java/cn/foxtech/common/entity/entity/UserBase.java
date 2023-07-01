@@ -1,0 +1,67 @@
+package cn.foxtech.common.entity.entity;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter(value = AccessLevel.PUBLIC)
+@Setter(value = AccessLevel.PUBLIC)
+public class UserBase extends BaseEntity {
+    /**
+     * 用户名称
+     */
+    private String username;
+
+    /**
+     * 用户密码
+     */
+    private String password;
+
+    /**
+     * 业务Key
+     *
+     * @return 业务Key
+     */
+    public List<Object> makeServiceKeyList() {
+        List<Object> list = new ArrayList<>();
+        list.add(this.username);
+
+        return list;
+    }
+
+    /**
+     * 查询过滤器
+     *
+     * @return 过滤器
+     */
+    public Object makeWrapperKey() {
+        QueryWrapper queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", this.username);
+
+        return queryWrapper;
+    }
+
+    /**
+     * 获取业务值
+     *
+     * @return
+     */
+    public List<Object> makeServiceValueList() {
+        List<Object> list = new ArrayList<>();
+        list.add(this.password);
+
+        return list;
+    }
+
+    public void bind(UserBase other) {
+        this.username = other.username;
+        this.password = other.password;
+
+
+        this.setId(other.getId());
+        this.setCreateTime(other.getCreateTime());
+        this.setUpdateTime(other.getUpdateTime());
+    }
+}

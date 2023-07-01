@@ -1,0 +1,103 @@
+#================================================卸载mysql==================================================#
+#查看MySQL依赖
+dpkg --list|grep mysql
+#卸载： 
+apt-get remove mysql-common
+#卸载： (这里版本对应即可)
+apt-get autoremove --purge mysql-server-8.0
+#清除残留数据: 
+dpkg -l|grep ^rc|awk '{print$2}'|sudo xargs dpkg -P
+#再次查看MySQL的剩余依赖项: (这里一般就没有输出了，如果有执行下一步)
+dpkg --list|grep mysql
+#继续删除剩余依赖项，如：
+apt-get autoremove --purge mysql-apt-config
+apt purge mysql-*
+#删除残余文件
+rm -rf /etc/mysql/ /var/lib/mysql
+
+apt autoremove
+
+apt autoclean
+#================================================卸载mysql==================================================#
+
+#================================================安装mysql==================================================#
+#更新源
+apt-get update  
+#安装
+apt-get install mysql-server 
+#验证
+systemctl status mysql
+
+#修改配置文件:bind-address = 127.0.0.1修改为bind-address = 0.0.0.0
+vi /etc/mysql/mysql.conf.d/mysqld.cnf 
+#
+
+#重启mysql
+systemctl restart mysql
+#验证mysql
+systemctl status mysql
+
+#================================================安装mysql===================================================#
+
+
+#================================================创建系统用户================================================#
+# -u 指定用户名 -p需要输入密码  回车输入密码
+mysql -u root -p  
+
+#后面是进入mysql后的操作
+
+#查看用户权限
+mysql> use mysql;
+mysql> select host, user, plugin from user;
+
+#创建用户:'admin'@'%'
+mysql> create user 'admin'@'%' identified by '12345678';
+mysql> grant all privileges on *.* to 'admin'@'%';
+mysql> flush privileges;
+
+#================================================创建系统用户================================================#
+
+#================================================创建应用用户================================================#
+
+#创建数据库fox_edge（注意，职能使用下划线，否则下面的授权会掉坑里去）
+mysql> use mysql;
+mysql> create database `fox_edge`;
+
+#查看用户权限
+mysql> use mysql;
+mysql> select host, user, plugin from user;
+
+#创建本地连接用户:'fox-edge'@'localhost'
+mysql> drop user if exists 'fox-edge'@'localhost', 'fox-edge'@'%';
+mysql> create user 'fox-edge'@'localhost' identified by '12345678';
+mysql> grant all privileges on fox_edge.* to 'fox-edge'@'localhost';
+mysql> flush privileges;
+
+#创建远程连接用户:'fox-edge'@'%'
+mysql> drop user if exists 'fox-edge'@'%', 'fox-edge'@'%';
+mysql> create user 'fox-edge'@'%' identified by '12345678';
+mysql> grant all privileges on fox_edge.* to 'fox-edge'@'%';
+mysql> flush privileges;
+#================================================创建应用用户================================================#
+
+#=================================================安装redis==================================================#
+#参考：https://gu-han-zhe.blog.csdn.net/article/details/117538180
+
+#更新
+apt-get update
+
+#安装redis
+apt install redis-server
+
+#检查安装结果
+systemctl status redis-server
+
+#修改配置文件
+vim /etc/redis/redis.conf
+#1.注释掉 bind 127.0.0.1 ::1   位置在56行左右
+#2.修改protected-mode为no      位置在88行左右
+#3.修改requirepass为12345678   位置在507行左右
+
+#重启redis
+systemctl restart redis-server
+#=================================================安装redis==================================================#

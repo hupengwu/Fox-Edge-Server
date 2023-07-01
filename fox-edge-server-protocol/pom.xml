@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>cn.fox-tech</groupId>
+        <artifactId>fox-edge-server</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>fox-edge-server-protocol</artifactId>
+    <name>${project.artifactId}</name>
+    <packaging>pom</packaging>
+    <description>${project.artifactId}</description>
+
+    <modules>
+        <module>fox-edge-server-protocol-anno</module>
+        <module>fox-edge-server-protocol-core</module>
+        <module>fox-edge-server-protocol-bass260zj</module>
+        <module>fox-edge-server-protocol-lrw</module>
+        <module>fox-edge-server-protocol-gdana-digester</module>
+        <module>fox-edge-server-protocol-modbus</module>
+        <module>fox-edge-server-protocol-modbus-core</module>
+        <module>fox-edge-server-protocol-telecom-core</module>
+        <module>fox-edge-server-protocol-snmp</module>
+        <module>fox-edge-server-protocol-dlt645-core</module>
+        <module>fox-edge-server-protocol-dlt645-1997</module>
+        <module>fox-edge-server-protocol-cjt188-core</module>
+        <module>fox-edge-server-protocol-cjt188</module>
+        <module>fox-edge-server-protocol-iec104-core</module>
+        <module>fox-edge-server-protocol-iec104-slaver</module>
+        <module>fox-edge-server-protocol-zxdu58</module>
+        <module>fox-edge-server-protocol-cetups</module>
+        <module>fox-edge-server-protocol-shmeter</module>
+        <module>fox-edge-server-protocol-mitsubishi-plc-fx-core</module>
+        <module>fox-edge-server-protocol-mitsubishi-plc-fx</module>
+        <module>fox-edge-server-protocol-omron-fins-core</module>
+        <module>fox-edge-server-protocol-omron-fins</module>
+    </modules>
+
+
+</project>

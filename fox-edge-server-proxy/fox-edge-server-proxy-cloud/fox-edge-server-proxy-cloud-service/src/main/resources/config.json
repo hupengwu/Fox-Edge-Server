@@ -1,0 +1,6 @@
+{
+  "host": "http://120.25.241.120:8080",
+  "username": "fox-edge",
+  "password": "12345678",
+  "lockdown": 60
+}

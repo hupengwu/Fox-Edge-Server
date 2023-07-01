@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>fox-edge-server</artifactId>
+        <groupId>cn.fox-tech</groupId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>fox-edge-server-device</artifactId>
+    <packaging>pom</packaging>
+    <description>${project.artifactId}</description>
+
+    <modules>
+        <module>fox-edge-server-device-domain</module>
+    </modules>
+
+
+</project>

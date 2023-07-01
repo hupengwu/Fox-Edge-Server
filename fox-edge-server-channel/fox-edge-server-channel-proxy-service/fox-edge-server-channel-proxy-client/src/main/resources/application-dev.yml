@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: fox-edge-server-channel-proxy-client
+
+  channel:
+    init-mode: "redis"                   # 可选参数：初始化数据来源:redis或者local
+    link-mode: false                     # 可选参数：开启链路模式
+
+  fox-service:                            # 配置信息
+    service:                              # 服务信息，指明这个服务的模块信息，用于识别进程，它跟shell和restful路由强相关
+      type: "service"                     # 服务类型：kernel/system/service
+      name: "channel-proxy-client"        # 服务名称：这是服务的名称
+    model:                                # 模块信息，用于业务之间的分类和协助
+      type: "channel"                     # 模块类型，指明这是一个controller类型的业务，这类业务主要是用户的业务流程的逻辑
+      name: "serialport"                  # 模块类型名称，告知别的业务，它的业务名称，可以通过该名称跟它进行通信，比如topic的主题
+
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    password: 12345678
+    pool:
+      max-idle: 8
+      min-idle: 0
+      max-active: 8
+      max-wait: -1
+
+mqtt:
+  client: # emq的默认端口为1883
+    enabled: true               # 是否开启客户端，默认：true
+    ip: 120.79.69.201              # 连接的服务端 ip ，默认：127.0.0.1
+    port: 1883                  # 端口：默认：1883
+    name: Mica-Mqtt-Client      # 名称，默认：Mica-Mqtt-Client
+    clientId: 000001            # 客户端Id（非常重要，一般为设备 sn，不可重复）
+    user-name: mica             # 认证的用户名
+    password: 123456            # 认证的密码
+    timeout: 5                  # 超时时间，单位：秒，默认：5秒
+    reconnect: true             # 是否重连，默认：true
+    re-interval: 5000           # 重连时间，默认 5000 毫秒
+    version: mqtt_3_1_1         # mqtt 协议版本，可选 MQTT_3_1、mqtt_3_1_1、mqtt_5，默认：mqtt_3_1_1
+    read-buffer-size: 8KB       # 接收数据的 buffer size，默认：8k
+    max-bytes-in-message: 10MB  # 消息解析最大 bytes 长度，默认：10M
+    buffer-allocator: heap      # 堆内存和堆外内存，默认：堆内存
+    keep-alive-secs: 60         # keep-alive 时间，单位：秒
+    clean-session: true         # mqtt clean session，默认：true
+    use-ssl: false              # 是否启用 ssl，默认：false
+
+    topic:
+      subscribe: "/group_fox/v1/proxy/response/#"   # 上位机的接收响应topic：设备会把数据写入这个位置，其中#是设备的ID，MqttClient可以订阅这个消息
+      publish: "/group_fox/v1/proxy/request/#"      # 设备的接收请求topic：设备模在这个位置等待消息，其中#是设备的ID，MqttClient可以把对设备的请求发布到这个位置
+
+
+
+

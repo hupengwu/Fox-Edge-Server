@@ -1,0 +1,9 @@
+前端的部署步骤
+1.vue打包
+在WINDOWS上对VUE代码使用npm run build:prod打包
+2.上传vue包
+将fox-edge-server\dist的所有文件，拷贝到linux上的/opt/fox-edge/dist目录
+3.nginx配置
+将nginx配置文件fox-edge.com.ipadr.conf和fox-edge.com.www.conf，复制到linux的\etc\nginx\conf.d\fox-edge.com.www.conf和\etc\nginx\conf.d\fox-edge.com.ipadr.conf
+然后使用nginx -s reload命令重新加载配置文件
+如果换IP换域名的时候，要修改这两个文件中配置的proxy_pass中的IP和域名参数
