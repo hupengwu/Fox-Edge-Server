@@ -15,7 +15,11 @@ import java.util.List;
 public class ConfigPo extends ConfigBase {
 
     /**
-     * 参数信息
+     * 数值
+     */
+    private String configValue;
+    /**
+     * 参数
      */
     private String configParam;
 
@@ -26,7 +30,7 @@ public class ConfigPo extends ConfigBase {
      */
     public List<Object> makeServiceValueList() {
         List<Object> list = super.makeServiceValueList();
-        list.add(this.configParam);
+        list.add(this.configValue);
 
         return list;
     }

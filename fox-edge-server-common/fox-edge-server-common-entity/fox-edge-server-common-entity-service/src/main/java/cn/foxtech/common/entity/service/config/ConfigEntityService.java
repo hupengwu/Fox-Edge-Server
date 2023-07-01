@@ -34,7 +34,7 @@ public class ConfigEntityService extends BaseEntityService {
         for (BaseEntity entity : recordList) {
             ConfigPo po = (ConfigPo) entity;
 
-            ConfigEntity config = ConfigMaker.makePo2Entity(po);
+            ConfigEntity config = ConfigEntityMaker.makePo2Entity(po);
             configList.add(config);
         }
 
@@ -48,7 +48,7 @@ public class ConfigEntityService extends BaseEntityService {
      */
     @Override
     public void insertEntity(BaseEntity entity) {
-        ConfigPo configPo = ConfigMaker.makeEntity2Po((ConfigEntity) entity);
+        ConfigPo configPo = ConfigEntityMaker.makeEntity2Po((ConfigEntity) entity);
         super.insertEntity(configPo);
 
         entity.setId(configPo.getId());
@@ -58,7 +58,7 @@ public class ConfigEntityService extends BaseEntityService {
 
     @Override
     public void updateEntity(BaseEntity entity) {
-        ConfigPo configPo = ConfigMaker.makeEntity2Po((ConfigEntity) entity);
+        ConfigPo configPo = ConfigEntityMaker.makeEntity2Po((ConfigEntity) entity);
         super.updateEntity(configPo);
 
         entity.setId(configPo.getId());
@@ -68,7 +68,7 @@ public class ConfigEntityService extends BaseEntityService {
 
     @Override
     public int deleteEntity(BaseEntity entity) {
-        ConfigPo ConfigPo = ConfigMaker.makeEntity2Po((ConfigEntity) entity);
+        ConfigPo ConfigPo = ConfigEntityMaker.makeEntity2Po((ConfigEntity) entity);
         return super.deleteEntity(ConfigPo);
     }
 }

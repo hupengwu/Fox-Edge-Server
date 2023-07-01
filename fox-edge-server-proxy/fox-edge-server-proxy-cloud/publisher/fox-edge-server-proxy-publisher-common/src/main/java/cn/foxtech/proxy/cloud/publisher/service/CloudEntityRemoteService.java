@@ -87,10 +87,10 @@ public class CloudEntityRemoteService {
         }
 
         // 取出信息
-        this.uri = (String) configEntity.getConfigParam().getOrDefault("host", "http://localhost:8080");
-        this.username = (String) configEntity.getConfigParam().getOrDefault("username", "username");
-        this.password = (String) configEntity.getConfigParam().getOrDefault("password", "");
-        this.lockdown = (Integer) configEntity.getConfigParam().getOrDefault("lockdown", 60);
+        this.uri = (String) configEntity.getConfigValue().getOrDefault("host", "http://localhost:8080");
+        this.username = (String) configEntity.getConfigValue().getOrDefault("username", "username");
+        this.password = (String) configEntity.getConfigValue().getOrDefault("password", "");
+        this.lockdown = (Integer) configEntity.getConfigValue().getOrDefault("lockdown", 60);
 
         Map<String, Object> request = new HashMap<>();
         request.put("username", this.username);

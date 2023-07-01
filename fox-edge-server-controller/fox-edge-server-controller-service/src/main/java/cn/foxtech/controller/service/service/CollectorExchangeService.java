@@ -93,8 +93,8 @@ public class CollectorExchangeService extends PeriodTaskService {
                 // 获得时间间隔配置:如果没有配置，那么默认100毫秒
                 Integer sleep = 100;
                 ConfigEntity configEntity = this.entityManageService.getConfigEntity(this.foxServiceName, this.foxServiceType, "devicePollingConfig");
-                if (configEntity != null && configEntity.getConfigParam().containsKey("sleep")) {
-                    sleep = (Integer) configEntity.getConfigParam().get("sleep");
+                if (configEntity != null && configEntity.getConfigValue().containsKey("sleep")) {
+                    sleep = (Integer) configEntity.getConfigValue().get("sleep");
                 }
 
                 // 不能访问太快，否则CPU占用率都受不了

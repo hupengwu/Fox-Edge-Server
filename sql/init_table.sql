@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- 主机:                           192.168.3.133
--- 服务器版本:                        8.0.32-0ubuntu0.22.04.2 - (Ubuntu)
+-- 服务器版本:                        8.0.33-0ubuntu0.22.04.2 - (Ubuntu)
 -- 服务器操作系统:                      Linux
 -- HeidiSQL 版本:                  12.2.0.6576
 -- --------------------------------------------------------
@@ -44,13 +44,14 @@ CREATE TABLE IF NOT EXISTS `tb_config` (
   `service_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '服务名称（消费者）',
   `service_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '服务类型（消费者）',
   `config_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '配置名称（消费者）',
-  `config_param` json DEFAULT NULL COMMENT 'JSON参数',
+  `config_value` json DEFAULT NULL COMMENT '数值',
+  `config_param` json DEFAULT NULL COMMENT '参数',
   `remark` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '描述',
   `create_time` bigint DEFAULT NULL COMMENT '创建时间',
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `service_name_service_type_config_name` (`service_name`,`service_type`,`config_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='该参数是由manage服务来配置，再给各个服务消费';
+) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='该参数是由manage服务来配置，再给各个服务消费';
 
 -- 数据导出被取消选择。
 
@@ -68,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `tb_device` (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `device_name` (`device_name`),
   KEY `device_type` (`device_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=2208 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2210 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -84,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_history` (
   PRIMARY KEY (`id`),
   KEY `device_id` (`device_id`),
   KEY `object_name` (`object_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=5226385 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31796845 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -100,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_mapper` (
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `device_type_object_name` (`device_type`,`object_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=628224 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='对象重命名';
+) ENGINE=InnoDB AUTO_INCREMENT=628281 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='对象重命名';
 
 -- 数据导出被取消选择。
 
@@ -118,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_object` (
   KEY `device_type` (`device_type`),
   KEY `device_name` (`device_name`),
   KEY `object_name` (`object_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=726300 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='设备的一个个数据对象信息';
+) ENGINE=InnoDB AUTO_INCREMENT=822854 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='设备的一个个数据对象信息';
 
 -- 数据导出被取消选择。
 
@@ -187,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `tb_operate_channel_task` (
   UNIQUE KEY `task_name` (`task_name`),
   KEY `channel_name` (`channel_name`),
   KEY `channel_type` (`channel_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='操作实例：用户手动操作设备时，提交的任务';
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='操作实例：用户手动操作设备时，提交的任务';
 
 -- 数据导出被取消选择。
 
@@ -243,7 +244,7 @@ CREATE TABLE IF NOT EXISTS `tb_operate_record` (
   KEY `device_name` (`device_name`) USING BTREE,
   KEY `device_type` (`device_type`) USING BTREE,
   KEY `event_name` (`record_name`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=23221 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23245 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -278,7 +279,7 @@ CREATE TABLE IF NOT EXISTS `tb_period_record` (
   KEY `device_id` (`device_id`) USING BTREE,
   KEY `object_name` (`object_name`) USING BTREE,
   KEY `record_batch` (`record_batch`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=189855678 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='设备数值的周期记录';
+) ENGINE=InnoDB AUTO_INCREMENT=200173381 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='设备数值的周期记录';
 
 -- 数据导出被取消选择。
 

@@ -40,7 +40,7 @@ public class ConfigManageService {
             return result;
         }
 
-        return configEntity.getConfigParam();
+        return configEntity.getConfigValue();
     }
 
     public <T> T getOrDefaultValue(String configName, Class<T> clazz, Object... keys) {

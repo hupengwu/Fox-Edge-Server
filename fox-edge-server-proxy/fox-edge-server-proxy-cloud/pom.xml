@@ -14,9 +14,9 @@
     <description>${project.artifactId}</description>
 
     <modules>
-        <module>fox-edge-server-proxy-cloud-publisher</module>
-        <module>fox-edge-server-proxy-cloud-forwarder</module>
-        <module>fox-edge-server-proxy-cloud-service</module>
+        <module>publisher</module>
+        <module>forwarder</module>
+        <module>service</module>
     </modules>
 
 

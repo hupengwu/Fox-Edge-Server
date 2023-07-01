@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * ConfigPo是数据库格式的对象，ConfigEntity是内存格式的对象，两者需要进行转换
  */
-public class ConfigMaker {
+public class ConfigEntityMaker {
     /**
      * PO转Entity
      *
@@ -20,23 +20,23 @@ public class ConfigMaker {
      * @return
      */
     public static List<BaseEntity> makePoList2EntityList(List<BaseEntity> List) {
-        List<BaseEntity> ConfigList = new ArrayList<>();
+        List<BaseEntity> resultList = new ArrayList<>();
         for (BaseEntity entity : List) {
             ConfigPo po = (ConfigPo) entity;
 
 
-            ConfigEntity config = ConfigMaker.makePo2Entity(po);
-            ConfigList.add(config);
+            ConfigEntity config = ConfigEntityMaker.makePo2Entity(po);
+            resultList.add(config);
         }
 
-        return ConfigList;
+        return resultList;
     }
 
     public static ConfigPo makeEntity2Po(ConfigEntity entity) {
         ConfigPo result = new ConfigPo();
         result.bind(entity);
 
-        result.setConfigParam(JsonUtils.buildJsonWithoutException(entity.getConfigParam()));
+        result.setConfigValue(JsonUtils.buildJsonWithoutException(entity.getConfigValue()));
         return result;
     }
 
@@ -45,14 +45,21 @@ public class ConfigMaker {
         result.bind(entity);
 
         try {
-            Map<String, Object> params = JsonUtils.buildObject(entity.getConfigParam(), Map.class);
-            if (params != null) {
-                result.setConfigParam(params);
+            Map<String, Object> value = JsonUtils.buildObject(entity.getConfigValue(), Map.class);
+            if (value != null) {
+                result.setConfigValue(value);
+            } else {
+                System.out.println("设备配置参数转换Json对象失败：" + entity.getConfigName() + ":" + entity.getConfigValue());
+            }
+
+            Map<String, Object> param = JsonUtils.buildObject(entity.getConfigParam(), Map.class);
+            if (param != null) {
+                result.setConfigParam(param);
             } else {
                 System.out.println("设备配置参数转换Json对象失败：" + entity.getConfigName() + ":" + entity.getConfigParam());
             }
         } catch (Exception e) {
-            System.out.println("设备配置参数转换Json对象失败：" + entity.getConfigName() + ":" + entity.getConfigParam());
+            System.out.println("设备配置参数转换Json对象失败：" + entity.getConfigName() + ":" + entity.getConfigValue() + ":" + entity.getConfigParam());
             e.printStackTrace();
         }
 

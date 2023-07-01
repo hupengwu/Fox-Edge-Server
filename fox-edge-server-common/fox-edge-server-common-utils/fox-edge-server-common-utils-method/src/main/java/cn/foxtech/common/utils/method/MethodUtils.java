@@ -5,22 +5,6 @@ import java.util.Collection;
 import java.util.Map;
 
 public class MethodUtils {
-    /**
-     * 是否包含null或者empty的参数
-     *
-     * @param paramList
-     * @return
-     */
-    public static boolean hasEmpty(Map<String, Object> map, Object... paramList) {
-        for (Object key : paramList) {
-            if (isEmpty(map.get(key))) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     private static boolean isEmpty(Object param) {
         if (param == null) {
             return true;
