@@ -33,6 +33,10 @@ public class ProducerRedisService extends BaseProducerRedisService {
         return map.get(clazzSimpleName);
     }
 
+    public static synchronized void removeInstanceBySimpleName(ProducerRedisService producerRedisService) {
+        map.remove(producerRedisService.entityType);
+    }
+
     public static <T> ProducerRedisService getInstance(Class<T> clazz, RedisService redisService) {
         return getInstanceBySimpleName(clazz.getSimpleName(), redisService);
     }

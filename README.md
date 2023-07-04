@@ -81,6 +81,8 @@ fox-edge
 ├─fox-edge-server-proxy
 │  ├─fox-edge-server-proxy-cloud
 │  └─fox-edge-server-proxy-redis-topic-service
+├─fox-edge-server-service
+├─fox-edge-server-trigger
 
 ``` 
 

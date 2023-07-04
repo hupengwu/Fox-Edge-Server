@@ -142,6 +142,15 @@ public class EntityRedisComponent {
         return null;
     }
 
+    protected <T> RedisWriter getBaseRedisWriter(String entityType) {
+        if (this.writer.contains(entityType)) {
+            RedisWriter redisWriter = RedisWriterService.getInstanceBySimpleName(entityType, this.redisTemplate);
+            return redisWriter;
+        }
+
+        return null;
+    }
+
     protected <T> RedisWriter getBaseRedisWriter(Class<T> clazz) {
         if (this.writer.contains(clazz.getSimpleName())) {
             RedisWriter redisWriter = RedisWriterService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisTemplate);

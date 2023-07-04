@@ -90,6 +90,30 @@ public abstract class EntityBaseManager {
         return producerRedisService.isInited();
     }
 
+    private boolean initLoadProducerWriter(String simpleName) {
+        // 如果不需要这个写入者，按成功处理，直接返回成功
+        if (!this.entityRedisComponent.getWriter().contains(simpleName)) {
+            return true;
+        }
+
+        // 临时性的获得RDService和DBService
+        ProducerRedisService producerRedisService = ProducerRedisService.getInstanceBySimpleName(simpleName, this.redisService);
+        BaseEntityService producerEntityService = this.entityMySQLComponent.getEntityServiceBySimpleName(simpleName);
+
+        // 使用DBService初始化RDService
+        if (!producerRedisService.isInited()) {
+            EntityServiceUtils.initLoadEntity(producerRedisService, producerEntityService);
+        }
+
+        // 将数据发布到redis
+        EntityServiceUtils.publishEntity(producerRedisService);
+
+        // 然后释放掉这个临时性的producerRedisService
+        ProducerRedisService.removeInstanceBySimpleName(producerRedisService);
+
+        return true;
+    }
+
     /**
      * 初始化生产者
      *
@@ -113,6 +137,32 @@ public abstract class EntityBaseManager {
             }
 
         } catch (JsonParseException | SerializationException e) {
+            // 数据结构调整，清空缓存数据
+            ProducerRedisService producerRedisService = ProducerRedisService.getInstanceBySimpleName(simpleName, this.redisService);
+            producerRedisService.cleanAgileEntities();
+            return false;
+        }
+
+        return isInitialized;
+    }
+
+    /**
+     * 對reader/writer操作生产者进行初始化
+     *
+     * @param writer
+     * @return
+     */
+    private boolean initLoadProducerWriter(Set<String> writer) {
+        boolean isInitialized = true;
+        String simpleName = "";
+
+        try {
+            for (String name : writer) {
+                simpleName = name;
+                isInitialized = isInitialized && this.initLoadProducerWriter(name);
+            }
+
+        } catch (SerializationException e) {
             // 数据结构调整，清空缓存数据
             ProducerRedisService producerRedisService = ProducerRedisService.getInstanceBySimpleName(simpleName, this.redisService);
             producerRedisService.cleanAgileEntities();
@@ -222,8 +272,11 @@ public abstract class EntityBaseManager {
 
                 // 没有初始化成功，那么等一会，再来一次上述操作
                 boolean isInitialized = true;
+
                 // 装载生产者
                 isInitialized = isInitialized && initLoadProducerEntity(this.sourceMySQL, this.sourceRedis);
+                // 装载生产者
+                isInitialized = isInitialized && initLoadProducerWriter(this.entityRedisComponent.getWriter());
                 // 装载消费者Entity
                 isInitialized = isInitialized && initLoadConsumerEntity();
                 // 装载消费者HashMap

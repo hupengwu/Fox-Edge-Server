@@ -42,7 +42,7 @@ mkdir -p $cpdir
 #复制二目录
 cpdir=repository/decoder
 mkdir -p $cpdir
-cp -r /opt/fox-edge/$cpdir repository
+cp -r /opt/fox-edge/$cpdir/decoderList.jsn $cpdir
 
 #创建目录并复制文件
 cpdir=repository/service
