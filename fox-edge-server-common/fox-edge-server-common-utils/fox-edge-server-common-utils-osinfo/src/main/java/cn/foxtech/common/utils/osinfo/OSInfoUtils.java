@@ -37,7 +37,7 @@ public class OSInfoUtils {
         String result = "";
         try {
             File file = File.createTempFile("realhowto", ".vbs");
-            file.deleteOnExit();
+            file.delete();
             FileWriter fw = new java.io.FileWriter(file);
 
             String vbs = "Set objWMIService = GetObject(\"winmgmts:\\\\.\\root\\cimv2\")\n"
@@ -244,7 +244,7 @@ public class OSInfoUtils {
         String result = "";
         try {
             File file = File.createTempFile("tmp", ".vbs");
-            file.deleteOnExit();
+            file.delete();
             FileWriter fw = new java.io.FileWriter(file);
             String vbs = "Set objWMIService = GetObject(\"winmgmts:\\\\.\\root\\cimv2\")\n"
                     + "Set colItems = objWMIService.ExecQuery _ \n" + "   (\"Select * from Win32_Processor\") \n"

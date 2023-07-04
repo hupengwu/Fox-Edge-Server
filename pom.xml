@@ -33,7 +33,7 @@
         <!-- other version -->
         <jna.version>5.10.0</jna.version>
         <jackson.version>2.9.0</jackson.version>
-        <fastjson.version>1.2.80</fastjson.version>
+        <lombok.version>1.18.28</lombok.version>
         <mica-mqtt.version>2.1.2</mica-mqtt.version>
         <californium-coap.version>3.5.0</californium-coap.version>
         <mybatis-plus.version>3.5.0</mybatis-plus.version>
@@ -45,9 +45,13 @@
 
     <modules>
         <module>fox-edge-server-common</module>
+        <module>fox-edge-server-proxy</module>
         <module>fox-edge-server-channel</module>
         <module>fox-edge-server-device</module>
+        <module>fox-edge-server-trigger</module>
         <module>fox-edge-server-controller</module>
+        <module>fox-edge-server-persist</module>
+        <module>fox-edge-server-service</module>
         <module>fox-edge-server-protocol</module>
     </modules>
 
