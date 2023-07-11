@@ -1,6 +1,5 @@
 package cn.foxtech.channel.common.api;
 
-import cn.foxtech.common.entity.entity.ChannelEntity;
 import cn.foxtech.channel.common.constant.ChannelProperties;
 import cn.foxtech.channel.common.linker.LinkerEntity;
 import cn.foxtech.channel.common.linker.LinkerManager;
@@ -11,6 +10,7 @@ import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.common.domain.vo.PublicRequestVO;
 import cn.foxtech.common.domain.vo.PublicRespondVO;
+import cn.foxtech.common.entity.entity.ChannelEntity;
 import cn.foxtech.core.exception.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -188,7 +188,7 @@ public class ChannelClientAPI {
      * @param channelName  通道名称
      * @param channelParam 通道参数
      */
-    public void openChannel(String channelName, Map<String, Object> channelParam) {
+    public void openChannel(String channelName, Map<String, Object> channelParam) throws Exception {
         this.channelServerAPI.openChannel(channelName, channelParam);
     }
 

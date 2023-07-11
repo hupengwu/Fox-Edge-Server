@@ -28,6 +28,7 @@
         <module>fox-edge-server-protocol-dlt645-1997</module>
         <module>fox-edge-server-protocol-cjt188-core</module>
         <module>fox-edge-server-protocol-cjt188</module>
+        <module>fox-edge-server-protocol-opc-ua</module>
         <module>fox-edge-server-protocol-iec104-core</module>
         <module>fox-edge-server-protocol-iec104-slaver</module>
         <module>fox-edge-server-protocol-zxdu58</module>

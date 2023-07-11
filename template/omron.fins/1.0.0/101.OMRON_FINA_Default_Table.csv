@@ -1,0 +1,10 @@
+value_name,value_address,value_offset,value_type,determine,remark
+系统输出电压,B1 00 0A 00,1,WORD,,读WR.10.01 布尔型   结果=1(第2位为1)
+系统输出电流,82 00 0B 00,1,WORD,,
+系统输出功率,B1 01 E0 00,1,DWORD,,
+系统输出频率,B1 01 E1 00,1,DWORD,,
+负载比,B1 01 E2 00,1,String,,
+组1输入电压,B1 01 E3 00,1,String,,
+组2输入电压,B1 01 E4 00,1,String,,
+组3输入电压,B1 00 0A 00,1,String,,
+组4输入电压,B1 00 0B 00,1,String,,

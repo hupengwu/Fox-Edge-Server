@@ -1,0 +1,9 @@
+object_name,node_id_namespace,node_id_identifier,remark
+Simulation,3,85/0:Simulation,
+Counter,3,Counter,
+Expression,3,Expression,
+Random,3,Random,
+Sawtooth,3,Sawtooth,
+Sinusoid,3,Sinusoid,
+Square,3,Square,
+Triangle,3,Triangle,

@@ -1,0 +1,27 @@
+{
+	"operate_list": [{
+		"ICF": "80",
+		"GCT": 2,
+		"DA1": 10,
+		"SA1": 113,
+		"SID": 255,
+		"AREA": "B1",
+		"WADR": 11,
+		"BADR": 0,
+		"CNT": 1,
+		"FMT": "Short",
+		"NAME": "数值11"
+	}, {
+		"ICF": "80",
+		"GCT": 2,
+		"DA1": 10,
+		"SA1": 113,
+		"SID": 255,
+		"AREA": "B1",
+		"WADR": 10,
+		"BADR": 0,
+		"CNT": 1,
+		"FMT": "Short",
+		"NAME": "数值10"
+	}]
+}

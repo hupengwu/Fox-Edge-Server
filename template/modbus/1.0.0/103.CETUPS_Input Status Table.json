@@ -1,0 +1,11 @@
+{
+	"operate_list": [{
+		"template_name": "Read Coil Status Table",
+		"device_addr": 1,
+		"reg_addr": 0,
+		"reg_cnt": 10,
+		"modbus_mode": "RTU",
+		"operate_name": "Read Coil Status",
+		"table_name": "102.CETUPS_Read Coil Status Table.csv"
+	}]
+}

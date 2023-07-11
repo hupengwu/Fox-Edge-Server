@@ -126,11 +126,19 @@ public class ChannelRedisScheduler extends PeriodTaskService {
             try {
                 ChannelEntity oldEntity = this.channelEntityMap.get(key);
                 ChannelEntity newEntity = map.get(key);
-                if (newEntity.makeServiceValue().equals(oldEntity.makeServiceKey())) {
+
+                // 检测：配置内容是否发生了变化
+                String newValue = newEntity.makeServiceValue();
+                String oldValue = oldEntity.makeServiceValue();
+                if (newValue.equals(oldValue)) {
                     continue;
                 }
 
+                // 关闭通道
                 this.channelService.closeChannel(oldEntity.getChannelName(), oldEntity.getChannelParam());
+                this.channelEntityMap.remove(key);
+
+                // 重新打开通道
                 this.channelService.openChannel(newEntity.getChannelName(), newEntity.getChannelParam());
                 this.channelEntityMap.put(key, newEntity);
             } catch (Exception e) {
