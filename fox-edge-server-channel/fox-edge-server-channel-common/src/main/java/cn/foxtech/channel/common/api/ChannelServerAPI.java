@@ -46,19 +46,6 @@ public class ChannelServerAPI {
         return new ArrayList<>();
     }
 
-    /**
-     * 获得资源的信息：可以被调用方用来发现存在哪些channel资源服务
-     *
-     * @param requestVO 请求报文
-     * @return 资源信息
-     * @throws ServiceException 异常信息
-     */
-    public PublicRespondVO getChannelNameList(PublicRequestVO requestVO) throws ServiceException {
-        PublicRespondVO respondVO = new PublicRespondVO();
-        respondVO.bindResVO(requestVO);
-
-        return respondVO;
-    }
 
     /**
      * 打开通道
@@ -79,5 +66,13 @@ public class ChannelServerAPI {
 
     }
 
-
+    /**
+     * 管理通道操作：上层服务，对通道的管理操作
+     *
+     * @param requestVO 发布报文
+     * @throws ServiceException 异常信息
+     */
+    public ChannelRespondVO manageChannel(ChannelRequestVO requestVO) throws ServiceException {
+        throw new ServiceException("该channel不支持管理操作");
+    }
 }

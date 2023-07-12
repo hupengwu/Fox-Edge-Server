@@ -1,6 +1,6 @@
 package cn.foxtech.channel.common.initialize;
 
-import cn.foxtech.channel.common.constant.ChannelProperties;
+import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.common.linker.LinkerMethodScanner;
 import cn.foxtech.channel.common.linker.LinkerScheduler;
 import cn.foxtech.channel.common.scheduler.ChannelRedisScheduler;

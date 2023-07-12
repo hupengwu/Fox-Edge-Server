@@ -1,11 +1,9 @@
 package cn.foxtech.channel.simulator.service;
 
 import cn.foxtech.channel.common.api.ChannelServerAPI;
-import cn.foxtech.channel.common.constant.ChannelProperties;
+import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
-import cn.foxtech.common.domain.vo.PublicRequestVO;
-import cn.foxtech.common.domain.vo.PublicRespondVO;
 import cn.foxtech.common.utils.hex.HexUtils;
 import cn.foxtech.core.exception.ServiceException;
 import lombok.AccessLevel;
@@ -19,7 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -111,23 +108,5 @@ public class ChannelService extends ChannelServerAPI {
     @Override
     public List<ChannelRespondVO> receive() throws ServiceException {
         return this.executeService.receive(constants.getChannelType(), this.channel2event);
-    }
-
-    /**
-     * 获得资源的信息
-     *
-     * @return 资源信息
-     * @throws ServiceException 异常信息
-     */
-    @Override
-    public PublicRespondVO getChannelNameList(PublicRequestVO requestVO) throws ServiceException {
-        PublicRespondVO respondVO = new PublicRespondVO();
-        respondVO.bindResVO(requestVO);
-
-        List<String> channelNameList = new ArrayList<>();
-        channelNameList.add("channel-simulator");
-        respondVO.setData(channelNameList);
-
-        return respondVO;
     }
 }

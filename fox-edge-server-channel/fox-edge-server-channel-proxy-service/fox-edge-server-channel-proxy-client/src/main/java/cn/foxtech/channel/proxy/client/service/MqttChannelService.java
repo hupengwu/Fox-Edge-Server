@@ -1,7 +1,7 @@
 package cn.foxtech.channel.proxy.client.service;
 
 import cn.foxtech.channel.common.api.ChannelServerAPI;
-import cn.foxtech.channel.common.constant.ChannelProperties;
+import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.common.utils.ContainerUtils;

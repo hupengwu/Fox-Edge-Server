@@ -1,15 +1,13 @@
 package cn.foxtech.channel.common.api;
 
-import cn.foxtech.channel.common.constant.ChannelProperties;
 import cn.foxtech.channel.common.linker.LinkerEntity;
 import cn.foxtech.channel.common.linker.LinkerManager;
 import cn.foxtech.channel.common.linker.LinkerMethodEntity;
 import cn.foxtech.channel.common.linker.LinkerMethodTemplate;
+import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.common.service.EntityManageService;
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
-import cn.foxtech.common.domain.vo.PublicRequestVO;
-import cn.foxtech.common.domain.vo.PublicRespondVO;
 import cn.foxtech.common.entity.entity.ChannelEntity;
 import cn.foxtech.core.exception.ServiceException;
 import org.slf4j.Logger;
@@ -172,17 +170,6 @@ public class ChannelClientAPI {
     }
 
     /**
-     * 获得资源的信息：可以被调用方用来发现存在哪些channel资源服务
-     *
-     * @param requestVO 请求报文
-     * @return 资源信息
-     * @throws ServiceException 异常信息
-     */
-    public PublicRespondVO getChannelNameList(PublicRequestVO requestVO) throws ServiceException {
-        return this.channelServerAPI.getChannelNameList(requestVO);
-    }
-
-    /**
      * 打开通道
      *
      * @param channelName  通道名称
@@ -202,5 +189,13 @@ public class ChannelClientAPI {
         this.channelServerAPI.closeChannel(channelName, channelParam);
     }
 
-
+    /**
+     * 对通道进行管理操作
+     * @param requestVO 操作请求
+     * @return 响应
+     * @throws ServiceException 异常状况
+     */
+    public ChannelRespondVO manageChannel(ChannelRequestVO requestVO) throws ServiceException {
+        return this.channelServerAPI.manageChannel(requestVO);
+    }
 }

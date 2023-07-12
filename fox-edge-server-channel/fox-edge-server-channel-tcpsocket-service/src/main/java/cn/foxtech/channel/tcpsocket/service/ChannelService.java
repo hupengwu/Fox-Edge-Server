@@ -4,16 +4,12 @@ import cn.foxtech.channel.common.api.ChannelServerAPI;
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.channel.tcpsocket.entity.TcpClientSocket;
-import cn.foxtech.common.domain.vo.PublicRequestVO;
-import cn.foxtech.common.domain.vo.PublicRespondVO;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Component
@@ -88,23 +84,5 @@ public class ChannelService extends ChannelServerAPI {
         }
 
         return this.executeService.execute(tcpClientSocket, requestVO);
-    }
-
-    /**
-     * 获得资源的信息
-     *
-     * @return 资源信息
-     * @throws ServiceException 异常信息
-     */
-    @Override
-    public PublicRespondVO getChannelNameList(PublicRequestVO requestVO) throws ServiceException {
-        PublicRespondVO respondVO = new PublicRespondVO();
-        respondVO.bindResVO(requestVO);
-
-        List<String> channelNameList = new ArrayList<>();
-        channelNameList.addAll(this.socketMap.keySet());
-        respondVO.setData(channelNameList);
-
-        return respondVO;
     }
 }

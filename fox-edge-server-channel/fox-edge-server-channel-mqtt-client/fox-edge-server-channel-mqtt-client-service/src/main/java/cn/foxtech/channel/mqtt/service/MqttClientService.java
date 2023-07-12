@@ -1,6 +1,6 @@
 package cn.foxtech.channel.mqtt.service;
 
-import cn.foxtech.channel.common.constant.ChannelProperties;
+import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.common.utils.hex.HexUtils;
 import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;

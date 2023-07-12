@@ -3,7 +3,7 @@ package cn.foxtech.channel.common.linker;
 
 import cn.foxtech.device.protocol.RootLocation;
 import cn.foxtech.device.protocol.core.annotation.FoxEdgeDeviceType;
-import cn.foxtech.channel.common.constant.ChannelProperties;
+import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.common.utils.reflect.JarLoaderUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

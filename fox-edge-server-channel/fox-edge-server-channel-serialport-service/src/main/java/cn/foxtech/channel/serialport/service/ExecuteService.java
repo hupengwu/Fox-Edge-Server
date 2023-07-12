@@ -36,7 +36,7 @@ public class ExecuteService {
 
         // 检查串口
         if (serialPort == null) {
-            throw new ServiceException("串口不存在！");
+            throw new ServiceException("串口不存在或者未打开！");
         }
         if (!serialPort.isOpen()) {
             throw new ServiceException("串口没有打开！");

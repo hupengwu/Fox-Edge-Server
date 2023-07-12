@@ -2,7 +2,7 @@ package cn.foxtech.channel.common.linker;
 
 import cn.foxtech.channel.common.api.ChannelServerAPI;
 import cn.foxtech.common.entity.entity.ChannelEntity;
-import cn.foxtech.channel.common.constant.ChannelProperties;
+import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.common.service.EntityManageService;
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;

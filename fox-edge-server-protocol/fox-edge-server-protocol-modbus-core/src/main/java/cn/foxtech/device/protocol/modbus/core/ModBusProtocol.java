@@ -202,7 +202,8 @@ public abstract class ModBusProtocol {
             respond.getEntity().setErrMsg(ModBusError.getError(respond.getEntity().getData()[0]));
             return null;
         }
-        if (respond.getEntity().getFunc() != 0x03) {
+        // 检测是否为输入03和04的返回
+        if (respond.getEntity().getFunc() != 0x03 && respond.getEntity().getFunc() != 0x04) {
             return null;
         }
 
@@ -229,7 +230,9 @@ public abstract class ModBusProtocol {
         // short *byStatus = arrStatus.GetData();
         int byStatus = 0;
         for (int i = 0; i < wCount; i++) {
-            int status = (arrData[byAt] & 0xff) * 0x100 + arrData[byAt + 1] & 0xFF;
+            int status = (arrData[byAt] & 0xff) * 0x100;
+            status += arrData[byAt + 1] & 0xFF;
+
             arrStatus[byStatus++] = status;
             byAt += 2;
         }
@@ -474,11 +477,23 @@ public abstract class ModBusProtocol {
         if (respond == null) {
             return null;
         }
-        if (respond.getEntity().getFunc() == 0x03) {
-            return respond;
+        if (respond.getEntity().getFunc() != 0x03) {
+            return null;
         }
 
-        return null;
+        return respond;
+    }
+
+    public ModBusReadRegistersRespond unPackCmdReadInputRegisters2Respond(byte[] arrCmd) {
+        ModBusReadRegistersRespond respond = this.unPackCmdReadRegisters2Respond(arrCmd);
+        if (respond == null) {
+            return null;
+        }
+        if (respond.getEntity().getFunc() != 0x04) {
+            return null;
+        }
+
+        return respond;
     }
 
     public byte[] packCmdWriteSingleCoilStatus4Request(ModBusWriteStatusRequest request) {

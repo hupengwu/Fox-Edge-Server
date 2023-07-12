@@ -1,4 +1,4 @@
-package cn.foxtech.channel.common.constant;
+package cn.foxtech.channel.common.properties;
 
 import lombok.AccessLevel;
 import lombok.Getter;

@@ -2,7 +2,7 @@ package cn.foxtech.channel.common.scheduler;
 
 
 import cn.foxtech.channel.common.api.ChannelClientAPI;
-import cn.foxtech.channel.common.constant.ChannelProperties;
+import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.common.linker.LinkerManager;
 import cn.foxtech.channel.common.service.EntityManageService;
 import cn.foxtech.common.entity.entity.BaseEntity;

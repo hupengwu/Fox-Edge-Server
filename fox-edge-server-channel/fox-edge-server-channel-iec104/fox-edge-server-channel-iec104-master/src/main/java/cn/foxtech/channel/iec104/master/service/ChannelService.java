@@ -1,12 +1,10 @@
 package cn.foxtech.channel.iec104.master.service;
 
 import cn.foxtech.channel.common.api.ChannelServerAPI;
-import cn.foxtech.channel.common.constant.ChannelProperties;
+import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.channel.iec104.master.handler.MasterLinkerHandler;
-import cn.foxtech.common.domain.vo.PublicRequestVO;
-import cn.foxtech.common.domain.vo.PublicRespondVO;
 import cn.foxtech.common.utils.iec104.server.Iec104ClientLinkerManager;
 import cn.foxtech.common.utils.iec104.server.Iec104ClientLinkerScheduler;
 import cn.foxtech.common.utils.json.JsonUtils;
@@ -121,19 +119,5 @@ public class ChannelService extends ChannelServerAPI {
     @Override
     public ChannelRespondVO execute(ChannelRequestVO requestVO) throws ServiceException {
         return this.executeService.execute(this.name2remote, requestVO);
-    }
-
-    /**
-     * 获得资源的信息
-     *
-     * @return 资源信息
-     * @throws ServiceException 异常信息
-     */
-    @Override
-    public PublicRespondVO getChannelNameList(PublicRequestVO requestVO) throws ServiceException {
-        PublicRespondVO respondVO = new PublicRespondVO();
-        respondVO.bindResVO(requestVO);
-        respondVO.setData(this.name2remote.keySet());
-        return respondVO;
     }
 }

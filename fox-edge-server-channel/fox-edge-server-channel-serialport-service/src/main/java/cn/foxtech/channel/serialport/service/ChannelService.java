@@ -1,12 +1,13 @@
 package cn.foxtech.channel.serialport.service;
 
-import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.channel.common.api.ChannelServerAPI;
-import cn.foxtech.channel.common.constant.ChannelProperties;
+import cn.foxtech.channel.common.properties.ChannelProperties;
+import cn.foxtech.channel.common.utils.ChannelStatusUtils;
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
-import cn.foxtech.common.domain.vo.PublicRequestVO;
-import cn.foxtech.common.domain.vo.PublicRespondVO;
+import cn.foxtech.channel.domain.ChannelVOConstant;
+import cn.foxtech.common.utils.json.JsonUtils;
+import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.serialport.ISerialPort;
 import cn.foxtech.core.exception.ServiceException;
 import com.sun.jna.Platform;
@@ -17,7 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,6 +97,45 @@ public class ChannelService extends ChannelServerAPI {
         this.name2port.put(channelName, serialPort);
     }
 
+    @Override
+    public synchronized ChannelRespondVO manageChannel(ChannelRequestVO requestVO) {
+        Map<String, Object> requestParam = (Map<String, Object>) requestVO.getSend();
+        if (MethodUtils.hasEmpty(requestParam)) {
+            throw new ServiceException("send参数不能为空!");
+        }
+
+        String operate = (String) requestParam.get(ChannelVOConstant.filed_operate);
+        if (MethodUtils.hasEmpty(operate)) {
+            throw new ServiceException("operate参数不能为空!");
+        }
+
+        Object recv = null;
+        if (operate.equals(ChannelVOConstant.value_operate_get_status)) {
+            Map<String, Object> result = new HashMap<>();
+            List<String> channelNameList = (List<String>) requestParam.get(ChannelVOConstant.filed_param);
+            for (String channelName : channelNameList) {
+                ISerialPort serialPort = this.name2port.get(channelName);
+                if (serialPort == null || !serialPort.isOpen()) {
+                    result.put(channelName, ChannelStatusUtils.buildStatus(false, 0));
+                    continue;
+                }
+
+                result.put(channelName, ChannelStatusUtils.buildStatus(true, System.currentTimeMillis()));
+            }
+
+            recv = result;
+        } else {
+            throw new ServiceException("不支持的operate参数!");
+        }
+
+
+        ChannelRespondVO respondVO = new ChannelRespondVO();
+        respondVO.bindBaseVO(requestVO);
+        respondVO.setRecv(recv);
+        return respondVO;
+
+    }
+
 
     /**
      * 装载串口
@@ -145,23 +184,5 @@ public class ChannelService extends ChannelServerAPI {
     public void publish(ChannelRequestVO requestVO) throws ServiceException {
         ISerialPort serialPort = this.name2port.get(requestVO.getName());
         this.executeService.publish(serialPort, requestVO);
-    }
-
-    /**
-     * 获得资源的信息
-     *
-     * @return 资源信息
-     * @throws ServiceException 异常信息
-     */
-    @Override
-    public PublicRespondVO getChannelNameList(PublicRequestVO requestVO) throws ServiceException {
-        PublicRespondVO respondVO = new PublicRespondVO();
-        respondVO.bindResVO(requestVO);
-
-        List<String> channelNameList = new ArrayList<>();
-        channelNameList.addAll(this.name2port.keySet());
-        respondVO.setData(channelNameList);
-
-        return respondVO;
     }
 }

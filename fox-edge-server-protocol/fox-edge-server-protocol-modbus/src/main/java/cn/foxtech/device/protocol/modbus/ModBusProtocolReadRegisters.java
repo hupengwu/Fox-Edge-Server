@@ -118,7 +118,7 @@ public class ModBusProtocolReadRegisters {
 
         byte[] arrCmd = HexUtils.hexStringToByteArray(hexString);
         // 报文解析
-        ModBusReadRegistersRespond respond = protocol.unPackCmdReadHoldingRegisters2Respond(arrCmd);
+        ModBusReadRegistersRespond respond = protocol.unPackCmdReadRegisters2Respond(arrCmd);
         if (respond == null) {
             throw new ProtocolException("报文格式不正确，解析失败！");
         }

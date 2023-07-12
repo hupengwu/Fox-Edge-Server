@@ -1,5 +1,6 @@
 package cn.foxtech.device.protocol.modbus.demo;
 
+import cn.foxtech.device.protocol.core.utils.BitsUtils;
 import cn.foxtech.device.protocol.modbus.ModBusProtocolReadRegisters;
 import cn.foxtech.device.protocol.modbus.ModBusProtocolReadStatus;
 import cn.foxtech.device.protocol.modbus.ModBusProtocolWriteRegisters;
@@ -14,17 +15,34 @@ public class TestUtils {
 
     public static void JHoldingRegistersTest2() {
         try {
-            String hexString = "01 03 8A 00 E5 00 35 03 79 01 F4 00 09 02 1D 00 00 00 00 00 00 00 00 00 11 01 30 00 00 00 15 01 30 00 3B 00 0F 01 19 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 01 00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 AC 63 ";
+            String hexString = "01 04 0c 01 1a 01 ba 41 e1 fa 9c 42 30 ed cb ef ca ";
+
+            byte[] ttt = new byte[4];
+            ttt[0] = (byte)0x41;
+            ttt[1] = (byte)0xe2;
+            ttt[2] = (byte)0x8e;
+            ttt[3] = (byte)0x44;
+
+            float v = BitsUtils.bitsToFloat(ttt);
+
+            ttt[0] = (byte)0x42;
+            ttt[1] = (byte)0x30;
+            ttt[2] = (byte)0xf7;
+            ttt[3] = (byte)0x2b;
+
+            float v1 = BitsUtils.bitsToFloat(ttt);
+
+
 
 
             Map<String, Object> param = new HashMap<>();
-            param.put("device_addr", 1);
-            param.put("reg_addr", 1070);
-            param.put("reg_cnt", 69);
-            param.put("modbus_mode", "RTU");
-            param.put("operate_name", "Read Holding Register");
-            param.put("template_name", "Read System Measures Table");
-            param.put("table_name", "101.CETUPS_Read System Measures Table.csv");
+            param.put("devAddr", 1);
+            param.put("regAddr", 0);
+            param.put("regCnt", 6);
+            param.put("modbusMode", "RTU");
+            param.put("operateName", "Read Input Register");
+            param.put("templateName", "temperature-sensor-read-input-status-table");
+            param.put("tableName", "zhongshengkeji-temperature-sensor-modbus/1.0.0/1.temperature-sensor-read-input-status-table.csv");
             Map<String, Object> value = new HashMap<>();
             value = ModBusProtocolReadRegisters.unpackReadHoldingRegister(hexString, param);
             value = ModBusProtocolReadRegisters.unpackReadHoldingRegister(hexString, param);
@@ -59,4 +77,23 @@ public class TestUtils {
             e.printStackTrace();
         }
     }
+
+    //方法1：  //(3412) 小端交换字节模式
+    private float big2Little(float big){
+        // 把float转换为byte[]
+        int fbit = Float.floatToIntBits(big);
+
+        byte[] b = new byte[4];
+        b[0] = (byte) (fbit >> 16);
+        b[1] = (byte) (fbit);
+
+        int l;
+        l = b[0];
+        l &= 0xff;
+        l |= ((long) b[2] << 16);
+        float little = Float.intBitsToFloat(l);
+        return little;
+    }
+
+
 }

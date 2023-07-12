@@ -22,6 +22,7 @@
         <module>fox-edge-server-protocol-gdana-digester</module>
         <module>fox-edge-server-protocol-modbus</module>
         <module>fox-edge-server-protocol-modbus-core</module>
+        <module>fox-edge-server-protocol-zs-sht30-1t-1h</module>
         <module>fox-edge-server-protocol-telecom-core</module>
         <module>fox-edge-server-protocol-snmp</module>
         <module>fox-edge-server-protocol-dlt645-core</module>

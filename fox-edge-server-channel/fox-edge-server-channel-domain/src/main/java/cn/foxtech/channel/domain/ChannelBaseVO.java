@@ -21,6 +21,11 @@ public class ChannelBaseVO {
     public static String MODE_RECEIVE = "receive";
 
     /**
+     * 管理模式：这不是通信模式，而是对通道进行管理
+     */
+    public static String MODE_MANAGE = "manage";
+
+    /**
      * 通道类型
      */
     private String type;
