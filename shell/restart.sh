@@ -154,7 +154,7 @@ fi
 
 #=========================================组织命令行参数，并重启业务进程==========================================#
 #杀死进程
-ids=`ps -ef | grep $app_home/bin/$app_type/$app_name/$jar_name | grep -v 'grep' | awk '{print $2}'`
+ids=`ps -ef | grep $app_home/bin/$app_type/$app_name/ | grep -v 'grep' | awk '{print $2}'`
 for id in $ids
 do
     kill -9 $id

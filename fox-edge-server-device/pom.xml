@@ -15,6 +15,7 @@
 
     <modules>
         <module>fox-edge-server-device-domain</module>
+        <module>fox-edge-server-device-scanner</module>
         <module>fox-edge-server-device-service</module>
     </modules>
 
