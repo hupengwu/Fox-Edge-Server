@@ -14,33 +14,34 @@
     <description>${project.artifactId}</description>
 
     <modules>
-        <module>fox-edge-server-common-utils-hex</module>
-        <module>fox-edge-server-common-utils-md5</module>
-        <module>fox-edge-server-common-utils-rsa</module>
         <module>fox-edge-server-common-utils-bean</module>
-        <module>fox-edge-server-common-utils-json</module>
+        <module>fox-edge-server-common-utils-container</module>
         <module>fox-edge-server-common-utils-escape</module>
+        <module>fox-edge-server-common-utils-file</module>
+        <module>fox-edge-server-common-utils-hex</module>
         <module>fox-edge-server-common-utils-http</module>
         <module>fox-edge-server-common-utils-hutool-http</module>
-        <module>fox-edge-server-common-utils-string</module>
-        <module>fox-edge-server-common-utils-pair</module>
-        <module>fox-edge-server-common-utils-number</module>
         <module>fox-edge-server-common-utils-influxdb</module>
+        <module>fox-edge-server-common-utils-json</module>
+        <module>fox-edge-server-common-utils-jar-info</module>
+        <module>fox-edge-server-common-utils-pair</module>
+        <module>fox-edge-server-common-utils-log4j</module>
+        <module>fox-edge-server-common-utils-osinfo</module>
+        <module>fox-edge-server-common-utils-number</module>
+        <module>fox-edge-server-common-utils-method</module>
+        <module>fox-edge-server-common-utils-md5</module>
+        <module>fox-edge-server-common-utils-niosocket</module>
+        <module>fox-edge-server-common-utils-netty</module>
         <module>fox-edge-server-common-utils-redis</module>
         <module>fox-edge-server-common-utils-redis-topic</module>
         <module>fox-edge-server-common-utils-redis-status</module>
         <module>fox-edge-server-common-utils-redis-logger</module>
         <module>fox-edge-server-common-utils-reflect</module>
-        <module>fox-edge-server-common-utils-jar-info</module>
-        <module>fox-edge-server-common-utils-file</module>
-        <module>fox-edge-server-common-utils-log4j</module>
+        <module>fox-edge-server-common-utils-rsa</module>
         <module>fox-edge-server-common-utils-security</module>
+        <module>fox-edge-server-common-utils-string</module>
         <module>fox-edge-server-common-utils-shell</module>
-        <module>fox-edge-server-common-utils-osinfo</module>
-        <module>fox-edge-server-common-utils-container</module>
-        <module>fox-edge-server-common-utils-niosocket</module>
-        <module>fox-edge-server-common-utils-method</module>
-        <module>fox-edge-server-common-utils-netty</module>
+        <module>fox-edge-server-common-utils-serial</module>
         <module>fox-edge-server-common-utils-scheduler</module>
         <module>fox-edge-server-common-utils-sync-obejct</module>
     </modules>

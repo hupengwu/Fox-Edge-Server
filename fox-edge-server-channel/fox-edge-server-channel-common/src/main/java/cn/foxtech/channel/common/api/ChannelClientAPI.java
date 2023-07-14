@@ -191,6 +191,7 @@ public class ChannelClientAPI {
 
     /**
      * 对通道进行管理操作
+     *
      * @param requestVO 操作请求
      * @return 响应
      * @throws ServiceException 异常状况

@@ -44,7 +44,7 @@
         <!-- 核心模块-->
         <dependency>
             <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-serial</artifactId>
+            <artifactId>fox-edge-server-common-utils-serial</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
 
@@ -79,6 +79,8 @@
     </dependencies>
 
     <build>
+        <!-- 产生的构件的文件名，指定为artifactId格式 -->
+        <finalName>${artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

@@ -1,7 +1,6 @@
 package cn.foxtech.controller.common.redistopic;
 
 import cn.foxtech.common.domain.constant.RedisTopicConstant;
-import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.redis.topic.service.RedisTopicSubscriber;
 import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
@@ -9,17 +8,13 @@ import cn.foxtech.common.utils.syncobject.SyncQueueObjectMap;
 import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
 import cn.foxtech.device.domain.vo.OperateRespondVO;
 import cn.foxtech.device.domain.vo.TaskRespondVO;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RedisTopicSuberService extends RedisTopicSubscriber {
-    /**
-     * 日志
-     */
-    @Autowired
-    private RedisConsoleService logger;
+    private static final Logger logger = Logger.getLogger(RedisTopicSuberService.class);
 
     @Value("${spring.redis_topic.controller_model}")
     private String controller_model = "system_controller";

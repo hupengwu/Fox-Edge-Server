@@ -10,6 +10,7 @@ import cn.foxtech.utils.common.utils.redis.service.RedisService;
 import com.fasterxml.jackson.core.JsonParseException;
 import lombok.AccessLevel;
 import lombok.Getter;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.serializer.SerializationException;
 
@@ -20,6 +21,8 @@ import java.util.Set;
  * 基本的实体管理者
  */
 public abstract class EntityBaseManager {
+    private static final Logger logger = Logger.getLogger(EntityBaseManager.class);
+
     /**
      * 初始化生产者的数据源：从数据库装载数据，并初始化redis和缓存
      */
@@ -55,11 +58,7 @@ public abstract class EntityBaseManager {
      */
     @Autowired
     protected EntityAgileMapComponent entityAgileMapComponent;
-    /**
-     * 日志
-     */
-    @Autowired
-    private RedisConsoleService logger;
+
     /**
      * redis部件
      */
@@ -289,7 +288,7 @@ public abstract class EntityBaseManager {
                     this.isInitialized = true;
                 }
             } catch (Exception e) {
-                logger.warn(e);
+                logger.warn(e.getMessage());
             }
         }
         logger.info("------------------initLoadEntity结束！------------------");

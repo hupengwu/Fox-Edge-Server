@@ -2,10 +2,10 @@ package cn.foxtech.persist.common.scheduler;
 
 
 import cn.foxtech.common.entity.entity.ConfigEntity;
-import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import cn.foxtech.persist.common.service.DeviceObjectMapper;
 import cn.foxtech.persist.common.service.EntityManageService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -17,11 +17,8 @@ import java.util.Map;
  */
 @Component
 public class EntityManageScheduler extends PeriodTaskService {
-    /**
-     * 日志
-     */
-    @Autowired
-    private RedisConsoleService logger;
+    private static final Logger logger = Logger.getLogger(EntityManageScheduler.class);
+
 
     @Autowired
     private EntityManageService entityManageService;

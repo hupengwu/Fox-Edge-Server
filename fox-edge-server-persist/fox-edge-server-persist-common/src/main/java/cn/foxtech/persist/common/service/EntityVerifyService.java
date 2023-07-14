@@ -3,10 +3,10 @@ package cn.foxtech.persist.common.service;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.DeviceObjectEntity;
 import cn.foxtech.common.entity.entity.DeviceValueEntity;
-import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.entity.service.redis.RedisReader;
 import cn.foxtech.common.entity.service.redis.RedisWriter;
 import cn.foxtech.common.utils.DifferUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,11 +14,7 @@ import java.util.*;
 
 @Component
 public class EntityVerifyService {
-    /**
-     * 日志
-     */
-    @Autowired
-    private RedisConsoleService logger;
+    private static final Logger logger = Logger.getLogger(EntityVerifyService.class);
 
     /**
      * 实体管理

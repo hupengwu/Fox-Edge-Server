@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>fox-edge-server-common</artifactId>
+        <artifactId>fox-edge-server-common-utils</artifactId>
         <groupId>cn.fox-tech</groupId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>fox-edge-server-common-serial</artifactId>
+    <artifactId>fox-edge-server-common-utils-serial</artifactId>
     <name>${project.artifactId}</name>
     <description>${project.artifactId}</description>
 

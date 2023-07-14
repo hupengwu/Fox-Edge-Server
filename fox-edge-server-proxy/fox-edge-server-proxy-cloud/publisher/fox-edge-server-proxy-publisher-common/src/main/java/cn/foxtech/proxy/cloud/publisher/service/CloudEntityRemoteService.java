@@ -124,7 +124,9 @@ public class CloudEntityRemoteService {
         // 保存token，方便后面反复使用
         this.header.put("Authorization", "Bearer " + token);
 
-        this.consoleService.info("登录云端服务器：登录成功！");
+        String logMessage = "登录云端服务器：登录成功！";
+        this.consoleService.info(logMessage);
+        this.logger.info(logMessage);
     }
 
     public <REQ> Map<String, Object> executePost(String res, REQ requestVO) throws IOException {

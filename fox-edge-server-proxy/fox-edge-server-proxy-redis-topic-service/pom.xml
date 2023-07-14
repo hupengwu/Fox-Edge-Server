@@ -27,6 +27,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
         </dependency>
 
         <dependency>
@@ -80,6 +81,8 @@
     </dependencies>
 
     <build>
+        <!-- 产生的构件的文件名，指定为artifactId格式 -->
+        <finalName>${artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

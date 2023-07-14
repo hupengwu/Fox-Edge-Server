@@ -21,7 +21,6 @@
 		<module>fox-edge-server-common-utils</module>
         <module>fox-edge-server-common-process</module>
         <module>fox-edge-server-common-status</module>
-        <module>fox-edge-server-common-serial</module>
         <module>fox-edge-server-common-entity</module>
     </modules>
 

@@ -15,6 +15,7 @@ import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.exception.ServiceException;
+import org.apache.log4j.Logger;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.UaClient;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
@@ -45,10 +46,13 @@ import java.util.function.Predicate;
  */
 @Component
 public class ExecuteService {
+    private static final Logger logger = Logger.getLogger(ExecuteService.class);
+
     private final Map<String, OpcUaChannelEntity> channelEntityMap = new ConcurrentHashMap<>();
 
     @Autowired
     private RedisConsoleService console;
+
     @Autowired
     private KeyStoreLoader keyStoreLoader;
     @Autowired
@@ -170,6 +174,7 @@ public class ExecuteService {
                 channelEntity.setHandler(null);
             } catch (Exception e) {
                 this.console.error(e.getMessage());
+                this.logger.error(e.getMessage());
             }
         }
 
@@ -180,6 +185,7 @@ public class ExecuteService {
                 channelEntity.setOpcLink(null);
             } catch (Exception e) {
                 this.console.error(e.getMessage());
+                this.logger.error(e.getMessage());
             }
         }
 
@@ -190,6 +196,7 @@ public class ExecuteService {
                 channelEntity.setOpcUaClient(null);
             } catch (Exception e) {
                 this.console.error(e.getMessage());
+                this.logger.error(e.getMessage());
             }
         }
 

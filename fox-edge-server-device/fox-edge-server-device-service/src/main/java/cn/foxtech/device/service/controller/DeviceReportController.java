@@ -92,7 +92,7 @@ public class DeviceReportController extends PeriodTaskService {
                 // 上报数据到public
                 this.puberService.sendReportVO(taskRespondVO);
             } catch (Exception e) {
-                logger.debug(e);
+                logger.debug(e.getMessage());
             }
         }
 

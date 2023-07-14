@@ -80,7 +80,7 @@ public class ConfigEntityManageScheduler extends PeriodTaskService {
      */
     private void operatePublishReset(Set<String> entityTypeList) {
         // 检查：是否已经登录
-        if (!this.remoteService.isLogin()){
+        if (!this.remoteService.isLogin()) {
             return;
         }
 
@@ -127,6 +127,7 @@ public class ConfigEntityManageScheduler extends PeriodTaskService {
             }
         } catch (Exception e) {
             this.consoleService.error(e.getMessage());
+            logger.error(e.getMessage());
         }
     }
 
@@ -137,7 +138,7 @@ public class ConfigEntityManageScheduler extends PeriodTaskService {
      */
     private void operatePublishUpdate(Set<String> entityTypeList) throws IOException {
         // 检查：是否已经登录
-        if (!this.remoteService.isLogin()){
+        if (!this.remoteService.isLogin()) {
             return;
         }
 

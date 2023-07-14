@@ -4,7 +4,6 @@ import cn.foxtech.common.domain.vo.RestFulRequestVO;
 import cn.foxtech.common.domain.vo.RestFulRespondVO;
 import cn.foxtech.common.entity.constant.DeviceVOFieldConstant;
 import cn.foxtech.common.entity.entity.DeviceEntity;
-import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.device.domain.vo.OperateRespondVO;
 import cn.foxtech.device.protocol.core.annotation.FoxEdgeOperate;
@@ -12,6 +11,7 @@ import cn.foxtech.persist.common.service.updater.DeviceCommStatusUpdater;
 import cn.foxtech.persist.common.service.updater.DeviceRecordValueUpdater;
 import cn.foxtech.persist.common.service.updater.DeviceStatusValueUpdater;
 import cn.foxtech.persist.common.service.updater.OperateRecordValueUpdater;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,11 +22,7 @@ import java.util.*;
  */
 @Component
 public class EntityUpdateService {
-    /**
-     * 日志
-     */
-    @Autowired
-    private RedisConsoleService logger;
+    private static final Logger logger = Logger.getLogger(EntityUpdateService.class);
 
     /**
      * 实体管理
