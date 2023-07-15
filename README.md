@@ -89,8 +89,8 @@ fox-edge
 ## 在线体验
 在安装之前，在线上有个[预览版本](http://fox-edge-demo.fox-tech.cn)，你现在就可以直接体验
 
-## 联系方式
-![image](http://docs.fox-tech.cn/_images/weixin.png)
+## 微信技术交流群
+![image](http://docs.fox-tech.cn/_images/weixinqun-01.jpg)
 
 ## 通信协议解码器列表
 1. fox-edge-server-protocol-bass260zj 广东高新兴的浙江移动版基站门禁的通信协议
