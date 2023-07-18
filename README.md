@@ -49,6 +49,7 @@ fox-edge
 │  ├─fox-edge-server-channel-http-client
 │  ├─fox-edge-server-channel-iec104
 │  ├─fox-edge-server-channel-mqtt-client
+│  ├─fox-edge-server-channel-opc-ua-service
 │  ├─fox-edge-server-channel-proxy-service
 │  ├─fox-edge-server-channel-serialport-service
 │  ├─fox-edge-server-channel-simulator-service
@@ -56,7 +57,9 @@ fox-edge
 │  ├─fox-edge-server-channel-tcpsocket-service
 │  └─fox-edge-server-channel-udpsocket-service
 ├─fox-edge-server-controller
-│├─fox-edge-server-protocol
+├─fox-edge-server-device
+├─fox-edge-server-persist
+├─fox-edge-server-protocol
 │  ├─fox-edge-server-protocol-bass260zj
 │  ├─fox-edge-server-protocol-cetups
 │  ├─fox-edge-server-protocol-cjt188
@@ -77,6 +80,7 @@ fox-edge
 │  ├─fox-edge-server-protocol-shmeter
 │  ├─fox-edge-server-protocol-snmp
 │  ├─fox-edge-server-protocol-telecom-core
+│  ├─fox-edge-server-protocol-zs-sht30-1t-1h
 │  └─fox-edge-server-protocol-zxdu58
 ├─fox-edge-server-proxy
 │  ├─fox-edge-server-proxy-cloud
