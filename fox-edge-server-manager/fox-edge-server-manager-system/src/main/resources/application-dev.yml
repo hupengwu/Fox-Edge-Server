@@ -1,0 +1,32 @@
+# 开发环境配置
+server:
+  port: 9101
+
+spring:
+  application:
+    name: fox-edge-server-manager-system-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.3.133:3306/fox_edge?useUnicode=true&characterEncoding=utf8
+    username: fox-edge
+    password: 12345678
+
+  fox-service:                      # 配置信息
+    service:                        # 服务信息，指明这个服务的模块信息，用于识别进程，它跟shell和restful路由强相关
+      type: "kernel"                # 服务类型：kernel/system/service
+      name: "manager-service"       # 服务名称：这是服务的名称
+    model:                          # 模块信息，用于业务之间的分类和协助
+      type: "manager"               # 模块类型，指明这是一个controller类型的业务，这类业务主要是用户的业务流程的逻辑
+      name: "manager"               # 模块类型名称，告知别的业务，它的业务名称，可以通过该名称跟它进行通信，比如topic的主题
+
+  redis:
+    host: localhost
+    port: 6379
+    password: 12345678
+    jedis:
+      pool:
+        max-active: 200 #最大连接数
+        max-wait: -1    #最大等待阻塞时间
+        max-idle: 10    #最大空闲连接
+        min-idle: 0     #最小空闲时间
+    timeout: 10000000     #连接超时时间
