@@ -78,10 +78,11 @@ public class DeviceOperateService {
 
     /**
      * 对设备执行操作
-     *
-     * @return 操作结果
+     * @param requestVO 请求报文
+     * @return 返回报文
      * @throws InterruptedException 操作异常
-     * @throws ServiceException     操作异常
+     * @throws ServiceException 业务异常
+     * @throws TimeoutException 超时异常
      */
     public TaskRespondVO execute(TaskRequestVO requestVO) throws InterruptedException, ServiceException, TimeoutException {
         Integer timeout = requestVO.getTimeout();

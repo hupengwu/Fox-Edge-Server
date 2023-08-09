@@ -39,10 +39,10 @@ public class RedisTopicPuberService {
         this.publisher.sendMessage(topic_device_request, json);
     }
 
+
     /**
      * 发送响应报文
-     *
-     * @return 响应报文
+     * @param respondVO 发送回复报文
      */
     public void sendRespondVO(Map<String, Object> respondVO) {
         String body = JsonUtils.buildJsonWithoutException(respondVO);
