@@ -25,6 +25,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
+            <version>${apache.commons.version}</version>
         </dependency>
 
         <!-- javax.ws.rs-api: javax.ws.rs包 -->
@@ -47,9 +48,12 @@
             <artifactId>httpclient</artifactId>
             <version>4.5.2</version>
         </dependency>
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
+
     </dependencies>
 </project>
