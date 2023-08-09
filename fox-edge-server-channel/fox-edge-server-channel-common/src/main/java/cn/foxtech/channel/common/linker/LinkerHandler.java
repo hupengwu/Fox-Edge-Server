@@ -8,7 +8,8 @@ public class LinkerHandler {
 
 
     /**
-     * IEC104链路建立
+     * 链路建立
+     * @param sessionEntity 会话实体
      */
     public void linkConnected(LinkerEntity sessionEntity) {
         LOGGER.info("链路连接:" + sessionEntity.getChannelName());

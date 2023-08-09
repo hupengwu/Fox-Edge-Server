@@ -55,8 +55,6 @@ public class LinkerCreateLinkerPeriodTask extends PeriodTask {
 
     /**
      * 待周期性执行的操作
-     *
-     * @return
      */
     public void execute() {
         // 查询：尚未建立连接的channel

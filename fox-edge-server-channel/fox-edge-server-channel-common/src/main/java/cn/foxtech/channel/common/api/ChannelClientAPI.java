@@ -174,6 +174,7 @@ public class ChannelClientAPI {
      *
      * @param channelName  通道名称
      * @param channelParam 通道参数
+     * @throws Exception 异常
      */
     public void openChannel(String channelName, Map<String, Object> channelParam) throws Exception {
         this.channelServerAPI.openChannel(channelName, channelParam);

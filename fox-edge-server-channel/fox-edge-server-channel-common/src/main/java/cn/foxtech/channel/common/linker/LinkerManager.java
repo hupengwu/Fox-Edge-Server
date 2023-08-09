@@ -13,7 +13,7 @@ public class LinkerManager {
     /**
      * 绑定自定义的handler
      *
-     * @param newHandler
+     * @param newHandler 绑定的handler
      */
     public static synchronized void bindHandler(LinkerHandler newHandler) {
         handler = newHandler;
@@ -21,6 +21,7 @@ public class LinkerManager {
 
     /**
      * 注册远端设备
+     * @param channelName 通道名称
      */
     public static synchronized void registerChannel(String channelName) {
         if (channelMap.containsKey(channelName)) {

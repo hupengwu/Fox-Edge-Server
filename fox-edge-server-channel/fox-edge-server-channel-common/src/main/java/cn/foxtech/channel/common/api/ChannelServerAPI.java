@@ -52,6 +52,7 @@ public class ChannelServerAPI {
      *
      * @param channelName  通道名称
      * @param channelParam 通道参数
+     * @throws Exception 异常信息
      */
     public void openChannel(String channelName, Map<String, Object> channelParam) throws Exception {
     }
@@ -70,6 +71,7 @@ public class ChannelServerAPI {
      * 管理通道操作：上层服务，对通道的管理操作
      *
      * @param requestVO 发布报文
+     * @return 响应VO
      * @throws ServiceException 异常信息
      */
     public ChannelRespondVO manageChannel(ChannelRequestVO requestVO) throws ServiceException {

@@ -100,8 +100,6 @@ public class LinkerMethodScanner {
 
     /**
      * 默认扫描的范围是cn.foxtech.device
-     *
-     * @return
      */
     public void scanMethod() {
         Map<String, LinkerMethodEntity> methods = this.scanMethod(RootLocation.class.getPackage().getName());

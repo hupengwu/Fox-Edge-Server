@@ -20,7 +20,7 @@ public class RedisTopicRespondManagerService extends PeriodTaskService {
     private RedisTopicPublisher publisher;
 
     /**
-     * 执行任务<>
+     * 执行任务
      * 步骤：
      * 1.获取全局设备列表和操作列表，进行循环遍历操作
      * 2.从全局设备配置中，获得设备的配置参数

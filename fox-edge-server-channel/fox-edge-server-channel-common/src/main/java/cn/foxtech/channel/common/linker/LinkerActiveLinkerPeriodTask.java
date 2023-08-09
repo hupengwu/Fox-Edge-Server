@@ -53,8 +53,6 @@ public class LinkerActiveLinkerPeriodTask extends PeriodTask {
 
     /**
      * 待周期性执行的操作
-     *
-     * @return
      */
     public void execute() {
         // 查询：已经完成了启动链路的Channel
