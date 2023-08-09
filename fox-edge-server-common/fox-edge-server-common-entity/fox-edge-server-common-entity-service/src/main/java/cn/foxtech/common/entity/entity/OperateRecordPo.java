@@ -41,7 +41,7 @@ public class OperateRecordPo extends OperateRecordBase {
     /**
      * 获取业务值
      *
-     * @return
+     * @return 对象列表
      */
     public List<Object> makeServiceValueListList() {
         List<Object> list = this.makeServiceValueList();

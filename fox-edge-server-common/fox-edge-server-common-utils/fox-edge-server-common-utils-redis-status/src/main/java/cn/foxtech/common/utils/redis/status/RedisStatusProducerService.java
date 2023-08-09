@@ -27,8 +27,6 @@ public abstract class RedisStatusProducerService {
 
     /**
      * 3、源端（异步线程）：保存数据
-     *
-     * @return
      */
     public synchronized void save(String serviceKey) {
         this.lastTime = System.currentTimeMillis();
@@ -38,8 +36,6 @@ public abstract class RedisStatusProducerService {
 
     /**
      * 4、消费端（异步线程）：保存数据
-     *
-     * @return
      */
     public synchronized void load(String serviceKey) {
         // 读取redis的时间戳
@@ -63,7 +59,7 @@ public abstract class RedisStatusProducerService {
     /**
      * 5、消费端（异步线程）：保存数据
      *
-     * @return
+     * @return 对象
      */
     public synchronized Object getData() {
         return this.data;

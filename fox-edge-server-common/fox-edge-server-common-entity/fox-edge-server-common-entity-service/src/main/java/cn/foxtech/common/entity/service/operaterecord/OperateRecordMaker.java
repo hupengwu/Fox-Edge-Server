@@ -16,12 +16,12 @@ public class OperateRecordMaker {
     /**
      * PO转Entity
      *
-     * @param recordList
-     * @return
+     * @param poList po列表
+     * @return 实体列表
      */
-    public static List<OperateRecordEntity> makePoList2EntityList(List<OperateRecordPo> recordList) {
+    public static List<OperateRecordEntity> makePoList2EntityList(List<OperateRecordPo> poList) {
         List<OperateRecordEntity> operateRecordList = new ArrayList<>();
-        for (BaseEntity entity : recordList) {
+        for (BaseEntity entity : poList) {
             OperateRecordPo po = (OperateRecordPo) entity;
 
             OperateRecordEntity config = OperateRecordMaker.makePo2Entity(po);

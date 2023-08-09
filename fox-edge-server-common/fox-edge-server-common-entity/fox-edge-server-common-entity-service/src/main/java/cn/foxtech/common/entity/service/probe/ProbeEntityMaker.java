@@ -16,12 +16,12 @@ public class ProbeEntityMaker {
     /**
      * PO转Entity
      *
-     * @param probePoList
-     * @return
+     * @param poList PO列表
+     * @return 实体列表
      */
-    public static List<BaseEntity> makePoList2EntityList(List<BaseEntity> probePoList) {
+    public static List<BaseEntity> makePoList2EntityList(List<BaseEntity> poList) {
         List<BaseEntity> entityList = new ArrayList<>();
-        for (BaseEntity po : probePoList) {
+        for (BaseEntity po : poList) {
             ProbePo probePo = (ProbePo) po;
 
             ProbeEntity entity = ProbeEntityMaker.makePo2Entity(probePo);

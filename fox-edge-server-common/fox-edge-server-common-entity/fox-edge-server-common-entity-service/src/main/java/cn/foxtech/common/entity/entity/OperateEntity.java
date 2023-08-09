@@ -10,8 +10,8 @@ public class OperateEntity extends OperateMethodEntity {
     /**
      * 获得bind方法
      *
-     * @return
-     * @throws NoSuchMethodException
+     * @return 对象列表
+     * @throws NoSuchMethodException 异常信息
      */
     public static Method getInitMethod() throws NoSuchMethodException {
         return OperateEntity.class.getMethod("init", OperateMethodEntity.class);

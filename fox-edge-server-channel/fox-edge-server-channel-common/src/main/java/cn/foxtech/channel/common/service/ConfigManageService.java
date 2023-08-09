@@ -2,7 +2,7 @@ package cn.foxtech.channel.common.service;
 
 import cn.foxtech.common.entity.entity.ConfigEntity;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
-import cn.foxtech.common.utils.map.Maps;
+import cn.foxtech.common.utils.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

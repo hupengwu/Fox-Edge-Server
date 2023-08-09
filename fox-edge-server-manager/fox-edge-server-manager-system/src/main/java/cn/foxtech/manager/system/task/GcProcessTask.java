@@ -4,7 +4,7 @@ package cn.foxtech.manager.system.task;
 import cn.foxtech.common.domain.constant.ServiceVOFieldConstant;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.process.ProcessUtils;
-import cn.foxtech.common.utils.map.Maps;
+import cn.foxtech.common.utils.Maps;
 import cn.foxtech.common.utils.osinfo.OSInfo;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTask;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTaskType;

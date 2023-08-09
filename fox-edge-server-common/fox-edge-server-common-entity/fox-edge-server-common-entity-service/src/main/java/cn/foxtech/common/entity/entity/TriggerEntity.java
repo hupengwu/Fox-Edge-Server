@@ -10,8 +10,8 @@ public class TriggerEntity extends TriggerMethodEntity {
     /**
      * 获得bind方法
      *
-     * @return
-     * @throws NoSuchMethodException
+     * @return 对象实体
+     * @throws NoSuchMethodException 异常信息
      */
     public static Method getInitMethod() throws NoSuchMethodException {
         return TriggerEntity.class.getMethod("init", TriggerMethodEntity.class);

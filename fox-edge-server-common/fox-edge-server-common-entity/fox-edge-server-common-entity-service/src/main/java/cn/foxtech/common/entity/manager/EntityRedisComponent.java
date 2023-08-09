@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -60,7 +61,7 @@ public class EntityRedisComponent {
         return null;
     }
 
-    protected <T> T readEntity(String entityKey, Class<T> clazz) throws JsonProcessingException {
+    protected <T> T readEntity(String entityKey, Class<T> clazz) throws IOException {
         if (this.reader.contains(clazz.getSimpleName())) {
             RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisTemplate);
             return (T) redisReader.readEntity(entityKey);

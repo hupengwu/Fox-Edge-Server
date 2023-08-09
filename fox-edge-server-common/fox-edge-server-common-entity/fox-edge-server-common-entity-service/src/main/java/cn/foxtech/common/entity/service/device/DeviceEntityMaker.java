@@ -16,8 +16,8 @@ public class DeviceEntityMaker {
     /**
      * PO转Entity
      *
-     * @param poList
-     * @return
+     * @param poList po列表
+     * @return 对象列表
      */
     public static List<BaseEntity> makePoList2EntityList(List poList) {
         List<BaseEntity> resultList = new ArrayList<>();

@@ -18,8 +18,6 @@ public class PeriodTaskScheduler {
 
     /**
      * 建立连接线程
-     *
-     * @throws Exception
      */
     public void schedule() {
         this.newShareSchedule();

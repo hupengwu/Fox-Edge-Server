@@ -22,7 +22,7 @@ public class TriggerConfigEntity extends TriggerConfigBase {
     /**
      * 获取业务值
      *
-     * @return
+     * @return 对象列表
      */
     public List<Object> makeServiceValueList() {
         List<Object> list = super.makeServiceValueList();

@@ -1,0 +1,18 @@
+# 开发环境配置
+server:
+  port: 9004
+
+
+spring:
+  application:
+    name: fox-edge-server-proxy-coap-service
+
+coap:
+  proxy:
+    # 格式：byte[],string,hex
+    return-format: string
+    # 默认访问超时
+    timeout: 2000
+
+
+

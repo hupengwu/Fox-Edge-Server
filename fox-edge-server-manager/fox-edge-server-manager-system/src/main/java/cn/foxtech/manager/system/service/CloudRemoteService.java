@@ -4,7 +4,7 @@ import cn.foxtech.common.constant.HttpStatus;
 import cn.foxtech.common.entity.entity.ConfigEntity;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.http.HttpClientUtil;
-import cn.foxtech.common.utils.map.Maps;
+import cn.foxtech.common.utils.Maps;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.manager.system.constants.RepositoryConfigConstant;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -18,8 +18,8 @@ public class FoxSqlService {
     /**
      * 扁平化MapList
      *
-     * @param mapList
-     * @return
+     * @param mapList map列表
+     * @return map列表
      */
     public List<Map<String, Object>> flatMapList(Collection<Map<String, Object>> mapList) {
         List<Map<String, Object>> resultList = new ArrayList<>();
@@ -49,10 +49,9 @@ public class FoxSqlService {
     /**
      * 将json字段转换陈map对象字段
      *
-     * @param mapList
-     * @param jsnKey
-     * @param objKey
-     * @return
+     * @param mapList map列表
+     * @param jsnKey jsonKey
+     * @param objKey objectKey
      */
     public void buildJsonField(Collection<Map<String, Object>> mapList, String jsnKey, String objKey) {
         for (Map<String, Object> map : mapList) {
@@ -77,9 +76,8 @@ public class FoxSqlService {
     /**
      * 剔除某些字段
      *
-     * @param mapList
-     * @param filterKey
-     * @return
+     * @param mapList map列表
+     * @param filterKey 过滤key
      */
     public void filterKey(Collection<Map<String, Object>> mapList, String filterKey) {
         List<String> filterKeys = new ArrayList<>();
@@ -90,9 +88,8 @@ public class FoxSqlService {
     /**
      * 过滤掉某些字段
      *
-     * @param mapList
-     * @param filterKeys
-     * @return
+     * @param mapList map列表
+     * @param filterKeys 过滤key
      */
     public void filterKeys(Collection<Map<String, Object>> mapList, List<String> filterKeys) {
         for (Map<String, Object> map : mapList) {
@@ -103,8 +100,8 @@ public class FoxSqlService {
     }
 
     /**
-     * @param mapList
-     * @return
+     * 转换为驼峰
+     * @param mapList 对象列表
      */
     public void toCamelCase(List<Map<String, Object>> mapList) {
         List<Map<String, Object>> resultList = new ArrayList<>();
@@ -130,9 +127,10 @@ public class FoxSqlService {
      * @param tableName 表名称
      * @param filter    过滤条件
      * @param order     ID按ASC/DESC排序
+     * @param total     总数
      * @param pageNmu   分页号
      * @param pageSize  分页大小
-     * @return
+     * @return sql
      */
     public String makeSelectSQLPage(String tableName, String filter, String order, Integer total, Long pageNmu, Long pageSize) {
         return makeSelectSQLPage(tableName, null, null, filter, order, total, pageNmu, pageSize);
@@ -143,11 +141,13 @@ public class FoxSqlService {
      *
      * @param tableName 表名称
      * @param vFields   字段列表
+     * @param cFields   组合字段
      * @param filter    过滤条件
      * @param order     ID按ASC/DESC排序
+     * @param total     总数
      * @param pageNmu   分页号
      * @param pageSize  分页大小
-     * @return
+     * @return sql
      */
     public String makeSelectSQLPage(String tableName, List<String> vFields, List<String> cFields, String filter, String order, Integer total, Long pageNmu, Long pageSize) {
         StringBuilder sb = new StringBuilder();
@@ -216,7 +216,7 @@ public class FoxSqlService {
      *
      * @param tableName 表名称
      * @param filter    过滤条件
-     * @return
+     * @return sql
      */
     public String makeSelectCountSQL(String tableName, String filter) {
         StringBuilder sb = new StringBuilder();
@@ -244,8 +244,8 @@ public class FoxSqlService {
     /**
      * 将数字类型的对象，转换为Long类型
      *
-     * @param object
-     * @return
+     * @param object 对象
+     * @return Long数值
      */
     public Long makeLong(Object object) {
         if (object instanceof Long) {
@@ -307,8 +307,8 @@ public class FoxSqlService {
      * 查询下数据库表的json列
      * 背景：json列的数据直接返回的是文本，它需要转换为HashMap对象进行处理
      *
-     * @param tableName
-     * @return
+     * @param tableName 表名称
+     * @return 返回值
      */
     public List<String> selectJsonColumns(String tableName) {
         List<String> result = new ArrayList<>();
@@ -357,11 +357,11 @@ public class FoxSqlService {
      * 对数据列表进行分页处理
      *
      * @param mapList       实体列表
-     * @param fieldPrimeKey
-     * @param fieldPageNum
-     * @param fieldPageSize
-     * @param body
-     * @return
+     * @param fieldPrimeKey 主字段
+     * @param fieldPageNum 页码
+     * @param fieldPageSize 页大小
+     * @param body 参数
+     * @return 查询结果
      */
     public Map<String, Object> selectMapListByPage(List<Map<String, Object>> mapList, String fieldPrimeKey, String fieldPageNum, String fieldPageSize, Map<String, Object> body) {
         Map<String, Object> data = new HashMap<>();
@@ -410,9 +410,9 @@ public class FoxSqlService {
     /**
      * 从用户输入的body中，提取需要的字段
      *
-     * @param body
-     * @param paramList
-     * @return
+     * @param body body参数
+     * @param paramList 参数列表
+     * @return 转换结果
      */
     public Map<String, Object> makeRecord(Map<String, Object> body, String... paramList) {
         String[] var1 = paramList;

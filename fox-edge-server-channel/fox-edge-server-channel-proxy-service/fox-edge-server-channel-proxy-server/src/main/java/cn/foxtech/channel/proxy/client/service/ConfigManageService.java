@@ -1,7 +1,7 @@
 package cn.foxtech.channel.proxy.client.service;
 
 import cn.foxtech.common.entity.entity.ConfigEntity;
-import cn.foxtech.common.utils.map.Maps;
+import cn.foxtech.common.utils.Maps;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

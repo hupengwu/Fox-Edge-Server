@@ -11,10 +11,10 @@ public class BeanMapUtils {
     /**
      * map转java对象
      *
-     * @param map
-     * @param beanClass
-     * @return
-     * @throws Exception
+     * @param map Map对象
+     * @param beanClass 待构造的对象类型
+     * @return 对象
+     * @throws Exception 转换异常
      */
     public static Object mapToObject(Map<String, Object> map, Class<?> beanClass) throws Exception {
         Object object = beanClass.newInstance();
@@ -23,13 +23,10 @@ public class BeanMapUtils {
         return object;
     }
 
-    //java对象转map
-
     /**
-     * 根据get/set属性，将java对象转map
-     *
-     * @param obj 带get/set的java对象
-     * @return Map<String, Object>
+     * 将对象转换为Map
+     * @param obj 对象
+     * @return Map
      */
     public static Map<String, Object> objectToMap(Object obj) {
         Map<String, Object> map = new HashMap<>();
@@ -47,7 +44,7 @@ public class BeanMapUtils {
      *
      * @param objectList 对象
      * @param filterKeys 要剔除的Key
-     * @param <T>
+     * @param <T> 类型名
      * @return map
      */
     public static <T> List<Map<String, Object>> objectToMap(Collection<T> objectList, List<String> filterKeys) {

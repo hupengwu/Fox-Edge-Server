@@ -16,8 +16,8 @@ public class ConfigEntityMaker {
     /**
      * PO转Entity
      *
-     * @param List
-     * @return
+     * @param List 实体列表
+     * @return 实体列表
      */
     public static List<BaseEntity> makePoList2EntityList(List<BaseEntity> List) {
         List<BaseEntity> resultList = new ArrayList<>();

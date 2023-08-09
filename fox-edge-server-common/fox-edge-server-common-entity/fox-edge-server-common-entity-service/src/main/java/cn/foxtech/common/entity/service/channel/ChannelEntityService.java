@@ -29,8 +29,8 @@ public class ChannelEntityService extends BaseEntityService {
     /**
      * 从数据库中获取数据
      *
-     * @param channelType
-     * @return
+     * @param channelType 通道类型
+     * @return 实体列表
      */
     public List<BaseEntity> selectEntityList(String channelType) {
         QueryWrapper queryWrapper = new QueryWrapper();

@@ -16,12 +16,12 @@ public class OperateManualTaskMaker {
     /**
      * PO转Entity
      *
-     * @param recordList
-     * @return
+     * @param poList PO列表
+     * @return 实体列表
      */
-    public static List<BaseEntity> makePoList2EntityList(List<BaseEntity> recordList) {
+    public static List<BaseEntity> makePoList2EntityList(List<BaseEntity> poList) {
         List<BaseEntity> operateRecordList = new ArrayList<>();
-        for (BaseEntity entity : recordList) {
+        for (BaseEntity entity : poList) {
             OperateManualTaskPo po = (OperateManualTaskPo) entity;
 
             OperateManualTaskEntity config = OperateManualTaskMaker.makePo2Entity(po);

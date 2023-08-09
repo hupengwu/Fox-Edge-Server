@@ -12,9 +12,10 @@ public class DifferUtils {
     /**
      * 比较两个列表是否一致
      *
-     * @param srcList
-     * @param dstList
-     * @return
+     * @param srcList 源数据
+     * @param dstList 目标数据
+     * @return 是否一致
+     * @param <T> 数据类型
      */
     public static <T> boolean differByValue(Collection<T> srcList, Collection<T> dstList) {
         List<T> addList = new ArrayList<T>();
@@ -34,6 +35,7 @@ public class DifferUtils {
      * @param addList 比对对象相对基准表，需要增加的数据部分
      * @param delList 比对对象相对基准表，需要减少的数据部分
      * @param eqlList 比对对象相对基准表，不发生变化的数据部分
+     * @param <T> 数据类型
      */
     public static <T> void differByValue(Collection<T> srcList, Collection<T> dstList, Collection<T> addList, Collection<T> delList, Collection<T> eqlList) {
         differA2BByValue(srcList, dstList, addList, eqlList);
@@ -76,6 +78,7 @@ public class DifferUtils {
      * @param aList a集合
      * @param bList b集合
      * @return 是否一致
+     * @param <T> 数据类型
      */
     public static <T> boolean differByValue(Set<T> aList, Set<T> bList) {
         Set<T> addList = new HashSet<T>();
@@ -89,24 +92,18 @@ public class DifferUtils {
     /**
      * 以DST为基准进行比较：SRC即转换为DST，对SRC需要进行的增删操作
      *
-     * @param srcList
-     * @param dstList
-     * @param addList
-     * @param delList
+     * @param srcList 源数据
+     * @param dstList 目标数据
+     * @param addList 新增的数据
+     * @param delList 删除的数据
+     * @param eqlList 相同的数据
+     * @param <T> 数据类型
      */
     public static <T> void differByValue(Set<T> srcList, Set<T> dstList, Set<T> addList, Set<T> delList, Set<T> eqlList) {
         differA2BByValue(srcList, dstList, addList, eqlList);
         differA2BByValue(dstList, srcList, delList, eqlList);
     }
 
-    /**
-     * 以DST为基准进行比较，需要对SRC进行修改的动作
-     *
-     * @param srcList
-     * @param dstList
-     * @param addList
-     * @param eqlList
-     */
     private static <T> void differA2BByValue(Set<T> srcList, Set<T> dstList, Set<T> addList, Set<T> eqlList) {
         for (T dstT : dstList) {
             if (null != dstT && srcList.contains(dstT)) {
@@ -120,9 +117,10 @@ public class DifferUtils {
     /**
      * 比较两个列表是否完全一致：不但比较A/B列表的数值一致，还比较双方数值顺序的一致性
      *
-     * @param aList
-     * @param bList
-     * @return
+     * @param aList 源数据
+     * @param bList 目的数据
+     * @return 是否一致
+     * @param <T> 数据类型
      */
     public static <T> boolean differA2BByConsistency(List<T> aList, List<T> bList) {
         int size = aList.size();

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import cn.foxtech.common.entity.service.redis.*;
 import cn.foxtech.core.exception.ServiceException;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -46,10 +47,11 @@ public class EntityObjectManager extends EntityBaseManager {
      *
      * @param entityKey 业务key
      * @param clazz     对象类型
-     * @param <T>       对象类型
      * @return 对象
+     * @param <T> 类型
+     * @throws IOException 异常信息
      */
-    public <T> T readEntity(String entityKey, Class<T> clazz) throws JsonProcessingException {
+    public <T> T readEntity(String entityKey, Class<T> clazz) throws IOException {
         return this.entityRedisComponent.readEntity(entityKey, clazz);
     }
 
@@ -126,7 +128,7 @@ public class EntityObjectManager extends EntityBaseManager {
     /**
      * 插入DR和RD实体
      *
-     * @param entity
+     * @param entity 实体
      */
     public void insertEntity(BaseEntity entity) {
         // 获得Redis部件
@@ -147,7 +149,7 @@ public class EntityObjectManager extends EntityBaseManager {
     /**
      * 插入实体到DR
      *
-     * @param entity
+     * @param entity 实体
      */
     public void insertRDEntity(BaseEntity entity) {
         // 获得Redis部件
@@ -167,7 +169,7 @@ public class EntityObjectManager extends EntityBaseManager {
     /**
      * 删除DB和RD上的实体
      *
-     * @param entity
+     * @param entity 实体
      */
     public void deleteEntity(BaseEntity entity) {
         if (!this.entityRedisComponent.getProducer().contains(entity.getClass().getSimpleName())) {
@@ -186,9 +188,9 @@ public class EntityObjectManager extends EntityBaseManager {
     /**
      * 删除DB和RD上的实体
      *
-     * @param id
-     * @param clazz
-     * @param <T>
+     * @param id ID
+     * @param clazz 类型
+     * @param <T> 类型
      */
     public <T> void deleteEntity(Long id, Class<T> clazz) {
         if (!this.entityRedisComponent.getProducer().contains(clazz.getSimpleName())) {
@@ -252,7 +254,7 @@ public class EntityObjectManager extends EntityBaseManager {
     /**
      * 更新DB和RD上的实体
      *
-     * @param entity
+     * @param entity 实体
      */
     public void updateEntity(BaseEntity entity) {
         // 获得REDIS部件
@@ -273,7 +275,7 @@ public class EntityObjectManager extends EntityBaseManager {
     /**
      * 更新RD上的实体
      *
-     * @param entity
+     * @param entity 实体
      */
     public void updateRDEntity(BaseEntity entity) {
         // 获得REDIS部件

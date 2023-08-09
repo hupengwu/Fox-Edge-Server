@@ -45,8 +45,9 @@ public class ConfigVOMaker {
     /**
      * 后期加工
      *
-     * @param entityList
-     * @return
+     * @param entityList 实体列表
+     * @param processMode 加工模式
+     * @return 实体列表
      */
     public List<BaseEntity> process(List<BaseEntity> entityList, String processMode) {
         List<BaseEntity> result = new ArrayList<>();
@@ -66,8 +67,8 @@ public class ConfigVOMaker {
     /**
      * 前期处理
      *
-     * @param param
-     * @param configValue
+     * @param param 参数
+     * @param configValue 配置值
      */
     private void process(Map<String, Object> param, Map<String, Object> configValue, String processMode) {
         try {

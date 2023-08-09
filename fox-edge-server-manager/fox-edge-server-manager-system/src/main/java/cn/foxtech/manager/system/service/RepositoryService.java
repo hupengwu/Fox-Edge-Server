@@ -8,7 +8,7 @@ import cn.foxtech.common.utils.file.FileNameUtils;
 import cn.foxtech.common.utils.file.FileTextUtils;
 import cn.foxtech.common.utils.http.DownLoadUtil;
 import cn.foxtech.common.utils.json.JsonUtils;
-import cn.foxtech.common.utils.map.Maps;
+import cn.foxtech.common.utils.Maps;
 import cn.foxtech.common.utils.md5.MD5Utils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.osinfo.OSInfo;

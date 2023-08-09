@@ -16,12 +16,12 @@ public class DeviceRecordMaker {
     /**
      * PO转Entity
      *
-     * @param recordList
-     * @return
+     * @param poList PO列表
+     * @return 实体列表
      */
-    public static List<DeviceRecordEntity> makePoList2EntityList(List<DeviceRecordPo> recordList) {
+    public static List<DeviceRecordEntity> makePoList2EntityList(List<DeviceRecordPo> poList) {
         List<DeviceRecordEntity> deviceRecordList = new ArrayList<>();
-        for (BaseEntity entity : recordList) {
+        for (BaseEntity entity : poList) {
             DeviceRecordPo po = (DeviceRecordPo) entity;
 
             DeviceRecordEntity config = DeviceRecordMaker.makePo2Entity(po);

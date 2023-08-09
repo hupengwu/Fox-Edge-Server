@@ -13,12 +13,12 @@ public class UserPermissionMaker {
     /**
      * PO转Entity
      *
-     * @param deviceList
-     * @return
+     * @param poList PO列表
+     * @return 实体列表
      */
-    public static List<BaseEntity> makePoList2EntityList(List<BaseEntity> deviceList) {
+    public static List<BaseEntity> makePoList2EntityList(List<BaseEntity> poList) {
         List<BaseEntity> deviceConfigList = new ArrayList<>();
-        for (BaseEntity entity : deviceList) {
+        for (BaseEntity entity : poList) {
             UserPermissionPo po = (UserPermissionPo) entity;
 
 

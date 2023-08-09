@@ -98,7 +98,7 @@ public class DeviceValueEntity extends BaseEntity {
     /**
      * 获取业务值
      *
-     * @return
+     * @return 对象实体
      */
     public List<Object> makeServiceValueList() {
         List<Object> list = new ArrayList<>();

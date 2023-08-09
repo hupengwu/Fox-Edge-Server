@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: fox-edge-server-device-simulator-coap-service
+
+coap:
+  server:
+    # 默认的端口
+    coap-port: 5683
+    # 格式：byte[],string,hex
+    return-format: string
+    # 默认访问超时
+    timeout: 2000
+    # 最大客户端并发数量
+    max-active-peers: 1000
+    resources:
+      resource1:
+        # coap设备中的资源，coap输入的资源格式通常是hello?value1=1&value2=2，然后消息会被hello资源捕获
+        resource: "data"
+        # TEXT_PLAIN = 0,APPLICATION_JSON = 50
+        media-type: 0
+      resource2:
+        # coap设备中的资源，coap输入的资源格式通常是hello?value1=1&value2=2，然后消息会被hello资源捕获
+        resource: "alarm"
+        # TEXT_PLAIN = 0,APPLICATION_JSON = 50
+        media-type: 0
+      resource3:
+        # coap设备中的资源
+        resource: "time"
+        # TEXT_PLAIN = 0,APPLICATION_JSON = 50
+        media-type: 0
+
+
+

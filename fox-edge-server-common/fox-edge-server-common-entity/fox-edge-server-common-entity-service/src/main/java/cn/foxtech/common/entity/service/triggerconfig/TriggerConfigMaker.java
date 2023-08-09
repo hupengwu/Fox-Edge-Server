@@ -16,8 +16,8 @@ public class TriggerConfigMaker {
     /**
      * PO转Entity
      *
-     * @param poList
-     * @return
+     * @param poList PO列表
+     * @return 实体列表
      */
     public static List<BaseEntity> makePoList2EntityList(List<BaseEntity> poList) {
         List<BaseEntity> deviceConfigList = new ArrayList<>();

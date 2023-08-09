@@ -23,8 +23,10 @@ public abstract class RedisStatusConsumerService {
      */
     private boolean inited = false;
 
+
     /**
      * 系统key
+     * @return 系统key
      */
     public abstract String getKeySync();
 
@@ -37,7 +39,7 @@ public abstract class RedisStatusConsumerService {
     /**
      * 4、消费端（异步线程）：保存数据
      *
-     * @return
+     * @return 是否成功
      */
     public synchronized boolean load() {
         // 读取redis数据
@@ -72,7 +74,7 @@ public abstract class RedisStatusConsumerService {
     /**
      * 5、消费端（异步线程）：保存数据
      *
-     * @return
+     * @return 状态
      */
     public synchronized Map<String, Status> getStatus() {
         return this.localMap;

@@ -3,7 +3,7 @@ package cn.foxtech.common.status;
 import cn.foxtech.common.domain.constant.ServiceVOFieldConstant;
 import cn.foxtech.common.utils.redis.status.RedisStatusConsumerService;
 import cn.foxtech.common.domain.constant.RedisStatusConstant;
-import cn.foxtech.common.utils.map.Maps;
+import cn.foxtech.common.utils.Maps;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.AbstractEnvironment;

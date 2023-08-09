@@ -88,10 +88,10 @@ public class EntityOptionManager {
     /**
      * 是否允许
      *
-     * @param entityType
-     * @param fieldName1
-     * @param fieldName2
-     * @return
+     * @param entityType 实体类型
+     * @param fieldName1 字段1
+     * @param fieldName2 字段2
+     * @return 返回值
      */
     public boolean isPermit(String entityType, String fieldName1, String fieldName2) {
         // 获得允许的字段列表
@@ -178,9 +178,9 @@ public class EntityOptionManager {
     /**
      * 字段是否为数字类型的字段
      *
-     * @param entityType
-     * @param fieldName
-     * @return
+     * @param entityType 实体类型
+     * @param fieldName 字段名
+     * @return 是否数字字段
      */
     public boolean isNumberField(String entityType, String fieldName) {
         String fieldType = this.getFiledType(entityType, fieldName);
@@ -196,7 +196,7 @@ public class EntityOptionManager {
      *
      * @param entityType 实体名称
      * @param fieldName  字段名称
-     * @return
+     * @return 字段类型
      */
     public String getFiledType(String entityType, String fieldName) {
         // 获得注册实体的数据库表名称

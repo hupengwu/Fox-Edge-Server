@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -103,7 +104,7 @@ public class RedisReader {
      *
      * @return
      */
-    public synchronized BaseEntity readEntity(String serviceKey) throws JsonProcessingException {
+    public synchronized BaseEntity readEntity(String serviceKey) throws IOException {
         Class entityClass = BaseEntityClassFactory.getInstance(this.getEntityType());
 
         Map<String, Object> dataJsn = (Map<String, Object>) this.redisTemplate.opsForHash().get(this.getHead() + "data", serviceKey);
@@ -118,9 +119,12 @@ public class RedisReader {
     /**
      * 将JSON MAP转换回Entity对象
      *
-     * @return
+     * @param entityClass 实体类型
+     * @param jsonObject json对象
+     * @return 实体类型
+     * @throws JsonProcessingException 异常
      */
-    private BaseEntity makeJson2Entity(Class entityClass, Map<String, Object> jsonObject) throws JsonProcessingException {
+    private BaseEntity makeJson2Entity(Class entityClass, Map<String, Object> jsonObject) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsn = objectMapper.writeValueAsString(jsonObject);
         BaseEntity entity = (BaseEntity) objectMapper.readValue(jsn, entityClass);
@@ -132,7 +136,7 @@ public class RedisReader {
      * 将JSON MAP转换回Entity对象
      *
      * @param jsonList
-     * @return
+     * @return map的实体
      */
     private Map<String, BaseEntity> makeJson2EntityList(List<Object> jsonList) throws JsonParseException {
         Class entityClass = BaseEntityClassFactory.getInstance(this.getEntityType());
@@ -161,7 +165,7 @@ public class RedisReader {
      * 将JSON MAP转换回Entity对象
      *
      * @param jsonMap
-     * @return
+     * @return map的实体
      */
     private Map<String, BaseEntity> makeJson2EntityMap(Map<String, Object> jsonMap) throws JsonParseException {
         Class entityClass = BaseEntityClassFactory.getInstance(this.getEntityType());

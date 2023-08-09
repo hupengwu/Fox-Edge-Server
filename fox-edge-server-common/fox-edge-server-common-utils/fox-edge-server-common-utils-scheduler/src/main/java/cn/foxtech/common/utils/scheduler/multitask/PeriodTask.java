@@ -7,7 +7,7 @@ public abstract class PeriodTask {
     /**
      * 任务类型
      *
-     * @return
+     * @return 类型代码
      */
     public int getTaskType() {
         return PeriodTaskType.task_type_share;
@@ -24,8 +24,6 @@ public abstract class PeriodTask {
 
     /**
      * 待周期性执行的操作：非阻塞性操作，否则会影响其他任务的执行
-     *
-     * @return
      */
     public abstract void execute();
 }

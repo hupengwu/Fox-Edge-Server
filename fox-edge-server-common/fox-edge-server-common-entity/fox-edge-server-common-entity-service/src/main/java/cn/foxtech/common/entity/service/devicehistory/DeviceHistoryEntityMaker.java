@@ -13,12 +13,12 @@ public class DeviceHistoryEntityMaker {
     /**
      * PO转Entity
      *
-     * @param deviceList
-     * @return
+     * @param poList po列表
+     * @return 实体列表
      */
-    public static List<DeviceHistoryEntity> makePoList2EntityList(List<DeviceHistoryPo> deviceList) {
+    public static List<DeviceHistoryEntity> makePoList2EntityList(List<DeviceHistoryPo> poList) {
         List<DeviceHistoryEntity> deviceConfigList = new ArrayList<>();
-        for (DeviceHistoryPo entity : deviceList) {
+        for (DeviceHistoryPo entity : poList) {
             DeviceHistoryPo po = entity;
 
 

@@ -26,10 +26,10 @@ public class FileNameUtils {
     /**
      * 读取目录下的所有文件
      *
-     * @param dir       目录
+     * @param dir 目录
+     * @param depth 深度扫描：也就是是否遍历下一级目录
+     * @param fullName 是否完整名
      * @param fileNames 保存文件名的集合
-     * @param depth     深度扫描：也就是是否遍历下一级目录
-     * @return
      */
     public static void findFileList(File dir, boolean depth, boolean fullName, List<String> fileNames) {
         if (!dir.exists() || !dir.isDirectory()) {// 判断是否存在目录
