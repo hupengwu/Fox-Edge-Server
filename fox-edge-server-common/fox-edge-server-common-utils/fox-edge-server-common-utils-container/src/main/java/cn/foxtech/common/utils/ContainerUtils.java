@@ -60,6 +60,65 @@ public class ContainerUtils {
         return clazz.getMethod(methodName);
     }
 
+    /**
+     * 根据对象列表中的对象的getXxxx()函数，取出成员
+     *
+     * @param objList
+     * @param clazz
+     * @param method  method是clazz的成员函数
+     * @param <K>
+     * @param <T>
+     * @return
+     */
+    private static <K, T> List<K> buildListByGetField(List<T> objList, Class<K> clazz, Method method) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<K> keyList = new ArrayList<K>();
+        for (T obj : objList) {
+            // 接下来就该执行该方法了，第一个参数是具体调用该方法的对象, 第二个参数是执行该方法的具体参数
+            Object keyObject = method.invoke(obj);
+            if (clazz.isInstance(keyObject)) {
+                K key = clazz.cast(keyObject);
+                keyList.add(key);
+            }
+        }
+
+        return keyList;
+    }
+
+    /**
+     * 根据对象的getXxxx()，取出类型列表中的数据
+     *
+     * @param objList  AClass对象列表
+     * @param clazz    TClass AClass::getXxxx()中，TClass这样的成员
+     * @param function AClass::getXxxx 这样的函数
+     * @param <E>      类的类型
+     * @param <R>      字段
+     * @param <K>      字段的类型
+     * @param <T>      对象的类型
+     * @return 对象列表
+     */
+    public static <E, R, K, T> List<K> buildListByGetField(List<T> objList, SerializableFunction<E, R> function, Class<K> clazz) {
+        if (objList.isEmpty()) {
+            return new ArrayList<K>();
+        }
+
+        try {
+            // 取得函数对应的方法
+            Method method = ContainerUtils.getMethod(objList.get(0).getClass(), function);
+
+            // 使用方法返回对应的数组
+            return ContainerUtils.buildListByGetField(objList, clazz, method);
+        } catch (NoSuchMethodException e) {
+            return new ArrayList<K>();
+        } catch (SecurityException e) {
+            return new ArrayList<K>();
+        } catch (IllegalAccessException e) {
+            return new ArrayList<K>();
+        } catch (IllegalArgumentException e) {
+            return new ArrayList<K>();
+        } catch (InvocationTargetException e) {
+            return new ArrayList<K>();
+        }
+    }
 
     /**
      * 根据Key生成Map，该方法是是具体类的函数，（不具备多态能力，不是反射，速度很快）
