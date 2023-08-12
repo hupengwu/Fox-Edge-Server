@@ -97,7 +97,7 @@ fox-edge
 EMAIL： 5389408@QQ.COM
 
 ## 微信技术交流群
-![image](http://docs.fox-tech.cn/_images/weixinqun-01.jpg)
+![image](http://docs.fox-tech.cn/_images/weixinqun-01.png)
 
 ## 通信协议解码器列表
 1. fox-edge-server-protocol-bass260zj 广东高新兴的浙江移动版基站门禁的通信协议
