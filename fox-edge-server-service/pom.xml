@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>fox-edge-server-service</artifactId>
+    <name>${project.artifactId}</name>
     <packaging>pom</packaging>
     <description>${project.artifactId}</description>
 
