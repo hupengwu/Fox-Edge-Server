@@ -32,8 +32,6 @@ public class Iec104PeriodTask4StartLink extends PeriodTask {
 
     /**
      * 待周期性执行的操作
-     *
-     * @return
      */
     public void execute() {
         // 查询：已经完成了Socket连接的Channel

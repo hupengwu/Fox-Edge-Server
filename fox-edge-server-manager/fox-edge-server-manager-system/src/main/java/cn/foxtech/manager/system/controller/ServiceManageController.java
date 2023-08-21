@@ -63,7 +63,7 @@ public class ServiceManageController {
             Boolean appLoad = (Boolean) body.get(ServiceVOFieldConstant.field_app_load);
 
             if (MethodUtils.hasEmpty(appName, appType, appLoad)) {
-                throw new ServiceException("参数不能为空:appName, appType, appLoad");
+                throw new ServiceException("参数不能为空: appName, appType, appLoad");
             }
 
             // 保存配置

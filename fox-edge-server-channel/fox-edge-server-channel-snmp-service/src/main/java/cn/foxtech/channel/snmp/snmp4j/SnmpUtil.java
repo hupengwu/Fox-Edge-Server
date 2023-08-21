@@ -18,9 +18,9 @@ import java.util.List;
 import java.util.Vector;
 
 /**
- * https://blog.csdn.net/wjs040/article/details/106938421/</br>
- * https://www.cnblogs.com/yuanfy008/p/8046189.html</br>
- * author: Administrator </br>
+ * https://blog.csdn.net/wjs040/article/details/106938421
+ * https://www.cnblogs.com/yuanfy008/p/8046189.html
+ * author: Administrator
  * createtime: 2020/6/23 17:56
  */
 public class SnmpUtil {
@@ -30,11 +30,9 @@ public class SnmpUtil {
     public static Snmp snmp = null;
 
     /**
-     * @throws IOException
-     * @description 初始化snmp
-     * @author YuanFY
-     * @date 2017年12月16日 上午10:28:01
-     * @version 1.0
+     * 初始化snmp
+     * @param localAddress 本地IP
+     * @throws IOException 异常
      */
     public static void initSnmp(String localAddress) throws IOException {
         // 1、初始化多线程消息转发类

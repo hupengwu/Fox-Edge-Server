@@ -30,7 +30,7 @@ public class TriggerValueManager {
      *
      * @param deviceName          设备名称
      * @param triggerConfigEntity 触发器配置
-     * @return objectName->ValueList
+     * @return objectName-ValueList
      */
     public Map<String, List<ObjectValue>> selectDeviceTriggerValue(String deviceName, TriggerConfigEntity triggerConfigEntity) {
 

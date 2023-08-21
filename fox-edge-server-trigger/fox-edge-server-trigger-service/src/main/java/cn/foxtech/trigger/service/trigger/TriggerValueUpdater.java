@@ -255,7 +255,7 @@ public class TriggerValueUpdater {
 
     /**
      * 对对设备数据进行触发器处理
-     *
+     * @param deviceValueEntity 设备数值
      * @param triggerConfigEntityList 触发器配置列表
      * @return 触发器加工值
      */

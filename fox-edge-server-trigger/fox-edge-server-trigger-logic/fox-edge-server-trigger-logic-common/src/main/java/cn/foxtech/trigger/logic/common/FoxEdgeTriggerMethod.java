@@ -20,7 +20,7 @@ public @interface FoxEdgeTriggerMethod {
     /**
      * 触发器描述
      *
-     * @return
+     * @return 描述
      */
     String description() default "";
 }

@@ -109,8 +109,9 @@ public class ChannelService extends ChannelServerAPI {
 
     /**
      * 查询串口数据:增加同步锁，避免并发访问带来的多线程异常。
-     *
-     * @return
+     * @param requestVO 请求报文
+     * @return 响应报文
+     * @throws ServiceException 异常
      */
     @Override
     public synchronized ChannelRespondVO execute(ChannelRequestVO requestVO) throws ServiceException {

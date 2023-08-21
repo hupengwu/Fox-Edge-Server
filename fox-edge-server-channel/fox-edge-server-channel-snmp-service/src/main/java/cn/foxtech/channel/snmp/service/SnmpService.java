@@ -39,8 +39,11 @@ public class SnmpService {
 
     /**
      * 创建对象communityTarget，用于返回target
-     *
-     * @return CommunityTarget
+     * @param targetIp 目的IP
+     * @param targetPort 目的端口
+     * @param version 版本
+     * @param community community
+     * @return 连接目标
      */
     public CommunityTarget createSnmpTarget(String targetIp, int targetPort, int version, String community) {
         Address address = GenericAddress.parse(DEFAULT_PROTOCOL + ":" + targetIp + "/" + targetPort);
@@ -86,13 +89,15 @@ public class SnmpService {
     /**
      * 根据OID列表，采用异步方式一次获取多条OID数据，并且以List形式返回
      *
-     * @param localIp   本地IP
-     * @param targetIp  目标IP
-     * @param version   snmp版本号 SnmpConstants.version2c
+     * @param localIp 本地IP
+     * @param localPort 本地port
+     * @param targetIp 目标IP
+     * @param targetPort 目标port
+     * @param version snmp版本号 SnmpConstants.version2c
      * @param community 团体属性
      * @param oidList   oid列表
      * @param timeout   通信超时
-     * @return
+     * @return PDU
      */
     public PDU snmpASynGetList(String localIp, int localPort, String targetIp, int targetPort, int version, String community, List<String> oidList, int timeout) {
         final PDU[] respond = {null};

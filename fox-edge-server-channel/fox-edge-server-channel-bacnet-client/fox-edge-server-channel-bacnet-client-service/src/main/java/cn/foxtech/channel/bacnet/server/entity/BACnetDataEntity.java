@@ -36,11 +36,6 @@ public class BACnetDataEntity {
     private int discoveryTime = 3000;
 
 
-    /**
-     * 构造数据
-     *
-     * @param json
-     */
     public void build(String json) throws IOException {
         JBACNetConfig jsnData = JsonUtils.buildObject(json, JBACNetConfig.class);
         this.localDeviceId = jsnData.local_device.device_id;

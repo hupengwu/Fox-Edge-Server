@@ -211,7 +211,7 @@ public class RepositoryService {
      */
     public List<Map<String, Object>> queryUriListFile(String modelType) throws IOException {
         Map<String, Object> body = new HashMap<>();
-        body.put("modelType", modelType);
+        body.put(RepositoryConstant.filed_model_type, modelType);
         Map<String, Object> respond = this.cloudRemoteService.executePost("/manager/repository/component/entities", body);
 
         List<Map<String, Object>> list = (List<Map<String, Object>>) respond.get("data");
@@ -545,7 +545,7 @@ public class RepositoryService {
     public void scanLocalMd5(String modelType, String modelName, String version, String stage, String component) {
         // 简单验证
         if (MethodUtils.hasEmpty(modelName, version, component)) {
-            throw new ServiceException("参数不能为空:modelName, version, component");
+            throw new ServiceException("参数不能为空: modelName, version, component");
         }
 
         String fileName = modelName + ".tar";
@@ -612,11 +612,11 @@ public class RepositoryService {
         }
         Set<String> components = new HashSet<>();
         components.add("bin");
-        components.add("template");
+        components.add(RepositoryConstant.repository_type_template);
         components.add(ServiceVOFieldConstant.field_type_service);
         components.add(ServiceVOFieldConstant.field_type_system);
         components.add(ServiceVOFieldConstant.field_type_kernel);
-        components.add("webpack");
+        components.add(RepositoryConstant.repository_type_webpack);
         if (!components.contains(component)) {
             throw new ServiceException("component必须为：" + components);
         }

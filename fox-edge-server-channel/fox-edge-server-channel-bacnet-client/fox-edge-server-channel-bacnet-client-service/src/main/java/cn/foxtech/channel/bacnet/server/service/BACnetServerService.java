@@ -95,9 +95,9 @@ public class BACnetServerService extends ChannelServerAPI {
     /**
      * 查询远端设备的数据:增加同步锁，避免并发访问带来的多线程异常。
      *
-     * @param requestVO
-     * @return
-     * @throws Exception
+     * @param requestVO 发送请求
+     * @return 响应报文
+     * @throws ServiceException 异常
      */
     @Override
     public synchronized ChannelRespondVO execute(ChannelRequestVO requestVO) throws ServiceException {

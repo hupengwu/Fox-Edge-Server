@@ -16,7 +16,7 @@ public class Iec104ClientLinkerManager {
     /**
      * 绑定自定义的handler
      *
-     * @param newHandler
+     * @param newHandler  newHandler
      */
     public static synchronized void bindHandler(Iec104ClientLinkerHandler newHandler) {
         handler = newHandler;
@@ -25,8 +25,8 @@ public class Iec104ClientLinkerManager {
     /**
      * 注册远端设备
      *
-     * @param host
-     * @param port
+     * @param host host
+     * @param port port
      */
     public static synchronized void registerRemoteAddress(String host, int port) {
         SocketAddress remoteAddress = new InetSocketAddress(host, port);
@@ -65,6 +65,7 @@ public class Iec104ClientLinkerManager {
 
     /**
      * 查询等待建立TCP连接的实体
+     * @return 连接的实体
      */
     public static synchronized List<SocketAddress> queryEntityList4WaitConnected() {
         List<SocketAddress> resultList = new ArrayList<>();

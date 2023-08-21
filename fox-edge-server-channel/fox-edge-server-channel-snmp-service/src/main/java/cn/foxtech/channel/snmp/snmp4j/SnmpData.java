@@ -16,8 +16,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
- * https://blog.csdn.net/wjs040/article/details/106938421/</br>
- * https://blog.csdn.net/DaveBobo/article/details/51308601 </br>
+ * https://blog.csdn.net/wjs040/article/details/106938421
+ * https://blog.csdn.net/DaveBobo/article/details/51308601
  *
  * @author Administrator
  */
@@ -131,7 +131,13 @@ public class SnmpData {
         }
     }
 
-    /* 根据OID列表，一次获取多条OID数据，并且以List形式返回 */
+
+    /**
+     * 根据OID列表，一次获取多条OID数据，并且以List形式返回
+     * @param ip  ip
+     * @param community community
+     * @param oidList oidList
+     */
     public static void snmpGetList(String ip, String community, List<String> oidList) {
         CommunityTarget target = createDefault(ip, community);
         Snmp snmp = null;

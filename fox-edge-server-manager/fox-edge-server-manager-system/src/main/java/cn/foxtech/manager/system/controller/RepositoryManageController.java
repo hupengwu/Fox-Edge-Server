@@ -65,19 +65,19 @@ public class RepositoryManageController {
             List<Map<String, Object>> resultList = new ArrayList<>();
             list.forEach((Map<String, Object> value) -> {
                 boolean result = true;
-                String fieldName = "modelName";
+                String fieldName = RepositoryConstant.filed_model_name;
                 if (body.containsKey(fieldName)) {
                     result &= ((String) value.getOrDefault(fieldName, "")).contains((String) body.get(fieldName));
                 }
-                fieldName = "version";
+                fieldName = RepositoryConstant.filed_version;
                 if (body.containsKey(fieldName)) {
                     result &= ((String) value.getOrDefault(fieldName, "")).contains((String) body.get(fieldName));
                 }
-                fieldName = "component";
+                fieldName = RepositoryConstant.filed_component;
                 if (body.containsKey(fieldName)) {
                     result &= value.getOrDefault(fieldName, "").equals(body.get(fieldName));
                 }
-                fieldName = "status";
+                fieldName = RepositoryConstant.filed_status;
                 if (body.containsKey(fieldName)) {
                     Map<String, Object> lastVersion = (Map<String, Object>) value.getOrDefault(RepositoryConstant.filed_last_version, new HashMap<>());
                     result &= lastVersion.getOrDefault(fieldName, 0).equals(body.get(fieldName));
@@ -143,7 +143,7 @@ public class RepositoryManageController {
 
             // 简单验证
             if (MethodUtils.hasEmpty(modelType)) {
-                throw new ServiceException("参数不能为空:modelType");
+                throw new ServiceException("参数不能为空: modelType");
             }
 
             this.periodTasksScheduler.insertPeriodTask(new RepoStatusTask(this.repositoryService, modelType));
@@ -183,7 +183,7 @@ public class RepositoryManageController {
 
             // 简单验证
             if (MethodUtils.hasEmpty(list)) {
-                throw new ServiceException("参数不能为空:list");
+                throw new ServiceException("参数不能为空: list");
             }
 
             for (Map<String, Object> map : list) {
@@ -196,7 +196,7 @@ public class RepositoryManageController {
 
                 // 简单验证
                 if (MethodUtils.hasEmpty(modelType, modelName, version, stage, component)) {
-                    throw new ServiceException("参数不能为空:modelType, modelName, version, stage, component");
+                    throw new ServiceException("参数不能为空: modelType, modelName, version, stage, component");
                 }
 
                 this.repositoryService.deletePackageFile(modelType, modelName, version, stage, component);

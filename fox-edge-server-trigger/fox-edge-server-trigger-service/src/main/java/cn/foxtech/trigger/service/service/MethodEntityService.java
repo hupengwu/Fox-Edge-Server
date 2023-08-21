@@ -92,6 +92,7 @@ public class MethodEntityService {
 
     /**
      * 构造TriggerMethodEntity信息
+     * @return 实体列表
      */
     public List<BaseEntity> buildMethodEntityList() {
         Long time = System.currentTimeMillis();

@@ -41,7 +41,7 @@ public class Iec104ClientLinkerEntity {
     /**
      * 会话是否空闲，也就是可以发送对话
      *
-     * @return
+     * @return 是否成功
      */
     public boolean isIdleSession() {
         if (this.channel == null) {

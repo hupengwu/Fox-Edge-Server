@@ -20,12 +20,6 @@ import java.security.*;
 import java.security.cert.X509Certificate;
 import java.util.regex.Pattern;
 
-/**
- * @ClassName: KeyStoreLoader
- * @Description: KeyStoreLoader
- * @author Jellyleo
- * @date 2019年12月11日
- */
 @Component
 public class KeyStoreLoader {
 
@@ -43,14 +37,7 @@ public class KeyStoreLoader {
     // 密钥对对象
     private KeyPair clientKeyPair;
 
-    /**
-     * @MethodName: load
-     * @Description: load
-     * @param baseDir
-     * @return
-     * @throws Exception
-     * @CreateTime 2019年12月11日 下午4:02:43
-     */
+
     public KeyStoreLoader load(Path baseDir, String certFileName) throws Exception {
         // 创建一个使用`PKCS12`加密标准的KeyStore。KeyStore在后面将作为读取和生成证书的对象。
         KeyStore keyStore = KeyStore.getInstance("PKCS12");

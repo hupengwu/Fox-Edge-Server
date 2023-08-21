@@ -53,7 +53,7 @@ public class FoxEdgeTriggerTemplate {
     /**
      * 扫描触发器静态模块
      *
-     * @param jarFileNameList
+     * @param jarFileNameList jar文件
      */
     public void scanMethodPair(List<String> jarFileNameList) {
         try {
@@ -73,9 +73,9 @@ public class FoxEdgeTriggerTemplate {
     /**
      * 取得触发器
      *
-     * @param modelName
-     * @param methodName
-     * @return
+     * @param modelName 模块名称
+     * @param methodName 方法名称
+     * @return FoxEdgeTrigger
      */
     public FoxEdgeTrigger getEdgeTrigger(String modelName, String methodName) {
         Map<String, FoxEdgeTrigger> map = this.triggers.get(modelName);

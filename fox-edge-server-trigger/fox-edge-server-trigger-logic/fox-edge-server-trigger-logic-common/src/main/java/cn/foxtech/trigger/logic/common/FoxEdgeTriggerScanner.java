@@ -74,7 +74,7 @@ public class FoxEdgeTriggerScanner {
     /**
      * 默认扫描的范围是cn.foxtech.trigger.logic
      *
-     * @return modelName->methodName->FoxEdgeTrigger
+     * @return modelName-methodName-FoxEdgeTrigger
      */
     public static Map<String, Map<String, FoxEdgeTrigger>> scanTrigger() {
         return scanTrigger("cn.foxtech.trigger.logic");

@@ -17,13 +17,12 @@ public class BeforePackHandler extends ByteToMessageDecoder {
     private static final int MIN_LENGTH = 6;
 
     /**
-     * @param ctx
-     * @param in
-     * @param out
-     * @throws Exception
+     * @param ctx 上下文
+     * @param in 輸入
+     * @param out 输出
      */
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out){
         // 可读性检查：可读性数据不构成最小包，直接退出，继续等待后续报文的到达。
         if (in.readableBytes() < MIN_LENGTH) {
             return;

@@ -94,12 +94,6 @@ public class MqttMessageMapping {
         return requestVOList;
     }
 
-    /**
-     * 更新执行时间
-     *
-     * @param uuid
-     * @param time
-     */
     public synchronized void updateRequestVO(String uuid, long time) {
         RestfulLikeRequestVO requestVO = this.requestList.get(uuid);
         if (requestVO == null) {
@@ -112,7 +106,7 @@ public class MqttMessageMapping {
     /**
      * 删除处理完成的任务
      *
-     * @param uuid
+     * @param uuid uuid
      */
     public synchronized void deleteRequestVO(String uuid) {
         this.requestList.remove(uuid);

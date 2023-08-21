@@ -74,7 +74,7 @@ public class Iec104ClientSessionEntity {
     /**
      * 会话是否空闲，也就是可以发送对话
      *
-     * @return
+     * @return 是否空闲
      */
     public boolean isIdle() {
         return this.request == null && this.responds.isEmpty();

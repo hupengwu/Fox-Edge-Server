@@ -39,8 +39,8 @@ public class HttpRestfulProxyService {
     /**
      * 检查：是不是HttpProxy的资源
      *
-     * @param resource
-     * @return
+     * @param resource 资源
+     * @return 是否成功
      */
     public boolean isHttpResource(String resource) {
         return this.getHttpHost(resource) != null;
@@ -49,8 +49,8 @@ public class HttpRestfulProxyService {
     /**
      * 查询host
      *
-     * @param resource
-     * @return
+     * @param resource 资源
+     * @return 是否成功
      */
     private String getHttpHost(String resource) {
         for (String head : this.proxyMapping.keySet()) {
@@ -65,9 +65,8 @@ public class HttpRestfulProxyService {
     /**
      * 执行操作
      *
-     * @param requestVO
-     * @return
-     * @throws IOException
+     * @param requestVO 请求报文
+     * @return 响应报文
      */
     public RestfulLikeRespondVO execute(RestfulLikeRequestVO requestVO) {
         String host = this.getHttpHost(requestVO.getResource());

@@ -28,7 +28,7 @@ public abstract class EntityServiceManager extends EntityObjectManager {
     }
 
     public List<BaseEntity> getChannelEntity(String channelType) {
-        List<BaseEntity> entityList = this.getEntityList(ChannelEntity.class, (Object value) -> {
+        return this.getEntityList(ChannelEntity.class, (Object value) -> {
             ChannelEntity entity = (ChannelEntity) value;
 
             boolean result = true;
@@ -37,8 +37,6 @@ public abstract class EntityServiceManager extends EntityObjectManager {
 
             return result;
         });
-
-        return entityList;
     }
 
     public ConfigEntity getConfigEntity(String serviceName, String serviceType, String configName) {
@@ -65,10 +63,6 @@ public abstract class EntityServiceManager extends EntityObjectManager {
         OperateManualTaskEntity entity = new OperateManualTaskEntity();
         entity.setTaskName(taskName);
         return super.getEntity(entity.makeServiceKey(), OperateManualTaskEntity.class);
-    }
-
-    public DeviceEntity getDeviceEntity(Long id) {
-        return super.getEntity(id, DeviceEntity.class);
     }
 
     public List<BaseEntity> selectUserMenuEntityListByPage(Map<String, Object> body) {

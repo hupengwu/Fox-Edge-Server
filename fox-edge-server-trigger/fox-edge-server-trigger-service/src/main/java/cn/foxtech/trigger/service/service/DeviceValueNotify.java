@@ -21,9 +21,9 @@ public class DeviceValueNotify implements BaseConsumerNotify {
     /**
      * 通知变更
      *
-     * @param addMap
-     * @param delSet
-     * @param mdyMap
+     * @param addMap 增加
+     * @param delSet 删除
+     * @param mdyMap 修改
      */
     @Override
     public void notify(String entityType, long updateTime, Map<String, BaseEntity> addMap, Set<String> delSet, Map<String, BaseEntity> mdyMap) {

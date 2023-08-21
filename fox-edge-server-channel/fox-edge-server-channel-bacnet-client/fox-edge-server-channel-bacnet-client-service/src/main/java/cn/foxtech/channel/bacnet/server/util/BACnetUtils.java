@@ -131,8 +131,8 @@ public class BACnetUtils {
      * @param timeOut      超时
      * @return 远端设备的数值
      * @throws BACnetException 异常信息
+     * @throws InterruptedException 异常信息
      */
-    @SuppressWarnings("unchecked")
     public static List<Map<String, Object>> readOidPresentValues(LocalDevice localDevice, RemoteDevice remoteDevice, List<ObjectIdentifier> oids, int timeOut) throws BACnetException, InterruptedException {
         // 设置等待标识：比如设备ID,等待3个ID共3次返回
         SyncCountObjectMap.inst().reset(remoteDevice.getName(), oids.size());

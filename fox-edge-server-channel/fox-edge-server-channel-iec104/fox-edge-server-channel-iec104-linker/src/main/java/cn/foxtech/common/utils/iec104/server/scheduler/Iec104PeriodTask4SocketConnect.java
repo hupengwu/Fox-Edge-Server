@@ -32,8 +32,6 @@ public class Iec104PeriodTask4SocketConnect extends PeriodTask {
 
     /**
      * 待周期性执行的操作
-     *
-     * @return
      */
     public void execute() {
         List<SocketAddress> waitRemoteAddress = Iec104ClientLinkerManager.queryEntityList4WaitConnected();
