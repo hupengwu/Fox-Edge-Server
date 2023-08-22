@@ -14,6 +14,10 @@
     <description>${project.artifactId}</description>
 
     <dependencies>
-
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-common-utils-log4j</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
     </dependencies>
 </project>

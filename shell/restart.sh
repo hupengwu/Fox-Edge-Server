@@ -172,6 +172,7 @@ if [ -n "$loader_name" ]; then
 	java \
 	$dubeg_param \
 	--add-opens java.base/jdk.internal.loader=ALL-UNNAMED  \
+	--add-opens java.base/java.net=ALL-UNNAMED  \
 	-jar \
 	$app_home/bin/$app_type/$app_name/$jar_name \
 	--app_name=$app_name \
@@ -185,8 +186,10 @@ if [ -n "$loader_name" ]; then
 else
 	#启动java的命令
 	nohup \
-	java -jar \
+	java \
 	$dubeg_param \
+	--add-opens java.base/java.net=ALL-UNNAMED  \
+	-jar \
 	$app_home/bin/$app_type/$app_name/$jar_name \
 	--app_name=$app_name \
 	-Dspring.profiles.active=prod \

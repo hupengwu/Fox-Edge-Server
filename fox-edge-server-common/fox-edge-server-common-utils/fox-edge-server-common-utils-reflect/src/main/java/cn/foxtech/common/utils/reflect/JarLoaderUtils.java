@@ -13,8 +13,11 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import org.apache.log4j.Logger;
 
 public class JarLoaderUtils {
+    private static final Logger logger = Logger.getLogger(JarLoaderUtils.class);
+
     /**
      * 从包package中获取所有的Class
      *
@@ -190,7 +193,7 @@ public class JarLoaderUtils {
         try {
             method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
         } catch (NoSuchMethodException | SecurityException e1) {
-            e1.printStackTrace();
+            logger.error(e1.getMessage());
         }
 
         //获取方法的访问权限以便写回
@@ -202,7 +205,7 @@ public class JarLoaderUtils {
             URL url = jarFile.toURI().toURL();
             method.invoke(classLoader, url);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             method.setAccessible(accessible);
         }

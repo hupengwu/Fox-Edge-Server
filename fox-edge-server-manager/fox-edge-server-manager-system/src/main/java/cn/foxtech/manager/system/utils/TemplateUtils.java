@@ -3,6 +3,7 @@ package cn.foxtech.manager.system.utils;
 import cn.foxtech.common.entity.constant.BaseVOFieldConstant;
 import cn.foxtech.common.utils.file.FileAttributesUtils;
 import cn.foxtech.manager.system.constants.RepositoryConstant;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 public class TemplateUtils {
+    private static final Logger logger = Logger.getLogger(TemplateUtils.class);
+
     /**
      * 查询模板列表
      *
@@ -50,18 +53,24 @@ public class TemplateUtils {
 
                     result.add(data);
                 } else {
-                    for (String fileName : fileNames) {
+
+                    for (File childFile : versionDir.listFiles()) {
                         Map<String, Object> data = new HashMap<>();
+                        result.add(data);
+
                         data.put(RepositoryConstant.filed_model_name, modelName);
                         data.put(RepositoryConstant.filed_version, version);
                         data.put(RepositoryConstant.filed_component, RepositoryConstant.repository_type_template);
-                        data.put("fileName", fileName);
+                        data.put("fileName", childFile.getName());
 
-                        BasicFileAttributes attributes = FileAttributesUtils.getAttributes(versionDir.getAbsolutePath() + "/" + fileName);
-                        data.put(BaseVOFieldConstant.field_create_time,attributes.creationTime().toMillis());
-                        data.put(BaseVOFieldConstant.field_update_time,attributes.lastModifiedTime().toMillis());
-
-                        result.add(data);
+                        // 乱码文件的异常处理
+                        try {
+                            BasicFileAttributes attributes = FileAttributesUtils.getAttributes(childFile);
+                            data.put(BaseVOFieldConstant.field_create_time, attributes.creationTime().toMillis());
+                            data.put(BaseVOFieldConstant.field_update_time, attributes.lastModifiedTime().toMillis());
+                        } catch (Exception e) {
+                            logger.error(e.getMessage());
+                        }
                     }
 
                 }
