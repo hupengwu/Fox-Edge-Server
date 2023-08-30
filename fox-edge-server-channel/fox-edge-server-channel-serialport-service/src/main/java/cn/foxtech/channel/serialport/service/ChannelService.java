@@ -96,13 +96,14 @@ public class ChannelService extends ChannelServerAPI {
             ISerialPort serialPort = ISerialPort.newInstance();
 
             SerialConfigEntity config = channelEntity.getConfig();
-            // 设置串口参数
-            serialPort.setParam(config.getBaudRate(), config.getParity(), config.getDatabits(), config.getStopbits());
 
             // 打开串口
             if (!serialPort.open(config.getSerialName())) {
                 throw new ServiceException("打开串口失败:" + channelName);
             }
+
+            // 设置串口参数
+            serialPort.setParam(config.getBaudRate(), config.getParity(), config.getDatabits(), config.getStopbits());
 
             // 记录打开的串口对象
             channelEntity.setSerialPort(serialPort);
