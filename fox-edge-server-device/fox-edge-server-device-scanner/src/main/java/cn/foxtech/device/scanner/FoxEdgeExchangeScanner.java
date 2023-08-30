@@ -1,12 +1,13 @@
 package cn.foxtech.device.scanner;
 
 
+import cn.foxtech.common.utils.reflect.JarLoaderUtils;
 import cn.foxtech.device.protocol.RootLocation;
 import cn.foxtech.device.protocol.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.core.annotation.FoxEdgeOperateParam;
-import cn.foxtech.common.utils.reflect.JarLoaderUtils;
 import cn.foxtech.device.protocol.core.method.FoxEdgeExchangeMethod;
+import org.apache.log4j.Logger;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -14,6 +15,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class FoxEdgeExchangeScanner {
+    private static final Logger logger = Logger.getLogger(FoxEdgeExchangeScanner.class);
+
     /**
      * 扫描代码，生成操作名-函数映射表,"cn.foxtech.device.adapter.annotation"
      *
@@ -26,6 +29,8 @@ public class FoxEdgeExchangeScanner {
             Set<Class<?>> classSet = JarLoaderUtils.getClasses(pack);
             for (Class<?> aClass : classSet) {
                 String name = aClass.getName();
+
+                logger.info("load class:" + name);
 
                 // 是否为解码器类型
                 if (!aClass.isAnnotationPresent(FoxEdgeDeviceType.class)) {
