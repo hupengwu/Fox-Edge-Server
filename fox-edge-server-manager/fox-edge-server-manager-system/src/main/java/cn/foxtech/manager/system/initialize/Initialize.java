@@ -45,8 +45,6 @@ public class Initialize implements CommandLineRunner {
 
     public void run(String... args) {
         this.logger.info("------------------------SystemInitialize初始化开始！------------------------");
-        // kill掉loader
-        ProcessUtils.killLoader();
 
         this.commonInitialize.initialize();
 

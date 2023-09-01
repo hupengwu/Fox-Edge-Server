@@ -2,7 +2,6 @@ package cn.foxtech.persist.service.initialize;
 
 
 import cn.foxtech.common.entity.manager.RedisConsoleService;
-import cn.foxtech.common.process.ProcessUtils;
 import cn.foxtech.persist.common.initialize.PersistInitialize;
 import cn.foxtech.persist.service.controller.ManagerController;
 import cn.foxtech.persist.service.controller.PersistController;
@@ -36,8 +35,6 @@ public class Initialize implements CommandLineRunner {
     @Override
     public void run(String... args) {
         logger.info("------------------------初始化开始！------------------------");
-
-        ProcessUtils.killLoader();
 
         // 装载数据实体，并启动同步线程
         this.persistInitialize.initialize();

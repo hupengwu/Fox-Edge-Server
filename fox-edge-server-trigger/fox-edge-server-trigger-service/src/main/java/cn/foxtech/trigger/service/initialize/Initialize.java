@@ -48,8 +48,6 @@ public class Initialize implements CommandLineRunner {
     public void run(String... args) {
         logger.info("------------------------初始化开始！------------------------");
 
-        ProcessUtils.killLoader();
-
         // 状态发布
         this.serviceStatusScheduler.initialize();
         this.serviceStatusScheduler.schedule();

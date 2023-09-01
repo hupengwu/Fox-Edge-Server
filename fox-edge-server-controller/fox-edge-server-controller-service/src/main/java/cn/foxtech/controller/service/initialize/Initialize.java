@@ -36,8 +36,6 @@ public class Initialize implements CommandLineRunner {
     public void run(String... args) {
         logger.info("------------------------初始化开始！------------------------");
 
-        ProcessUtils.killLoader();
-
         this.controllerInitialize.initialize();
 
         // 调度设备数据采集任务

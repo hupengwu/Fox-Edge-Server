@@ -31,8 +31,6 @@ public class Initialize implements CommandLineRunner {
     public void run(String... args) {
         logger.info("------------------------Manager Service 初始化开始！------------------------");
 
-        ProcessUtils.killLoader();
-
         this.commonInitialize.initialize();
 
         // 装载数据实体

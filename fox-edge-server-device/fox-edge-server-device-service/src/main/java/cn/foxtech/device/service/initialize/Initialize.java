@@ -2,7 +2,6 @@ package cn.foxtech.device.service.initialize;
 
 
 import cn.foxtech.common.entity.manager.RedisConsoleService;
-import cn.foxtech.common.process.ProcessUtils;
 import cn.foxtech.common.status.ServiceStatusScheduler;
 import cn.foxtech.device.service.controller.DeviceExecuteController;
 import cn.foxtech.device.service.controller.DeviceReportController;
@@ -47,7 +46,6 @@ public class Initialize implements CommandLineRunner {
     @Override
     public void run(String... args) {
         logger.info("------------------------初始化开始！------------------------");
-        ProcessUtils.killLoader();
 
         this.serviceStatusScheduler.initialize();
         this.serviceStatusScheduler.schedule();
