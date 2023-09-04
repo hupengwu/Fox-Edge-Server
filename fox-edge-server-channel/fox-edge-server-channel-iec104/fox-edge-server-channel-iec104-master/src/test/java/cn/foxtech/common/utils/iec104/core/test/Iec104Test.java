@@ -1,8 +1,8 @@
 package cn.foxtech.common.utils.iec104.core.test;
 
-import cn.foxtech.device.protocol.iec104.core.encoder.ApduEncoder;
-import cn.foxtech.device.protocol.iec104.core.encoder.ValueEncoder;
-import cn.foxtech.device.protocol.iec104.core.entity.ApduEntity;
+import cn.foxtech.device.protocol.v1.iec104.core.encoder.ApduEncoder;
+import cn.foxtech.device.protocol.v1.iec104.core.encoder.ValueEncoder;
+import cn.foxtech.device.protocol.v1.iec104.core.entity.ApduEntity;
 
 public class Iec104Test {
     public static void main(String[] args) {

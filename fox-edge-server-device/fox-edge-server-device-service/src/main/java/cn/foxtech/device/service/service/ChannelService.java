@@ -7,7 +7,7 @@ import cn.foxtech.common.constant.HttpStatus;
 import cn.foxtech.common.entity.entity.ChannelEntity;
 import cn.foxtech.common.entity.entity.DeviceEntity;
 import cn.foxtech.core.exception.ServiceException;
-import cn.foxtech.device.protocol.core.channel.FoxEdgeChannelService;
+import cn.foxtech.device.protocol.v1.core.channel.FoxEdgeChannelService;
 import cn.foxtech.device.service.redistopic.RedisTopicPuberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

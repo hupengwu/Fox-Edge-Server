@@ -7,12 +7,12 @@ import cn.foxtech.common.utils.iec104.server.Iec104ClientLinkerManager;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
 import cn.foxtech.core.exception.ServiceException;
-import cn.foxtech.device.protocol.iec104.core.builder.ApduVOBuilder;
-import cn.foxtech.device.protocol.iec104.core.encoder.ApduEncoder;
-import cn.foxtech.device.protocol.iec104.core.entity.ApduEntity;
-import cn.foxtech.device.protocol.iec104.core.entity.IControlEntity;
-import cn.foxtech.device.protocol.iec104.core.enums.FrameTypeEnum;
-import cn.foxtech.device.protocol.iec104.core.vo.ApduVO;
+import cn.foxtech.device.protocol.v1.iec104.core.builder.ApduVOBuilder;
+import cn.foxtech.device.protocol.v1.iec104.core.encoder.ApduEncoder;
+import cn.foxtech.device.protocol.v1.iec104.core.entity.ApduEntity;
+import cn.foxtech.device.protocol.v1.iec104.core.entity.IControlEntity;
+import cn.foxtech.device.protocol.v1.iec104.core.enums.FrameTypeEnum;
+import cn.foxtech.device.protocol.v1.iec104.core.vo.ApduVO;
 import org.springframework.stereotype.Component;
 
 import java.net.SocketAddress;

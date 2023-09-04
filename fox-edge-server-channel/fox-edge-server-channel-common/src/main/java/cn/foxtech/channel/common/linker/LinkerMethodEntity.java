@@ -1,7 +1,7 @@
 package cn.foxtech.channel.common.linker;
 
 
-import cn.foxtech.device.protocol.core.annotation.FoxEdgeLinkerAction;
+import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeLinkerAction;
 import lombok.Data;
 
 import java.lang.reflect.Method;

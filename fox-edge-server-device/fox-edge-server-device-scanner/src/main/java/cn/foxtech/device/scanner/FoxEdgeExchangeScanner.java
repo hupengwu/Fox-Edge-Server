@@ -3,10 +3,10 @@ package cn.foxtech.device.scanner;
 
 import cn.foxtech.common.utils.reflect.JarLoaderUtils;
 import cn.foxtech.device.protocol.RootLocation;
-import cn.foxtech.device.protocol.core.annotation.FoxEdgeDeviceType;
-import cn.foxtech.device.protocol.core.annotation.FoxEdgeOperate;
-import cn.foxtech.device.protocol.core.annotation.FoxEdgeOperateParam;
-import cn.foxtech.device.protocol.core.method.FoxEdgeExchangeMethod;
+import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
+import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
+import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperateParam;
+import cn.foxtech.device.protocol.v1.core.method.FoxEdgeExchangeMethod;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.Method;

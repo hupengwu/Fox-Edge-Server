@@ -4,7 +4,7 @@ import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.utils.pair.Pair;
 import cn.foxtech.common.entity.entity.DeviceMapperEntity;
 import cn.foxtech.common.utils.Maps;
-import cn.foxtech.device.protocol.core.utils.MethodUtils;
+import cn.foxtech.device.protocol.v1.core.utils.MethodUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

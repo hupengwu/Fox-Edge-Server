@@ -1,15 +1,15 @@
 package cn.foxtech.channel.iec104.master.demo;
 
-import cn.foxtech.common.utils.hex.HexUtils;
 import cn.foxtech.common.utils.iec104.server.Iec104ClientLinkerManager;
 import cn.foxtech.common.utils.iec104.server.Iec104ClientLinkerScheduler;
-import cn.foxtech.common.utils.json.JsonUtils;
-import cn.foxtech.device.protocol.iec104.core.builder.ApduVOBuilder;
-import cn.foxtech.device.protocol.iec104.core.encoder.ApduEncoder;
-import cn.foxtech.device.protocol.iec104.core.encoder.BasicSessionEncoder;
-import cn.foxtech.device.protocol.iec104.core.entity.ApduEntity;
-import cn.foxtech.device.protocol.iec104.core.enums.FrameTypeEnum;
-import cn.foxtech.device.protocol.iec104.core.vo.ApduVO;
+import cn.foxtech.device.protocol.v1.core.utils.HexUtils;
+import cn.foxtech.device.protocol.v1.core.utils.JsonUtils;
+import cn.foxtech.device.protocol.v1.iec104.core.builder.ApduVOBuilder;
+import cn.foxtech.device.protocol.v1.iec104.core.encoder.ApduEncoder;
+import cn.foxtech.device.protocol.v1.iec104.core.encoder.BasicSessionEncoder;
+import cn.foxtech.device.protocol.v1.iec104.core.entity.ApduEntity;
+import cn.foxtech.device.protocol.v1.iec104.core.enums.FrameTypeEnum;
+import cn.foxtech.device.protocol.v1.iec104.core.vo.ApduVO;
 import cn.foxtech.channel.iec104.master.handler.MasterLinkerHandler;
 
 public class Demo {

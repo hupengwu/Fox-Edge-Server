@@ -30,7 +30,7 @@
         <!-- 工具模块-->
         <dependency>
             <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-hex</artifactId>
+            <artifactId>fox-edge-server-protocol-core</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
 

@@ -1,12 +1,12 @@
 package cn.foxtech.device.scanner;
 
 import cn.foxtech.device.protocol.RootLocation;
-import cn.foxtech.device.protocol.core.annotation.FoxEdgeDeviceType;
-import cn.foxtech.device.protocol.core.annotation.FoxEdgeOperate;
-import cn.foxtech.device.protocol.core.annotation.FoxEdgeOperateParam;
-import cn.foxtech.device.protocol.core.annotation.FoxEdgeReport;
+import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
+import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
+import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperateParam;
+import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeReport;
 import cn.foxtech.common.utils.reflect.JarLoaderUtils;
-import cn.foxtech.device.protocol.core.method.FoxEdgeReportMethod;
+import cn.foxtech.device.protocol.v1.core.method.FoxEdgeReportMethod;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;

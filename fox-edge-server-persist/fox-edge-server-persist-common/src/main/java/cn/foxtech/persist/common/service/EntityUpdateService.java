@@ -6,7 +6,7 @@ import cn.foxtech.common.entity.constant.DeviceVOFieldConstant;
 import cn.foxtech.common.entity.entity.DeviceEntity;
 import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.device.domain.vo.OperateRespondVO;
-import cn.foxtech.device.protocol.core.annotation.FoxEdgeOperate;
+import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.persist.common.service.updater.DeviceCommStatusUpdater;
 import cn.foxtech.persist.common.service.updater.DeviceRecordValueUpdater;
 import cn.foxtech.persist.common.service.updater.DeviceStatusValueUpdater;

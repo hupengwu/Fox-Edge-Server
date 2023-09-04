@@ -3,10 +3,10 @@ package cn.foxtech.device.service.service;
 import cn.foxtech.common.entity.entity.DeviceEntity;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.device.domain.vo.OperateRespondVO;
-import cn.foxtech.device.protocol.core.constants.FoxEdgeConstant;
-import cn.foxtech.device.protocol.core.worker.FoxEdgeExchangeWorker;
-import cn.foxtech.device.protocol.core.worker.FoxEdgePublishWorker;
-import cn.foxtech.device.protocol.core.worker.FoxEdgeReportWorker;
+import cn.foxtech.device.protocol.v1.core.constants.FoxEdgeConstant;
+import cn.foxtech.device.protocol.v1.core.worker.FoxEdgeExchangeWorker;
+import cn.foxtech.device.protocol.v1.core.worker.FoxEdgePublishWorker;
+import cn.foxtech.device.protocol.v1.core.worker.FoxEdgeReportWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

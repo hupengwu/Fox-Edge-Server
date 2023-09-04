@@ -1,6 +1,6 @@
 package cn.foxtech.common.utils.iec104.server.scheduler;
 
-import cn.foxtech.device.protocol.iec104.core.encoder.BasicSessionEncoder;
+import cn.foxtech.device.protocol.v1.iec104.core.encoder.BasicSessionEncoder;
 import cn.foxtech.common.utils.iec104.server.Iec104ClientLinkerEntity;
 import cn.foxtech.common.utils.iec104.server.Iec104ClientLinkerManager;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTask;

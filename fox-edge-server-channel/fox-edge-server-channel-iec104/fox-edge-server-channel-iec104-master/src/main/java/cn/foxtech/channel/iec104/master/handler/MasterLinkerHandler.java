@@ -3,11 +3,11 @@ package cn.foxtech.channel.iec104.master.handler;
 import cn.foxtech.common.utils.iec104.server.Iec104ClientLinkerEntity;
 import cn.foxtech.common.utils.iec104.server.Iec104ClientLinkerHandler;
 import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
-import cn.foxtech.device.protocol.iec104.core.encoder.MessageUtils;
-import cn.foxtech.device.protocol.iec104.core.entity.ApduEntity;
-import cn.foxtech.device.protocol.iec104.core.entity.IControlEntity;
-import cn.foxtech.device.protocol.iec104.core.entity.SControlEntity;
-import cn.foxtech.device.protocol.iec104.core.enums.FrameTypeEnum;
+import cn.foxtech.device.protocol.v1.iec104.core.encoder.MessageUtils;
+import cn.foxtech.device.protocol.v1.iec104.core.entity.ApduEntity;
+import cn.foxtech.device.protocol.v1.iec104.core.entity.IControlEntity;
+import cn.foxtech.device.protocol.v1.iec104.core.entity.SControlEntity;
+import cn.foxtech.device.protocol.v1.iec104.core.enums.FrameTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,9 +1,9 @@
 package cn.foxtech.common.utils.iec104.server;
 
-import cn.foxtech.device.protocol.iec104.core.entity.ApduEntity;
-import cn.foxtech.device.protocol.iec104.core.entity.IControlEntity;
-import cn.foxtech.device.protocol.iec104.core.entity.SControlEntity;
-import cn.foxtech.device.protocol.iec104.core.enums.FrameTypeEnum;
+import cn.foxtech.device.protocol.v1.iec104.core.entity.ApduEntity;
+import cn.foxtech.device.protocol.v1.iec104.core.entity.IControlEntity;
+import cn.foxtech.device.protocol.v1.iec104.core.entity.SControlEntity;
+import cn.foxtech.device.protocol.v1.iec104.core.enums.FrameTypeEnum;
 import lombok.Data;
 
 import java.util.List;

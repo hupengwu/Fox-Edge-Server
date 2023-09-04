@@ -1,6 +1,6 @@
 package cn.foxtech.common.utils.iec104.server.handler;
 
-import cn.foxtech.device.protocol.iec104.core.encoder.ValueEncoder;
+import cn.foxtech.device.protocol.v1.iec104.core.encoder.ValueEncoder;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;

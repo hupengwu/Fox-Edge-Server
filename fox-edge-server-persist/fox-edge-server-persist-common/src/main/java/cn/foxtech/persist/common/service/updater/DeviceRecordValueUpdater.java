@@ -4,7 +4,7 @@ import cn.foxtech.common.entity.entity.BaseEntity;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import cn.foxtech.common.entity.entity.DeviceRecordEntity;
 import cn.foxtech.common.entity.service.devicerecord.DeviceRecordEntityService;
-import cn.foxtech.device.protocol.core.constants.FoxEdgeConstant;
+import cn.foxtech.device.protocol.v1.core.constants.FoxEdgeConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

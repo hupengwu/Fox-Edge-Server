@@ -50,10 +50,12 @@
             <artifactId>fox-edge-server-protocol-iec104-core</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
+
         <dependency>
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-utils-scheduler</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
+
     </dependencies>
 </project>
