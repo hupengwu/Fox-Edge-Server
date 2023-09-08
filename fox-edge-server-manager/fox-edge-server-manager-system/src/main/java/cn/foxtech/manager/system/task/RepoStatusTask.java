@@ -84,12 +84,14 @@ public class RepoStatusTask extends PeriodTask {
             List<Map<String, Object>> modelList = this.service.findLocalModel(modelType);
             for (Map<String, Object> map : modelList) {
                 String modelName = (String) map.getOrDefault(RepositoryConstant.filed_model_name, "");
+                String modelVersion = (String) map.getOrDefault(RepositoryConstant.filed_model_version, "v1");
                 String component = (String) map.getOrDefault(RepositoryConstant.filed_component, "");
                 String version = (String) map.getOrDefault(RepositoryConstant.filed_version, "");
                 String stage = (String) map.getOrDefault(RepositoryConstant.filed_stage, "");
 
                 StringBuilder sb = new StringBuilder();
                 sb.append(modelName);
+                sb.append(modelVersion);
                 sb.append(component);
                 sb.append(version);
                 sb.append(stage);
@@ -100,7 +102,7 @@ public class RepoStatusTask extends PeriodTask {
                 }
 
                 // 删除本地垃圾文件
-                this.service.deletePackageFile(modelType, modelName, version, stage, component);
+                this.service.deletePackageFile(modelType, modelName, modelVersion, version, stage, component);
             }
         } catch (Exception e) {
             logger.error(e.getMessage());

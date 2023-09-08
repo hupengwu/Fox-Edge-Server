@@ -149,7 +149,7 @@ public class ServiceManageController {
             }
 
             // 停止进程
-            this.processStartService.uninstallProcess(appName, appType);
+            this.processStartService.uninstallProcess(appName, appType );
 
             return AjaxResult.success();
         } catch (Exception e) {

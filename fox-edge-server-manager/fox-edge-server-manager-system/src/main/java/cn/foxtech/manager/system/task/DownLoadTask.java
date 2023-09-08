@@ -22,6 +22,7 @@ public class DownLoadTask extends PeriodTask {
 
     private String modelType;
     private String modelName;
+    private String modelVersion;
     private String version;
     private String stage;
     private String pathName;
@@ -29,10 +30,11 @@ public class DownLoadTask extends PeriodTask {
 
     private RepositoryService service;
 
-    public DownLoadTask(RepositoryService service, String modelType, String modelName, String version, String stage, String pathName, String component) {
+    public DownLoadTask(RepositoryService service, String modelType, String modelName, String modelVersion, String version, String stage, String pathName, String component) {
         this.service = service;
         this.modelType = modelType;
         this.modelName = modelName;
+        this.modelVersion = modelVersion;
         this.version = version;
         this.stage = stage;
         this.pathName = pathName;
@@ -65,21 +67,21 @@ public class DownLoadTask extends PeriodTask {
     public void execute() {
         try {
             // 简单验证
-            if (MethodUtils.hasEmpty(modelType, modelName, version, stage, pathName, component)) {
-                throw new ServiceException("参数不能为空:modelType, modelName, version,stage, pathName, component");
+            if (MethodUtils.hasEmpty(modelType, modelName, modelVersion, version, stage, pathName, component)) {
+                throw new ServiceException("参数不能为空: modelType, modelName, modelVersion, version, stage, pathName, component");
             }
 
             // 删除旧的下载文件
-            if (RepositoryConstant.repository_type_service.equals(modelType) || RepositoryConstant.repository_type_webpack.equals(modelType) || RepositoryConstant.repository_type_template.equals(modelType)) {
-                this.service.deletePackageFile(modelType, modelName, version, stage, component);
+            if (RepositoryConstant.repository_type_service.equals(modelType) || RepositoryConstant.repository_type_decoder.equals(modelType) || RepositoryConstant.repository_type_webpack.equals(modelType) || RepositoryConstant.repository_type_template.equals(modelType)) {
+                this.service.deletePackageFile(modelType, modelName, modelVersion, version, stage, component);
             }
 
             // 重新下载新的安装文件
-            this.service.downloadFile(modelType, modelName, version, stage, pathName, component);
+            this.service.downloadFile(modelType, modelName, modelVersion, version, stage, pathName, component);
 
             // 下载完成后，验证状态
-            this.service.scanLocalStatus(modelType, modelName, version, stage, component);
-            this.service.scanLocalMd5(modelType, modelName, version, stage, component);
+            this.service.scanLocalStatus(modelType, modelName, modelVersion, version, stage, component);
+            this.service.scanLocalMd5(modelType, modelName, modelVersion, version, stage, component);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

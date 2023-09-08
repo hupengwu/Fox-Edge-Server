@@ -112,21 +112,22 @@ public class RepositoryManageController {
                 // 提取业务参数
                 String modelType = (String) map.get(RepositoryConstant.filed_model_type);
                 String modelName = (String) map.get(RepositoryConstant.filed_model_name);
+                String modelVersion = (String) map.get(RepositoryConstant.filed_model_version);
                 String version = (String) map.get(RepositoryConstant.filed_version);
                 String stage = (String) map.get(RepositoryConstant.filed_stage);
                 String pathName = (String) map.get(RepositoryConstant.filed_path_name);
                 String component = (String) map.get(RepositoryConstant.filed_component);
 
                 // 简单验证
-                if (MethodUtils.hasEmpty(modelType, modelName, version, stage, pathName, component)) {
-                    throw new ServiceException("参数不能为空:modelType, modelName, version, stage, pathName, component");
+                if (MethodUtils.hasEmpty(modelType, modelName, modelVersion, version, stage, pathName, component)) {
+                    throw new ServiceException("参数不能为空: modelType, modelName, modelVersion, version, stage, pathName, component");
                 }
 
-                if (!this.repositoryService.testUrlFileCanBeOpen(modelType, modelName, version, pathName)) {
+                if (!this.repositoryService.testUrlFileCanBeOpen(modelType, modelName, modelVersion, version, pathName)) {
                     throw new ServiceException("Fox-Cloud上文件无法下载，请联系该模块的发布者!");
                 }
 
-                this.periodTasksScheduler.insertPeriodTask(new DownLoadTask(this.repositoryService, modelType, modelName, version, stage, pathName, component));
+                this.periodTasksScheduler.insertPeriodTask(new DownLoadTask(this.repositoryService, modelType, modelName, modelVersion, version, stage, pathName, component));
             }
 
             return AjaxResult.success();
@@ -159,16 +160,17 @@ public class RepositoryManageController {
             // 提取业务参数
             String modelType = (String) body.get(RepositoryConstant.filed_model_type);
             String modelName = (String) body.get(RepositoryConstant.filed_model_name);
+            String modelVersion = (String) body.get(RepositoryConstant.filed_model_version);
             String version = (String) body.get(RepositoryConstant.filed_version);
             String stage = (String) body.get(RepositoryConstant.filed_stage);
             String component = (String) body.get(RepositoryConstant.filed_component);
 
             // 简单验证
-            if (MethodUtils.hasEmpty(modelType, modelName, version, stage, component)) {
-                throw new ServiceException("参数不能为空:modelType, modelName, version, stage, component");
+            if (MethodUtils.hasEmpty(modelType, modelName, modelVersion, version, stage, component)) {
+                throw new ServiceException("参数不能为空: modelType, modelName, modelVersion, version, stage, component");
             }
 
-            this.repositoryService.installFile(modelType, modelName, version, stage, component);
+            this.repositoryService.installFile(modelType, modelName, modelVersion, version, stage, component);
             return AjaxResult.success();
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
@@ -190,16 +192,17 @@ public class RepositoryManageController {
                 // 提取业务参数
                 String modelType = (String) map.get(RepositoryConstant.filed_model_type);
                 String modelName = (String) map.get(RepositoryConstant.filed_model_name);
+                String modelVersion = (String) map.get(RepositoryConstant.filed_model_version);
                 String version = (String) map.get(RepositoryConstant.filed_version);
                 String stage = (String) map.get(RepositoryConstant.filed_stage);
                 String component = (String) map.get(RepositoryConstant.filed_component);
 
                 // 简单验证
-                if (MethodUtils.hasEmpty(modelType, modelName, version, stage, component)) {
-                    throw new ServiceException("参数不能为空: modelType, modelName, version, stage, component");
+                if (MethodUtils.hasEmpty(modelType, modelName, modelVersion, version, stage, component)) {
+                    throw new ServiceException("参数不能为空: modelType, modelName, modelVersion, version, stage, component");
                 }
 
-                this.repositoryService.deletePackageFile(modelType, modelName, version, stage, component);
+                this.repositoryService.deletePackageFile(modelType, modelName, modelVersion, version, stage, component);
             }
 
             return AjaxResult.success();

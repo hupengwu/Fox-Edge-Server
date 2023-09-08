@@ -1,10 +1,6 @@
 package cn.foxtech.common.utils.osinfo;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.ArrayList;
@@ -178,15 +174,15 @@ public class OSInfoUtils {
         NetworkInterface ni = null;
         List<String> macList = new ArrayList<String>();
         try {
-            Enumeration<NetworkInterface> netInterfaces = (Enumeration<NetworkInterface>) NetworkInterface
+            Enumeration<NetworkInterface> netInterfaces = NetworkInterface
                     .getNetworkInterfaces();
             while (netInterfaces.hasMoreElements()) {
-                ni = (NetworkInterface) netInterfaces.nextElement();
+                ni = netInterfaces.nextElement();
                 // ----------特定情况，可以考虑用ni.getName判断
                 // 遍历所有ip
                 Enumeration<InetAddress> ips = ni.getInetAddresses();
                 while (ips.hasMoreElements()) {
-                    ip = (InetAddress) ips.nextElement();
+                    ip = ips.nextElement();
                     if (!ip.isLoopbackAddress() // 非127.0.0.1
                             && ip.getHostAddress().matches("(\\d{1,3}\\.){3}\\d{1,3}")) {
                         macList.add(getMacFromBytes(ni.getHardwareAddress()));
@@ -221,13 +217,23 @@ public class OSInfoUtils {
         return mac.toString().toUpperCase();
     }
 
+    public static String getArch() {
+        String arch = System.getProperty("os.arch");
+        return arch;
+    }
+
     public static String getCPUID() {
         if (OSInfo.isWindows()) {
-            return getCPUID_Windows().replace(" ","");
+            return getCPUID_Windows().replace(" ", "");
         }
         if (OSInfo.isLinux()) {
             try {
-                return getCPUID_linux().replace(" ","");
+                String arch = getArch().toLowerCase();
+                if ("aarch64".equals(arch)) {
+                    return getCPUID_aarch64_linux().replace(" ", "").toUpperCase();
+                } else {
+                    return getCPUID_x86_linux().replace(" ", "");
+                }
             } catch (InterruptedException e) {
                 return "";
             }
@@ -272,7 +278,7 @@ public class OSInfoUtils {
      *
      * @return
      */
-    private static String getCPUID_linux() throws InterruptedException {
+    private static String getCPUID_x86_linux() throws InterruptedException {
         String result = "";
         String maniBord_cmd = "dmidecode -t 4 | grep ID |sort -u |awk -F': ' '{print $2}'";
         Process p;
@@ -290,5 +296,30 @@ public class OSInfoUtils {
         }
         return result.replace(" ", "");
     }
+
+    /**
+     * 获得嵌入式芯片aarch64的信息
+     * @return CPU序列号
+     * @throws InterruptedException 异常
+     */
+    private static String getCPUID_aarch64_linux() throws InterruptedException {
+        String result = "";
+        String maniBord_cmd = "cat /proc/cpuinfo  | grep Serial |awk -F': ' '{print $2}'";
+        Process p;
+        try {
+            p = Runtime.getRuntime().exec(new String[]{"sh", "-c", maniBord_cmd});// 管道
+            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line;
+            while ((line = br.readLine()) != null) {
+                result += line;
+                break;
+            }
+            br.close();
+        } catch (IOException e) {
+            //  logger.error("获取主板信息错误", e);
+        }
+        return result.replace(" ", "");
+    }
+
 
 }

@@ -57,17 +57,18 @@ public class DeviceTemplateManageController {
             for (Map<String, Object> map : list) {
                 // 提取业务参数
                 String modelName = (String) map.get(RepositoryConstant.filed_model_name);
+                String modelVersion = (String) map.get(RepositoryConstant.filed_model_version);
                 String version = (String) map.get(RepositoryConstant.filed_version);
                 String component = (String) map.get(RepositoryConstant.filed_component);
                 String fileName = (String) map.get("fileName");
 
                 // 简单验证
-                if (MethodUtils.hasEmpty(modelName, version, component, fileName)) {
-                    throw new ServiceException("参数不能为空:modelName, version, component, fileName");
+                if (MethodUtils.hasEmpty(modelName, modelVersion, version, component, fileName)) {
+                    throw new ServiceException("参数不能为空:modelName, modelVersion,version, component, fileName");
                 }
 
                 File file = new File("");
-                File delete = new File(file.getAbsolutePath() + "/template/" + modelName + "/" + version + "/" + fileName);
+                File delete = new File(file.getAbsolutePath() + "/template/" + modelName + "/" + modelVersion + "/" + version + "/" + fileName);
                 delete.delete();
             }
 
@@ -85,19 +86,20 @@ public class DeviceTemplateManageController {
         try {
             // 提取业务参数
             String modelName = (String) body.get(RepositoryConstant.filed_model_name);
+            String modelVersion = (String) body.get(RepositoryConstant.filed_model_version);
             String version = (String) body.get(RepositoryConstant.filed_version);
             String component = (String) body.get(RepositoryConstant.filed_component);
             String fileName = (String) body.get("fileName");
 
             // 简单验证
-            if (MethodUtils.hasEmpty(modelName, version, component, fileName)) {
-                throw new ServiceException("参数不能为空:modelName, version, component, fileName");
+            if (MethodUtils.hasEmpty(modelName, modelVersion, version, component, fileName)) {
+                throw new ServiceException("参数不能为空:modelName, modelVersion, version, component, fileName");
             }
 
             HttpServletResponse resp = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
 
             File file = new File("");
-            File download = new File(file.getAbsolutePath() + "/template/" + modelName + "/" + version + "/" + fileName);
+            File download = new File(file.getAbsolutePath() + "/template/" + modelName + "/" + modelVersion + "/" + version + "/" + fileName);
             if (download.exists()) {
                 resp.setContentType("application/x-msdownload");
                 resp.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes(), StandardCharsets.ISO_8859_1));

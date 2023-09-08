@@ -3,12 +3,12 @@ package cn.foxtech.manager.system.service;
 import cn.foxtech.common.domain.constant.ServiceVOFieldConstant;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.process.ProcessUtils;
+import cn.foxtech.common.utils.Maps;
 import cn.foxtech.common.utils.file.FileCompareUtils;
 import cn.foxtech.common.utils.file.FileNameUtils;
 import cn.foxtech.common.utils.file.FileTextUtils;
 import cn.foxtech.common.utils.http.DownLoadUtil;
 import cn.foxtech.common.utils.json.JsonUtils;
-import cn.foxtech.common.utils.Maps;
 import cn.foxtech.common.utils.md5.MD5Utils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.osinfo.OSInfo;
@@ -24,6 +24,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -76,10 +78,11 @@ public class RepositoryService {
             Set<String> localKeys = new HashSet<>();
             for (Map<String, Object> map : localList) {
                 String modelName = (String) map.get(RepositoryConstant.filed_model_name);
+                String modelVersion = (String) map.get(RepositoryConstant.filed_model_version);
                 String version = (String) map.get(RepositoryConstant.filed_version);
                 String stage = (String) map.get(RepositoryConstant.filed_stage);
                 String component = (String) map.get(RepositoryConstant.filed_component);
-                localKeys.add(modelType + ":" + modelName + ":" + version + ":" + stage + ":" + component);
+                localKeys.add(modelType + ":" + modelName + ":" + modelVersion + ":" + version + ":" + stage + ":" + component);
 
             }
 
@@ -89,6 +92,7 @@ public class RepositoryService {
             // 尚未下载云端组件，标识未未下载状态
             for (Map<String, Object> map : cloudList) {
                 String modelName = (String) map.get(RepositoryConstant.filed_model_name);
+                String modelVersion = (String) map.get(RepositoryConstant.filed_model_version);
                 Map<String, Object> lastVersion = (Map<String, Object>) map.get(RepositoryConstant.filed_last_version);
                 List<Map<String, Object>> versions = (List<Map<String, Object>>) map.get(RepositoryConstant.filed_versions);
 
@@ -107,19 +111,19 @@ public class RepositoryService {
                     String version = (String) verEntity.get(RepositoryConstant.filed_version);
                     String stage = (String) verEntity.get(RepositoryConstant.filed_stage);
                     String component = (String) verEntity.get(RepositoryConstant.filed_component);
-                    if (MethodUtils.hasEmpty(modelName, version, component)) {
+                    if (MethodUtils.hasEmpty(modelName, modelVersion, version, component)) {
                         continue;
                     }
 
 
                     // 检查：该组件是否存在本地
-                    String key = modelType + ":" + modelName + ":" + version + ":" + stage + ":" + component;
+                    String key = modelType + ":" + modelName + ":" + modelVersion + ":" + version + ":" + stage + ":" + component;
                     if (localKeys.contains(key)) {
                         continue;
                     }
 
                     // 标识为未下载状态
-                    Maps.setValue(this.statusMap, modelType, modelName, version, stage, component, RepositoryConstant.filed_status, RepositoryStatusConstant.status_not_downloaded);
+                    Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepositoryConstant.filed_status, RepositoryStatusConstant.status_not_downloaded);
                 }
             }
 
@@ -157,42 +161,52 @@ public class RepositoryService {
                 continue;
             }
 
-            // \opt\fox-edge\repository\decoder\anno\1.0.0\
-            String[] versionFiles = modelDir.list();
-            for (String versionFile : versionFiles) {
-                File versionDir = new File(modelDir, versionFile);
-                if (versionDir.isFile()) {
+            // \opt\fox-edge\repository\decoder\fox-edge-server-protocol-bass260zj\v1\1.0.0\
+            String[] modelVersionFiles = modelDir.list();
+            for (String modelVersionFile : modelVersionFiles) {
+                File modelVersionDir = new File(modelDir, modelVersionFile);
+                if (modelVersionDir.isFile()) {
                     continue;
                 }
 
-                // \opt\fox-edge\repository\decoder\anno\1.0.0\
-                String[] stageFiles = versionDir.list();
-                for (String stageFile : stageFiles) {
-                    File stageDir = new File(versionDir, stageFile);
-                    if (stageDir.isFile()) {
+                String[] versionFiles = modelVersionDir.list();
+                for (String versionFile : versionFiles) {
+                    File versionDir = new File(modelVersionDir, versionFile);
+                    if (versionDir.isFile()) {
                         continue;
                     }
 
-                    String[] componentFiles = stageDir.list();
-                    for (String componentFile : componentFiles) {
-                        File componentDir = new File(stageDir, componentFile);
-                        if (componentDir.isFile()) {
+                    // \opt\fox-edge\repository\decoder\fox-edge-server-protocol-bass260zj\v1\1.0.0\
+                    String[] stageFiles = versionDir.list();
+                    for (String stageFile : stageFiles) {
+                        File stageDir = new File(versionDir, stageFile);
+                        if (stageDir.isFile()) {
                             continue;
                         }
 
-                        // 提取业务参数
-                        String modelName = modelDir.getName();
-                        String version = versionDir.getName();
-                        String stage = stageDir.getName();
-                        String component = componentDir.getName();
+                        String[] componentFiles = stageDir.list();
+                        for (String componentFile : componentFiles) {
+                            File componentDir = new File(stageDir, componentFile);
+                            if (componentDir.isFile()) {
+                                continue;
+                            }
 
-                        Map<String, Object> map = new HashMap<>();
-                        map.put(RepositoryConstant.filed_model_name, modelName);
-                        map.put(RepositoryConstant.filed_version, version);
-                        map.put(RepositoryConstant.filed_stage, stage);
-                        map.put(RepositoryConstant.filed_component, component);
+                            // 提取业务参数
+                            String modelName = modelDir.getName();
+                            String modelVersion = modelVersionDir.getName();
+                            String version = versionDir.getName();
+                            String stage = stageDir.getName();
+                            String component = componentDir.getName();
 
-                        resultList.add(map);
+                            Map<String, Object> map = new HashMap<>();
+                            map.put(RepositoryConstant.filed_model_name, modelName);
+                            map.put(RepositoryConstant.filed_model_version, modelVersion);
+                            map.put(RepositoryConstant.filed_version, version);
+                            map.put(RepositoryConstant.filed_stage, stage);
+                            map.put(RepositoryConstant.filed_component, component);
+
+                            resultList.add(map);
+                        }
                     }
                 }
             }
@@ -312,17 +326,18 @@ public class RepositoryService {
     public void extendLocalStatus(String modelType, List<Map<String, Object>> list) {
         for (Map<String, Object> map : list) {
             String modelName = (String) map.getOrDefault(RepositoryConstant.filed_model_name, "");
+            String modelVersion = (String) map.getOrDefault(RepositoryConstant.filed_model_version, RepositoryConstant.filed_value_model_version_default);
             Map<String, Object> lastVersion = (Map<String, Object>) map.getOrDefault(RepositoryConstant.filed_last_version, new HashMap<>());
             List<Map<String, Object>> versions = (List<Map<String, Object>>) map.getOrDefault(RepositoryConstant.filed_versions, "");
             String component = (String) map.getOrDefault(RepositoryConstant.filed_component, "");
 
 
             // 验证last版本的破损状态
-            int status = this.verifyMd5Status(modelType, modelName, component, lastVersion);
+            int status = this.verifyMd5Status(modelType, modelName, modelVersion, component, lastVersion);
             if (RepositoryStatusConstant.status_damaged_package == status) {
                 lastVersion.put(RepositoryConstant.filed_status, status);
             } else {
-                if (this.verifyUpgradeStatus(modelType, modelName, lastVersion, versions)) {
+                if (this.verifyUpgradeStatus(modelType, modelName, modelVersion, lastVersion, versions)) {
                     lastVersion.put(RepositoryConstant.filed_status, RepositoryStatusConstant.status_need_upgrade);
                 }
             }
@@ -330,7 +345,7 @@ public class RepositoryService {
 
             // 验证明细包的破损状态
             for (Map<String, Object> verEntity : versions) {
-                status = this.verifyMd5Status(modelType, modelName, component, verEntity);
+                status = this.verifyMd5Status(modelType, modelName, modelVersion, component, verEntity);
                 verEntity.put(RepositoryConstant.filed_status, status);
             }
         }
@@ -362,7 +377,7 @@ public class RepositoryService {
         return status;
     }
 
-    private boolean verifyUpgradeStatus(String modelType, String modelName, Map<String, Object> lastVersion, List<Map<String, Object>> versions) {
+    private boolean verifyUpgradeStatus(String modelType, String modelName, String modelVersion, Map<String, Object> lastVersion, List<Map<String, Object>> versions) {
         // 检查最新版本
         if (lastVersion == null) {
             return false;
@@ -373,7 +388,7 @@ public class RepositoryService {
         String lastComponent = (String) lastVersion.get(RepositoryConstant.filed_component);
 
         // 如果最新版本就是安装版本，那么不需要升级
-        Integer lastStatus = (Integer) Maps.getOrDefault(this.statusMap, modelType, modelName, lastVer, lastStage, lastComponent, RepositoryConstant.filed_status, RepositoryStatusConstant.status_not_scanned);
+        Integer lastStatus = (Integer) Maps.getOrDefault(this.statusMap, modelType, modelName, modelVersion, lastVer, lastStage, lastComponent, RepositoryConstant.filed_status, RepositoryStatusConstant.status_not_scanned);
         if (RepositoryStatusConstant.status_installed == lastStatus) {
             return false;
         }
@@ -390,7 +405,7 @@ public class RepositoryService {
             }
 
             // 检查：低版本是否处于安装状态，如果是安装状态，那么就是需要用最新版本来升级
-            Integer status = (Integer) Maps.getOrDefault(this.statusMap, modelType, modelName, version, stage, component, RepositoryConstant.filed_status, RepositoryStatusConstant.status_not_scanned);
+            Integer status = (Integer) Maps.getOrDefault(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepositoryConstant.filed_status, RepositoryStatusConstant.status_not_scanned);
             if (RepositoryStatusConstant.status_installed == status) {
                 return true;
             }
@@ -408,15 +423,15 @@ public class RepositoryService {
      * @param component
      * @param verEntity
      */
-    private int verifyMd5Status(String modelType, String modelName, String component, Map<String, Object> verEntity) {
+    private int verifyMd5Status(String modelType, String modelName, String modelVersion, String component, Map<String, Object> verEntity) {
         String version = (String) verEntity.get(RepositoryConstant.filed_version);
         String stage = (String) verEntity.get(RepositoryConstant.filed_stage);
         if (MethodUtils.hasEmpty(version, stage)) {
             return -1;
         }
 
-        Integer status = (Integer) Maps.getOrDefault(this.statusMap, modelType, modelName, version, stage, component, RepositoryConstant.filed_status, RepositoryStatusConstant.status_not_scanned);
-        String localMd5 = (String) Maps.getOrDefault(this.statusMap, modelType, modelName, version, stage, component, RepositoryConstant.filed_local_md5, "");
+        Integer status = (Integer) Maps.getOrDefault(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepositoryConstant.filed_status, RepositoryStatusConstant.status_not_scanned);
+        String localMd5 = (String) Maps.getOrDefault(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepositoryConstant.filed_local_md5, "");
         verEntity.put(RepositoryConstant.filed_status, status);
         verEntity.put(RepositoryConstant.filed_local_md5, localMd5);
 
@@ -434,13 +449,50 @@ public class RepositoryService {
         for (Map<String, Object> map : list) {
             // 提取业务参数
             String modelName = (String) map.get(RepositoryConstant.filed_model_name);
+            String modelVersion = (String) map.get(RepositoryConstant.filed_model_version);
             String version = (String) map.get(RepositoryConstant.filed_version);
             String stage = (String) map.get(RepositoryConstant.filed_stage);
             String component = (String) map.get(RepositoryConstant.filed_component);
 
             // 本地的状态
-            this.scanLocalStatus(modelType, modelName, version, stage, component);
-            this.scanLocalMd5(modelType, modelName, version, stage, component);
+            this.scanLocalStatus(modelType, modelName, modelVersion, version, stage, component);
+            this.scanLocalMd5(modelType, modelName, modelVersion, version, stage, component);
+        }
+    }
+
+    private String getRepoLocalTarFileName(String modelName, String modelVersion, String version) {
+        return modelName + "-" + modelVersion + "-" + version + ".tar";
+    }
+
+    private String getRepoLocalPathTarFileName(String absolutePath, String modelType, String modelName, String modelVersion, String version, String stage, String component) {
+        return absolutePath + "/repository/" + modelType + "/" + modelName + "/" + modelVersion + "/" + version + "/" + stage + "/" + component + "/" + "tar";
+    }
+
+    private void deleteEmptyDir(String fileDir) throws IOException, InterruptedException {
+        Path path = Paths.get(fileDir);
+        File file = path.toFile();
+        if (!file.exists()) {
+            return;
+        }
+        if (!file.isDirectory()) {
+            return;
+        }
+
+        // 是否为空目录
+        if (file.list().length != 0) {
+            return;
+        }
+
+        // 切换目录
+        fileDir = file.getAbsolutePath();
+
+        if (OSInfo.isWindows()) {
+            // 删除可能存在的目录
+            fileDir = fileDir.replace("/", "\\");
+            ShellUtils.executeCmd("rd /s /q " + fileDir);
+        }
+        if (OSInfo.isLinux()) {
+            ShellUtils.executeShell("rm -rf '" + fileDir + "'");
         }
     }
 
@@ -452,13 +504,12 @@ public class RepositoryService {
      * @param version   模块版本
      * @param component 组件
      */
-    public void scanLocalStatus(String modelType, String modelName, String version, String stage, String component) {
+    public void scanLocalStatus(String modelType, String modelName, String modelVersion, String version, String stage, String component) {
         // 简单验证
-        if (MethodUtils.hasEmpty(modelType, modelName, version, stage, component)) {
-            throw new ServiceException("参数不能为空:modelType, modelName, version, stage, component");
+        if (MethodUtils.hasEmpty(modelType, modelName, modelVersion, version, stage, component)) {
+            throw new ServiceException("参数不能为空: modelType, modelName, modelVersion, version, stage, component");
         }
 
-        String fileName = modelName + ".tar";
 
         // 阶段1：未下载
         int status = RepositoryStatusConstant.status_not_downloaded;
@@ -466,20 +517,20 @@ public class RepositoryService {
         // 检查：是否已经下载
         File file = new File("");
         String absolutePath = file.getAbsolutePath();
-        String tarFile = absolutePath + "/repository/" + modelType + "/" + modelName + "/" + version + "/" + stage + "/" + component + "/" + fileName;
+        String tarFile = absolutePath + "/repository/" + modelType + "/" + modelName + "/" + modelVersion + "/" + version + "/" + stage + "/" + component + "/" + this.getRepoLocalTarFileName(modelName, modelVersion, version);
         File check = new File(tarFile);
         if (!check.exists()) {
-            Maps.setValue(this.statusMap, modelType, modelName, version, stage, component, RepositoryConstant.filed_status, status);
+            Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepositoryConstant.filed_status, status);
             return;
         }
         // 阶段2："已经下载，待安装!
         status = RepositoryStatusConstant.status_downloaded;
 
         // 检查：解压后的目录是否存在，至少包含一个文件
-        String tarDir = absolutePath + "/repository/" + modelType + "/" + modelName + "/" + version + "/" + stage + "/" + component + "/" + "tar";
+        String tarDir = this.getRepoLocalPathTarFileName(absolutePath, modelType, modelName, modelVersion, version, stage, component);
         List<String> tarFileNames = FileNameUtils.findFileList(tarDir, true, true);
         if (tarFileNames.isEmpty()) {
-            Maps.setValue(this.statusMap, modelType, modelName, version, stage, component, RepositoryConstant.filed_status, status);
+            Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepositoryConstant.filed_status, status);
             return;
         }
 
@@ -499,7 +550,7 @@ public class RepositoryService {
             }
             if (RepositoryConstant.repository_type_template.equals(modelType)) {
                 srcFileName = tarDir + "/" + tarFileName;
-                jarFileName = absolutePath + "/template/" + modelName + "/" + version + "/" + tarFileName;
+                jarFileName = absolutePath + "/template/" + modelName + "/" + modelVersion + "/" + version + "/" + tarFileName;
             }
             if (RepositoryConstant.repository_type_service.equals(modelType)) {
                 srcFileName = tarDir + "/" + tarFileName;
@@ -531,7 +582,7 @@ public class RepositoryService {
             status = RepositoryStatusConstant.status_installed;
         }
 
-        Maps.setValue(this.statusMap, modelType, modelName, version, stage, component, RepositoryConstant.filed_status, status);
+        Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepositoryConstant.filed_status, status);
     }
 
     /**
@@ -542,48 +593,48 @@ public class RepositoryService {
      * @param version
      * @param component
      */
-    public void scanLocalMd5(String modelType, String modelName, String version, String stage, String component) {
+    public void scanLocalMd5(String modelType, String modelName, String modelVersion, String version, String stage, String component) {
         // 简单验证
-        if (MethodUtils.hasEmpty(modelName, version, component)) {
-            throw new ServiceException("参数不能为空: modelName, version, component");
+        if (MethodUtils.hasEmpty(modelName, modelVersion, version, component)) {
+            throw new ServiceException("参数不能为空: modelName, modelVersion, version, component");
         }
 
-        String fileName = modelName + ".tar";
 
         String md5 = "";
 
         // 检查：是否已经下载
         File file = new File("");
         String absolutePath = file.getAbsolutePath();
-        String tarFile = absolutePath + "/repository/" + modelType + "/" + modelName + "/" + version + "/" + stage + "/" + component + "/" + fileName;
+        String tarFile = absolutePath + "/repository/" + modelType + "/" + modelName + "/" + modelVersion + "/" + version + "/" + stage + "/" + component + "/" + this.getRepoLocalTarFileName(modelName, modelVersion, version);
         File check = new File(tarFile);
         if (!check.exists()) {
-            Maps.setValue(this.statusMap, modelType, modelName, version, stage, component, RepositoryConstant.filed_local_md5, md5);
+            Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepositoryConstant.filed_local_md5, md5);
             return;
         }
 
         // 计算MD5
         md5 = MD5Utils.getMD5Txt(check);
 
-        Maps.setValue(this.statusMap, modelType, modelName, version, stage, component, RepositoryConstant.filed_local_md5, md5);
+        Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepositoryConstant.filed_local_md5, md5);
     }
 
 
     /**
      * 测试云端的文件能否被下载
+     *
      * @param modelType
      * @param modelName
      * @param version
      * @param pathName
      * @return
      */
-    public boolean testUrlFileCanBeOpen(String modelType, String modelName, String version, String pathName) {
+    public boolean testUrlFileCanBeOpen(String modelType, String modelName, String modelVersion, String version, String pathName) {
         String host = (String) this.configService.getConfigValue(this.foxServiceName, this.foxServiceType, RepositoryConfigConstant.filed_config_name, RepositoryConfigConstant.filed_config_file, this.siteUri);
         if (MethodUtils.hasEmpty(host)) {
             throw new ServiceException("尚未配置仓库的uri，请先配置仓库的uri");
         }
 
-        String urlStr = host + "/" + modelType + "/" + modelName + "/" + version + "/" + pathName;
+        String urlStr = host + "/" + modelType + "/" + modelName + "/" + modelVersion + "/" + version + "/" + pathName;
 
         return DownLoadUtil.testUrlFileCanBeOpen(urlStr, "");
     }
@@ -594,13 +645,13 @@ public class RepositoryService {
      * @param modelType 仓库类型
      * @throws IOException 异常信息
      */
-    public void downloadFile(String modelType, String modelName, String version, String stage, String pathName, String component) throws IOException, InterruptedException {
+    public void downloadFile(String modelType, String modelName, String modelVersion, String version, String stage, String pathName, String component) throws IOException, InterruptedException {
         // 简单验证
-        if (MethodUtils.hasEmpty(modelType, modelName, version, stage, pathName, component)) {
-            throw new ServiceException("参数不能为空:modelType, modelName, version, stage, pathName, component");
+        if (MethodUtils.hasEmpty(modelType, modelName, modelVersion, version, stage, pathName, component)) {
+            throw new ServiceException("参数不能为空:modelType, modelName, modelVersion, version, stage, pathName, component");
         }
 
-        String fileName = modelName + ".tar";
+        String fileName = this.getRepoLocalTarFileName(modelName, modelVersion, version);
 
         String host = (String) this.configService.getConfigValue(this.foxServiceName, this.foxServiceType, RepositoryConfigConstant.filed_config_name, RepositoryConfigConstant.filed_config_file, this.siteUri);
         if (MethodUtils.hasEmpty(host)) {
@@ -623,8 +674,8 @@ public class RepositoryService {
 
         // 下载tar文件
         File file = new File("");
-        String url = host + "/" + modelType + "/" + modelName + "/" + version + "/" + pathName;
-        String localPath = file.getAbsolutePath() + "/repository/" + modelType + "/" + modelName + "/" + version + "/" + stage + "/" + component;
+        String url = host + "/" + modelType + "/" + modelName + "/" + modelVersion + "/" + version + "/" + pathName;
+        String localPath = file.getAbsolutePath() + "/repository/" + modelType + "/" + modelName + "/" + modelVersion + "/" + version + "/" + stage + "/" + component;
         DownLoadUtil.downLoadFromHttpUrl(url, fileName, localPath, "");
 
 
@@ -657,7 +708,7 @@ public class RepositoryService {
 
 
         // 将状态保存起来
-        this.scanLocalStatus(modelType, modelName, version, stage, component);
+        this.scanLocalStatus(modelType, modelName, modelVersion, version, stage, component);
     }
 
     /**
@@ -668,15 +719,17 @@ public class RepositoryService {
      * @param version
      * @param component
      */
-    public void deletePackageFile(String modelType, String modelName, String version, String stage, String component) {
+    public void deletePackageFile(String modelType, String modelName, String modelVersion, String version, String stage, String component) {
         try {
             // 简单验证
-            if (MethodUtils.hasEmpty(modelType, modelName, version, component)) {
-                throw new ServiceException("参数不能为空:modelType, modelName, version, component");
+            if (MethodUtils.hasEmpty(modelType, modelName, modelVersion, version, component)) {
+                throw new ServiceException("参数不能为空: modelType, modelName, modelVersion, version, component");
             }
 
             File file = new File("");
-            String packageDir = file.getAbsolutePath() + "/repository/" + modelType + "/" + modelName + "/" + version;
+            String modelNameDir = file.getAbsolutePath() + "/repository/" + modelType + "/" + modelName;
+            String modelVersionDir = modelNameDir + "/" + modelVersion;
+            String packageDir = modelVersionDir + "/" + version;
 
             //  删除安装包文件
             if (OSInfo.isWindows()) {
@@ -689,46 +742,36 @@ public class RepositoryService {
 
 
             // 检查：是否整个模块都清空了，如果是就删除残余目录
-            String modelPath = file.getAbsolutePath() + "/repository/" + modelType + "/" + modelName;
-            File modelFile = new File(modelPath);
-            if (modelFile.isDirectory() && modelFile.list().length == 0) {
-                if (OSInfo.isWindows()) {
-                    modelPath = modelPath.replace("/", "\\");
-                    ShellUtils.executeCmd("rd /s /q " + modelPath);
-                }
-                if (OSInfo.isLinux()) {
-                    ShellUtils.executeShell("rm -rf '" + modelPath + "'");
-                }
-            }
+            this.deleteEmptyDir(modelVersionDir);
+            this.deleteEmptyDir(modelNameDir);
 
             // 将状态保存起来
-            this.scanLocalStatus(modelType, modelName, version, stage, component);
-            this.scanLocalMd5(modelType, modelName, version, stage, component);
+            this.scanLocalStatus(modelType, modelName, modelVersion, version, stage, component);
+            this.scanLocalMd5(modelType, modelName, modelVersion, version, stage, component);
         } catch (Exception e) {
             throw new ServiceException(e.getMessage());
         }
     }
 
-
     /**
      * 安装模块
      */
-    public void installFile(String modelType, String modelName, String version, String stage, String component) {
+    public void installFile(String modelType, String modelName, String modelVersion, String version, String stage, String component) {
         try {
             // 简单验证
-            if (MethodUtils.hasEmpty(modelType, modelName, version, stage, component)) {
-                throw new ServiceException("参数不能为空:modelType, modelName, version, stage, component");
+            if (MethodUtils.hasEmpty(modelType, modelName, modelVersion, version, stage, component)) {
+                throw new ServiceException("参数不能为空:modelType, modelName, modelVersion, version, stage, component");
             }
 
             File file = new File("");
-            String tarDir = file.getAbsolutePath() + "/repository/" + modelType + "/" + modelName + "/" + version + "/" + stage + "/" + component + "/" + "tar";
+            String tarDir = this.getRepoLocalPathTarFileName(file.getAbsolutePath(), modelType, modelName, modelVersion, version, stage, component);
 
             // 备份目标文件，然后将解压文件复制复制到目标目录
             if (modelType.equals(RepositoryConstant.repository_type_decoder)) {
                 this.installDecoderFile(tarDir, file.getAbsolutePath() + "/jar/decoder");
             }
             if (modelType.equals(RepositoryConstant.repository_type_template)) {
-                this.installTemplateFile(tarDir, file.getAbsolutePath() + "/template/" + modelName + "/" + version);
+                this.installTemplateFile(tarDir, file.getAbsolutePath() + "/template/" + modelName + "/" + modelVersion + "/" + version);
             }
             if (modelType.equals(RepositoryConstant.repository_type_service)) {
                 if (ServiceVOFieldConstant.field_type_kernel.equals(component) || ServiceVOFieldConstant.field_type_system.equals(component) || ServiceVOFieldConstant.field_type_service.equals(component)) {
@@ -742,10 +785,32 @@ public class RepositoryService {
             }
 
             // 将状态保存起来
-            this.scanLocalStatus(modelType, modelName, version, stage, component);
-            this.scanLocalMd5(modelType, modelName, version, stage, component);
+            this.scanLocalStatus(modelType, modelName, modelVersion, version, stage, component);
+            this.scanLocalMd5(modelType, modelName, modelVersion, version, stage, component);
         } catch (Exception e) {
             throw new ServiceException(e.getMessage());
+        }
+    }
+
+    private void mkdirDir(String destFileDir) throws IOException, InterruptedException {
+        if (OSInfo.isWindows()) {
+            destFileDir = destFileDir.replace("/", "\\");
+            ShellUtils.executeCmd("mkdir " + destFileDir);
+        }
+        if (OSInfo.isLinux()) {
+            ShellUtils.executeShell("mkdir -p '" + destFileDir + "'");
+        }
+    }
+
+    private void copyFile(String installFileDir, String fileName, String destFileDir) throws IOException, InterruptedException {
+        if (OSInfo.isWindows()) {
+            installFileDir = installFileDir.replace("/", "\\");
+            destFileDir = destFileDir.replace("/", "\\");
+
+            ShellUtils.executeCmd("xcopy /r/Y/F \"" + installFileDir + "\\" + fileName + "\" \"" + destFileDir + "\"");
+        }
+        if (OSInfo.isLinux()) {
+            ShellUtils.executeShell("cp -f '" + installFileDir + "/" + fileName + "' '" + destFileDir + "'");
         }
     }
 
@@ -756,11 +821,12 @@ public class RepositoryService {
             throw new ServiceException(installFileDir + " 没有文件");
         }
 
-        ShellUtils.executeShell("mkdir -p '" + destFileDir + "'");
+        // 预创建目录
+        this.mkdirDir(destFileDir);
 
-        // 备份旧的jar文件和覆盖文件
-        for (String name : fileList) {
-            ShellUtils.executeShell("cp -f '" + installFileDir + "/" + name + "' '" + destFileDir + "'");
+        // 拷贝文件
+        for (String fileName : fileList) {
+            this.copyFile(installFileDir, fileName, destFileDir);
         }
     }
 
@@ -779,33 +845,23 @@ public class RepositoryService {
             throw new ServiceException(installFileDir + " 没有文件");
         }
 
-        if (OSInfo.isWindows()) {
-            destFileDir = destFileDir.replace("/", "\\");
-            ShellUtils.executeCmd("mkdir " + destFileDir);
-        }
-        if (OSInfo.isLinux()) {
-            ShellUtils.executeShell("mkdir -p '" + destFileDir + "'");
-        }
+        // 预创建目录
+        this.mkdirDir(destFileDir);
 
 
         // 复制文件
-        for (String name : fileList) {
-            if (!name.endsWith(".jar")) {
+        for (String fileName : fileList) {
+            if (!fileName.endsWith(".jar")) {
                 continue;
             }
 
             // 检查：两个文件是否一致，如果一致旧不需重复替换
-            if (FileCompareUtils.isSameFile(installFileDir + "/" + name, destFileDir + "/" + name)) {
+            if (FileCompareUtils.isSameFile(installFileDir + "/" + fileName, destFileDir + "/" + fileName)) {
                 continue;
             }
 
-            if (OSInfo.isWindows()) {
-                installFileDir = installFileDir.replace("/", "\\");
-                ShellUtils.executeCmd("xcopy /r/Y/F " + installFileDir + "\\" + name + " " + destFileDir);
-            }
-            if (OSInfo.isLinux()) {
-                ShellUtils.executeShell("cp -f '" + installFileDir + "/" + name + "' '" + destFileDir + "'");
-            }
+            // 拷贝文件
+            this.copyFile(installFileDir, fileName, destFileDir);
         }
     }
 
@@ -908,8 +964,8 @@ public class RepositoryService {
             for (String stage : stages.keySet()) {
                 Map<String, Object> components = (Map<String, Object>) stages.get(stage);
                 for (String component : components.keySet()) {
-                    this.scanLocalStatus(RepositoryConstant.repository_type_service, appName, version, stage, component);
-                    this.scanLocalMd5(RepositoryConstant.repository_type_service, appName, version, stage, component);
+                    this.scanLocalStatus(RepositoryConstant.repository_type_service, appName, RepositoryConstant.filed_value_model_version_default, version, stage, component);
+                    this.scanLocalMd5(RepositoryConstant.repository_type_service, appName, RepositoryConstant.filed_value_model_version_default, version, stage, component);
                 }
             }
         }

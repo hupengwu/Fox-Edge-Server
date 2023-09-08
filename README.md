@@ -20,7 +20,12 @@ Fox-Edge 边缘计算，致力于提供一种在线下管理智能设备的物�
 
 ## 运行环境
 在现实中，Fox-Edge安装在通用的x86工控机上，使之成为线下的一种专用网关设备，然后它可以跟那些智能设备一起被安装在现场。
-![image](http://docs.fox-tech.cn/_images/device.jpg)
+1. x86系列的**小型工控机** 或者是 **软路由** 或者是 **小型工业网关** 这类小型物理设备
+2. 最低配置：4G物理内存（推荐8G内存），64G存储空间。
+
+<img src="http://docs.fox-tech.cn/_images/NanoPiR5C.jpg" style="width:50%;height:auto;">
+<img src="http://docs.fox-tech.cn/_images/device-router.jpg" alt="软路由" style="width:50%;height:auto;">
+<img src="http://docs.fox-tech.cn/_images/device.jpg" style="width:50%;height:auto;">
 
 ## 产品特点
 fox-edge 边缘计算 采用积木式的全开放式的架构，方便用户自选各种组件和从仓库中选择解码器。目前正在增强解码器仓库功能，方便各用户互相分享自己开发的解码器。
