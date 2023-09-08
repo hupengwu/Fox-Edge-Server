@@ -1,0 +1,36 @@
+{
+	"operate_list": [{
+		"operate_name": "总召唤",
+		"template_name": "Read All Data Template",		
+		"operate": {
+			"name": "Read Single Point Signal Table",
+			"operate_name": "Read Single Point Signal",
+			"encoder_param": {
+				"asdu": {
+					"typeId": 100,
+					"vsq": {
+						"sq": false,
+						"num": 0
+					},
+					"cot": {
+						"reason": 6,
+						"test": false,
+						"pn": true,
+						"addr": 0
+					},
+					"commonAddress": 1,
+					"data": "00 00 00 14 "
+				},
+				"waitEndFlag": [10]
+			},
+			"decoder_param": [{
+					"typeId": 1,
+					"table": "102.IEC104_Read Single Point Signal Table.csv"
+			}, {
+
+					"typeId": 11,
+					"table": "101.IEC104_Read Scaled Telemetry.csv"
+			}]
+		}
+	}]
+}

@@ -60,6 +60,7 @@ public class RepoStatusTask extends PeriodTask {
             Set<String> tables = new HashSet<>();
             for (Map<String, Object> map : localList) {
                 String modelName = (String) map.getOrDefault(RepositoryConstant.filed_model_name, "");
+                String modelVersion = (String) map.getOrDefault(RepositoryConstant.filed_model_version, RepositoryConstant.filed_value_model_version_default);
                 String component = (String) map.getOrDefault(RepositoryConstant.filed_component, "");
                 List<Map<String, Object>> versions = (List<Map<String, Object>>) map.getOrDefault(RepositoryConstant.filed_versions, new ArrayList<>());
 
@@ -71,6 +72,7 @@ public class RepoStatusTask extends PeriodTask {
                     }
                     StringBuilder sb = new StringBuilder();
                     sb.append(modelName);
+                    sb.append(modelVersion);
                     sb.append(component);
                     sb.append(version);
                     sb.append(stage);

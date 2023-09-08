@@ -775,7 +775,7 @@ public class RepositoryService {
             }
             if (modelType.equals(RepositoryConstant.repository_type_service)) {
                 if (ServiceVOFieldConstant.field_type_kernel.equals(component) || ServiceVOFieldConstant.field_type_system.equals(component) || ServiceVOFieldConstant.field_type_service.equals(component)) {
-                    this.installServiceFile(modelName, component, version, stage);
+                    this.installServiceFile(modelName, modelVersion, component, version, stage);
                 } else {
                     throw new ServiceException("component必须为service或者system或者kernel!");
                 }
@@ -876,7 +876,7 @@ public class RepositoryService {
      * @throws IOException          异常信息
      * @throws InterruptedException 异常信息
      */
-    private void installServiceFile(String modelName, String component, String version, String stage) throws IOException, InterruptedException {
+    private void installServiceFile(String modelName, String modelVersion, String component, String version, String stage) throws IOException, InterruptedException {
         // 管理服务默认固定9000端口，其他服务按动态端口分配
         Integer serverPort = ServiceVOFieldConstant.field_port_gateway;
         if (!ServiceVOFieldConstant.field_app_gateway.equals(modelName) || !ServiceVOFieldConstant.field_type_kernel.equals(component)) {
@@ -884,7 +884,7 @@ public class RepositoryService {
         }
 
         File file = new File("");
-        ShellUtils.executeShell(file.getAbsolutePath() + "/shell/upgrade.sh " + component + " " + modelName + " " + version + " " + stage + " " + serverPort);
+        ShellUtils.executeShell(file.getAbsolutePath() + "/shell/upgrade.sh " + component + " " + modelName + " " + modelVersion + " " + version + " " + stage + " " + serverPort);
     }
 
     private void installWebpackFile(String installFileDir, String destFileDir) throws IOException, InterruptedException {
