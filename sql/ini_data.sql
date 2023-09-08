@@ -1436,7 +1436,7 @@ INSERT INTO `tb_operate_monitor_task` (`id`, `template_name`, `device_type`, `te
 	(17, 'SNMP服务器监控任务', 'SNMP Device', '[{"param": {"tableName": "snmp/v1/1.0.0/101.SNMP_MIB_Default_Table.csv", "templateName": "Read Data", "objectNameList": ["CPU负载(1分钟)", "CPU负载(5分钟)", "CPU负载(15分钟)", "总交换大小", "可用交换空间", "机器内存总量", "使用的总RAM", "总可用RAM", "共享的RAM总量", "缓冲的总RAM", "系统运行时间"]}, "timeout": 2000, "operateMode": "exchange", "operateName": "读数据"}]', '[]', 1676611509576, 1694166833983),
 	(18, 'CJT188设备-读表数据', 'CJT188', '[{"param": {}, "timeout": 2000, "operateMode": "exchange", "operateName": "读表数据"}]', '[2204]', 1677310065496, 1677333441314);
 
--- 正在导出表  fox_edge.tb_operate_record 的数据：~34 rows (大约)
+-- 正在导出表  fox_edge.tb_operate_record 的数据：~38 rows (大约)
 DELETE FROM `tb_operate_record`;
 INSERT INTO `tb_operate_record` (`id`, `device_name`, `device_type`, `record_name`, `client_model`, `operate_uuid`, `record_param`, `record_data`, `create_time`, `update_time`) VALUES
 	(23221, 'CJT188设备-01', 'CJT188', '读表数据', 'proxy4http2topic', '97ea528d-aefe-4d2d-8661-d474ef33cccd', '{"type": 16, "address": "01 00 00 05 08 00 00"}', '{"value": {"status": {"sn": 0, "时间": "2015-5-11 22:1:31", "状态1": 32, "状态2": 33, "本月用量": 776655, "累计用量": 776655, "本月用量单位": "m3", "累计用量单位": "m3"}}, "commStatus": {"commFailedTime": 0, "commFailedCount": 0, "commSuccessTime": 1682695021690}}', 1682695021700, 1682695021700),
