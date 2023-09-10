@@ -9,7 +9,7 @@ import cn.foxtech.common.utils.ContainerUtils;
 import cn.foxtech.device.protocol.v1.core.method.FoxEdgeExchangeMethod;
 import cn.foxtech.device.protocol.v1.core.method.FoxEdgeMethodTemplate;
 import cn.foxtech.device.protocol.v1.core.method.FoxEdgePublishMethod;
-import cn.foxtech.device.protocol.v1.core.utils.MethodUtils;
+import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 import cn.foxtech.device.scanner.FoxEdgeMethodTemplateScanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

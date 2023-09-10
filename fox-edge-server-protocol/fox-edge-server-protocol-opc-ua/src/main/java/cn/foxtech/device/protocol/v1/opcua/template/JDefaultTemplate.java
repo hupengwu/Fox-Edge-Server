@@ -2,7 +2,7 @@ package cn.foxtech.device.protocol.v1.opcua.template;
 
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.core.template.ITemplate;
-import cn.foxtech.device.protocol.v1.core.utils.MethodUtils;
+import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 import cn.foxtech.device.protocol.v1.opcua.entity.OpcUaNodeId;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.csv.CsvReader;

@@ -1,7 +1,7 @@
 package cn.foxtech.device.protocol.v1.telecom.demo;
 
-import cn.foxtech.device.protocol.v1.core.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.telecom.core.TelecomProtocol;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
 
 import java.util.Map;
 

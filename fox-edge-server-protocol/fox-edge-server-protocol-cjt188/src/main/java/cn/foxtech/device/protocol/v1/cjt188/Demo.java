@@ -3,7 +3,7 @@ package cn.foxtech.device.protocol.v1.cjt188;
 import cn.foxtech.device.protocol.v1.cjt188.core.CJT188Address;
 import cn.foxtech.device.protocol.v1.cjt188.core.CJT188Entity;
 import cn.foxtech.device.protocol.v1.cjt188.core.CJT188ProtocolFrame;
-import cn.foxtech.device.protocol.v1.core.utils.HexUtils;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
 
 import java.util.HashMap;
 import java.util.Map;

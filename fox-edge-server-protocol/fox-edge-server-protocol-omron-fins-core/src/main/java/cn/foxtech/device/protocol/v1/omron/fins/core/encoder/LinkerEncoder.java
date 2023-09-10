@@ -6,7 +6,7 @@ import cn.foxtech.device.protocol.v1.omron.fins.core.entity.data.Respond;
 import cn.foxtech.device.protocol.v1.omron.fins.core.entity.pdu.ConnectRequest;
 import cn.foxtech.device.protocol.v1.omron.fins.core.entity.pdu.ConnectRespond;
 import cn.foxtech.device.protocol.v1.omron.fins.core.entity.pdu.TransferRespond;
-import cn.foxtech.device.protocol.v1.core.utils.HexUtils;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
 
 import java.util.Map;
 

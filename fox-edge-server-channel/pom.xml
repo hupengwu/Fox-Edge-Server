@@ -24,6 +24,7 @@
         <module>fox-edge-server-channel-serialport-service</module>
         <module>fox-edge-server-channel-simulator-service</module>
         <module>fox-edge-server-channel-opc-ua-service</module>
+        <module>fox-edge-server-channel-tcp-server</module>
         <module>fox-edge-server-channel-tcpsocket-service</module>
         <module>fox-edge-server-channel-udpsocket-service</module>
         <module>fox-edge-server-channel-mqtt-client</module>

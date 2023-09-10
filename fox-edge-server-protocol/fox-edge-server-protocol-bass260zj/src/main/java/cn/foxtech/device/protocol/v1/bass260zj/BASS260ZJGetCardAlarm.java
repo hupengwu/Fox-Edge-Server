@@ -3,7 +3,7 @@ package cn.foxtech.device.protocol.v1.bass260zj;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
-import cn.foxtech.device.protocol.v1.core.utils.HexUtils;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.telecom.core.TelecomEntity;
 import cn.foxtech.device.protocol.v1.telecom.core.TelecomProtocol;
 

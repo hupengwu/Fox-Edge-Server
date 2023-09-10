@@ -1,7 +1,7 @@
 package cn.foxtech.channel.gdana.digester.service;
 
 import cn.foxtech.common.utils.method.MethodUtils;
-import cn.foxtech.device.protocol.v1.core.utils.HexUtils;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.gdana.digester.DigesterEntity;
 import cn.foxtech.device.protocol.v1.gdana.digester.DigesterProtocolFrame;
 import cn.foxtech.channel.domain.ChannelRequestVO;

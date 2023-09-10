@@ -1,6 +1,6 @@
 package cn.foxtech.device.protocol.v1.modbus.demo;
 
-import cn.foxtech.device.protocol.v1.core.utils.BitsUtils;
+import cn.foxtech.device.protocol.v1.utils.BitsUtils;
 import cn.foxtech.device.protocol.v1.modbus.ModBusProtocolReadRegisters;
 import cn.foxtech.device.protocol.v1.modbus.ModBusProtocolReadStatus;
 import cn.foxtech.device.protocol.v1.modbus.ModBusProtocolWriteRegisters;

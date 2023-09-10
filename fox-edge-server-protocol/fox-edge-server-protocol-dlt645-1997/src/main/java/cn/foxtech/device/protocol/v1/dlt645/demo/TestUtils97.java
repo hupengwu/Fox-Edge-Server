@@ -7,8 +7,8 @@ import cn.foxtech.device.protocol.v1.dlt645.core.entity.DLT645DataEntity;
 import cn.foxtech.device.protocol.v1.dlt645.core.entity.DLT645FunEntity;
 import cn.foxtech.device.protocol.v1.dlt645.core.entity.DLT645v1997DataEntity;
 import cn.foxtech.device.protocol.v1.dlt645.core.loader.DLT645v1997CsvLoader;
-import cn.foxtech.device.protocol.v1.core.utils.ContainerUtils;
-import cn.foxtech.device.protocol.v1.core.utils.HexUtils;
+import cn.foxtech.device.protocol.v1.utils.ContainerUtils;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
 
 import java.util.HashMap;
 import java.util.List;

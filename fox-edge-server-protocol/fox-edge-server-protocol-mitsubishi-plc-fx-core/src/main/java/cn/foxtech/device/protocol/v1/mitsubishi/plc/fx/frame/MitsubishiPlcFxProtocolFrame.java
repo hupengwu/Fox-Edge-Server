@@ -2,7 +2,7 @@ package cn.foxtech.device.protocol.v1.mitsubishi.plc.fx.frame;
 
 
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
-import cn.foxtech.device.protocol.v1.core.utils.AsciiUtils;
+import cn.foxtech.device.protocol.v1.utils.AsciiUtils;
 import cn.foxtech.device.protocol.v1.mitsubishi.plc.fx.entity.MitsubishiPlcFxDeviceReadEntity;
 import cn.foxtech.device.protocol.v1.mitsubishi.plc.fx.entity.MitsubishiPlcFxDeviceWriteEntity;
 import cn.foxtech.device.protocol.v1.mitsubishi.plc.fx.entity.MitsubishiPlcFxForceOffEntity;

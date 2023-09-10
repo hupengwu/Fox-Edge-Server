@@ -2,9 +2,9 @@ package cn.foxtech.device.protocol.v1.modbus.template;
 
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.core.template.ITemplate;
-import cn.foxtech.device.protocol.v1.core.utils.BitsUtils;
-import cn.foxtech.device.protocol.v1.core.utils.ByteUtils;
 import cn.foxtech.device.protocol.v1.modbus.core.ModBusWriteRegistersRequest;
+import cn.foxtech.device.protocol.v1.utils.BitsUtils;
+import cn.foxtech.device.protocol.v1.utils.ByteUtils;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.csv.CsvReader;
 import cn.hutool.core.text.csv.CsvUtil;
@@ -125,7 +125,7 @@ public class JReadRegistersTemplate implements ITemplate {
                     data[1] = (byte) (statusList[i] & 0xff);
 
                     // 解码
-                    this.decodeValue(jDecoderValueParam,data,result);
+                    this.decodeValue(jDecoderValueParam, data, result);
                     continue;
                 }
                 // 该变量占用2个寄存器
@@ -137,7 +137,7 @@ public class JReadRegistersTemplate implements ITemplate {
                     data[3] = (byte) (statusList[i + 1] & 0xff);
 
                     // 解码
-                    this.decodeValue(jDecoderValueParam,data,result);
+                    this.decodeValue(jDecoderValueParam, data, result);
                     continue;
                 }
                 // 该变量占用3个寄存器
@@ -151,7 +151,7 @@ public class JReadRegistersTemplate implements ITemplate {
                     data[5] = (byte) (statusList[i + 2] & 0xff);
 
                     // 解码
-                    this.decodeValue(jDecoderValueParam,data,result);
+                    this.decodeValue(jDecoderValueParam, data, result);
                     continue;
                 }
                 // 该变量占用4个寄存器
@@ -167,7 +167,7 @@ public class JReadRegistersTemplate implements ITemplate {
                     data[7] = (byte) (statusList[i + 3] & 0xff);
 
                     // 解码
-                    this.decodeValue(jDecoderValueParam,data,result);
+                    this.decodeValue(jDecoderValueParam, data, result);
                     continue;
                 }
 

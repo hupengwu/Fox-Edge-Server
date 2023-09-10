@@ -16,6 +16,7 @@
 
     <modules>
         <module>fox-edge-server-protocol-anno</module>
+        <module>fox-edge-server-protocol-utils</module>
         <module>fox-edge-server-protocol-core</module>
         <module>fox-edge-server-protocol-bass260zj</module>
         <module>fox-edge-server-protocol-lrw</module>
@@ -23,6 +24,7 @@
         <module>fox-edge-server-protocol-modbus</module>
         <module>fox-edge-server-protocol-modbus-core</module>
         <module>fox-edge-server-protocol-zs-sht30-1t-1h</module>
+        <module>fox-edge-server-protocol-zktl-air6in1</module>
         <module>fox-edge-server-protocol-telecom-core</module>
         <module>fox-edge-server-protocol-snmp</module>
         <module>fox-edge-server-protocol-dlt645-core</module>

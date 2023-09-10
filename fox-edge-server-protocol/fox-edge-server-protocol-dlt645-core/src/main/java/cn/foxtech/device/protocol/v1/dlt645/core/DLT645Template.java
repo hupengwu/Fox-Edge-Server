@@ -1,6 +1,6 @@
 package cn.foxtech.device.protocol.v1.dlt645.core;
 
-import cn.foxtech.device.protocol.v1.core.utils.ContainerUtils;
+import cn.foxtech.device.protocol.v1.utils.ContainerUtils;
 import cn.foxtech.device.protocol.v1.dlt645.core.loader.DLT645v1997CsvLoader;
 import cn.foxtech.device.protocol.v1.dlt645.core.loader.DLT645v2007CsvLoader;
 import cn.foxtech.device.protocol.v1.dlt645.core.entity.DLT645DataEntity;

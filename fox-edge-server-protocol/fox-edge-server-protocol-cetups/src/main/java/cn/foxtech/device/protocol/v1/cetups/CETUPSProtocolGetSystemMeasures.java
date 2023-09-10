@@ -2,7 +2,7 @@ package cn.foxtech.device.protocol.v1.cetups;
 
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
-import cn.foxtech.device.protocol.v1.core.utils.HexUtils;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.modbus.core.ModBusConstants;
 import cn.foxtech.device.protocol.v1.modbus.core.ModBusReadRegistersRequest;
 

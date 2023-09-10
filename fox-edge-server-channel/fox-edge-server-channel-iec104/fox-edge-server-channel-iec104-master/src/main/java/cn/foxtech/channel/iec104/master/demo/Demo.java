@@ -2,7 +2,7 @@ package cn.foxtech.channel.iec104.master.demo;
 
 import cn.foxtech.common.utils.iec104.server.Iec104ClientLinkerManager;
 import cn.foxtech.common.utils.iec104.server.Iec104ClientLinkerScheduler;
-import cn.foxtech.device.protocol.v1.core.utils.HexUtils;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.core.utils.JsonUtils;
 import cn.foxtech.device.protocol.v1.iec104.core.builder.ApduVOBuilder;
 import cn.foxtech.device.protocol.v1.iec104.core.encoder.ApduEncoder;

@@ -1,6 +1,6 @@
 package cn.foxtech.device.protocol.v1.gdana.digester;
 
-import cn.foxtech.device.protocol.v1.core.utils.HexUtils;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,7 +1,7 @@
 package cn.foxtech.device.protocol.v1.dlt645.core.entity;
 
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
-import cn.foxtech.device.protocol.v1.core.utils.HexUtils;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

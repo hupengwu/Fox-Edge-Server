@@ -7,9 +7,9 @@ import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.cjt188.core.CJT188ProtocolFrame;
 import cn.foxtech.device.protocol.v1.cjt188.core.CJT188Unit;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
-import cn.foxtech.device.protocol.v1.core.utils.BcdUtils;
-import cn.foxtech.device.protocol.v1.core.utils.HexUtils;
-import cn.foxtech.device.protocol.v1.core.utils.MethodUtils;
+import cn.foxtech.device.protocol.v1.utils.BcdUtils;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
+import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 
 import java.util.HashMap;
 import java.util.Map;

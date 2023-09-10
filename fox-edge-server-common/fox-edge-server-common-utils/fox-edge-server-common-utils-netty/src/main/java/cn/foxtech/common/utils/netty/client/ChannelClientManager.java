@@ -1,8 +1,6 @@
 package cn.foxtech.common.utils.netty.client;
 
 import io.netty.channel.Channel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -15,13 +13,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class ChannelClientManager {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChannelClientManager.class);
 
     private static final Map<SocketAddress, Channel> channelMap = new HashMap<>();
 
-    /**
-     * 获得等待连接状态的地址
-     */
+
     public static synchronized List<SocketAddress> waitRemoteAddress() {
         List<SocketAddress> waitRemoteAddress = new ArrayList<>();
         for (Map.Entry<SocketAddress, Channel> enty : channelMap.entrySet()) {
@@ -73,11 +68,6 @@ public class ChannelClientManager {
         createThread4Connect();
     }
 
-    /**
-     * 建立连接线程
-     *
-     * @throws Exception
-     */
     private static void createThread4Connect() {
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
         scheduledExecutorService.schedule(new Runnable() {
@@ -98,7 +88,7 @@ public class ChannelClientManager {
 
                         Thread.sleep(10 * 1000);
                     } catch (Throwable e) {
-                        LOGGER.error("createThread4Connect", e);
+                    //    LOGGER.error("createThread4Connect", e);
                     }
                 }
             }

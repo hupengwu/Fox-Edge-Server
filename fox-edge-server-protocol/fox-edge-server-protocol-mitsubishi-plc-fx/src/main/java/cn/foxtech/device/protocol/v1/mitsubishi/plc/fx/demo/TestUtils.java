@@ -1,7 +1,7 @@
 package cn.foxtech.device.protocol.v1.mitsubishi.plc.fx.demo;
 
 import cn.foxtech.device.protocol.v1.mitsubishi.plc.fx.PlcFxProtocolDeviceRead;
-import cn.foxtech.device.protocol.v1.core.utils.HexUtils;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.mitsubishi.plc.fx.entity.MitsubishiPlcFxDeviceReadEntity;
 import cn.foxtech.device.protocol.v1.mitsubishi.plc.fx.entity.MitsubishiPlcFxDeviceWriteEntity;
 import cn.foxtech.device.protocol.v1.mitsubishi.plc.fx.entity.MitsubishiPlcFxEntity;

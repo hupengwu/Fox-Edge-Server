@@ -12,8 +12,8 @@ import cn.foxtech.device.protocol.v1.omron.fins.core.entity.pdu.Header;
 import cn.foxtech.device.protocol.v1.omron.fins.core.entity.pdu.TransferRequest;
 import cn.foxtech.device.protocol.v1.omron.fins.core.entity.pdu.TransferRespond;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
-import cn.foxtech.device.protocol.v1.core.utils.HexUtils;
-import cn.foxtech.device.protocol.v1.core.utils.MethodUtils;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
+import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 
 import java.util.HashMap;
 import java.util.Map;

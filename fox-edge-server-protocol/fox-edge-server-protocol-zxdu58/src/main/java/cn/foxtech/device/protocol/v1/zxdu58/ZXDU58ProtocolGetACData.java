@@ -3,9 +3,9 @@ package cn.foxtech.device.protocol.v1.zxdu58;
 
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
-import cn.foxtech.device.protocol.v1.core.utils.BitsUtils;
-import cn.foxtech.device.protocol.v1.core.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.telecom.core.TelecomProtocol;
+import cn.foxtech.device.protocol.v1.utils.BitsUtils;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
 
 import java.util.HashMap;
 import java.util.Map;

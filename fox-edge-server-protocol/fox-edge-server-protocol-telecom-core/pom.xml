@@ -20,6 +20,7 @@
             <artifactId>fox-edge-server-protocol-core</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

@@ -5,8 +5,6 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -15,7 +13,6 @@ import java.net.SocketAddress;
  * Netty客户端工厂：创建异步连接
  */
 public class ChannelClientFactory {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChannelClientFactory.class);
 
     private final static ChannelClientFactory instance = new ChannelClientFactory();
 
@@ -41,7 +38,7 @@ public class ChannelClientFactory {
         this.bootstrap.remoteAddress(remoteAddress);
         this.bootstrap.connect().addListener(future -> {
             if (future.cause() != null) {
-                LOGGER.warn("连接失败: " + future.cause());
+                //      LOGGER.warn("连接失败: " + future.cause());
             }
         });
     }

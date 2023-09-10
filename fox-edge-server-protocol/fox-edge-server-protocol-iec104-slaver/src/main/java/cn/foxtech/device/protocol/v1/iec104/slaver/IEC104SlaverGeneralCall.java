@@ -4,7 +4,7 @@ import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperateParam;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
-import cn.foxtech.device.protocol.v1.core.utils.BcdUtils;
+import cn.foxtech.device.protocol.v1.utils.BcdUtils;
 import cn.foxtech.device.protocol.v1.core.utils.JsonUtils;
 import cn.foxtech.device.protocol.v1.iec104.core.builder.ApduVOBuilder;
 import cn.foxtech.device.protocol.v1.iec104.core.entity.*;

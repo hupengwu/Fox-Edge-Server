@@ -1,6 +1,6 @@
 package cn.foxtech.device.protocol.v1.iec104.slaver.demo;
 
-import cn.foxtech.device.protocol.v1.core.utils.HexUtils;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.core.utils.JsonUtils;
 import cn.foxtech.device.protocol.v1.iec104.core.builder.ApduVOBuilder;
 import cn.foxtech.device.protocol.v1.iec104.core.encoder.ApduEncoder;
