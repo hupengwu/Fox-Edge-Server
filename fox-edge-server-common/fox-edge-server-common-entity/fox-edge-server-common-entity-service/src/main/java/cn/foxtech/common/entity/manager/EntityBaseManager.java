@@ -95,6 +95,14 @@ public abstract class EntityBaseManager {
             return true;
         }
 
+        // 如果是单纯的数据只存在于redis的实体，那直接返回成功，比如持久化服务的DeviceValueEntity、DeviceStatusEntity
+        if (this.entityMySQLComponent.getEntityServiceBySimpleName(simpleName) == null) {
+            return true;
+        }
+
+        // 如果同时拥有mysql和redis的生产者角色，但是为了节省内存，redis和mysql各自进行独立操作，
+        // 那么在启动阶段，进行下面的将mysql数据同步给redis的操作。例如管理服务的DeviceEntity
+
         // 临时性的获得RDService和DBService
         ProducerRedisService producerRedisService = ProducerRedisService.getInstanceBySimpleName(simpleName, this.redisService);
         BaseEntityService producerEntityService = this.entityMySQLComponent.getEntityServiceBySimpleName(simpleName);
@@ -106,6 +114,7 @@ public abstract class EntityBaseManager {
 
         // 将数据发布到redis
         EntityServiceUtils.publishEntity(producerRedisService);
+
 
         // 然后释放掉这个临时性的producerRedisService
         ProducerRedisService.removeInstanceBySimpleName(producerRedisService);
