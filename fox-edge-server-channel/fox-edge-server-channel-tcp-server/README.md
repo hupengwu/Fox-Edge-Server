@@ -38,6 +38,10 @@ tcp-server提供了自动识别的接口：cn.foxtech.device.protocol.v1.utils.n
 这样，上层应用就能够以channel的方式，进行跟远程的现场设备，基于tcp的方式进行交互操作了。
 
 #### 7、服务配置
+为channel-tcp-server创建一个serverConfig的配置<br>
+jarFile：解码器所在的文件位置<br>
+splitHandler：拆包类的完整名称<br>
+keyHandler：提取设备身份信息的完整名称<br>
 
 
 

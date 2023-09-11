@@ -18,4 +18,5 @@ public class Constants {
 
     public static final String OPERATE_MODE_EXCHANGE = "exchange";
     public static final String OPERATE_MODE_PUBLISH = "publish";
+    public static final String OPERATE_MODE_REPORT = "report";
 }

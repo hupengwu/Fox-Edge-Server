@@ -9,6 +9,7 @@ import cn.foxtech.common.utils.ContainerUtils;
 import cn.foxtech.device.protocol.v1.core.method.FoxEdgeExchangeMethod;
 import cn.foxtech.device.protocol.v1.core.method.FoxEdgeMethodTemplate;
 import cn.foxtech.device.protocol.v1.core.method.FoxEdgePublishMethod;
+import cn.foxtech.device.protocol.v1.core.method.FoxEdgeReportMethod;
 import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 import cn.foxtech.device.scanner.FoxEdgeMethodTemplateScanner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,10 +100,12 @@ public class MethodEntityService {
     private List<BaseEntity> buildMethodEntityList() {
         Map<String, Map<String, FoxEdgeExchangeMethod>> operateMethod = FoxEdgeMethodTemplate.inst().getExchangeMethod();
         Map<String, Map<String, FoxEdgePublishMethod>> publishMethod = FoxEdgeMethodTemplate.inst().getPublishMethod();
+        Map<String, Map<String, FoxEdgeReportMethod>> reportMethod = FoxEdgeMethodTemplate.inst().getReportMethod();
 
         List<BaseEntity> methodEntityList = new ArrayList<>();
         methodEntityList.addAll(this.buildExchangeMethod(operateMethod));
         methodEntityList.addAll(this.buildPublishMethod(publishMethod));
+        methodEntityList.addAll(this.buildReportMethod(reportMethod));
 
         return methodEntityList;
     }
@@ -160,6 +163,35 @@ public class MethodEntityService {
                 methodEntity.setOperateMode(Constants.OPERATE_MODE_PUBLISH);
                 methodEntity.setTimeout(methodPair.getTimeout());
                 methodEntity.setPolling(methodPair.isPolling());
+                methodEntity.setCreateTime(time);
+                methodEntity.setUpdateTime(time);
+
+                resultList.add(methodEntity);
+            }
+        }
+
+        return resultList;
+    }
+
+    private List<OperateMethodEntity> buildReportMethod(Map<String, Map<String, FoxEdgeReportMethod>> methodPairs) {
+
+        Long time = System.currentTimeMillis();
+
+        List<OperateMethodEntity> resultList = new ArrayList<>();
+
+        for (Map.Entry<String, Map<String, FoxEdgeReportMethod>> deviceEntity : methodPairs.entrySet()) {
+            Map<String, FoxEdgeReportMethod> methodpairs = deviceEntity.getValue();
+            for (Map.Entry<String, FoxEdgeReportMethod> entity : methodpairs.entrySet()) {
+                FoxEdgeReportMethod methodPair = entity.getValue();
+
+                OperateMethodEntity methodEntity = new OperateMethodEntity();
+
+                methodEntity.setManufacturer(methodPair.getManufacturer());
+                methodEntity.setDeviceType(methodPair.getDeviceType());
+                methodEntity.setOperateName(methodPair.getName());
+                methodEntity.setOperateMode(Constants.OPERATE_MODE_REPORT);
+                methodEntity.setTimeout(0);
+                methodEntity.setPolling(false);
                 methodEntity.setCreateTime(time);
                 methodEntity.setUpdateTime(time);
 

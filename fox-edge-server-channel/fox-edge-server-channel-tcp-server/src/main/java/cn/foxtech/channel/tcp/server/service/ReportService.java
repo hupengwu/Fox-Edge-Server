@@ -4,6 +4,7 @@ import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.common.service.EntityManageService;
 import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.common.entity.entity.ChannelEntity;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -61,7 +62,7 @@ public class ReportService {
                 respondVO.setUuid(null);
                 respondVO.setType(this.channelProperties.getChannelType());
                 respondVO.setName(channelEntity.getChannelName());
-                respondVO.setRecv(pdu);
+                respondVO.setRecv(HexUtils.byteArrayToHexString(pdu));
 
                 respondVOList.add(respondVO);
             }
