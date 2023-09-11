@@ -1,6 +1,7 @@
 package cn.foxtech.channel.tcp.server.handler;
 
 import cn.foxtech.channel.tcp.server.service.ChannelManager;
+import cn.foxtech.channel.tcp.server.service.ReportService;
 import cn.foxtech.common.utils.netty.server.handler.TcpSocketChannelHandler;
 import cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -17,8 +18,12 @@ public class SocketChannelHandler extends TcpSocketChannelHandler {
     @Autowired
     private ChannelManager channelManager;
 
+    @Autowired
+    private ReportService reportService;
+
     @Setter
     private ServiceKeyHandler serviceKeyHandler;
+
 
     /**
      * 客户端与服务端第一次建立连接时 执行
@@ -56,10 +61,8 @@ public class SocketChannelHandler extends TcpSocketChannelHandler {
             this.channelManager.setServiceKey(ctx, serviceKey);
         }
 
-
-
-
-        ctx.writeAndFlush("I got it1111111111111111".getBytes());
+        // 保存PDU到接收缓存
+        this.reportService.push(serviceKey, (byte[]) msg);
     }
 
     /**

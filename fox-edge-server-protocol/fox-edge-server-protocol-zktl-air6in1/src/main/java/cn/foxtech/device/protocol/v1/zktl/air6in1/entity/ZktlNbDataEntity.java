@@ -56,6 +56,6 @@ public class ZktlNbDataEntity extends ZktlDataEntity {
     private int reserve = 0;
 
     public String getServiceKey() {
-        return super.getCommunType() + ":" + super.getDeviceType() + ":" + this.imei + ":" + this.iccid;
+        return "air6in1=" + super.getCommunTypeName() + ":" + super.getDeviceTypeName() + ":" + this.imei + ":" + this.iccid;
     }
 }

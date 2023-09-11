@@ -396,20 +396,30 @@ public abstract class BaseRedisService {
     public List<BaseEntity> getEntityList(IBaseFinder finder) {
         List<BaseEntity> entityList = new ArrayList<>();
 
-        for (Map.Entry<String, BaseEntity> operateEntry : this.dataMap.entrySet()) {
-            if (finder.compareValue(operateEntry.getValue())) {
-                entityList.add(operateEntry.getValue());
+        for (Map.Entry<String, BaseEntity> entry : this.dataMap.entrySet()) {
+            if (finder.compareValue(entry.getValue())) {
+                entityList.add(entry.getValue());
             }
         }
 
         return entityList;
     }
 
+    public BaseEntity getEntity(IBaseFinder finder) {
+        for (Map.Entry<String, BaseEntity> entry : this.dataMap.entrySet()) {
+            if (finder.compareValue(entry.getValue())) {
+                return entry.getValue();
+            }
+        }
+
+        return null;
+    }
+
 
     public int getEntityCount(IBaseFinder finder) {
         int count = 0;
-        for (Map.Entry<String, BaseEntity> operateEntry : this.dataMap.entrySet()) {
-            if (finder.compareValue(operateEntry.getValue())) {
+        for (Map.Entry<String, BaseEntity> entry : this.dataMap.entrySet()) {
+            if (finder.compareValue(entry.getValue())) {
                 count++;
             }
         }
@@ -418,9 +428,9 @@ public abstract class BaseRedisService {
     }
 
     public BaseEntity getEntity(Long id) {
-        for (Map.Entry<String, BaseEntity> operateEntry : this.dataMap.entrySet()) {
-            if (id.equals(operateEntry.getValue().getId())) {
-                return operateEntry.getValue();
+        for (Map.Entry<String, BaseEntity> entry : this.dataMap.entrySet()) {
+            if (id.equals(entry.getValue().getId())) {
+                return entry.getValue();
             }
         }
 

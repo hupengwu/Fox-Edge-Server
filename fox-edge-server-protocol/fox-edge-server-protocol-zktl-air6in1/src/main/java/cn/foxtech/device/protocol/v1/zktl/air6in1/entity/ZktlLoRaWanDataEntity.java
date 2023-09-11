@@ -48,6 +48,6 @@ public class ZktlLoRaWanDataEntity extends ZktlDataEntity {
     private int reserve = 0;
 
     public String getServiceKey() {
-        return super.getCommunType() + ":" + super.getDeviceType();
+        return "air6in1=" + super.getCommunTypeName() + ":" + super.getDeviceTypeName();
     }
 }

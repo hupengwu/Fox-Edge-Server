@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ZktlLoRaDataEntity extends ZktlDataEntity{
+public class ZktlLoRaDataEntity extends ZktlDataEntity {
     /**
      * Addr
      */
@@ -52,6 +52,6 @@ public class ZktlLoRaDataEntity extends ZktlDataEntity{
     private int reserve = 0;
 
     public String getServiceKey() {
-        return super.getCommunType() + ":" + super.getDeviceType() + ":" + this.addr;
+        return "air6in1=" + super.getCommunTypeName() + ":" + super.getDeviceTypeName() + ":" + this.addr;
     }
 }

@@ -106,7 +106,7 @@ public class ChannelService extends ChannelServerAPI {
      * @throws ServiceException 异常信息
      */
     @Override
-    public List<ChannelRespondVO> receive() throws ServiceException {
+    public List<ChannelRespondVO> report() throws ServiceException {
         return this.executeService.receive(constants.getChannelType(), this.channel2event);
     }
 }

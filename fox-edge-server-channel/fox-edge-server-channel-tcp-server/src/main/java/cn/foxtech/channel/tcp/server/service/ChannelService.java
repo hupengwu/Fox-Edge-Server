@@ -9,6 +9,7 @@ import io.netty.channel.ChannelHandlerContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -20,7 +21,11 @@ public class ChannelService extends ChannelServerAPI {
     private ChannelManager channelManager;
 
     @Autowired
-    private ExecuteService executeService;
+    private PublishService publishService;
+
+    @Autowired
+    private ReportService reportService;
+
 
     /**
      * 打开通道：tcp-server是服务端，连接是自动触发的，不存在真正的打开和关闭操作
@@ -55,14 +60,12 @@ public class ChannelService extends ChannelServerAPI {
     }
 
     /**
-     * 执行主从半双工操作
-     *
-     * @param requestVO 请求报文
-     * @return 返回的json报文
+     * 执行发布操作：单向下行操作
+     * @param requestVO 发布报文
      * @throws ServiceException 异常信息
      */
     @Override
-    public synchronized ChannelRespondVO execute(ChannelRequestVO requestVO) throws ServiceException {
+    public synchronized void publish(ChannelRequestVO requestVO) throws ServiceException {
         String serviceKey = this.channelName2ServiceKey.get(requestVO.getName());
         if (MethodUtils.hasEmpty(serviceKey)) {
             throw new ServiceException("参数不能为空: serviceKey");
@@ -73,6 +76,16 @@ public class ChannelService extends ChannelServerAPI {
             throw new ServiceException("找不到对应的socket:" + requestVO.getName());
         }
 
-        return this.executeService.execute(ctx, requestVO);
+        this.publishService.publish(ctx, requestVO);
+    }
+
+    /**
+     * 主动上报操作：单向上行
+     * @return 上行报文
+     * @throws ServiceException 异常信息
+     */
+    @Override
+    public synchronized List<ChannelRespondVO> report() throws ServiceException {
+        return this.reportService.popAll();
     }
 }

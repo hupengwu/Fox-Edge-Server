@@ -33,13 +33,14 @@ public class RedisTopicRespondDeviceService extends PeriodTaskService {
      * 3.将操作请求编码后发送给设备，并对设备返回的数据进行解码，得到设备的各项数值
      * 4.将设备的各项数值，写入redis保存，通过redis分享给其他服务
      *
+     * 说明：SyncQueueObjectMap.inst().popup默认waite了100毫秒，所以不再需要专门的sleep(100)
      * @throws Exception 异常情况
      */
     public void execute(long threadId) throws Exception {
         // 将channel模块中的设备上报数据，转移到发送队列
         this.getReceive();
 
-        // 设备频道
+        // 设备通道
         List<Object> privateList = SyncQueueObjectMap.inst().popup(deviceTopic);
         for (Object object : privateList) {
             publisher.sendMessage(deviceTopic, object);

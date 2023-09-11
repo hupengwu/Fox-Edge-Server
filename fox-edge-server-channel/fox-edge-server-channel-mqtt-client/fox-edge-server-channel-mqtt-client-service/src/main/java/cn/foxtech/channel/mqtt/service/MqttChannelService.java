@@ -92,7 +92,7 @@ public class MqttChannelService extends ChannelServerAPI {
      * @throws ServiceException 异常信息
      */
     @Override
-    public List<ChannelRespondVO> receive() throws ServiceException {
+    public List<ChannelRespondVO> report() throws ServiceException {
         try {
             List<Object> result = SyncQueueObjectMap.inst().popup(constants.getChannelType(), false);
             return ContainerUtils.buildClassList(result, ChannelRespondVO.class);

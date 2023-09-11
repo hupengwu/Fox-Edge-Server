@@ -162,6 +162,11 @@ public abstract class EntityServiceManager extends EntityObjectManager {
         return entityRedisService.getEntityList(finder);
     }
 
+    public <T> T getEntity(Class<T> clazz, IBaseFinder finder) {
+        BaseRedisService entityRedisService = super.getBaseRedisService(clazz);
+        return (T)entityRedisService.getEntity(finder);
+    }
+
     public <T> int getEntityCount(Class<T> clazz, IBaseFinder finder) {
         BaseRedisService entityRedisService = super.getBaseRedisService(clazz);
         return entityRedisService.getEntityCount(finder);

@@ -2,8 +2,6 @@ package cn.foxtech.channel.common.api;
 
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
-import cn.foxtech.common.domain.vo.PublicRequestVO;
-import cn.foxtech.common.domain.vo.PublicRespondVO;
 import cn.foxtech.core.exception.ServiceException;
 
 import java.util.ArrayList;
@@ -42,7 +40,7 @@ public class ChannelServerAPI {
      * @return 上报消息
      * @throws ServiceException 异常信息
      */
-    public List<ChannelRespondVO> receive() throws ServiceException {
+    public List<ChannelRespondVO> report() throws ServiceException {
         return new ArrayList<>();
     }
 

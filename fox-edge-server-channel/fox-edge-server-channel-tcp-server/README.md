@@ -1,83 +1,43 @@
-# fox-serialport
+# tcp-server
 
-#### 介绍
-linux下的串口服务器
+## 介绍
+这是tcp-server通道服务器，用于支持现场设备作为tcp-client主动上报的场景。
 
-#### 软件架构
-软件架构说明
+## 说明
 
+#### 1、操作方法
+该服务的操作方法，只有单工的**publish**和**report**两种模式，没有主从半双工的execute模式。<br>
+这样设计的目的，是因为execute只适合一问一答式的传统自动化设备。<br>
+但是，对于很多会采用tcp的设备来说，它们的设计更多的是采用全双工的方式。<br>
+换句话说，在传输层面，上行和下行是彼此独立的，上行和下行，可以认为是两条各自独立的单向通道。<br>
+所以，tcp-server的操作方法，也跟着用**publish**和**report**来分别对应上行和下行数据的传输。<br>
 
-#### 安装教程
+#### 2、报文协议
+tcp是面向流的传输协议，想要在上面传输会话动作，必然会出现所谓的**粘包**问题。<br>
+所以，设备制造厂商，它们的设备协议上，会定义有**报头**和**报长**两种信息，来帮助分包。<br>
+如果它们的设备没有这种**报头**和**报长**两这两个关键信息，别白费力气了，赶紧找设备厂商解决，或者直接更换设备厂商。<br>
 
-1.  该服务职能在LINUX环境运行，所以需要远程调试
-2.  远程调试的配置，不要参考简单网上的配置，因为linux的默认端口是环回端口，无法远程连接
-3.  linux侧的启动命令，必须强制指明IP地址，例如:
-java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=192.168.241.128:5005 fox-serialport-service-0.0.1.jar
+#### 3、拆包接口
 
-#### 使用说明
+tcp-server提供了自动拆包的接口：cn.foxtech.device.protocol.v1.utils.netty.SplitMessageHandler<br>
+开发者应该写一个解码器，并派生一个子类，为tcp-server指出**报头**和**报长**的特征，那么tcp-server在接收到数据流之后，<br>
+会使用SplitMessageHandler的派生类自动进行拆包操作。
 
-1.  打开串口
-http://192.168.241.128:9001/serialport/reload
-GET
-返回：
-{
-    "msg": "操作成功",
-    "code": 200
-}
+#### 4、身份识别
+线下设备主动连接tcp-server的适合，会通过报文告知上层应用，自己的**身份特征**信息。<br>
+如何从报文中获得**身份特征**信息，同样需要解码器从中提取。<br>
 
-2.  发送数据
-http://192.168.241.128:9001/serialport/send
-POST
-LINUX发送
-{
-	"name": "ttyS1",
-	"send": "b0 01 00 fe fe",
-	"timeout": 5000
-}
-返回：
-{
-    "msg": "操作成功",
-    "code": 200,
-    "data": {
-        "name": "ttyS1",
-        "send": "b0 01 00 fe fe",
-        "recv": "b08103131613fefe",
-        "timeout": 5000
-    }
-}
-WINDOWS发送
-{
-	"name": "COM3",
-	"send": "b0 01 00 fe fe",
-	"timeout": 5000
-}
-返回：
-{
-    "msg": "操作成功",
-    "code": 200,
-    "data": {
-        "name": "COM3",
-        "send": "b0 01 00 fe fe",
-        "recv": " b0 810 3 13 16 13 fe fe",
-        "timeout": 3000
-    }
-}
-3.  xxxx
-4.  xxxx
+#### 5、身份接口
+tcp-server提供了自动识别的接口：cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler<br>
+开发者应该写一个解码器，并派生一个子类，为tcp-server指出**身份特征**特征，那么tcp-server在接收到数据流之后，<br>
+会使用ServiceKeyHandler的派生类自动进行身份的自动提取，然后自动维护某个TCP连接和业务通道的关联关系。<br>
 
-#### 参与贡献
+#### 6、通道管理
+用户在通道界面创建一个tcp-server类型的通道之后，在通道上配置好**身份特征**特征，那么Fox-Edge就会遵循下列操作流程<br>
+【现场设备】《==TCP==》【通道服务】（tcp连接-身份特征-通道名）《==Channel==》【设备服务】<br>
+这样，上层应用就能够以channel的方式，进行跟远程的现场设备，基于tcp的方式进行交互操作了。
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+#### 7、服务配置
 
 
-#### 特技
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
