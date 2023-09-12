@@ -54,8 +54,7 @@ public class SocketChannelHandler extends TcpSocketChannelHandler {
         if (serviceKey == null) {
             // 拆解报文
             byte[] data = (byte[]) msg;
-            Object entity = this.serviceKeyHandler.decodeEntity(data);
-            serviceKey = this.serviceKeyHandler.getServiceKey(entity);
+            serviceKey = this.serviceKeyHandler.getServiceKey(data);
 
             // 标记:serviceKey信息
             this.channelManager.setServiceKey(ctx, serviceKey);

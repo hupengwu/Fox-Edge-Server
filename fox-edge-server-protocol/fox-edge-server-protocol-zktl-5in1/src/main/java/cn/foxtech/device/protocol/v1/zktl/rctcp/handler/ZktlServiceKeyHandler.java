@@ -1,8 +1,8 @@
-package cn.foxtech.device.protocol.v1.zktl.air6in1.handler;
+package cn.foxtech.device.protocol.v1.zktl.rctcp.handler;
 
 import cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler;
-import cn.foxtech.device.protocol.v1.zktl.air6in1.encoder.Encoder;
-import cn.foxtech.device.protocol.v1.zktl.air6in1.entity.ZktlDataEntity;
+import cn.foxtech.device.protocol.v1.zktl.rctcp.encoder.Encoder;
+import cn.foxtech.device.protocol.v1.zktl.rctcp.entity.ZktlDataEntity;
 
 public class ZktlServiceKeyHandler extends ServiceKeyHandler {
     @Override
