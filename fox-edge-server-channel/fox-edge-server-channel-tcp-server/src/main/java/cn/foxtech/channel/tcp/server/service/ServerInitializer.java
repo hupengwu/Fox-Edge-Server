@@ -2,7 +2,6 @@ package cn.foxtech.channel.tcp.server.service;
 
 import cn.foxtech.channel.common.service.ConfigManageService;
 import cn.foxtech.channel.tcp.server.handler.SocketChannelHandler;
-import cn.foxtech.common.entity.manager.EntityConfigManager;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.netty.server.nettty.BootNettyServer;
 import cn.foxtech.common.utils.reflect.JarLoaderUtils;
@@ -33,40 +32,56 @@ public class ServerInitializer {
     private RedisConsoleService logger;
 
     @Autowired
-    private EntityConfigManager entityConfigManager;
+    private ChannelManager channelManager;
+
+    @Autowired
+    private ReportService reportService;
+
 
     @Autowired
     private ConfigManageService configManageService;
-
-    @Autowired
-    private SocketChannelHandler channelHandler;
-
-    @Autowired
-    private SocketChannelHandler socketChannelHandler;
-
-    private SplitMessageHandler splitHandlerInstance;
-    private ServiceKeyHandler serviceKeyHandler;
 
 
     public void initialize() {
         // 读取配置参数
         Map<String, Object> configs = this.configManageService.loadInitConfig("serverConfig", "serverConfig.json");
 
-        // 扫描jar文件
-        this.scanJarFile(configs);
+        // 启动多个服务器
+        this.startServers(configs);
 
-        // 启动服务
-        this.schedule(configs);
+
     }
 
     /**
      * 扫描解码器
+     *
+     * @param configs 总配置参数
      */
-    public void scanJarFile(Map<String, Object> configs) {
+    public void startServers(Map<String, Object> configs) {
         try {
-            List<Map<String, Object>> configList = (List<Map<String, Object>>) configs.get("decoder");
-            String splitHandler = (String) configs.get("splitHandler");
-            String keyHandler = (String) configs.get("keyHandler");
+            // 启动多个TCP 服务器
+            List<Map<String, Object>> decoderList = (List<Map<String, Object>>) configs.get("decoderList");
+            for (Map<String, Object> decoder : decoderList) {
+                // 启动一个TCP Server
+                this.startTcpServer(decoder);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.logger.error("scanJarFile出现异常:" + e.getMessage());
+        }
+    }
+
+    /**
+     * 启动一个TCP Server
+     *
+     * @param config 配置参数项目
+     */
+    private void startTcpServer(Map<String, Object> config) {
+        try {
+            List<Map<String, Object>> configList = (List<Map<String, Object>>) config.get("decoder");
+            String splitHandler = (String) config.get("splitHandler");
+            String keyHandler = (String) config.get("keyHandler");
+            Integer serverPort = (Integer) config.get("serverPort");
 
 
             File file = new File("");
@@ -101,11 +116,33 @@ public class ServerInitializer {
             }
 
             // 实例化一个SplitMessageHandler对象
-            this.splitHandlerInstance = (SplitMessageHandler) splitHandlerClass.newInstance();
-            this.serviceKeyHandler = (ServiceKeyHandler) keyHandlerClass.newInstance();
+            SplitMessageHandler splitMessageHandler = (SplitMessageHandler) splitHandlerClass.newInstance();
+            // 实例化一个serviceKeyHandler对象
+            ServiceKeyHandler serviceKeyHandler = (ServiceKeyHandler) keyHandlerClass.newInstance();
 
             // 绑定关系
-            this.socketChannelHandler.setServiceKeyHandler(serviceKeyHandler);
+            SocketChannelHandler socketChannelHandler = new SocketChannelHandler();
+            socketChannelHandler.setServiceKeyHandler(serviceKeyHandler);
+            socketChannelHandler.setChannelManager(this.channelManager);
+            socketChannelHandler.setReportService(this.reportService);
+
+            // 启动一个线程池
+            ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+            scheduledExecutorService.schedule(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        BootNettyServer server = new BootNettyServer();
+                        server.getChannelInitializer().setSplitMessageHandler(splitMessageHandler);
+                        server.getChannelInitializer().setChannelHandler(socketChannelHandler);
+                        server.bind(serverPort);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        logger.error("scanJarFile出现异常:" + e.getMessage());
+                    }
+                }
+            }, 0, TimeUnit.MILLISECONDS);
+            scheduledExecutorService.shutdown();
         } catch (Exception e) {
             e.printStackTrace();
             this.logger.error("scanJarFile出现异常:" + e.getMessage());
@@ -148,23 +185,4 @@ public class ServerInitializer {
         return null;
     }
 
-    private void schedule(Map<String, Object> configs) {
-        Integer serverPort = (Integer) configs.get("serverPort");
-
-        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
-        scheduledExecutorService.schedule(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    BootNettyServer server = new BootNettyServer();
-                    server.getChannelInitializer().setSplitMessageHandler(splitHandlerInstance);
-                    server.getChannelInitializer().setChannelHandler(channelHandler);
-                    server.bind(serverPort);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }, 0, TimeUnit.MILLISECONDS);
-        scheduledExecutorService.shutdown();
-    }
 }

@@ -8,17 +8,14 @@ import io.netty.channel.ChannelHandlerContext;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class SocketChannelHandler extends TcpSocketChannelHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(TcpSocketChannelHandler.class);
 
-    @Autowired
+    @Setter
     private ChannelManager channelManager;
 
-    @Autowired
+    @Setter
     private ReportService reportService;
 
     @Setter
@@ -54,6 +51,8 @@ public class SocketChannelHandler extends TcpSocketChannelHandler {
         if (serviceKey == null) {
             // 拆解报文
             byte[] data = (byte[]) msg;
+
+            // 从报文总获得业务特征信息
             serviceKey = this.serviceKeyHandler.getServiceKey(data);
 
             // 标记:serviceKey信息

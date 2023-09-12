@@ -1,8 +1,8 @@
-package cn.foxtech.device.protocol.v1.zktl.rctcp.encoder;
+package cn.foxtech.device.protocol.v1.zktl.air5in1.encoder;
 
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.utils.AsciiUtils;
-import cn.foxtech.device.protocol.v1.zktl.rctcp.entity.*;
+import cn.foxtech.device.protocol.v1.zktl.air5in1.entity.*;
 
 public class Encoder {
     public static String encodePdu(ZktlConfigEntity entity) {
@@ -47,7 +47,7 @@ public class Encoder {
 
 
     public static ZktlNbDataEntity decodeNbDataEntity(String data) {
-        if (data.length() < 56) {
+        if (data.length() < 54) {
             throw new ProtocolException("数据长度不正确!");
         }
 
@@ -96,7 +96,7 @@ public class Encoder {
     }
 
     public static ZktlLoRaDataEntity decodeLoRaDataEntity(String data) {
-        if (data.length() < 38) {
+        if (data.length() < 36) {
             throw new ProtocolException("数据长度不正确!");
         }
 
@@ -142,7 +142,7 @@ public class Encoder {
     }
 
     public static ZktlLoRaWanDataEntity decodeLoRaWanDataEntity(String data) {
-        if (data.length() < 30) {
+        if (data.length() < 28) {
             throw new ProtocolException("数据长度不正确!");
         }
 
@@ -228,13 +228,13 @@ public class Encoder {
     }
 
     public static void main(String[] args) {
-        ZktlPduEntity entity = Encoder.decodePduEntity("24240843867572058700527898611212450141741910058009b00b3006400b6019e110200aa");
+        ZktlPduEntity entity = Encoder.decodePduEntity("24240838867572058700527898611212450141741910058009b00b30064b60AA");
         Encoder.decodeDataEntity(entity.getCommunType(), entity.getData());
-        entity = Encoder.decodePduEntity("24241828131D467F0053009000a9006400bb019a000200aa");
+        entity = Encoder.decodePduEntity("24241828131D467F0053009000a9006400bb019a000200AA");
         Encoder.decodeDataEntity(entity.getCommunType(), entity.getData());
-        entity = Encoder.decodePduEntity("242428200056008b009c006400bc0194000200aa");
+        entity = Encoder.decodePduEntity("242428200056008b009c006400bc0194000200AA");
         Encoder.decodeDataEntity(entity.getCommunType(), entity.getData());
-        ZktlDataEntity entity1 = Encoder.decodeDataEntity("24240843867572058700527898611212450141741910058009b00b3006400b6019e110200aa");
+        ZktlDataEntity entity1 = Encoder.decodeDataEntity("24240843867572058700527898611212450141741910058009b00b3006400b6019e110200AA");
         String key = entity1.getServiceKey();
     }
 

@@ -1,15 +1,19 @@
-package cn.foxtech.device.protocol.v1.zktl.rctcp.entity;
+package cn.foxtech.device.protocol.v1.zktl.air5in1.entity;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ZktlLoRaDataEntity extends ZktlDataEntity {
+public class ZktlNbDataEntity extends ZktlDataEntity {
     /**
-     * Addr
+     * IMEI
      */
-    private String addr = "";
+    private String imei = "";
+    /**
+     * ICCID
+     */
+    private String iccid = "";
     /**
      *  防拆状态
      */
@@ -52,6 +56,6 @@ public class ZktlLoRaDataEntity extends ZktlDataEntity {
     private int reserve = 0;
 
     public String getServiceKey() {
-        return "5in1=" + super.getCommunTypeName() + ":" + super.getDeviceTypeName() + ":" + this.addr;
+        return "air5in1=" + super.getCommunTypeName() + ":" + super.getDeviceTypeName() + ":" + this.imei + ":" + this.iccid;
     }
 }

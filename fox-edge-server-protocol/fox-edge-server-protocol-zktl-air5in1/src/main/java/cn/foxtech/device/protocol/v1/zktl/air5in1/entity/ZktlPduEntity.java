@@ -1,4 +1,4 @@
-package cn.foxtech.device.protocol.v1.zktl.rctcp.entity;
+package cn.foxtech.device.protocol.v1.zktl.air5in1.entity;
 
 import lombok.Getter;
 import lombok.Setter;

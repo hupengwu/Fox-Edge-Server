@@ -56,7 +56,7 @@ public class BootNettyServer {
              */
             serverBootstrap = serverBootstrap.childHandler(this.channelInitializer);
 
-            System.out.println("netty server start success!");
+            System.out.println("netty server " + port + " start success!");
             /**
              * 绑定端口，同步等待成功
              */

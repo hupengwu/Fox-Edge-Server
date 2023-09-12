@@ -1,4 +1,4 @@
-package cn.foxtech.device.protocol.v1.zktl.rctcp.entity;
+package cn.foxtech.device.protocol.v1.zktl.air5in1.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -48,6 +48,6 @@ public class ZktlLoRaWanDataEntity extends ZktlDataEntity {
     private int reserve = 0;
 
     public String getServiceKey() {
-        return "5in1=" + super.getCommunTypeName() + ":" + super.getDeviceTypeName();
+        return "air5in1=" + super.getCommunTypeName() + ":" + super.getDeviceTypeName();
     }
 }

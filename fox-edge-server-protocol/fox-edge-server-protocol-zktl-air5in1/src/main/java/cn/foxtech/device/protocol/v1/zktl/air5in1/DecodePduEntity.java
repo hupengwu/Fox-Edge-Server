@@ -1,4 +1,4 @@
-package cn.foxtech.device.protocol.v1.zktl.rctcp;
+package cn.foxtech.device.protocol.v1.zktl.air5in1;
 
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
@@ -8,9 +8,9 @@ import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.core.utils.JsonUtils;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.utils.MethodUtils;
-import cn.foxtech.device.protocol.v1.zktl.rctcp.encoder.Encoder;
-import cn.foxtech.device.protocol.v1.zktl.rctcp.entity.ZktlConfigEntity;
-import cn.foxtech.device.protocol.v1.zktl.rctcp.entity.ZktlDataEntity;
+import cn.foxtech.device.protocol.v1.zktl.air5in1.encoder.Encoder;
+import cn.foxtech.device.protocol.v1.zktl.air5in1.entity.ZktlConfigEntity;
+import cn.foxtech.device.protocol.v1.zktl.air5in1.entity.ZktlDataEntity;
 
 import java.io.IOException;
 import java.util.Map;

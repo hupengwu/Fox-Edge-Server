@@ -1,4 +1,4 @@
-package cn.foxtech.device.protocol.v1.zktl.rctcp.handler;
+package cn.foxtech.device.protocol.v1.zktl.air5in1.handler;
 
 import cn.foxtech.device.protocol.v1.utils.netty.SplitMessageHandler;
 
