@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * 读取Registers
  */
-@FoxEdgeDeviceType(value = "五合一", manufacturer = "中科图灵")
+@FoxEdgeDeviceType(value = "五合一空气监测传感器", manufacturer = "中科图灵")
 public class DecodePduEntity {
     /**
      * 查询传感器状态

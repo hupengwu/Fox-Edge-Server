@@ -1,20 +1,21 @@
 package cn.foxtech.manager.system.controller;
 
 
+import cn.foxtech.common.entity.constant.Constants;
+import cn.foxtech.common.entity.constant.OperateVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
+import cn.foxtech.common.entity.entity.OperateEntity;
 import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
-import cn.foxtech.manager.system.service.EntityManageService;
-import cn.foxtech.common.entity.constant.OperateVOFieldConstant;
-import cn.foxtech.common.entity.entity.OperateEntity;
 import cn.foxtech.core.domain.AjaxResult;
+import cn.foxtech.core.exception.ServiceException;
+import cn.foxtech.manager.system.service.EntityManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.QueryParam;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * operate的数据是由deviceService服务启动阶段，自动扫描第三方jar生成的，不需要手动维护
@@ -42,6 +43,40 @@ public class OperateManageController {
         return this.selectEntityList(body, true);
     }
 
+    @PostMapping("option")
+    public AjaxResult selectOptionList(@RequestBody Map<String, Object> body) {
+        String deviceType = (String) body.get(OperateVOFieldConstant.field_device_type);
+        if (MethodUtils.hasEmpty(deviceType)) {
+            throw new ServiceException("参数缺失：deviceType");
+        }
+
+        Set<String> operateModes = new HashSet<>();
+        operateModes.add(Constants.OPERATE_MODE_PUBLISH);
+        operateModes.add(Constants.OPERATE_MODE_EXCHANGE);
+
+        Map<String, Object> param = new HashMap<>();
+        param.put(OperateVOFieldConstant.field_device_type, deviceType);
+        param.put(OperateVOFieldConstant.field_operate_modes, operateModes);
+
+        // 转换为option格式
+        AjaxResult ajxResult = this.selectEntityList(param, false);
+        List<Map<String, Object>> data = (List<Map<String, Object>>) ajxResult.get("data");
+        if (!MethodUtils.hasEmpty(data)){
+
+            List<Map<String, Object>> resultList = new ArrayList<>();
+            for (Map<String, Object> map:data){
+                Map<String, Object> result = new HashMap<>();
+                result.put("value",map.get(OperateVOFieldConstant.field_operate_name));
+                result.put("label",map.get(OperateVOFieldConstant.field_operate_name));
+                resultList.add(result);
+            }
+
+            ajxResult.put("data",resultList);
+        }
+
+        return ajxResult;
+    }
+
     /**
      * 查询实体数据
      *
@@ -64,6 +99,10 @@ public class OperateManageController {
                 }
                 if (body.containsKey(OperateVOFieldConstant.field_operate_mode)) {
                     result &= entity.getOperateMode().equals(body.get(OperateVOFieldConstant.field_operate_mode));
+                }
+                if (body.containsKey(OperateVOFieldConstant.field_operate_modes)) {
+                    Set<String> operateModes = (Set<String>) body.get(OperateVOFieldConstant.field_operate_modes);
+                    result &= operateModes.contains(entity.getOperateMode());
                 }
                 if (body.containsKey(OperateVOFieldConstant.field_manufacturer)) {
                     result &= entity.getManufacturer().equals(body.get(OperateVOFieldConstant.field_manufacturer));
@@ -88,6 +127,7 @@ public class OperateManageController {
             return AjaxResult.error(e.getMessage());
         }
     }
+
 
     @GetMapping("entity")
     public AjaxResult queryEntity(@QueryParam("id") Long id) {
