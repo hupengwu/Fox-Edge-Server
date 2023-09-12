@@ -2,6 +2,7 @@ package cn.foxtech.channel.tcp.server.service;
 
 import cn.foxtech.channel.common.service.ConfigManageService;
 import cn.foxtech.channel.tcp.server.handler.SocketChannelHandler;
+import cn.foxtech.common.entity.manager.EntityConfigManager;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.netty.server.nettty.BootNettyServer;
 import cn.foxtech.common.utils.reflect.JarLoaderUtils;
@@ -25,12 +26,14 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class ServerInitializer {
-    private final int port = 8888;
     /**
      * 日志
      */
     @Autowired
     private RedisConsoleService logger;
+
+    @Autowired
+    private EntityConfigManager entityConfigManager;
 
     @Autowired
     private ConfigManageService configManageService;
@@ -41,27 +44,26 @@ public class ServerInitializer {
     @Autowired
     private SocketChannelHandler socketChannelHandler;
 
-
-
     private SplitMessageHandler splitHandlerInstance;
     private ServiceKeyHandler serviceKeyHandler;
 
 
     public void initialize() {
-        this.scanJarFile();
+        // 读取配置参数
+        Map<String, Object> configs = this.configManageService.loadInitConfig("serverConfig", "serverConfig.json");
+
+        // 扫描jar文件
+        this.scanJarFile(configs);
 
         // 启动服务
-        this.schedule();
+        this.schedule(configs);
     }
 
     /**
      * 扫描解码器
      */
-    public void scanJarFile() {
+    public void scanJarFile(Map<String, Object> configs) {
         try {
-            Map<String, Object> configs = this.configManageService.getConfigParam("serverConfig");
-
-
             List<Map<String, Object>> configList = (List<Map<String, Object>>) configs.get("decoder");
             String splitHandler = (String) configs.get("splitHandler");
             String keyHandler = (String) configs.get("keyHandler");
@@ -146,7 +148,9 @@ public class ServerInitializer {
         return null;
     }
 
-    private void schedule() {
+    private void schedule(Map<String, Object> configs) {
+        Integer serverPort = (Integer) configs.get("serverPort");
+
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
         scheduledExecutorService.schedule(new Runnable() {
             @Override
@@ -155,7 +159,7 @@ public class ServerInitializer {
                     BootNettyServer server = new BootNettyServer();
                     server.getChannelInitializer().setSplitMessageHandler(splitHandlerInstance);
                     server.getChannelInitializer().setChannelHandler(channelHandler);
-                    server.bind(port);
+                    server.bind(serverPort);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -4,6 +4,7 @@ import cn.foxtech.common.domain.constant.RedisStatusConstant;
 import cn.foxtech.common.entity.entity.ConfigEntity;
 import cn.foxtech.common.entity.manager.EntityConfigManager;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
+import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTask;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTaskType;
 import cn.foxtech.manager.system.service.EntityManageService;
@@ -50,8 +51,21 @@ public class ConfigEntityTask extends PeriodTask {
                 String serviceName = (String) map.get(RedisStatusConstant.field_service_name);
                 Map<String, Object> configMap = (Map<String, Object>) map.get(RedisStatusConstant.field_config_entity);
                 for (String key : configMap.keySet()) {
-                    Object config = configMap.get(key);
-                    if (!(config instanceof Map)) {
+                    Object serverConfig = configMap.get(key);
+                    if (!(serverConfig instanceof Map)) {
+                        continue;
+                    }
+
+                    // 取出配置内容
+                    Object remark = ((Map) serverConfig).get("remark");
+                    Object configValue = ((Map) serverConfig).get("configValue");
+                    Object configParam = ((Map) serverConfig).get("configParam");
+                    if (MethodUtils.hasNull(remark, configValue, configParam)) {
+                        continue;
+                    }
+
+                    // 检查：数据格式是否合法
+                    if (!(remark instanceof String) || !(configValue instanceof Map) || !(configParam instanceof Map)) {
                         continue;
                     }
 
@@ -61,8 +75,9 @@ public class ConfigEntityTask extends PeriodTask {
                         newConfig.setServiceType(serviceType);
                         newConfig.setServiceName(serviceName);
                         newConfig.setConfigName(key);
-                        newConfig.setRemark("");
-                        newConfig.getConfigValue().putAll((Map) config);
+                        newConfig.setRemark((String) remark);
+                        newConfig.getConfigValue().putAll((Map) configValue);
+                        newConfig.getConfigParam().putAll((Map) configParam);
 
                         this.entityManageService.insertEntity(newConfig);
                     }

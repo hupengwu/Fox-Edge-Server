@@ -37,6 +37,7 @@ public class ConfigEntityMaker {
         result.bind(entity);
 
         result.setConfigValue(JsonUtils.buildJsonWithoutException(entity.getConfigValue()));
+        result.setConfigParam(JsonUtils.buildJsonWithoutException(entity.getConfigParam()));
         return result;
     }
 

@@ -1,0 +1,12 @@
+{
+  "configValue": {
+    "serverPort": 9312,
+    "decoder": [{
+      "jarFile": "\\jar\\decoder\\fox-edge-server-protocol-zktl-air6in1-1.0.2.jar"
+    }],
+    "splitHandler": "cn.foxtech.device.protocol.v1.zktl.air6in1.handler.ZktlSplitMessageHandler",
+    "keyHandler": "cn.foxtech.device.protocol.v1.zktl.air6in1.handler.ZktlServiceKeyHandler"
+  },
+  "configParam": {},
+  "remark": "tcp-server通道的配置信息：\n\njarFile：解码器所在的文件位置\nsplitHandler：拆包类的完整名称\nkeyHandler：提取设备身份信息的完整名称"
+}

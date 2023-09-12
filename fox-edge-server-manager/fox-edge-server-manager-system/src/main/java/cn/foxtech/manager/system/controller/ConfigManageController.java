@@ -56,11 +56,12 @@ public class ConfigManageController {
 
                 boolean result = true;
 
+
                 if (body.containsKey(ConfigVOFieldConstant.field_config_name)) {
-                    result = entity.getConfigName().contains((String) body.get(ConfigVOFieldConstant.field_config_name));
+                    result &= entity.getConfigName().contains((String) body.get(ConfigVOFieldConstant.field_config_name));
                 }
                 if (body.containsKey(ConfigVOFieldConstant.field_service_name)) {
-                    result &= entity.getServiceName().equals(body.get(ConfigVOFieldConstant.field_service_name));
+                    result &= entity.getServiceName().contains((String) body.get(ConfigVOFieldConstant.field_service_name));
                 }
 
                 return result;

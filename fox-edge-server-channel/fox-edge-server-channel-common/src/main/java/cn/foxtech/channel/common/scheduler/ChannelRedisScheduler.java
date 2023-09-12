@@ -163,6 +163,4 @@ public class ChannelRedisScheduler extends PeriodTaskService {
             }
         }
     }
-
-
 }
