@@ -27,3 +27,4 @@ buildNumber.properties
 /document/settings.xml
 /.flattened-pom.xml
 /repository/template
+/temp

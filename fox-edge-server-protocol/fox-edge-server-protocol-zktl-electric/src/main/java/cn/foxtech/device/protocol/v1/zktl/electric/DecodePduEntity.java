@@ -1,13 +1,16 @@
-package cn.foxtech.device.protocol.v1.zktl.air6in1;
+package cn.foxtech.device.protocol.v1.zktl.electric;
 
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
+import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgePublish;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeReport;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.core.utils.JsonUtils;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
-import cn.foxtech.device.protocol.v1.zktl.air6in1.encoder.Encoder;
-import cn.foxtech.device.protocol.v1.zktl.air6in1.entity.ZktlDataEntity;
+import cn.foxtech.device.protocol.v1.utils.MethodUtils;
+import cn.foxtech.device.protocol.v1.zktl.electric.encoder.Encoder;
+import cn.foxtech.device.protocol.v1.zktl.electric.entity.ZktlConfigEntity;
+import cn.foxtech.device.protocol.v1.zktl.electric.entity.ZktlDataEntity;
 
 import java.io.IOException;
 import java.util.Map;
@@ -15,7 +18,7 @@ import java.util.Map;
 /**
  * 读取Registers
  */
-@FoxEdgeDeviceType(value = "六合一空气监测传感器", manufacturer = "武汉中科图灵科技有限公司")
+@FoxEdgeDeviceType(value = "电器火灾监控设备", manufacturer = "武汉中科图灵科技有限公司")
 public class DecodePduEntity {
     /**
      * 解码数据：对主动上报数据的解码
