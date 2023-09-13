@@ -27,6 +27,7 @@
         <module>fox-edge-server-protocol-zktl-air6in1</module>
         <module>fox-edge-server-protocol-zktl-air5in1</module>
         <module>fox-edge-server-protocol-zktl-electric</module>
+        <module>fox-edge-server-protocol-zktl-ctrl4g</module>
         <module>fox-edge-server-protocol-telecom-core</module>
         <module>fox-edge-server-protocol-snmp</module>
         <module>fox-edge-server-protocol-dlt645-core</module>
