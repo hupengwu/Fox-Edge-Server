@@ -7,7 +7,7 @@ import lombok.Setter;
 public class InboundHandlerAdapter extends SimpleChannelInboundHandler {
 
     @Setter
-    private TcpSocketChannelHandler channelHandler = new TcpSocketChannelHandler();
+    private SocketChannelHandler channelHandler = new SocketChannelHandler();
 
     /**
      * 客户端与服务端第一次建立连接时 执行

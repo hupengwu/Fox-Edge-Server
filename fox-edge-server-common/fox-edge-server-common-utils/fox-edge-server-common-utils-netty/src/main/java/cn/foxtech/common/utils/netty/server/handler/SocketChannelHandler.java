@@ -2,7 +2,7 @@ package cn.foxtech.common.utils.netty.server.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 
-public class TcpSocketChannelHandler {
+public class SocketChannelHandler {
 
     /**
      * 客户端与服务端第一次建立连接时 执行
@@ -10,7 +10,7 @@ public class TcpSocketChannelHandler {
      * @param ctx 上下文
      * @throws Exception 异常
      */
-    protected void channelActive(ChannelHandlerContext ctx) throws Exception {
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
     }
 
     /**
@@ -19,7 +19,7 @@ public class TcpSocketChannelHandler {
      * @param ctx 上下文
      * @param msg 消息
      */
-    protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
     }
 
     /**
@@ -27,7 +27,7 @@ public class TcpSocketChannelHandler {
      *
      * @param ctx 上下文
      */
-    protected void channelInactive(final ChannelHandlerContext ctx) {
+    public void channelInactive(final ChannelHandlerContext ctx) {
     }
 
     /**
@@ -36,6 +36,6 @@ public class TcpSocketChannelHandler {
      * @param ctx 上下文
      * @param cause 异常源头
      */
-    protected void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
     }
 }

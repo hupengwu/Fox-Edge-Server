@@ -2,15 +2,15 @@ package cn.foxtech.channel.tcp.server.handler;
 
 import cn.foxtech.channel.tcp.server.service.ChannelManager;
 import cn.foxtech.channel.tcp.server.service.ReportService;
-import cn.foxtech.common.utils.netty.server.handler.TcpSocketChannelHandler;
+import cn.foxtech.common.utils.netty.server.handler.SocketChannelHandler;
 import cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SocketChannelHandler extends TcpSocketChannelHandler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TcpSocketChannelHandler.class);
+public class ChannelHandler extends SocketChannelHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(cn.foxtech.common.utils.netty.server.handler.SocketChannelHandler.class);
 
     @Setter
     private ChannelManager channelManager;
@@ -28,7 +28,7 @@ public class SocketChannelHandler extends TcpSocketChannelHandler {
      * @param ctx 上下文
      * @throws Exception 异常
      */
-    protected void channelActive(ChannelHandlerContext ctx) throws Exception {
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
         this.channelManager.insert(ctx);
 
         LOGGER.info("建立连接:" + ctx.channel().remoteAddress());
@@ -41,7 +41,7 @@ public class SocketChannelHandler extends TcpSocketChannelHandler {
      * @param ctx 上下文
      * @param msg 信息
      */
-    protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (this.serviceKeyHandler == null) {
             return;
         }
@@ -68,7 +68,7 @@ public class SocketChannelHandler extends TcpSocketChannelHandler {
      *
      * @param ctx 上下文
      */
-    protected void channelInactive(final ChannelHandlerContext ctx) {
+    public void channelInactive(final ChannelHandlerContext ctx) {
         this.channelManager.remove(ctx);
 
         LOGGER.info("连接断开:" + ctx.channel().remoteAddress());
@@ -80,7 +80,7 @@ public class SocketChannelHandler extends TcpSocketChannelHandler {
      * @param ctx   上下文
      * @param cause 源头
      */
-    protected void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         LOGGER.info("连接异常:" + ctx.channel().remoteAddress());
     }
 }

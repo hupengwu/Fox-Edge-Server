@@ -3,7 +3,7 @@ package cn.foxtech.channel.tcp.server.service;
 import cn.foxtech.channel.common.service.ConfigManageService;
 import cn.foxtech.channel.tcp.server.handler.ChannelHandler;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
-import cn.foxtech.common.utils.netty.server.tcp.NettyTcpServer;
+import cn.foxtech.common.utils.netty.server.udp.NettyUdpServer;
 import cn.foxtech.common.utils.reflect.JarLoaderUtils;
 import cn.foxtech.device.protocol.RootLocation;
 import cn.foxtech.device.protocol.v1.utils.MethodUtils;
@@ -124,7 +124,7 @@ public class ServerInitializer {
             channelHandler.setReportService(this.reportService);
 
             // 创建一个Tcp Server实例
-            NettyTcpServer.createServer(serverPort, splitMessageHandler, channelHandler);
+            NettyUdpServer.createServer(serverPort, channelHandler);
         } catch (Exception e) {
             e.printStackTrace();
             this.logger.error("scanJarFile出现异常:" + e.getMessage());

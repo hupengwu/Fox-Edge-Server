@@ -1,6 +1,8 @@
-package cn.foxtech.common.utils.netty.server.nettty;
+package cn.foxtech.common.utils.netty.server.tcp;
 
 
+import cn.foxtech.common.utils.netty.server.handler.SocketChannelHandler;
+import cn.foxtech.device.protocol.v1.utils.netty.SplitMessageHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.AdaptiveRecvByteBufAllocator;
 import io.netty.channel.ChannelFuture;
@@ -11,15 +13,43 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.Getter;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 /**
  * netty的server
  * 参考文章：https://blog.csdn.net/zwj1030711290/article/details/131590141
  */
-public class BootNettyServer {
+public class NettyTcpServer {
     @Getter
-    private final BootNettyChannelInitializer channelInitializer = new BootNettyChannelInitializer<SocketChannel>();
+    private final NettyTcpChannelInitializer channelInitializer = new NettyTcpChannelInitializer<SocketChannel>();
 
-    public void bind(int port) throws Exception {
+    /**
+     * 创建一个TCP SERVER实例
+     * @param port 服务端口
+     * @param splitMessageHandler 用于帮TCP报文粘包，进行拆包的自定义派生类，它通过报头和报文长度来判定如何拆包
+     * @param channelHandler 接收数据的channelHandler派生类
+     */
+    public static void createServer(int port, SplitMessageHandler splitMessageHandler, SocketChannelHandler channelHandler) {
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+        scheduledExecutorService.schedule(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    NettyTcpServer server = new NettyTcpServer();
+                    server.getChannelInitializer().setSplitMessageHandler(splitMessageHandler);
+                    server.getChannelInitializer().setChannelHandler(channelHandler);
+                    server.bind(port);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 0, TimeUnit.MILLISECONDS);
+        scheduledExecutorService.shutdown();
+    }
+
+    public void bind(int port) {
 
         /**
          * 配置服务端的NIO线程组

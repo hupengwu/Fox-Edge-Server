@@ -1,4 +1,4 @@
-package cn.foxtech.common.utils.netty.server.nettty;
+package cn.foxtech.common.utils.netty.server.tcp;
 
 
 import cn.foxtech.common.utils.netty.server.handler.*;
@@ -11,12 +11,12 @@ import lombok.Setter;
 /**
  * 通道初始化
  */
-public class BootNettyChannelInitializer<SocketChannel> extends ChannelInitializer<Channel> {
+public class NettyTcpChannelInitializer<SocketChannel> extends ChannelInitializer<Channel> {
     @Setter
     private SplitMessageHandler splitMessageHandler = new SplitMessageHandler();
 
     @Setter
-    private TcpSocketChannelHandler channelHandler = new TcpSocketChannelHandler();
+    private SocketChannelHandler channelHandler = new SocketChannelHandler();
 
 
     @Override
