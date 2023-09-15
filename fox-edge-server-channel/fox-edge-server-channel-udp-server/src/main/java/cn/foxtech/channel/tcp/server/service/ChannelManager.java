@@ -4,7 +4,9 @@ import io.netty.channel.ChannelHandlerContext;
 import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -21,6 +23,35 @@ public class ChannelManager {
         this.skt2key.put(skt, serviceKey);
         this.key2ctx.put(serviceKey, ctx);
         this.key2skt.put(serviceKey, skt);
+    }
+
+    /**
+     * 清理不在serviceKeys中的数据
+     * @param serviceKeys 来自channel管理器的serviceKeys信息
+     */
+    public void clearLifeCycle(Set<String> serviceKeys) {
+        Set<String> removeKey = new HashSet<>();
+        Set<InetSocketAddress> removeSkt = new HashSet<>();
+
+        for (String key : this.key2skt.keySet()) {
+            if (serviceKeys.contains(key)) {
+                continue;
+            }
+            // 准备删除的key2skt/key2ctx
+            removeKey.add(key);
+
+            // 准备删除的skt2key
+            removeSkt.add(this.key2skt.get(key));
+        }
+
+        for (String key : removeKey) {
+            this.key2skt.remove(key);
+            this.key2ctx.remove(key);
+        }
+
+        for (InetSocketAddress skt : removeSkt) {
+            this.skt2key.remove(skt);
+        }
     }
 
     public ChannelHandlerContext getChannel(String serviceKey) {

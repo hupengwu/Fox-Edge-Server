@@ -3,6 +3,7 @@ package cn.foxtech.channel.tcp.server.handler;
 import cn.foxtech.channel.tcp.server.service.ChannelManager;
 import cn.foxtech.channel.tcp.server.service.ReportService;
 import cn.foxtech.common.utils.netty.server.handler.SocketChannelHandler;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.Setter;
@@ -10,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ChannelHandler extends SocketChannelHandler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(cn.foxtech.common.utils.netty.server.handler.SocketChannelHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChannelHandler.class);
 
     @Setter
     private ChannelManager channelManager;
@@ -20,6 +21,9 @@ public class ChannelHandler extends SocketChannelHandler {
 
     @Setter
     private ServiceKeyHandler serviceKeyHandler;
+
+    @Setter
+    private boolean logger = false;
 
 
     /**
@@ -46,12 +50,17 @@ public class ChannelHandler extends SocketChannelHandler {
             return;
         }
 
+        byte[] data = (byte[]) msg;
+
+        // 记录接收到的报文
+        if (this.logger) {
+            LOGGER.info("channelRead: " + ctx.channel().remoteAddress() + ": " + HexUtils.byteArrayToHexString(data));
+        }
+
+
         // 检查：channel是否已经标识上了信息
         String serviceKey = this.channelManager.getServiceKey(ctx);
         if (serviceKey == null) {
-            // 拆解报文
-            byte[] data = (byte[]) msg;
-
             // 从报文总获得业务特征信息
             serviceKey = this.serviceKeyHandler.getServiceKey(data);
 

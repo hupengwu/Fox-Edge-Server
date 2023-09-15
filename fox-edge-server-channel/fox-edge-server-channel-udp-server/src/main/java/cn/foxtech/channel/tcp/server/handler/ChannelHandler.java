@@ -3,6 +3,7 @@ package cn.foxtech.channel.tcp.server.handler;
 import cn.foxtech.channel.tcp.server.service.ChannelManager;
 import cn.foxtech.channel.tcp.server.service.ReportService;
 import cn.foxtech.common.utils.netty.server.handler.SocketChannelHandler;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.socket.DatagramPacket;
@@ -11,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ChannelHandler extends SocketChannelHandler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(cn.foxtech.common.utils.netty.server.handler.SocketChannelHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChannelHandler.class);
 
     @Setter
     private ChannelManager channelManager;
@@ -21,6 +22,9 @@ public class ChannelHandler extends SocketChannelHandler {
 
     @Setter
     private ServiceKeyHandler serviceKeyHandler;
+
+    @Setter
+    private boolean logger = false;
 
     /**
      * 从客户端收到新的数据时，这个方法会在收到消息时被调用
@@ -39,6 +43,10 @@ public class ChannelHandler extends SocketChannelHandler {
         byte[] data = new byte[size];
         packet.content().readBytes(data);
 
+        // 记录接收到的报文
+        if (this.logger) {
+            LOGGER.info("channelRead: " + packet.sender() + ": " + HexUtils.byteArrayToHexString(data));
+        }
 
         // 检查：channel是否已经标识上了信息
         String serviceKey = this.channelManager.getServiceKey(packet.sender());

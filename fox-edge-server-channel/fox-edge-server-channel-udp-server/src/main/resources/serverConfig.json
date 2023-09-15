@@ -11,7 +11,6 @@
       "jarFile": "\\jar\\decoder\\fox-edge-server-protocol-zktl-air5in1-1.0.2.jar"
     }],
     "keyHandler": "cn.foxtech.device.protocol.v1.zktl.air5in1.handler.ZktlServiceKeyHandler",
-    "serverPort": 9302,
-    "lifeCycle": 3600
+    "serverPort": 9302
   }]
 }

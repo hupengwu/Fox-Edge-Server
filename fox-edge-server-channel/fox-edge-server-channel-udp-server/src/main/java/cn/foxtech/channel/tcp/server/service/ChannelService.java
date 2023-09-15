@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -26,6 +28,11 @@ public class ChannelService extends ChannelServerAPI {
 
     @Autowired
     private ReportService reportService;
+
+    /**
+     * 上次检查时间
+     */
+    private long lastCleanTime = 0;
 
 
     /**
@@ -92,6 +99,23 @@ public class ChannelService extends ChannelServerAPI {
      */
     @Override
     public synchronized List<ChannelRespondVO> report() throws ServiceException {
+        // 搭顺风车：清理生命周期失效的socket信息
+        this.cleanLifeCycle();
+
         return this.reportService.popAll();
+    }
+
+    private void cleanLifeCycle() throws ServiceException {
+        if (System.currentTimeMillis() - this.lastCleanTime < 3600 * 1000) {
+            return;
+        }
+
+        Set<String> serviceKeys = new HashSet<>();
+        serviceKeys.addAll(this.channelName2ServiceKey.values());
+
+        // 清理无效的TCP:PORT数据
+        this.channelManager.clearLifeCycle(serviceKeys);
+
+        this.lastCleanTime = System.currentTimeMillis();
     }
 }

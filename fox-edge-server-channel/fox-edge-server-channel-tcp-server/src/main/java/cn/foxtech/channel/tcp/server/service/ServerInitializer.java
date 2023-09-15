@@ -1,5 +1,6 @@
 package cn.foxtech.channel.tcp.server.service;
 
+import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.common.service.ConfigManageService;
 import cn.foxtech.channel.tcp.server.handler.ChannelHandler;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
@@ -34,6 +35,8 @@ public class ServerInitializer {
     @Autowired
     private ReportService reportService;
 
+    @Autowired
+    private ChannelProperties channelProperties;
 
     @Autowired
     private ConfigManageService configManageService;
@@ -43,10 +46,12 @@ public class ServerInitializer {
         // 读取配置参数
         Map<String, Object> configs = this.configManageService.loadInitConfig("serverConfig", "serverConfig.json");
 
+
+        // 记录启动参数，方便后面全局使用
+        this.channelProperties.setLogger((Boolean) configs.get("logger"));
+
         // 启动多个服务器
         this.startServers(configs);
-
-
     }
 
     /**
@@ -64,7 +69,7 @@ public class ServerInitializer {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            this.logger.error("scanJarFile出现异常:" + e.getMessage());
+            this.logger.error("startServers 出现异常:" + e.getMessage());
         }
     }
 
@@ -122,6 +127,7 @@ public class ServerInitializer {
             channelHandler.setServiceKeyHandler(serviceKeyHandler);
             channelHandler.setChannelManager(this.channelManager);
             channelHandler.setReportService(this.reportService);
+            channelHandler.setLogger(this.channelProperties.getLogger());
 
             // 创建一个Tcp Server实例
             NettyTcpServer.createServer(serverPort, splitMessageHandler, channelHandler);

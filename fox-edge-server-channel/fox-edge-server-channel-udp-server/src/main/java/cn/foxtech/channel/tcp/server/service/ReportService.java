@@ -71,6 +71,5 @@ public class ReportService {
         }
 
         return respondVOList;
-
     }
 }

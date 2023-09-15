@@ -13,5 +13,6 @@
     "keyHandler": "cn.foxtech.device.protocol.v1.zktl.air5in1.handler.ZktlServiceKeyHandler",
     "serverPort": 9302,
     "splitHandler": "cn.foxtech.device.protocol.v1.zktl.air5in1.handler.ZktlSplitMessageHandler"
-  }]
+  }],
+  "logger": false
 }
