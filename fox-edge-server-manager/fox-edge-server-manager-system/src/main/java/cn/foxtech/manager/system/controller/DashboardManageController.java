@@ -71,20 +71,27 @@ public class DashboardManageController {
 
     private void getDeviceStatusEntityIndicator(Map<String, Object> indicators) throws JsonParseException {
         RedisReader redisReader = this.entityManageService.getRedisReader(DeviceStatusEntity.class);
-        List<BaseEntity> entityList = redisReader.readEntityList();
+        Map<String, Object> dataMap = redisReader.readHashMap();
 
         AtomicInteger successCount = new AtomicInteger();
         AtomicInteger failedCount = new AtomicInteger();
 
-        for (BaseEntity entity : entityList) {
-            DeviceStatusEntity statusEntity = (DeviceStatusEntity) entity;
+        for (String key : dataMap.keySet()) {
+            Object data = dataMap.get(key);
+            if (!(data instanceof Map)) {
+                continue;
+            }
 
-            if (statusEntity.getCommFailedCount() > 0) {
+            Map<String, Object> map = (Map<String, Object>)data;
+            Integer commFailedCount = (Integer) map.getOrDefault("commFailedCount",0);
+
+            if (commFailedCount > 0) {
                 failedCount.getAndIncrement();
             }
-            if (statusEntity.getCommFailedCount() == 0) {
+            if (commFailedCount == 0) {
                 successCount.getAndIncrement();
             }
+
         }
 
         indicators.put("deviceFailedCount", failedCount.intValue());
