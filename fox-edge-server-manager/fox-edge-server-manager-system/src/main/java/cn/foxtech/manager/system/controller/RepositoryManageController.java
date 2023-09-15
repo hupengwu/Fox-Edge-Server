@@ -65,10 +65,20 @@ public class RepositoryManageController {
             List<Map<String, Object>> resultList = new ArrayList<>();
             list.forEach((Map<String, Object> value) -> {
                 boolean result = true;
-                String fieldName = RepositoryConstant.filed_model_name;
+                String fieldName = "";
+
+                // 模糊搜索
+                fieldName = RepositoryConstant.filed_keyword;
                 if (body.containsKey(fieldName)) {
-                    result &= ((String) value.getOrDefault(fieldName, "")).contains((String) body.get(fieldName));
+                    boolean fuzzy = false;
+                    fuzzy |= ((String) value.getOrDefault(RepositoryConstant.filed_model_name, "")).toLowerCase().contains(((String) body.get(fieldName)).toLowerCase());
+                    fuzzy |= ((String) value.getOrDefault(RepositoryConstant.filed_model_type, "")).toLowerCase().contains(((String) body.get(fieldName)).toLowerCase());
+                    fuzzy |= ((String) value.getOrDefault(RepositoryConstant.filed_description, "")).toLowerCase().contains(((String) body.get(fieldName)).toLowerCase());
+
+                    result &= fuzzy;
                 }
+
+                // 后面是精确匹配
                 fieldName = RepositoryConstant.filed_version;
                 if (body.containsKey(fieldName)) {
                     result &= ((String) value.getOrDefault(fieldName, "")).contains((String) body.get(fieldName));
@@ -82,6 +92,7 @@ public class RepositoryManageController {
                     Map<String, Object> lastVersion = (Map<String, Object>) value.getOrDefault(RepositoryConstant.filed_last_version, new HashMap<>());
                     result &= lastVersion.getOrDefault(fieldName, 0).equals(body.get(fieldName));
                 }
+
 
                 if (result) {
                     resultList.add(value);

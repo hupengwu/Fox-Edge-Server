@@ -12,6 +12,7 @@ public class RepositoryConstant {
     public static final String filed_model_version = "modelVersion";
 
     public static final String filed_model_type = "modelType";
+    public static final String filed_description = "description";
     public static final String filed_version = "version";
     public static final String filed_stage = "stage";
     public static final String filed_versions = "versions";
@@ -23,6 +24,8 @@ public class RepositoryConstant {
     public static final String filed_local_md5 = "localMd5";
     public static final String filed_md5 = "md5";
     public static final String filed_path_name = "pathName";
+
+    public static final String filed_keyword = "keyword";
 
     public static final String filed_value_model_version_default = "v1";
 }
