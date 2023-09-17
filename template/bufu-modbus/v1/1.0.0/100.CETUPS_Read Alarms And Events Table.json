@@ -1,0 +1,16 @@
+{
+	"template_name": "Read Alarms And Events Table",
+	"operate": {
+		"name": "Read Alarms And Events Table",
+		"operate_name": "Read Holding Register",
+		"modbus_mode": "RTU",
+		"encoder_param": {
+			"reg_addr": 1055,
+			"reg_cnt": 7
+		},
+		"decoder_param": {
+			"table": "100.CETUPS_Read Alarms And Events Table.csv"
+		}
+
+	}
+}

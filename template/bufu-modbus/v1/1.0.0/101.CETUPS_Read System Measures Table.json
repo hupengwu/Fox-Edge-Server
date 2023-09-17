@@ -1,0 +1,19 @@
+{
+	"operate_list": [{
+		"template_name": "Read System Measures Table",
+		"device_addr": 1,
+		"reg_addr": 1070,
+		"reg_cnt": 69,
+		"modbus_mode": "RTU",
+		"operate_name": "Read Holding Register",
+		"table_name": "101.CETUPS_Read System Measures Table.csv"
+	}, {
+		"template_name": "Read Alarms And Events Table",
+		"device_addr": 1,
+		"reg_addr": 1055,
+		"reg_cnt": 7,
+		"modbus_mode": "RTU",
+		"operate_name": "Read Holding Register",
+		"table_name": "100.CETUPS_Read Alarms And Events Table.csv"
+	}]
+}
