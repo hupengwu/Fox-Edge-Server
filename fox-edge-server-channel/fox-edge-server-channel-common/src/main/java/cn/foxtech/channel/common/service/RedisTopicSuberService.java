@@ -7,6 +7,7 @@ import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.common.domain.constant.RedisTopicConstant;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.json.JsonUtils;
+import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.redis.topic.service.RedisTopicSubscriber;
 import cn.foxtech.common.utils.syncobject.SyncQueueObjectMap;
 import cn.foxtech.core.exception.ServiceException;
@@ -44,13 +45,18 @@ public class RedisTopicSuberService extends RedisTopicSubscriber {
                 // 一问一答模式
                 respondVO = this.execute(requestVO);
 
+                // 检查：是否发送到指定路由，如果没有说明，则默认发到设备接收的topic
+                if (MethodUtils.hasEmpty(respondVO.getRoute())){
+                    respondVO.setRoute(RedisTopicConstant.topic_channel_respond + RedisTopicConstant.model_device);
+                }
+
                 // 将UUID回填回去
                 respondVO.setUuid(requestVO.getUuid());
                 respondVO.setType(constants.getChannelType());
                 String json = JsonUtils.buildJson(respondVO);
 
                 // 填充到缓存队列
-                SyncQueueObjectMap.inst().push(RedisTopicConstant.topic_channel_respond + RedisTopicConstant.model_device, json, 1000);
+                SyncQueueObjectMap.inst().push(respondVO.getRoute(), json, 1000);
 
             } else if (ChannelRequestVO.MODE_PUBLISH.equals(requestVO.getMode())) {
                 // 单向发布模式

@@ -53,6 +53,10 @@ public class ChannelBaseVO {
      * 通信超时
      */
     private Integer timeout;
+    /**
+     * 重路由到某个topic
+     */
+    private String route;
 
 
     /**
@@ -67,6 +71,7 @@ public class ChannelBaseVO {
         this.mode = vo.mode;
         this.send = vo.send;
         this.recv = vo.recv;
+        this.route = vo.route;
         this.timeout = vo.timeout;
     }
 }

@@ -5,6 +5,7 @@ import cn.foxtech.common.domain.constant.RestFulManagerVOConstant;
 import cn.foxtech.common.domain.vo.PublicRespondVO;
 import cn.foxtech.common.domain.vo.RestFulRequestVO;
 import cn.foxtech.common.domain.vo.RestFulRespondVO;
+import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
 import cn.foxtech.common.utils.syncobject.SyncQueueObjectMap;
 import cn.foxtech.core.exception.ServiceException;
@@ -28,7 +29,7 @@ public class TopicRespondScheduler implements IRedisTopicService {
     @Override
     public void respondChannel(ChannelRespondVO respondVO) throws ServiceException {
         try {
-            if (respondVO.getUuid() != null && !respondVO.getUuid().isEmpty()) {
+            if (!MethodUtils.hasEmpty(respondVO.getUuid())) {
                 SyncFlagObjectMap.inst().notifyDynamic(respondVO.getUuid(), respondVO);
             }
         } catch (Exception e) {
@@ -39,7 +40,7 @@ public class TopicRespondScheduler implements IRedisTopicService {
     @Override
     public void respondPersist(RestFulRespondVO respondVO) throws ServiceException {
         try {
-            if (respondVO.getUuid() != null && !respondVO.getUuid().isEmpty()) {
+            if (!MethodUtils.hasEmpty(respondVO.getUuid())) {
                 SyncFlagObjectMap.inst().notifyDynamic(respondVO.getUuid(), respondVO);
             }
         } catch (Exception e) {
@@ -50,7 +51,7 @@ public class TopicRespondScheduler implements IRedisTopicService {
     @Override
     public void requestManager(RestFulRequestVO requestVO) throws ServiceException {
         try {
-            if (requestVO.getUuid() != null && !requestVO.getUuid().isEmpty()) {
+            if (!MethodUtils.hasEmpty(requestVO.getUuid())) {
                 SyncQueueObjectMap.inst().push(RestFulManagerVOConstant.restful_manager, requestVO, 16);
             }
         } catch (Exception e) {

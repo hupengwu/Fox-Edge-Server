@@ -5,6 +5,9 @@ public class DeviceMethodVOFieldConstant {
     public static final String field_uuid = "uuid";
     public static final String field_timeout = "timeout";
 
+    // 接收的topic名称
+    public static final String field_route = "route";
+
 
     /**
      * 字段值定义：field_operate

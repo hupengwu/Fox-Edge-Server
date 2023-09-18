@@ -20,7 +20,13 @@ public class JarInfoReader {
     public static Set<String> readClassName(String jarFilePath) throws IOException {
         Map<String, Object> jarInfo = readJarInfo(jarFilePath);
 
-        return (Set<String> )jarInfo.get("classFileName");
+        return (Set<String>) jarInfo.get("classFileName");
+    }
+
+    public static Set<String> readDirectoryName(String jarFilePath) throws IOException {
+        Map<String, Object> jarInfo = readJarInfo(jarFilePath);
+
+        return (Set<String>) jarInfo.get("directoryName");
     }
 
 
