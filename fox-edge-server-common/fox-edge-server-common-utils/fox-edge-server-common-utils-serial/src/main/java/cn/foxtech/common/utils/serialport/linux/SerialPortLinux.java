@@ -1,8 +1,8 @@
 package cn.foxtech.common.utils.serialport.linux;
 
 import cn.foxtech.common.utils.serialport.ISerialPort;
-import cn.foxtech.common.utils.serialport.linux.entity.OutValue;
 import cn.foxtech.common.utils.serialport.linux.entity.FD_SET;
+import cn.foxtech.common.utils.serialport.linux.entity.OutValue;
 import cn.foxtech.common.utils.serialport.linux.entity.TERMIOS;
 import cn.foxtech.common.utils.serialport.linux.entity.TIMEVAL;
 
@@ -24,19 +24,19 @@ public class SerialPortLinux implements ISerialPort {
     /**
      * 新的串口设备选项
      */
-    private TERMIOS ntm = new TERMIOS();
+    private final TERMIOS ntm = new TERMIOS();
     /**
      * 旧的串口设备选项
      */
-    private TERMIOS otm = new TERMIOS();
+    private final TERMIOS otm = new TERMIOS();
     /**
      * 接收的数据
      */
-    private byte[] data = new byte[1024];
+    private final byte[] data = new byte[1024];
     /**
      * SELECT超时
      */
-    private long uTimeOut = 100 * 1000;
+    private final long uTimeOut = 100 * 1000;
 
     /**
      * 串口是否已经打开
@@ -89,14 +89,15 @@ public class SerialPortLinux implements ISerialPort {
     /**
      * 设置串口参数
      *
-     * @param baudRate 速率
-     * @param databits 数据位
-     * @param stopbits 停止位
-     * @param parity   校验位
+     * @param baudRate     速率
+     * @param databits     数据位
+     * @param stopbits     停止位
+     * @param parity       校验位
+     * @param commTimeOuts commTimeOuts的字节时间间隔
      * @return 是否成功
      */
     @Override
-    public boolean setParam(Integer baudRate, String parity, Integer databits, Integer stopbits) {
+    public boolean setParam(Integer baudRate, String parity, Integer databits, Integer stopbits, Integer commTimeOuts) {
         // 参数转换为大写
         if (parity == null) {
             return false;
@@ -216,11 +217,7 @@ public class SerialPortLinux implements ISerialPort {
 
         // 将属性设置入串口
         rtn = API.tcsetattr(this.fd, LinuxMacro.TCSANOW, this.ntm);
-        if (rtn != 0) {
-            return false;
-        }
-
-        return true;
+        return rtn == 0;
     }
 
     /**
@@ -319,11 +316,7 @@ public class SerialPortLinux implements ISerialPort {
 
         // 清除输入缓存
         int rtn = API.tcflush(this.fd, LinuxMacro.TCIFLUSH);
-        if (rtn != 0) {
-            return false;
-        }
-
-        return true;
+        return rtn == 0;
     }
 
 
@@ -340,11 +333,7 @@ public class SerialPortLinux implements ISerialPort {
 
         // 清除输出缓存
         int rtn = API.tcflush(this.fd, LinuxMacro.TCOFLUSH);
-        if (rtn != 0) {
-            return false;
-        }
-
-        return true;
+        return rtn == 0;
     }
 
     /**

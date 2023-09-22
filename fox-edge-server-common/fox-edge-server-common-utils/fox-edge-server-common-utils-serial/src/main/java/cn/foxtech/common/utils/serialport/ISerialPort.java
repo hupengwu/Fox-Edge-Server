@@ -1,8 +1,8 @@
 package cn.foxtech.common.utils.serialport;
 
-import cn.foxtech.common.utils.serialport.win32.SerialPortWin32;
 import cn.foxtech.common.utils.serialport.linux.SerialPortLinux;
 import cn.foxtech.common.utils.serialport.linux.entity.OutValue;
+import cn.foxtech.common.utils.serialport.win32.SerialPortWin32;
 import com.sun.jna.Platform;
 
 /**
@@ -24,7 +24,7 @@ public interface ISerialPort {
      *
      * @return 是否打开
      */
-    public boolean isOpen();
+    boolean isOpen();
 
     /**
      * 打开串口
@@ -32,7 +32,7 @@ public interface ISerialPort {
      * @param name LINUX下串口名为ttyS0这样格式的数据，WINDOWS下串口名为COM1这样的格式
      * @return 操作是否成功
      */
-    public boolean open(String name);
+    boolean open(String name);
 
 
     /**
@@ -42,9 +42,10 @@ public interface ISerialPort {
      * @param databits 数据位
      * @param stopbits 停止位
      * @param parity   校验位
+     * @param commTimeOuts   commTimeOuts的字节时间间隔
      * @return 是否成功
      */
-    public boolean setParam(Integer baudRate, String parity, Integer databits, Integer stopbits);
+    boolean setParam(Integer baudRate, String parity, Integer databits, Integer stopbits, Integer commTimeOuts);
 
     /**
      * 发送数据
@@ -53,7 +54,7 @@ public interface ISerialPort {
      * @param sendLen
      * @return 操作是否成功
      */
-    public boolean sendData(byte[] data, OutValue sendLen);
+    boolean sendData(byte[] data, OutValue sendLen);
 
     /**
      * 接收数据
@@ -63,24 +64,24 @@ public interface ISerialPort {
      * @param recvLen  接收到数据
      * @return 操作是否成功
      */
-    public boolean recvData(byte[] data, long mTimeout, OutValue recvLen);
+    boolean recvData(byte[] data, long mTimeout, OutValue recvLen);
 
     /**
      * 清空缓冲区
      *
      * @return 操作是否成功
      */
-    public boolean clearRecvFlush();
+    boolean clearRecvFlush();
 
     /**
      * 清空缓冲区
      *
      * @return 操作是否成功
      */
-    public boolean clearSendFlush();
+    boolean clearSendFlush();
 
     /**
      * 关闭串口
      */
-    public boolean close();
+    boolean close();
 }

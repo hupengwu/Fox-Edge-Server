@@ -82,7 +82,7 @@ public class ChannelService extends ChannelServerAPI {
         }
 
         // 设置串口参数
-        serialPort.setParam(baudRate, parity, databits, stopbits);
+        serialPort.setParam(baudRate, parity, databits, stopbits, 0);
 
         // 保存串口对象
         this.name2port.put(channelName, serialPort);

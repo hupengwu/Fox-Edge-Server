@@ -30,4 +30,9 @@ public class SerialConfigEntity {
      * 停止位
      */
     private Integer stopbits;
+    /**
+     * 每个字节之间的时间间隔：Win32下的CommTimeOuts参数，该参数默认为0，其他参数，是要付出响应时间缓慢的代价的
+     */
+    private Integer commTimeOuts;
+
 }
