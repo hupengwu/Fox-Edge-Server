@@ -4,6 +4,7 @@ import cn.foxtech.common.domain.constant.RedisStatusConstant;
 import cn.foxtech.common.entity.constant.DeviceVOFieldConstant;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.entity.utils.PageUtils;
+import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,11 @@ public class ConsoleManageController {
                 }
                 if (!MethodUtils.hasEmpty(level) && !level.equals(object.get("level"))) {
                     continue;
+                }
+
+                Object value = object.get("value");
+                if (value != null && !(value instanceof String)) {
+                    object.put("value", JsonUtils.buildJsonWithoutException(value));
                 }
 
                 list.add(object);

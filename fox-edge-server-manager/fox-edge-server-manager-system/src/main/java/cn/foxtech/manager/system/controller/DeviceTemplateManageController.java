@@ -6,7 +6,7 @@ import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.manager.system.constants.RepositoryConstant;
 import cn.foxtech.manager.system.service.RepositoryService;
-import cn.foxtech.manager.system.utils.TemplateUtils;
+import cn.foxtech.manager.system.service.TemplateFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,12 +30,17 @@ public class DeviceTemplateManageController {
     @Autowired
     private RepositoryService repositoryService;
 
+    @Autowired
+    private TemplateFileService fileService;
+
+
+
 
     @PostMapping("/page")
     public AjaxResult selectEntityList(@RequestBody Map<String, Object> body) {
         try {
-            // 从磁盘中查找所有的shell文件信息
-            List<Map<String, Object>> resultList = TemplateUtils.queryTemplateList(false);
+            // 从磁盘中查找所有的模板文件信息
+            List<Map<String, Object>> resultList = this.fileService.queryTemplateList();
 
             return PageUtils.getPageMapList(resultList, body);
         } catch (Exception e) {
