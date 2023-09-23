@@ -114,7 +114,7 @@ public class SerialPortWin32 implements ISerialPort {
             return false;
         }
 
-        // 检查：字节时间的配置是否超过合理范围
+        // 检查：字节时间的配置是否超过合理范围，填写了这个参数，是要付出卡顿的代价的，非遇到断句不正确的时候，不要配置它。
         if (commTimeOuts < 0 || commTimeOuts > 5) {
             commTimeOuts = 0;
         }
