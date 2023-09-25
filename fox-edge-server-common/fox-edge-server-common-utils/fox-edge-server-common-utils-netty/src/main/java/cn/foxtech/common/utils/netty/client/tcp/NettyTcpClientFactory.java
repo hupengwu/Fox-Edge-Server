@@ -51,7 +51,7 @@ public class NettyTcpClientFactory {
         this.bootstrap.remoteAddress(remoteAddress);
         ChannelFuture channelFuture = this.bootstrap.connect().addListener(future -> {
             if (future.cause() != null) {
-                System.out.println(future.cause().getMessage());
+              //  System.out.println(future.cause().getMessage());
             }
         });
 

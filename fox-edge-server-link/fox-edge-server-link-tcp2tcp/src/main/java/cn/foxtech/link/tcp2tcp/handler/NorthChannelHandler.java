@@ -1,13 +1,18 @@
 package cn.foxtech.link.tcp2tcp.handler;
 
+import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.netty.handler.SocketChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class NorthChannelHandler extends SocketChannelHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(NorthChannelHandler.class);
+
+    @Autowired
+    private RedisConsoleService consoleService;
 
     @Setter
     private JoinerChannelHandler joinerChannelHandler;
@@ -20,7 +25,10 @@ public class NorthChannelHandler extends SocketChannelHandler {
      * @throws Exception 异常
      */
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        LOGGER.info("北向建立连接:" + ctx.channel().remoteAddress());
+        String info = "北向建立连接:" + ctx.channel().remoteAddress();
+
+        LOGGER.info(info);
+        this.consoleService.info(info);
 
         this.joinerChannelHandler.insertNorthChannel(ctx);
     }
@@ -41,7 +49,10 @@ public class NorthChannelHandler extends SocketChannelHandler {
      * @param ctx 上下文
      */
     public void channelInactive(final ChannelHandlerContext ctx) {
-        LOGGER.info("北向连接断开:" + ctx.channel().remoteAddress());
+        String info = "北向连接断开:" + ctx.channel().remoteAddress();
+
+        LOGGER.info(info);
+        this.consoleService.info(info);
 
         this.joinerChannelHandler.removeNorthChannel(ctx);
     }
@@ -53,6 +64,9 @@ public class NorthChannelHandler extends SocketChannelHandler {
      * @param cause 源头
      */
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        LOGGER.info("北向连接异常:" + ctx.channel().remoteAddress());
+        String info = "北向连接异常:" + ctx.channel().remoteAddress();
+
+        LOGGER.info(info);
+        this.consoleService.info(info);
     }
 }

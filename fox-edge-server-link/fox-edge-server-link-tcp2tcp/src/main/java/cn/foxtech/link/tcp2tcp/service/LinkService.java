@@ -1,5 +1,6 @@
 package cn.foxtech.link.tcp2tcp.service;
 
+import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.netty.server.tcp.NettyTcpOriginalChannelInitializer;
 import cn.foxtech.common.utils.netty.server.tcp.NettyTcpServer;
@@ -8,6 +9,7 @@ import cn.foxtech.link.common.api.LinkServerAPI;
 import cn.foxtech.link.tcp2tcp.entity.Tcp2TcpLinkEntity;
 import cn.foxtech.link.tcp2tcp.handler.NorthChannelHandler;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -20,6 +22,9 @@ import java.util.concurrent.TimeUnit;
 public class LinkService extends LinkServerAPI {
     @Getter
     private final Map<String, Tcp2TcpLinkEntity> linkName2linkEntity = new ConcurrentHashMap<>();
+
+    @Autowired
+    private RedisConsoleService consoleService;
 
 
     /**
@@ -75,8 +80,9 @@ public class LinkService extends LinkServerAPI {
             public void run() {
                 try {
                     tcpServer.bind(entity.getServerPort());
+                    consoleService.info("创建Tcp Server成功，端口号：" + entity.getServerPort());
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    consoleService.info("创建Tcp Server失败，端口号：" + entity.getServerPort() + "，出错信息：" + e.getMessage());
                 }
             }
         }, 0, TimeUnit.MILLISECONDS);

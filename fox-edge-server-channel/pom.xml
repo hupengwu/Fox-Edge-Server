@@ -28,7 +28,6 @@
         <module>fox-edge-server-channel-tcp-client</module>
         <module>fox-edge-server-channel-udp-server</module>
         <module>fox-edge-server-channel-udp-client</module>
-        <module>fox-edge-server-channel-tcpsocket-service</module>
         <module>fox-edge-server-channel-udpsocket-service</module>
         <module>fox-edge-server-channel-mqtt-client</module>
         <module>fox-edge-server-channel-http-client</module>
