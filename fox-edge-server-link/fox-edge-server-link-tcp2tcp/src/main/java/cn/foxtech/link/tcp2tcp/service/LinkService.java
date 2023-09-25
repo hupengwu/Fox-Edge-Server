@@ -5,30 +5,21 @@ import cn.foxtech.common.utils.netty.server.tcp.NettyTcpOriginalChannelInitializ
 import cn.foxtech.common.utils.netty.server.tcp.NettyTcpServer;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.link.common.api.LinkServerAPI;
-import cn.foxtech.link.common.properties.LinkProperties;
 import cn.foxtech.link.tcp2tcp.entity.Tcp2TcpLinkEntity;
-import cn.foxtech.link.tcp2tcp.handler.ChannelHandler;
-import org.springframework.beans.factory.annotation.Autowired;
+import cn.foxtech.link.tcp2tcp.handler.NorthChannelHandler;
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class LinkService extends LinkServerAPI {
-    private final Map<String, Tcp2TcpLinkEntity> linkName2ServiceKey = new ConcurrentHashMap<>();
-
-    @Autowired
-    private LinkManager linkManager;
-
-    @Autowired
-    private LinkProperties linkProperties;
-
-    @Autowired
-    private PublishService publishService;
-
-    @Autowired
-    private ReportService reportService;
+    @Getter
+    private final Map<String, Tcp2TcpLinkEntity> linkName2linkEntity = new ConcurrentHashMap<>();
 
 
     /**
@@ -39,51 +30,63 @@ public class LinkService extends LinkServerAPI {
      */
     @Override
     public void openLink(String linkName, Map<String, Object> linkParam) {
-        Map<String, Object> server = (Map<String, Object>) linkParam.get("server");
+        Integer serverPort = (Integer) linkParam.get("serverPort");
         Map<String, Object> remote = (Map<String, Object>) linkParam.get("remote");
-        if (MethodUtils.hasEmpty(server, remote)) {
-            throw new ServiceException("参数不能为空: server, remote");
-        }
-
-        // 北向参数
-        String serverHost = (String) server.get("host");
-        Integer serverPort = (Integer) server.get("port");
-        if (MethodUtils.hasEmpty(serverHost, serverPort)) {
-            throw new ServiceException("参数不能为空: server->host, server->port");
+        if (MethodUtils.hasEmpty(serverPort, remote)) {
+            throw new ServiceException("参数不能为空: serverPort, remote");
         }
 
         // 南向参数
         String remoteHost = (String) remote.get("host");
         Integer remotePort = (Integer) remote.get("port");
-        if (MethodUtils.hasEmpty(serverHost, serverPort)) {
+        if (MethodUtils.hasEmpty(remotePort, remoteHost)) {
             throw new ServiceException("参数不能为空: remote->host, remote->port");
         }
 
         // 构造实体
         Tcp2TcpLinkEntity entity = new Tcp2TcpLinkEntity();
-        entity.setServerHost(serverHost);
         entity.setServerPort(serverPort);
         entity.setRemoteHost(remoteHost);
         entity.setRemotePort(remotePort);
 
         // 保存配置
-        this.linkName2ServiceKey.put(linkName, entity);
+        this.linkName2linkEntity.put(linkName, entity);
 
-        // 创建服务端口
-        this.createServer(entity.getServerPort());
+        // 建立【北向】-【连接】-【南向】三个handler
+
+        // 绑定三者的关系
+        entity.getNorthChannelHandler().setJoinerChannelHandler(entity.getJoinerChannelHandler());
+        entity.getSouthChannelHandler().setJoinerChannelHandler(entity.getJoinerChannelHandler());
+
+        // 创建北向服务
+        this.createNorthServer(entity, entity.getNorthChannelHandler());
     }
 
-    private void createServer(int serverPort){
-        // 绑定关系
-        ChannelHandler channelHandler = new ChannelHandler();
-        channelHandler.setLinkManager(this.linkManager);
-        channelHandler.setLogger(this.linkProperties.getLogger());
-
+    private void createNorthServer(Tcp2TcpLinkEntity entity, NorthChannelHandler northChannelHandler) {
         NettyTcpOriginalChannelInitializer channelInitializer = new NettyTcpOriginalChannelInitializer();
-        channelInitializer.setChannelHandler(channelHandler);
+        channelInitializer.setChannelHandler(northChannelHandler);
 
-        NettyTcpServer.createServer(serverPort, channelInitializer);
+        NettyTcpServer tcpServer = new NettyTcpServer();
+        tcpServer.setChannelInitializer(channelInitializer);
+
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+        executorService.schedule(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    tcpServer.bind(entity.getServerPort());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 0, TimeUnit.MILLISECONDS);
+        executorService.shutdown();
+
+        // 记录信息，方便后面关闭服务端口和线程池
+        entity.setNorthTcpServer(tcpServer);
+        entity.setNorthExecutor(executorService);
     }
+
 
     /**
      * 关闭通道：tcp-server是服务端，连接是自动触发的，不存在真正的打开和关闭操作
@@ -93,6 +96,45 @@ public class LinkService extends LinkServerAPI {
      */
     @Override
     public void closeLink(String linkName, Map<String, Object> linkParam) {
-        this.linkName2ServiceKey.remove(linkName);
+        Tcp2TcpLinkEntity linkEntity = this.linkName2linkEntity.get(linkName);
+
+        this.linkName2linkEntity.remove(linkName);
+
+        if (linkEntity == null) {
+            return;
+        }
+
+        /**
+         * 步骤1：关闭南向的连接
+         */
+        try {
+            linkEntity.getSouthChannelFuture().channel().disconnect();
+            linkEntity.getSouthChannelFuture().channel().closeFuture();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        /**
+         * 步骤2：关闭北向服务端口
+         */
+        try {
+            // 主动关闭服务端口
+            linkEntity.getNorthTcpServer().getChannelFuture().channel().close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        /**
+         * 步骤3：关闭北向监听的线程池
+         */
+        try {
+            // 关闭线程池
+            if (!linkEntity.getNorthExecutor().awaitTermination(1000, TimeUnit.MILLISECONDS)) {
+                linkEntity.getNorthExecutor().shutdownNow();
+            }
+        } catch (Exception e) {
+            linkEntity.getNorthExecutor().shutdownNow();
+            e.printStackTrace();
+        }
     }
 }

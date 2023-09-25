@@ -2,6 +2,7 @@ package cn.foxtech.common.utils.netty.client.tcp;
 
 import cn.foxtech.common.utils.netty.handler.SocketChannelHandler;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -46,17 +47,19 @@ public class NettyTcpClientFactory {
         inst.createClient("127.0.0.1", 8082);
     }
 
-    public void createClient(SocketAddress remoteAddress) {
+    public ChannelFuture createClient(SocketAddress remoteAddress) {
         this.bootstrap.remoteAddress(remoteAddress);
-        this.bootstrap.connect().addListener(future -> {
-            if (future.cause() != null){
+        ChannelFuture channelFuture = this.bootstrap.connect().addListener(future -> {
+            if (future.cause() != null) {
                 System.out.println(future.cause().getMessage());
             }
         });
+
+        return channelFuture;
     }
 
-    public void createClient(String host, int port) {
+    public ChannelFuture createClient(String host, int port) {
         SocketAddress remoteAddress = new InetSocketAddress(host, port);
-        this.createClient(remoteAddress);
+        return this.createClient(remoteAddress);
     }
 }

@@ -1,7 +1,7 @@
 package cn.foxtech.link.tcp2tcp.initialize;
 
-import cn.foxtech.link.tcp2tcp.service.ServerInitializer;
 import cn.foxtech.link.common.initialize.LinkInitialize;
+import cn.foxtech.link.tcp2tcp.service.ServerInitializer;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -26,6 +26,7 @@ public class Initialize implements CommandLineRunner {
         logger.info("------------------------初始化开始！------------------------");
 
         this.linkInitialize.initialize();
+        this.serverInitializer.initialize();
 
         logger.info("------------------------初始化结束！------------------------");
 

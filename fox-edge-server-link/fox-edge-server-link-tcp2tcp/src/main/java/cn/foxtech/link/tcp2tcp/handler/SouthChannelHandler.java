@@ -1,28 +1,16 @@
 package cn.foxtech.link.tcp2tcp.handler;
 
 import cn.foxtech.common.utils.netty.handler.SocketChannelHandler;
-import cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler;
-import cn.foxtech.link.tcp2tcp.service.LinkManager;
-import cn.foxtech.link.tcp2tcp.service.ReportService;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ChannelHandler extends SocketChannelHandler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChannelHandler.class);
+public class SouthChannelHandler extends SocketChannelHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(NorthChannelHandler.class);
 
     @Setter
-    private LinkManager linkManager;
-
-    @Setter
-    private ReportService reportService;
-
-    @Setter
-    private ServiceKeyHandler serviceKeyHandler;
-
-    @Setter
-    private boolean logger = false;
+    private JoinerChannelHandler joinerChannelHandler;
 
 
     /**
@@ -32,10 +20,9 @@ public class ChannelHandler extends SocketChannelHandler {
      * @throws Exception 异常
      */
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        this.linkManager.insert(ctx);
+        LOGGER.info("南向建立连接:" + ctx.channel().remoteAddress());
 
-        LOGGER.info("建立连接:" + ctx.channel().remoteAddress());
-
+        this.joinerChannelHandler.insertSouthChannel(ctx);
     }
 
     /**
@@ -45,8 +32,7 @@ public class ChannelHandler extends SocketChannelHandler {
      * @param msg 信息
      */
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-        byte[] data = (byte[]) msg;
-
+        this.joinerChannelHandler.send2North(msg);
     }
 
     /**
@@ -55,9 +41,9 @@ public class ChannelHandler extends SocketChannelHandler {
      * @param ctx 上下文
      */
     public void channelInactive(final ChannelHandlerContext ctx) {
-        this.linkManager.remove(ctx);
+        LOGGER.info("南向连接断开:" + ctx.channel().remoteAddress());
 
-        LOGGER.info("连接断开:" + ctx.channel().remoteAddress());
+        this.joinerChannelHandler.removeSouthChannel(ctx);
     }
 
     /**
@@ -67,6 +53,6 @@ public class ChannelHandler extends SocketChannelHandler {
      * @param cause 源头
      */
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        LOGGER.info("连接异常:" + ctx.channel().remoteAddress());
+        LOGGER.info("南向连接异常:" + ctx.channel().remoteAddress());
     }
 }

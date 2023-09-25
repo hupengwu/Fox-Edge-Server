@@ -23,6 +23,9 @@ public class NettyTcpServer {
     @Setter
     private ChannelInitializer channelInitializer;
 
+    @Getter
+    private ChannelFuture channelFuture;
+
     /**
      * 创建一个TCP SERVER实例
      *
@@ -102,11 +105,11 @@ public class NettyTcpServer {
             /**
              * 绑定端口，同步等待成功
              */
-            ChannelFuture f = serverBootstrap.bind(port).sync();
+            this.channelFuture = serverBootstrap.bind(port).sync();
             /**
              * 等待服务器监听端口关闭
              */
-            f.channel().closeFuture().sync();
+            this.channelFuture.channel().closeFuture().sync();
 
         } catch (InterruptedException e) {
 
