@@ -27,6 +27,10 @@ public abstract class EntityServiceManager extends EntityObjectManager {
         return super.getEntity(id, ChannelEntity.class);
     }
 
+    public LinkEntity getLinkEntity(Long id) {
+        return super.getEntity(id, LinkEntity.class);
+    }
+
     public List<BaseEntity> getChannelEntity(String channelType) {
         return this.getEntityList(ChannelEntity.class, (Object value) -> {
             ChannelEntity entity = (ChannelEntity) value;
@@ -34,6 +38,18 @@ public abstract class EntityServiceManager extends EntityObjectManager {
             boolean result = true;
 
             result &= entity.getChannelType().equals(channelType);
+
+            return result;
+        });
+    }
+
+    public List<BaseEntity> getLinkEntity(String linkType) {
+        return this.getEntityList(LinkEntity.class, (Object value) -> {
+            LinkEntity entity = (LinkEntity) value;
+
+            boolean result = true;
+
+            result &= entity.getLinkType().equals(linkType);
 
             return result;
         });

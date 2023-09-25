@@ -1,6 +1,6 @@
 package cn.foxtech.common.utils.netty.server.udp;
 
-import cn.foxtech.common.utils.netty.server.handler.SocketChannelHandler;
+import cn.foxtech.common.utils.netty.handler.SocketChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.DatagramPacket;

@@ -56,7 +56,7 @@ public class ExecuteService {
     @Autowired
     private KeyStoreLoader keyStoreLoader;
     @Autowired
-    private TempDirManageService TempDirService;
+    private TempDirManageService tempDirService;
 
     public void openChannel(String channelName, Map<String, Object> channelParam) throws Exception {
         // 创建一个实体对象
@@ -115,8 +115,8 @@ public class ExecuteService {
     }
 
     private OpcUaClient createClient(OpcUaConfigEntity channelEntity) throws Exception {
-        this.TempDirService.createTempDir();
-        Path securityTempDir = Paths.get(this.TempDirService.getTempDir());
+        this.tempDirService.createTempDir();
+        Path securityTempDir = Paths.get(this.tempDirService.getTempDir());
 
 
         KeyStoreLoader loader = keyStoreLoader.load(securityTempDir, channelEntity.getCertificate().getFile());

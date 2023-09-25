@@ -4,13 +4,13 @@ import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.core.template.TemplateFactory;
-import cn.foxtech.device.protocol.v1.utils.HexUtils;
-import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 import cn.foxtech.device.protocol.v1.modbus.core.ModBusConstants;
 import cn.foxtech.device.protocol.v1.modbus.core.ModBusProtocol;
 import cn.foxtech.device.protocol.v1.modbus.core.ModBusProtocolFactory;
 import cn.foxtech.device.protocol.v1.modbus.core.ModBusReadRegistersRespond;
 import cn.foxtech.device.protocol.v1.modbus.template.JReadRegistersTemplate;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
+import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 
 import java.util.Map;
 
@@ -27,7 +27,7 @@ public class ModBusProtocolReadRegisters {
      */
     @FoxEdgeOperate(name = "Read Holding Register", polling = true, type = FoxEdgeOperate.encoder, timeout = 2000)
     public static String packReadHoldingRegister(Map<String, Object> param) {
-        return (String) operateReadRegister("", param);
+        return (String) operateReadRegister("", JReadRegistersTemplate.READ_HOLDING_REGISTER, param);
     }
 
     /**
@@ -39,7 +39,7 @@ public class ModBusProtocolReadRegisters {
      */
     @FoxEdgeOperate(name = "Read Holding Register", polling = true, type = FoxEdgeOperate.decoder, timeout = 2000)
     public static Map<String, Object> unpackReadHoldingRegister(String hexString, Map<String, Object> param) {
-        return (Map<String, Object>) operateReadRegister(hexString, param);
+        return (Map<String, Object>) operateReadRegister(hexString, JReadRegistersTemplate.READ_HOLDING_REGISTER, param);
     }
 
 
@@ -51,7 +51,7 @@ public class ModBusProtocolReadRegisters {
      */
     @FoxEdgeOperate(name = "Read Input Register", polling = true, type = FoxEdgeOperate.encoder, timeout = 2000)
     public static String packReadInputRegister(Map<String, Object> param) {
-        return (String) operateReadRegister("", param);
+        return (String) operateReadRegister("", JReadRegistersTemplate.READ_INPUT_REGISTER, param);
     }
 
     /**
@@ -63,7 +63,7 @@ public class ModBusProtocolReadRegisters {
      */
     @FoxEdgeOperate(name = "Read Input Register", polling = true, type = FoxEdgeOperate.decoder, timeout = 2000)
     public static Map<String, Object> unpackReadInputRegister(String hexString, Map<String, Object> param) {
-        return (Map<String, Object>) operateReadRegister(hexString, param);
+        return (Map<String, Object>) operateReadRegister(hexString, JReadRegistersTemplate.READ_INPUT_REGISTER, param);
     }
 
     /**
@@ -73,19 +73,18 @@ public class ModBusProtocolReadRegisters {
      * @param param     参数表
      * @return 编码为String，解码为Map<String, Object>
      */
-    private static Object operateReadRegister(String hexString, Map<String, Object> param) {
+    private static Object operateReadRegister(String hexString, String operateName, Map<String, Object> param) {
         // 取出设备地址
         Integer devAddr = (Integer) param.get("devAddr");
         Integer regAddr = (Integer) param.get("regAddr");
         Integer regCnt = (Integer) (param.get("regCnt"));
         String modbusMode = (String) param.get("modbusMode");
         String templateName = (String) param.get("templateName");
-        String operateName = (String) param.get("operateName");
         String tableName = (String) param.get("tableName");
 
         // 检查输入参数
-        if (MethodUtils.hasEmpty(devAddr, regAddr, regCnt, modbusMode, templateName, operateName, tableName)) {
-            throw new ProtocolException("输入参数不能为空:devAddr, regAddr, regCnd, modbusMode, templateName, operateName, tableName");
+        if (MethodUtils.hasEmpty(devAddr, regAddr, regCnt, modbusMode, templateName, tableName)) {
+            throw new ProtocolException("输入参数不能为空:devAddr, regAddr, regCnd, modbusMode, templateName, tableName");
         }
 
         JReadRegistersTemplate template = TemplateFactory.getTemplate("fox-edge-server-protocol-modbus").getTemplate(templateName, tableName, JReadRegistersTemplate.class);

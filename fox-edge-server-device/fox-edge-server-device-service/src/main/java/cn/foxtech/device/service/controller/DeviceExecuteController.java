@@ -119,8 +119,9 @@ public class DeviceExecuteController extends PeriodTaskService {
                 throw new ServiceException("指定的Channel服务尚未运行：" + deviceEntity.getChannelType());
             }
 
-            // 组合参数
+            // 组合参数：先组合设备上的参数，再组合操作上的参数，也就是操作参数的优先级高于设备上的参数
             Map<String, Object> param = new HashMap<>();
+            param.putAll(deviceEntity.getDeviceParam());
             if (requestVO.getParam() != null) {
                 param.putAll(requestVO.getParam());
             }

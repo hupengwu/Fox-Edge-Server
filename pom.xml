@@ -53,6 +53,7 @@
         <module>fox-edge-server-manager</module>
         <module>fox-edge-server-proxy</module>
         <module>fox-edge-server-channel</module>
+        <module>fox-edge-server-link</module>
         <module>fox-edge-server-device</module>
         <module>fox-edge-server-trigger</module>
         <module>fox-edge-server-controller</module>

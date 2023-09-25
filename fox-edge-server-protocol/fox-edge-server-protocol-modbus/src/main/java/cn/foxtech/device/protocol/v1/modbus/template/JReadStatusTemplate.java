@@ -21,7 +21,7 @@ import java.util.Map;
 @Data
 public class JReadStatusTemplate implements ITemplate {
     public static final String READ_COIL_STATUS = "Read Coil Status";
-    public static final String READ_INPUT_STATUS = "Read Input Status";
+    public static final String READ_DISCRETE_INPUT_STATUS = "Read Discrete Input Status";
     public static final String WRITE_SINGLE_STATUS = "Write Single Status";
 
     private String template_name = "";

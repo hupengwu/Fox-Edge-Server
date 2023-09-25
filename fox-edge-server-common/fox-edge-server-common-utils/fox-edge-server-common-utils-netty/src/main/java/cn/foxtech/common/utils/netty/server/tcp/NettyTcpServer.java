@@ -1,17 +1,14 @@
 package cn.foxtech.common.utils.netty.server.tcp;
 
 
-import cn.foxtech.common.utils.netty.server.handler.SocketChannelHandler;
+import cn.foxtech.common.utils.netty.handler.SocketChannelHandler;
 import cn.foxtech.device.protocol.v1.utils.netty.SplitMessageHandler;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.AdaptiveRecvByteBufAllocator;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -23,23 +20,38 @@ import java.util.concurrent.TimeUnit;
  */
 public class NettyTcpServer {
     @Getter
-    private final NettyTcpChannelInitializer channelInitializer = new NettyTcpChannelInitializer<SocketChannel>();
+    @Setter
+    private ChannelInitializer channelInitializer;
 
     /**
      * 创建一个TCP SERVER实例
-     * @param port 服务端口
+     *
+     * @param port                服务端口
      * @param splitMessageHandler 用于帮TCP报文粘包，进行拆包的自定义派生类，它通过报头和报文长度来判定如何拆包
-     * @param channelHandler 接收数据的channelHandler派生类
+     * @param channelHandler      接收数据的channelHandler派生类
      */
     public static void createServer(int port, SplitMessageHandler splitMessageHandler, SocketChannelHandler channelHandler) {
+        NettyTcpChannelInitializer channelInitializer = new NettyTcpChannelInitializer();
+        channelInitializer.setChannelHandler(channelHandler);
+        channelInitializer.setSplitMessageHandler(splitMessageHandler);
+
+        createServer(port, channelInitializer);
+    }
+
+    /**
+     * 创建一个TCP SERVER实例
+     *
+     * @param port               服务端口
+     * @param channelInitializer 自定义的通道初始化工具
+     */
+    public static void createServer(int port, ChannelInitializer channelInitializer) {
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
         scheduledExecutorService.schedule(new Runnable() {
             @Override
             public void run() {
                 try {
                     NettyTcpServer server = new NettyTcpServer();
-                    server.getChannelInitializer().setSplitMessageHandler(splitMessageHandler);
-                    server.getChannelInitializer().setChannelHandler(channelHandler);
+                    server.setChannelInitializer(channelInitializer);
                     server.bind(port);
                 } catch (Exception e) {
                     e.printStackTrace();

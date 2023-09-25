@@ -5,13 +5,13 @@ import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.core.template.TemplateFactory;
-import cn.foxtech.device.protocol.v1.utils.HexUtils;
-import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 import cn.foxtech.device.protocol.v1.modbus.core.ModBusConstants;
 import cn.foxtech.device.protocol.v1.modbus.core.ModBusProtocol;
 import cn.foxtech.device.protocol.v1.modbus.core.ModBusProtocolFactory;
 import cn.foxtech.device.protocol.v1.modbus.core.ModBusReadStatusRespond;
 import cn.foxtech.device.protocol.v1.modbus.template.JReadStatusTemplate;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
+import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 
 import java.util.Map;
 
@@ -28,7 +28,7 @@ public class ModBusProtocolReadStatus {
      */
     @FoxEdgeOperate(name = "Read Coil Status", polling = true, type = FoxEdgeOperate.encoder, timeout = 2000)
     public static String packReadCoilStatus(Map<String, Object> param) {
-        return (String) operateReadStatus("", param);
+        return (String) operateReadStatus("", JReadStatusTemplate.READ_COIL_STATUS, param);
     }
 
     /**
@@ -40,7 +40,7 @@ public class ModBusProtocolReadStatus {
      */
     @FoxEdgeOperate(name = "Read Coil Status", polling = true, type = FoxEdgeOperate.decoder, timeout = 2000)
     public static Map<String, Object> unpackReadCoilStatus(String hexString, Map<String, Object> param) {
-        return (Map<String, Object>) operateReadStatus(hexString, param);
+        return (Map<String, Object>) operateReadStatus(hexString, JReadStatusTemplate.READ_COIL_STATUS, param);
     }
 
 
@@ -50,9 +50,9 @@ public class ModBusProtocolReadStatus {
      * @param param 必须包含device_addr和modbus_holding_registers_template两个输入参数
      * @return 16进制文本格式的报文
      */
-    @FoxEdgeOperate(name = "Read Input Status", polling = true, type = FoxEdgeOperate.encoder, timeout = 2000)
+    @FoxEdgeOperate(name = "Read Discrete Inputs Status", polling = true, type = FoxEdgeOperate.encoder, timeout = 2000)
     public static String packReadInputStatus(Map<String, Object> param) {
-        return (String) operateReadStatus("", param);
+        return (String) operateReadStatus("", JReadStatusTemplate.READ_DISCRETE_INPUT_STATUS, param);
     }
 
     /**
@@ -62,9 +62,9 @@ public class ModBusProtocolReadStatus {
      * @param param     必须包含 device_addr 和 modbus_holding_registers_template 两个输入参数
      * @return 解码后的数据
      */
-    @FoxEdgeOperate(name = "Read Input Status", polling = true, type = FoxEdgeOperate.decoder, timeout = 2000)
+    @FoxEdgeOperate(name = "Read Discrete Inputs Status", polling = true, type = FoxEdgeOperate.decoder, timeout = 2000)
     public static Map<String, Object> unpackReadInputStatus(String hexString, Map<String, Object> param) {
-        return (Map<String, Object>) operateReadStatus(hexString, param);
+        return (Map<String, Object>) operateReadStatus(hexString, JReadStatusTemplate.READ_DISCRETE_INPUT_STATUS, param);
     }
 
     /**
@@ -74,19 +74,18 @@ public class ModBusProtocolReadStatus {
      * @param param     参数表
      * @return 编码为String，解码为Map<String, Object>
      */
-    private static Object operateReadStatus(String hexString, Map<String, Object> param) {
+    private static Object operateReadStatus(String hexString, String operateName, Map<String, Object> param) {
         // 取出设备地址
         Integer devAddr = (Integer) param.get("devAddr");
         Integer regAddr = (Integer) param.get("regAddr");
         Integer regCnt = (Integer) (param.get("regCnt"));
         String modbusMode = (String) param.get("modbusMode");
         String templateName = (String) param.get("templateName");
-        String operateName = (String) param.get("operateName");
         String tableName = (String) param.get("tableName");
 
         // 检查输入参数
-        if (MethodUtils.hasEmpty(devAddr, regAddr, regCnt, modbusMode, templateName, operateName, tableName)) {
-            throw new ProtocolException("输入参数不能为空:devAddr, regAddr, regCnd, modbusMode, templateName, operateName, tableName");
+        if (MethodUtils.hasEmpty(devAddr, regAddr, regCnt, modbusMode, templateName, tableName)) {
+            throw new ProtocolException("输入参数不能为空:devAddr, regAddr, regCnd, modbusMode, templateName, tableName");
         }
 
         JReadStatusTemplate template = TemplateFactory.getTemplate("fox-edge-server-protocol-modbus").getTemplate(templateName, tableName, JReadStatusTemplate.class);
@@ -96,7 +95,7 @@ public class ModBusProtocolReadStatus {
         if (JReadStatusTemplate.READ_COIL_STATUS.equals(operateName)) {
             func = 0x01;
         }
-        if (JReadStatusTemplate.WRITE_SINGLE_STATUS.equals(operateName)) {
+        if (JReadStatusTemplate.READ_DISCRETE_INPUT_STATUS.equals(operateName)) {
             func = 0x02;
         }
 

@@ -1,0 +1,48 @@
+package cn.foxtech.link.tcp2tcp.service;
+
+import io.netty.channel.ChannelHandlerContext;
+import org.springframework.stereotype.Component;
+
+import java.net.SocketAddress;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * 连接状态的管理
+ * 设备主动上行连接的时候，它能够直接提供的是自己的IP+PORT信息，所以用SocketAddress来查询信息
+ */
+@Component
+public class LinkManager {
+    private final Map<SocketAddress, ChannelHandlerContext> skt2ctx = new ConcurrentHashMap<>();
+    private final Map<SocketAddress, String> skt2key = new ConcurrentHashMap<>();
+    private final Map<String, ChannelHandlerContext> key2ctx = new ConcurrentHashMap<>();
+
+    public void insert(ChannelHandlerContext ctx) {
+        this.skt2ctx.put(ctx.channel().remoteAddress(), ctx);
+    }
+
+    public void setServiceKey(ChannelHandlerContext ctx, String serviceKey) {
+        this.skt2key.put(ctx.channel().remoteAddress(), serviceKey);
+        this.key2ctx.put(serviceKey, ctx);
+    }
+
+    public ChannelHandlerContext getContext(String serviceKey) {
+        return this.key2ctx.get(serviceKey);
+    }
+
+    public String getServiceKey(ChannelHandlerContext ctx) {
+        return this.skt2key.get(ctx.channel().remoteAddress());
+    }
+
+
+    public void remove(ChannelHandlerContext ctx) {
+        String key = this.skt2key.get(ctx.channel().remoteAddress());
+        if (key != null) {
+            this.key2ctx.remove(key);
+        }
+
+        this.skt2ctx.remove(ctx.channel().remoteAddress());
+        this.skt2key.remove(ctx.channel().remoteAddress());
+    }
+
+}

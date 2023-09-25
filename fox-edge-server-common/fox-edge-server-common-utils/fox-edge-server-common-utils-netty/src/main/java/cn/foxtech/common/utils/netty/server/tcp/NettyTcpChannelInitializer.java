@@ -1,7 +1,7 @@
 package cn.foxtech.common.utils.netty.server.tcp;
 
 
-import cn.foxtech.common.utils.netty.server.handler.*;
+import cn.foxtech.common.utils.netty.handler.*;
 import cn.foxtech.device.protocol.v1.utils.netty.SplitMessageHandler;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -29,15 +29,15 @@ public class NettyTcpChannelInitializer<SocketChannel> extends ChannelInitialize
         // 入方向：多个ChannelHandler组成链条，按顺序进行处理
 
         // 第1道拦截器：沾包拆包工具，根据报文的头标识+帧长度结构，进行拆包/粘包处理
-        BeforeMessageDecoder beforeMessageDecoder = new BeforeMessageDecoder();
+        BeforeBytesDecoder beforeMessageDecoder = new BeforeBytesDecoder();
         beforeMessageDecoder.setHandler(this.splitMessageHandler);
         pipeline.addLast(beforeMessageDecoder);
 
         // 第2道拦截器：对报文进行提取处理，生成一个byte[]作为完整的一帧数据
-        pipeline.addLast(new CompleteMessageDecoder());
+        pipeline.addLast(new BytesToByteDecoder());
 
         // 第3道拦截器：TCP连接流程的响应处理
-        InboundHandlerAdapter inboundHandler = new InboundHandlerAdapter();
+        ChannelInboundHandler inboundHandler = new ChannelInboundHandler();
         inboundHandler.setChannelHandler(this.channelHandler);
         pipeline.addLast(inboundHandler);
     }

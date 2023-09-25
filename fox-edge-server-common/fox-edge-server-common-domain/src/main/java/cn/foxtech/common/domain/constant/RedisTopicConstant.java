@@ -43,6 +43,10 @@ public class RedisTopicConstant {
      *
      * 有下划线，代表会有多个使用该前缀为topic，无下划线代表只有一个topic
      */
+
+    public static final String topic_link_request = "topic_link_request_";
+    public static final String topic_link_respond = "topic_link_respond_";
+
     public static final String topic_channel_request = "topic_channel_request_";
     public static final String topic_channel_respond = "topic_channel_respond_";
 

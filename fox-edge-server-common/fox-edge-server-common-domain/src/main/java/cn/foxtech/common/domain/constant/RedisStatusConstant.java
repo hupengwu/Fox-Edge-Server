@@ -44,6 +44,7 @@ public class RedisStatusConstant {
      */
     public static final String field_config_entity = "configEntity";
 
+    public static final String value_model_type_link = "link";
     public static final String value_model_type_channel = "channel";
     public static final String value_model_type_device = "device";
     public static final String value_model_name_device = "device";

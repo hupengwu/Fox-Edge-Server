@@ -62,7 +62,7 @@ public class TcpClientSocket {
      */
     private void tryConnect() throws IOException {
         // 检查：socket是否已经实例化
-        if (this.socket != null) {
+        if (this.socket != null && this.socket.isConnected()) {
             return;
         }
 
@@ -121,7 +121,7 @@ public class TcpClientSocket {
      * 尝试接收数据
      *
      * @param recvBuff 接受缓存
-     * @param timeout 通信超时
+     * @param timeout  通信超时
      * @return 受到的数据量，没有收到数据时返回-1
      * @throws IOException 操作是否异常
      */
@@ -141,7 +141,7 @@ public class TcpClientSocket {
      * 接收数据
      *
      * @param recvBuff 接受缓存
-     * @param timeout 通信超时
+     * @param timeout  通信超时
      * @return 受到的数据量，没有收到数据时返回-1
      */
     public int recvData(byte[] recvBuff, int timeout) {

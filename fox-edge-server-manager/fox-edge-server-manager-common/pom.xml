@@ -45,6 +45,12 @@
             <version>${fox-edge-server.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-link-domain</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>cn.fox-tech</groupId>

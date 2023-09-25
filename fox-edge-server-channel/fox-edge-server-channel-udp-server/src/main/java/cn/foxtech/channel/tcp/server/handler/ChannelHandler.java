@@ -2,7 +2,7 @@ package cn.foxtech.channel.tcp.server.handler;
 
 import cn.foxtech.channel.tcp.server.service.ChannelManager;
 import cn.foxtech.channel.tcp.server.service.ReportService;
-import cn.foxtech.common.utils.netty.server.handler.SocketChannelHandler;
+import cn.foxtech.common.utils.netty.handler.SocketChannelHandler;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -63,7 +63,7 @@ public class ChannelHandler extends SocketChannelHandler {
         this.reportService.push(serviceKey, data);
     }
 
-     /**
+    /**
      * 当出现 Throwable 对象才会被调用，即当 Netty 由于 IO 错误或者处理器在处理事件时抛出的异常时
      *
      * @param ctx   上下文

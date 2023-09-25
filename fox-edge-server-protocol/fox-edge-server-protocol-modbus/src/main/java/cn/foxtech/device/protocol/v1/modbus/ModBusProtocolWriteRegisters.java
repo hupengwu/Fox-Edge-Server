@@ -52,14 +52,13 @@ public class ModBusProtocolWriteRegisters {
         Integer devAddr = (Integer) param.get("devAddr");
         String modbusMode = (String) param.get("modbusMode");
         String templateName = (String) param.get("templateName");
-        String operateName = (String) param.get("operateName");
         String tableName = (String) param.get("tableName");
         String objectName = (String) param.get("objectName");
         Object objectValue = param.get("objectValue");
 
         // 检查输入参数
-        if (MethodUtils.hasEmpty(devAddr, modbusMode, templateName, operateName, tableName, objectName, objectValue)) {
-            throw new ProtocolException("输入参数不能为空:devAddr, modbusMode, templateName, operateName, tableName, objectName, objectValue");
+        if (MethodUtils.hasEmpty(devAddr, modbusMode, templateName, tableName, objectName, objectValue)) {
+            throw new ProtocolException("输入参数不能为空:devAddr, modbusMode, templateName, tableName, objectName, objectValue");
         }
 
         JReadRegistersTemplate template = TemplateFactory.getTemplate("fox-edge-server-protocol-modbus").getTemplate(templateName, tableName, JReadRegistersTemplate.class);
@@ -96,6 +95,10 @@ public class ModBusProtocolWriteRegisters {
             throw new ProtocolException("报文格式不正确，解析失败！");
         }
 
-        return new HashMap<>();
+        // 使用模板拆解数据
+        int[] statusList = new int[1];
+        statusList[0] = respond.getValue();
+        Map<String, Object> value = template.decode(respond.getMemAddr(), 1, statusList);
+        return value;
     }
 }

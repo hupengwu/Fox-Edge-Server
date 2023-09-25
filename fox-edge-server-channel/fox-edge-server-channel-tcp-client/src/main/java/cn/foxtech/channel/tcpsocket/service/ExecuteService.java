@@ -30,13 +30,6 @@ public class ExecuteService {
             throw new ServiceException("发送数据不能为空");
         }
 
-        // 地址格式转换
-        String[] host = name.split(":");
-        if (host.length != 2) {
-            throw new ServiceException("必须为IP:PORT格式！");
-        }
-
-
         // 格式转换
         byte[] send = HexUtils.hexStringToByteArray(sendData);
 
