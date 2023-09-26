@@ -48,7 +48,7 @@ public class ServerInitializer {
 
 
         // 记录启动参数，方便后面全局使用
-        this.channelProperties.setLogger((Boolean) configs.get("logger"));
+        this.channelProperties.setLogger((Boolean) configs.getOrDefault("logger",false));
 
         // 启动多个服务器
         this.startServers(configs);
@@ -127,7 +127,7 @@ public class ServerInitializer {
             channelHandler.setServiceKeyHandler(serviceKeyHandler);
             channelHandler.setChannelManager(this.channelManager);
             channelHandler.setReportService(this.reportService);
-            channelHandler.setLogger(this.channelProperties.getLogger());
+            channelHandler.setLogger(this.channelProperties.isLogger());
 
             // 创建一个Tcp Server实例
             NettyTcpServer.createServer(serverPort, splitMessageHandler, channelHandler);

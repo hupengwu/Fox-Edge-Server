@@ -47,7 +47,7 @@ public class ServerInitializer {
         Map<String, Object> configs = this.configManageService.loadInitConfig("serverConfig", "serverConfig.json");
 
         // 记录启动参数，方便后面全局使用
-        this.channelProperties.setLogger((Boolean) configs.get("logger"));
+        this.channelProperties.setLogger((Boolean) configs.getOrDefault("logger",false));
 
         // 启动多个服务器
         this.startServers(configs);
@@ -102,12 +102,6 @@ public class ServerInitializer {
             // 装载器：加载类信息
             Set<Class<?>> classSet = JarLoaderUtils.getClasses(RootLocation.class.getPackage().getName());
 
-            // 取出splitHandler的java类
-            Class splitHandlerClass = this.getSplitHandler(classSet, splitHandler);
-            if (splitHandlerClass == null) {
-                this.logger.error("找不到splitHandler对应的JAVA类：" + splitHandler);
-                return;
-            }
 
             // 取出keyHandler的java类
             Class keyHandlerClass = this.getKeyHandler(classSet, keyHandler);
@@ -116,8 +110,6 @@ public class ServerInitializer {
                 return;
             }
 
-            // 实例化一个SplitMessageHandler对象
-            SplitMessageHandler splitMessageHandler = (SplitMessageHandler) splitHandlerClass.newInstance();
             // 实例化一个serviceKeyHandler对象
             ServiceKeyHandler serviceKeyHandler = (ServiceKeyHandler) keyHandlerClass.newInstance();
 
@@ -126,7 +118,7 @@ public class ServerInitializer {
             channelHandler.setServiceKeyHandler(serviceKeyHandler);
             channelHandler.setChannelManager(this.channelManager);
             channelHandler.setReportService(this.reportService);
-            channelHandler.setLogger(this.channelProperties.getLogger());
+            channelHandler.setLogger(this.channelProperties.isLogger());
 
             // 创建一个Tcp Server实例
             NettyUdpServer.createServer(serverPort, channelHandler);

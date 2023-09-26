@@ -9,10 +9,11 @@ import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.core.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
 
-import java.io.File;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,26 +64,28 @@ public class ConfigManageService {
 
     /**
      * 从resource下的json文件中装载缺省的配置参数，从管理服务中装载用户的配置参数，并合并成一个启动参数
-     * @param configName 配置名称
+     *
+     * @param configName    配置名称
      * @param classpathFile resource下的json文件
      * @return 启动参数
      */
-    public Map<String, Object> loadInitConfig(String configName,String classpathFile) {
+    public Map<String, Object> loadInitConfig(String configName, String classpathFile) {
         try {
             // 从配置文件中，读取缺省的配置参数
-            File file = ResourceUtils.getFile("classpath:" + classpathFile);
-            String json = FileTextUtils.readTextFile(file);
+            ClassPathResource classPathResource = new ClassPathResource(classpathFile);
+            InputStream inputStream = classPathResource.getInputStream();
+            String json = FileTextUtils.readTextFile(inputStream, StandardCharsets.UTF_8);
             Map<String, Object> defaultConfig = JsonUtils.buildObject(json, Map.class);
 
             // 填写该信息：通告给管理服务，添加该配置作为缺省配置
-            this.entityConfigManager.setConfigEntity("serverConfig", defaultConfig);
+            this.entityConfigManager.setConfigEntity(configName, defaultConfig);
 
             // 取出管理服务通告的配置信息
-            Map<String, Object> systemConfig = this.getConfigParam("serverConfig");
+            Map<String, Object> systemConfig = this.getConfigParam(configName);
 
             // 通过合并两者信息，获得配置参数
             Map<String, Object> configValue = new HashMap<>();
-            configValue.putAll(defaultConfig);
+            configValue.putAll((Map<String, Object>) defaultConfig.getOrDefault("configValue", new HashMap<>()));
             configValue.putAll(systemConfig);
             return configValue;
 

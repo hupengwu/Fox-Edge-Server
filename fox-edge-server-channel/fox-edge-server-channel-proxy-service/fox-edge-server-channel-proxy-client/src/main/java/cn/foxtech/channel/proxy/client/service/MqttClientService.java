@@ -1,6 +1,7 @@
 package cn.foxtech.channel.proxy.client.service;
 
 import cn.foxtech.channel.common.properties.ChannelProperties;
+import cn.foxtech.channel.common.service.ConfigManageService;
 import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
@@ -18,6 +19,7 @@ import org.tio.core.ChannelContext;
 import org.tio.utils.buffer.ByteBufferUtil;
 
 import java.nio.ByteBuffer;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -46,9 +48,14 @@ public class MqttClientService {
     @Autowired
     private ChannelProperties constants;
 
+    @Autowired
+    private ConfigManageService configManageService;
+
     public boolean Initialize() {
+        Map<String, Object> configs = this.configManageService.loadInitConfig("serverConfig", "serverConfig.json");
+
         // 初始化配置
-        this.configService.initialize();
+        this.configService.initialize(configs);
 
         String subTopic = this.configService.getSubscribe();
         String pubTopic = this.configService.getPublish();

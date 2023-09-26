@@ -18,6 +18,7 @@ import org.tio.utils.buffer.ByteBufferUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -27,6 +28,10 @@ import java.util.UUID;
 @Getter(value = AccessLevel.PUBLIC)
 public class MqttClientService {
     private static final Logger logger = LoggerFactory.getLogger(MqttClientService.class);
+
+    @Autowired
+    private ConfigManageService configManageService;
+
     /**
      * MQTT的创建者
      */
@@ -48,8 +53,10 @@ public class MqttClientService {
 
 
     public boolean Initialize() {
+        Map<String, Object> configs = this.configManageService.loadInitConfig("serverConfig", "serverConfig.json");
+
         // 初始化配置
-        this.configService.initialize();
+        this.configService.initialize(configs);
 
         String subTopic = this.configService.getSubscribe();
         String pubTopic = this.configService.getPublish();

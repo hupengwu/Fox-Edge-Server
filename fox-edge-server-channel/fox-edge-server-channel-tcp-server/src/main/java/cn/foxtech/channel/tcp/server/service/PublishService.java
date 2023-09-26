@@ -26,7 +26,7 @@ public class PublishService {
         }
 
         // 记录接收到的报文
-        if (this.channelProperties.getLogger()) {
+        if (this.channelProperties.isLogger()) {
             LOGGER.info("channelRead: " + ctx.channel().remoteAddress() + ": " + sendData);
         }
 

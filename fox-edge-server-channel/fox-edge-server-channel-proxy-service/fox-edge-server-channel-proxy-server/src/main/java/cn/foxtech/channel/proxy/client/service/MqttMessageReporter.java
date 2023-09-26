@@ -14,7 +14,6 @@ import java.util.List;
 @Component
 public class MqttMessageReporter {
 
-    @Value("${mqtt.client.topic.publish}")
     private String topic_head = "/foxteam/v1/proxy/response/#";
     @Autowired
     private MqttClientService clientService;

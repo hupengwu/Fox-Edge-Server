@@ -1,16 +1,21 @@
 {
-  "decoderList": [{
-    "decoder": [{
-      "jarFile": "\\jar\\decoder\\fox-edge-server-protocol-zktl-air6in1-1.0.2.jar"
+  "configValue": {
+    "decoderList": [{
+      "decoder": [{
+        "jarFile": "\\jar\\decoder\\fox-edge-server-protocol-zktl-air6in1-1.0.3.jar"
+      }],
+      "keyHandler": "cn.foxtech.device.protocol.v1.zktl.air6in1.handler.ZktlServiceKeyHandler",
+      "serverPort": 9301,
+      "lifeCycle": 3600
+    }, {
+      "decoder": [{
+        "jarFile": "\\jar\\decoder\\fox-edge-server-protocol-zktl-air5in1-1.0.3.jar"
+      }],
+      "keyHandler": "cn.foxtech.device.protocol.v1.zktl.air5in1.handler.ZktlServiceKeyHandler",
+      "serverPort": 9302
     }],
-    "keyHandler": "cn.foxtech.device.protocol.v1.zktl.air6in1.handler.ZktlServiceKeyHandler",
-    "serverPort": 9301,
-    "lifeCycle": 3600
-  }, {
-    "decoder": [{
-      "jarFile": "\\jar\\decoder\\fox-edge-server-protocol-zktl-air5in1-1.0.2.jar"
-    }],
-    "keyHandler": "cn.foxtech.device.protocol.v1.zktl.air5in1.handler.ZktlServiceKeyHandler",
-    "serverPort": 9302
-  }]
+    "logger": false
+  },
+  "configParam": {},
+  "remark": "udp-server通道的配置信息：\n\njarFile：解码器所在的文件位置\n\nkeyHandler：提取设备身份信息的完整名称"
 }
