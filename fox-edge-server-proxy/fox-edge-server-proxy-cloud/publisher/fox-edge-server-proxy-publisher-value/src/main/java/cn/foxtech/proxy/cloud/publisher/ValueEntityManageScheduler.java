@@ -25,6 +25,8 @@ public class ValueEntityManageScheduler extends PeriodTaskService {
 
     @Override
     public void execute(long threadId) throws Exception {
+        Thread.sleep(1000);
+
         // 云端是否处于锁定状态
         if (!this.remoteService.isLogin() && this.remoteService.isLockdown()) {
             return;
