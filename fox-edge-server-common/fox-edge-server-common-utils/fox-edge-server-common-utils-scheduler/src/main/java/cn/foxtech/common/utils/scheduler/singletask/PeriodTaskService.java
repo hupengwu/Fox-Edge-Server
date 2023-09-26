@@ -51,7 +51,7 @@ public abstract class PeriodTaskService {
             scheduledExecutorService.schedule(new Runnable() {
                 @Override
                 public void run() {
-                    long threadId = System.nanoTime();
+                    long threadId = Thread.currentThread().getId();
 
                     //当前任务执行时候，对应的时间
                     while (true) {
