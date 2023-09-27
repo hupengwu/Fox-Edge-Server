@@ -30,7 +30,7 @@ public class ModBusTcpProtocol extends ModBusProtocol {
         // 报文长度
         int len = (arrCmd[4] & 0xff) * 0x100;
         len += arrCmd[5] & 0xff;
-        if (arrCmd.length < len + 6) {
+        if (arrCmd.length != len + 6) {
             return null;
         }
         if (len < 2) {

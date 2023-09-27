@@ -4,7 +4,7 @@ package cn.foxtech.device.protocol.v1.modbus.core;
  * ModBus常量定义
  */
 public class ModBusConstants {
-    public static final String MODE = "mode";
+    public static final String MODE = "modbusMode";
     public static final String MODE_ASCII = "ASCII";
     public static final String MODE_RTU = "RTU";
     public static final String MODE_TCP = "TCP";
@@ -12,16 +12,16 @@ public class ModBusConstants {
     /**
      * ModBus的报文结构
      */
-    public static final String SN = "SN";
-    public static final String ADDR = "ADDR";
-    public static final String FUNC = "FUNC";
-    public static final String DATA = "DATA";
+    public static final String SN = "sn";
+    public static final String ADDR = "devAddr";
+    public static final String FUNC = "func";
+    public static final String DATA = "data";
 
     /**
      * 寄存器地址和数量
      */
-    public static final String REG_ADDR = "REG_ADDR";
-    public static final String REG_CNT = "REG_CNT";
+    public static final String REG_ADDR = "regAddr";
+    public static final String REG_CNT = "regCnt";
 
-    public static final String REG_HOLD_STATUS = "REG_HOLD_STATUS";
+    public static final String REG_HOLD_STATUS = "regHoldStatus";
 }
