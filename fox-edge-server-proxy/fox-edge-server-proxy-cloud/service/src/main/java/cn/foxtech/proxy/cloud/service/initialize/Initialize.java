@@ -1,7 +1,7 @@
 package cn.foxtech.proxy.cloud.service.initialize;
 
 
-import cn.foxtech.common.status.ServiceStatusScheduler;
+import cn.foxtech.proxy.cloud.common.initialize.InitializeCommon;
 import cn.foxtech.proxy.cloud.forwarder.initialize.InitializeForwarder;
 import cn.foxtech.proxy.cloud.publisher.initialize.InitializePublisher;
 import org.apache.log4j.Logger;
@@ -16,8 +16,9 @@ import org.springframework.stereotype.Component;
 public class Initialize implements CommandLineRunner {
     private static final Logger logger = Logger.getLogger(Initialize.class);
 
+
     @Autowired
-    private ServiceStatusScheduler serviceStatusScheduler;
+    private InitializeCommon initializeCommon;
 
     @Autowired
     private InitializePublisher initializePublisher;
@@ -29,8 +30,7 @@ public class Initialize implements CommandLineRunner {
     public void run(String... args) {
         logger.info("------------------------初始化开始！------------------------");
 
-        this.serviceStatusScheduler.initialize();
-        this.serviceStatusScheduler.schedule();
+        this.initializeCommon.initialize();
 
         this.initializePublisher.initialize();
 

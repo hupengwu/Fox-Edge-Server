@@ -1,4 +1,4 @@
-package cn.foxtech.channel.proxy.client.service;
+package cn.foxtech.proxy.cloud.common.service;
 
 import cn.foxtech.common.entity.manager.EntityConfigInitializer;
 import cn.foxtech.common.entity.manager.EntityConfigManager;

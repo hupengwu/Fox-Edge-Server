@@ -14,6 +14,7 @@
     <description>${project.artifactId}</description>
 
     <modules>
+        <module>common</module>
         <module>publisher</module>
         <module>forwarder</module>
         <module>service</module>

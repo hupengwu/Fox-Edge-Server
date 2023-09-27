@@ -16,6 +16,12 @@
     <dependencies>
         <dependency>
             <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-proxy-cloud-common</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-proxy-cloud-forwarder</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>

@@ -1,4 +1,4 @@
-package cn.foxtech.proxy.cloud.publisher.config;
+package cn.foxtech.proxy.cloud.common.config;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.ComponentScan;
