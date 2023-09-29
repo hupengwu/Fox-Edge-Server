@@ -201,7 +201,7 @@ public class JarFileInfoService {
             File dir = new File("");
 
             // 从jar文件中，读取jar信息
-            JarInfoEntity jarInfoEntity = JarInfoReader.readJarInfoEntity(dir.getAbsolutePath() + "\\jar\\decoder\\" + jarFileName);
+            JarInfoEntity jarInfoEntity = JarInfoReader.readJarInfoEntity(dir.getAbsolutePath() + "/jar/decoder/" + jarFileName);
 
 
             // 获得版本名称
