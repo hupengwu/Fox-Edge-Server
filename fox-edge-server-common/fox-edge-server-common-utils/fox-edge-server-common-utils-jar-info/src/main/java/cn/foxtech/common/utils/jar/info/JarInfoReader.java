@@ -1,5 +1,8 @@
 package cn.foxtech.common.utils.jar.info;
 
+import cn.foxtech.common.utils.Maps;
+import cn.foxtech.common.utils.xml.XmlReader;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -29,6 +32,51 @@ public class JarInfoReader {
         return (Set<String>) jarInfo.get("directoryName");
     }
 
+    public static JarInfoEntity readJarInfoEntity(String jarFilePath) throws IOException {
+        // 读取jar文件的静态信息
+        Map<String, Object> jarInfo = readJarInfo(jarFilePath);
+
+        // 提取dir和class信息
+        JarInfoEntity entity = new JarInfoEntity();
+        entity.getClassFileName().addAll((Set<String>) jarInfo.get("classFileName"));
+        entity.getDirectoryName().addAll((Set<String>) jarInfo.get("directoryName"));
+
+        // 读取POM.XML文件信息
+        String xml = readPomXml(jarFilePath, (String) jarInfo.get("pom.xml"));
+        Map<String, Object> jarXml = XmlReader.parse(xml);
+        Object xmlEl = Maps.getValue(jarXml, "project", "dependencies", "dependency");
+
+        // XML解释器，在单个元素的时候会返回MAP，在多个数据的时候，会返回LIST
+        List<Map<String, Object>> dependencies = new ArrayList<>();
+        if (xmlEl != null) {
+            if (xmlEl instanceof Map) {
+                dependencies.add((Map) xmlEl);
+            }
+            if (xmlEl instanceof List) {
+                dependencies = (List) xmlEl;
+            }
+        }
+
+
+        for (Map<String, Object> dependency : dependencies) {
+            JarInfoItem item = new JarInfoItem();
+            item.setGroupId((String) dependency.get("groupId"));
+            item.setArtifactId((String) dependency.get("artifactId"));
+            item.setVersion((String) dependency.get("version"));
+
+            entity.getDependencies().add(item);
+        }
+
+        // 读取pom.properties文件信息
+        byte[] bytes = getFileFromJar(jarFilePath, "pom.properties");
+        Properties properties = new Properties();
+        properties.load(new ByteArrayInputStream(bytes));
+        entity.getProperties().setGroupId(properties.getProperty("groupId"));
+        entity.getProperties().setArtifactId(properties.getProperty("artifactId"));
+        entity.getProperties().setVersion(properties.getProperty("version"));
+
+        return entity;
+    }
 
     public static Map<String, Object> readJarInfo(String jarFilePath) throws IOException {
         Map<String, Object> result = new HashMap<>();

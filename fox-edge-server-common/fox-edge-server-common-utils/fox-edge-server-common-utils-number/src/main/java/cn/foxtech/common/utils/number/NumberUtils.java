@@ -21,6 +21,14 @@ public class NumberUtils {
         return null;
     }
 
+    public static Long parseLong(String object) {
+        try {
+            return Long.parseLong(object);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public static Integer makeInteger(Object object) {
         if (object instanceof Long) {
             return ((Long) object).intValue();
