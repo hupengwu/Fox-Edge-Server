@@ -5,8 +5,8 @@ import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTask;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTaskType;
 import cn.foxtech.core.exception.ServiceException;
-import cn.foxtech.manager.system.constants.RepositoryConstant;
-import cn.foxtech.manager.system.service.RepositoryService;
+import cn.foxtech.manager.system.constants.RepoComponentConstant;
+import cn.foxtech.manager.system.service.RepoComponentService;
 import lombok.AccessLevel;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +28,9 @@ public class DownLoadTask extends PeriodTask {
     private String pathName;
     private String component;
 
-    private RepositoryService service;
+    private RepoComponentService service;
 
-    public DownLoadTask(RepositoryService service, String modelType, String modelName, String modelVersion, String version, String stage, String pathName, String component) {
+    public DownLoadTask(RepoComponentService service, String modelType, String modelName, String modelVersion, String version, String stage, String pathName, String component) {
         this.service = service;
         this.modelType = modelType;
         this.modelName = modelName;
@@ -72,7 +72,7 @@ public class DownLoadTask extends PeriodTask {
             }
 
             // 删除旧的下载文件
-            if (RepositoryConstant.repository_type_service.equals(modelType) || RepositoryConstant.repository_type_decoder.equals(modelType) || RepositoryConstant.repository_type_webpack.equals(modelType) || RepositoryConstant.repository_type_template.equals(modelType)) {
+            if (RepoComponentConstant.repository_type_service.equals(modelType) || RepoComponentConstant.repository_type_decoder.equals(modelType) || RepoComponentConstant.repository_type_webpack.equals(modelType) || RepoComponentConstant.repository_type_template.equals(modelType)) {
                 this.service.deletePackageFile(modelType, modelName, modelVersion, version, stage, component);
             }
 

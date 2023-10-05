@@ -67,6 +67,52 @@ public class HttpClientUtil {
         return resultString;
     }
 
+    public static String executeGet(String url, Map<String, String> param, Map<String, String> header) {
+        // 创建Httpclient对象
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+
+        String resultString = "";
+        CloseableHttpResponse response = null;
+        try {
+            // 创建uri
+            URIBuilder builder = new URIBuilder(url);
+            if (param != null) {
+                for (String key : param.keySet()) {
+                    builder.addParameter(key, param.get(key));
+                }
+            }
+            URI uri = builder.build();
+
+            // 创建http GET请求
+            HttpGet httpGet = new HttpGet(uri);
+
+            // 创建请求内容
+            for (String key : header.keySet()) {
+                httpGet.setHeader(key, header.get(key));
+            }
+
+
+            // 执行请求
+            response = httpclient.execute(httpGet);
+            // 判断返回状态是否为200
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SUCCESS) {
+                resultString = EntityUtils.toString(response.getEntity(), "UTF-8");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (response != null) {
+                    response.close();
+                }
+                httpclient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return resultString;
+    }
+
     /**
      * 执行GET
      *
@@ -175,13 +221,13 @@ public class HttpClientUtil {
         String result1 = HttpClientUtil.executePost("http://120.25.241.120:8080/auth/login", pass);
 
         Map<String, String> header = new HashMap<>();
-        header.put("Authorization","Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX2tleSI6ImVkZmYwY2I0LTI3NTctNDUyZS05MjFkLTcyNTYyNTQ2MjFmMiIsInVzZXJuYW1lIjoiYWRtaW4ifQ.VkVh8C5bRU-MwvQZIy6PSe9VRBJR-2mNcEex0jboikrLzwyCbwmmCRwkqiAFopx1LCNIQFAZHLX5_pZueem-Wg");
+        header.put("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX2tleSI6ImVkZmYwY2I0LTI3NTctNDUyZS05MjFkLTcyNTYyNTQ2MjFmMiIsInVzZXJuYW1lIjoiYWRtaW4ifQ.VkVh8C5bRU-MwvQZIy6PSe9VRBJR-2mNcEex0jboikrLzwyCbwmmCRwkqiAFopx1LCNIQFAZHLX5_pZueem-Wg");
 
         String json = "{\n" + "    \"edgeId\" : \"BFEBFBFF000906A3\",\n" + "    \"entityTypeList\" : [\"DeviceValueEntity\"]\n" + "}";
 
-        String result = HttpClientUtil.executePost("http://120.25.241.120:8080/aggregator/config/timestamp", json,header);
-        result = HttpClientUtil.executePost("http://120.25.241.120:8080/aggregator/config/timestamp", json,header);
-        result = HttpClientUtil.executePost("http://120.25.241.120:8080/aggregator/config/timestamp", json,header);
+        String result = HttpClientUtil.executePost("http://120.25.241.120:8080/aggregator/config/timestamp", json, header);
+        result = HttpClientUtil.executePost("http://120.25.241.120:8080/aggregator/config/timestamp", json, header);
+        result = HttpClientUtil.executePost("http://120.25.241.120:8080/aggregator/config/timestamp", json, header);
 
     }
 }

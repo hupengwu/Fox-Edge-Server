@@ -2,9 +2,8 @@ package cn.foxtech.manager.system.scheduler;
 
 
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTaskScheduler;
-import cn.foxtech.manager.system.constants.RepositoryConstant;
-import cn.foxtech.manager.system.service.RepositoryService;
-import cn.foxtech.manager.system.task.*;
+import cn.foxtech.manager.system.constants.RepoComponentConstant;
+import cn.foxtech.manager.system.service.RepoComponentService;
 import cn.foxtech.manager.system.task.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,7 +39,7 @@ public class PeriodTasksScheduler extends PeriodTaskScheduler {
     private ProcessStartTask processStartTask;
 
     @Autowired
-    private RepositoryService repositoryService;
+    private RepoComponentService repositoryComponentService;
 
     @Autowired
     private RouteUpdateTask routeUpdateTask;
@@ -54,10 +53,10 @@ public class PeriodTasksScheduler extends PeriodTaskScheduler {
 
         // 一次性任务
         this.insertPeriodTask(this.processStartTask);
-        this.insertPeriodTask(new RepoStatusTask(this.repositoryService, RepositoryConstant.repository_type_decoder));
-        this.insertPeriodTask(new RepoStatusTask(this.repositoryService, RepositoryConstant.repository_type_template));
-        this.insertPeriodTask(new RepoStatusTask(this.repositoryService, RepositoryConstant.repository_type_webpack));
-        this.insertPeriodTask(new RepoStatusTask(this.repositoryService, RepositoryConstant.repository_type_service));
+        this.insertPeriodTask(new RepoStatusTask(this.repositoryComponentService, RepoComponentConstant.repository_type_decoder));
+        this.insertPeriodTask(new RepoStatusTask(this.repositoryComponentService, RepoComponentConstant.repository_type_template));
+        this.insertPeriodTask(new RepoStatusTask(this.repositoryComponentService, RepoComponentConstant.repository_type_webpack));
+        this.insertPeriodTask(new RepoStatusTask(this.repositoryComponentService, RepoComponentConstant.repository_type_service));
 
     }
 }

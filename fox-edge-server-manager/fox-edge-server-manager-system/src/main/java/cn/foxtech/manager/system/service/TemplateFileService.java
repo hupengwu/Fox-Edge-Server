@@ -2,7 +2,7 @@ package cn.foxtech.manager.system.service;
 
 import cn.foxtech.common.entity.constant.BaseVOFieldConstant;
 import cn.foxtech.common.utils.file.FileAttributesUtils;
-import cn.foxtech.manager.system.constants.RepositoryConstant;
+import cn.foxtech.manager.system.constants.RepoComponentConstant;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
@@ -65,10 +65,10 @@ public class TemplateFileService {
     private Map<String, Object> getFileNameInfo(String modelName, String modelVer, String version, File childFile) {
         Map<String, Object> data = new HashMap<>();
 
-        data.put(RepositoryConstant.filed_model_name, modelName);
-        data.put(RepositoryConstant.filed_model_version, modelVer);
-        data.put(RepositoryConstant.filed_version, version);
-        data.put(RepositoryConstant.filed_component, RepositoryConstant.repository_type_template);
+        data.put(RepoComponentConstant.filed_model_name, modelName);
+        data.put(RepoComponentConstant.filed_model_version, modelVer);
+        data.put(RepoComponentConstant.filed_version, version);
+        data.put(RepoComponentConstant.filed_component, RepoComponentConstant.repository_type_template);
         data.put("fileName", childFile.getName());
 
         // 乱码文件的异常处理

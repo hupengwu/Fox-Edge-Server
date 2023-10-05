@@ -5,11 +5,11 @@ import cn.foxtech.common.entity.constant.DeviceDecoderVOFieldConstant;
 import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
-import cn.foxtech.manager.system.constants.RepositoryConstant;
+import cn.foxtech.manager.system.constants.RepoComponentConstant;
 import cn.foxtech.manager.system.service.JarFileInfoService;
 import cn.foxtech.manager.system.service.ManageConfigService;
 import cn.foxtech.manager.system.service.ProcessStartService;
-import cn.foxtech.manager.system.service.RepositoryService;
+import cn.foxtech.manager.system.service.RepoComponentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +31,7 @@ public class DeviceDecoderManageController {
 
 
     @Autowired
-    private RepositoryService repositoryService;
+    private RepoComponentService repositoryComponentService;
 
 
     @PostMapping("entities")
@@ -58,7 +58,7 @@ public class DeviceDecoderManageController {
             Map<String, Object> configValue = this.manageConfigService.getConfigValue("device-service", "system", "decoderConfig");
 
             // 从仓库获得解码器的描述信息
-            List<Map<String, Object>> repoList = this.repositoryService.queryLocalListFile(RepositoryConstant.repository_type_decoder);
+            List<Map<String, Object>> repoList = this.repositoryComponentService.queryLocalListFile(RepoComponentConstant.repository_type_decoder);
 
             // 扫描文件，获得解码器的信息
             List<Map<String, Object>> resultList = this.jarFileInfoService.findJarInfo(configValue, repoList);

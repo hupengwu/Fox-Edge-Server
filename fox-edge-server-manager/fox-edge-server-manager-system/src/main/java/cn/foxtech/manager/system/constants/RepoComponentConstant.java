@@ -1,6 +1,6 @@
 package cn.foxtech.manager.system.constants;
 
-public class RepositoryConstant {
+public class RepoComponentConstant {
     public static final String repository_type_decoder = "decoder";
     public static final String repository_type_service = "service";
 

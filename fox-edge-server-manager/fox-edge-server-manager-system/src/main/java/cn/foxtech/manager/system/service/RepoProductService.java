@@ -14,8 +14,8 @@ import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.osinfo.OSInfo;
 import cn.foxtech.common.utils.shell.ShellUtils;
 import cn.foxtech.core.exception.ServiceException;
+import cn.foxtech.manager.system.constants.RepoComponentConstant;
 import cn.foxtech.manager.system.constants.RepositoryConfigConstant;
-import cn.foxtech.manager.system.constants.RepositoryConstant;
 import cn.foxtech.manager.system.constants.RepositoryStatusConstant;
 import cn.foxtech.manager.system.utils.ServiceIniFilesUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 仓库管理服务：它简化仓库的管理
  */
 @Component
-public class RepositoryService {
+public class RepoProductService {
     private final String siteUri = "http://www.fox-tech.cn";
     /**
      * 本地组件的安装状态列表：通过缓存安装状态，用于优化磁盘扫描安装包的长时间卡顿问题
@@ -77,24 +77,24 @@ public class RepositoryService {
             // 本地存在的组件特征
             Set<String> localKeys = new HashSet<>();
             for (Map<String, Object> map : localList) {
-                String modelName = (String) map.get(RepositoryConstant.filed_model_name);
-                String modelVersion = (String) map.get(RepositoryConstant.filed_model_version);
-                String version = (String) map.get(RepositoryConstant.filed_version);
-                String stage = (String) map.get(RepositoryConstant.filed_stage);
-                String component = (String) map.get(RepositoryConstant.filed_component);
+                String modelName = (String) map.get(RepoComponentConstant.filed_model_name);
+                String modelVersion = (String) map.get(RepoComponentConstant.filed_model_version);
+                String version = (String) map.get(RepoComponentConstant.filed_version);
+                String stage = (String) map.get(RepoComponentConstant.filed_stage);
+                String component = (String) map.get(RepoComponentConstant.filed_component);
                 localKeys.add(modelType + ":" + modelName + ":" + modelVersion + ":" + version + ":" + stage + ":" + component);
 
             }
 
             // 获得云端组件列表
-            List<Map<String, Object>> cloudList = this.queryLocalListFile(modelType);
+            List<Map<String, Object>> cloudList = this.queryLocalListFile();
 
             // 尚未下载云端组件，标识未未下载状态
             for (Map<String, Object> map : cloudList) {
-                String modelName = (String) map.get(RepositoryConstant.filed_model_name);
-                String modelVersion = (String) map.get(RepositoryConstant.filed_model_version);
-                Map<String, Object> lastVersion = (Map<String, Object>) map.get(RepositoryConstant.filed_last_version);
-                List<Map<String, Object>> versions = (List<Map<String, Object>>) map.get(RepositoryConstant.filed_versions);
+                String modelName = (String) map.get(RepoComponentConstant.filed_model_name);
+                String modelVersion = (String) map.get(RepoComponentConstant.filed_model_version);
+                Map<String, Object> lastVersion = (Map<String, Object>) map.get(RepoComponentConstant.filed_last_version);
+                List<Map<String, Object>> versions = (List<Map<String, Object>>) map.get(RepoComponentConstant.filed_versions);
 
                 // 合并lastVersion和Versions
                 List<Map<String, Object>> verEntityList = new ArrayList<>();
@@ -108,9 +108,9 @@ public class RepositoryService {
                 }
 
                 for (Map<String, Object> verEntity : verEntityList) {
-                    String version = (String) verEntity.get(RepositoryConstant.filed_version);
-                    String stage = (String) verEntity.get(RepositoryConstant.filed_stage);
-                    String component = (String) verEntity.get(RepositoryConstant.filed_component);
+                    String version = (String) verEntity.get(RepoComponentConstant.filed_version);
+                    String stage = (String) verEntity.get(RepoComponentConstant.filed_stage);
+                    String component = (String) verEntity.get(RepoComponentConstant.filed_component);
                     if (MethodUtils.hasEmpty(modelName, modelVersion, version, component)) {
                         continue;
                     }
@@ -123,7 +123,7 @@ public class RepositoryService {
                     }
 
                     // 标识为未下载状态
-                    Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepositoryConstant.filed_status, RepositoryStatusConstant.status_not_downloaded);
+                    Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoComponentConstant.filed_status, RepositoryStatusConstant.status_not_downloaded);
                 }
             }
 
@@ -199,11 +199,11 @@ public class RepositoryService {
                             String component = componentDir.getName();
 
                             Map<String, Object> map = new HashMap<>();
-                            map.put(RepositoryConstant.filed_model_name, modelName);
-                            map.put(RepositoryConstant.filed_model_version, modelVersion);
-                            map.put(RepositoryConstant.filed_version, version);
-                            map.put(RepositoryConstant.filed_stage, stage);
-                            map.put(RepositoryConstant.filed_component, component);
+                            map.put(RepoComponentConstant.filed_model_name, modelName);
+                            map.put(RepoComponentConstant.filed_model_version, modelVersion);
+                            map.put(RepoComponentConstant.filed_version, version);
+                            map.put(RepoComponentConstant.filed_stage, stage);
+                            map.put(RepoComponentConstant.filed_component, component);
 
                             resultList.add(map);
                         }
@@ -216,17 +216,28 @@ public class RepositoryService {
         return resultList;
     }
 
+    public Map<String, Object> queryProductEntity(String uuid) throws IOException {
+        Map<String, String> param = new HashMap<>();
+        param.put("uuid", uuid);
+        Map<String, Object> respond = this.cloudRemoteService.executeGet("/manager/repository/product/entity", param);
+
+        Map<String, Object> data = (Map<String, Object>) respond.get("data");
+        if (data == null) {
+            throw new ServiceException("云端数据仓库返回的数据为空！");
+        }
+
+        return data;
+    }
+
     /**
      * 从云端查询仓库列表，并保存到本地
      *
-     * @param modelType
      * @return
      * @throws IOException
      */
-    public List<Map<String, Object>> queryUriListFile(String modelType) throws IOException {
+    public List<Map<String, Object>> queryUriListFile() throws IOException {
         Map<String, Object> body = new HashMap<>();
-        body.put(RepositoryConstant.filed_model_type, modelType);
-        Map<String, Object> respond = this.cloudRemoteService.executePost("/manager/repository/component/entities", body);
+        Map<String, Object> respond = this.cloudRemoteService.executePost("/manager/repository/product/entities", body);
 
         List<Map<String, Object>> list = (List<Map<String, Object>>) respond.get("data");
         if (list == null) {
@@ -237,22 +248,11 @@ public class RepositoryService {
 
         String json = JsonUtils.buildJson(data);
 
-        String listFileName;
-        if (RepositoryConstant.repository_type_decoder.equals(modelType)) {
-            listFileName = "decoderList.jsn";
-        } else if (RepositoryConstant.repository_type_webpack.equals(modelType)) {
-            listFileName = "webpackList.jsn";
-        } else if (RepositoryConstant.repository_type_service.equals(modelType)) {
-            listFileName = "serviceList.jsn";
-        } else if (RepositoryConstant.repository_type_template.equals(modelType)) {
-            listFileName = "templateList.jsn";
-        } else {
-            listFileName = "serviceList.jsn";
-        }
+        String listFileName = "productList.jsn";
 
         // 确认目录
         File file = new File("");
-        String localPath = file.getAbsolutePath() + "/repository/" + modelType;
+        String localPath = file.getAbsolutePath() + "/repository/product";
 
         // 创建目录
         File pathDir = new File(localPath);
@@ -272,23 +272,12 @@ public class RepositoryService {
      * @return
      * @throws IOException
      */
-    public List<Map<String, Object>> queryLocalListFile(String modelType) throws IOException {
-        String listFileName = "";
-        if (RepositoryConstant.repository_type_decoder.equals(modelType)) {
-            listFileName = "decoderList.jsn";
-        } else if (RepositoryConstant.repository_type_webpack.equals(modelType)) {
-            listFileName = "webpackList.jsn";
-        } else if (RepositoryConstant.repository_type_service.equals(modelType)) {
-            listFileName = "serviceList.jsn";
-        } else if (RepositoryConstant.repository_type_template.equals(modelType)) {
-            listFileName = "templateList.jsn";
-        } else {
-            listFileName = "serviceList.jsn";
-        }
+    public List<Map<String, Object>> queryLocalListFile() throws IOException {
+        String listFileName = "productList.jsn";
 
         // 下载list文件
         File file = new File("");
-        String localPath = file.getAbsolutePath() + "/repository/" + modelType;
+        String localPath = file.getAbsolutePath() + "/repository/product";
 
         return this.queryLocalListFile(localPath, listFileName);
     }
@@ -325,20 +314,20 @@ public class RepositoryService {
      */
     public void extendLocalStatus(String modelType, List<Map<String, Object>> list) {
         for (Map<String, Object> map : list) {
-            String modelName = (String) map.getOrDefault(RepositoryConstant.filed_model_name, "");
-            String modelVersion = (String) map.getOrDefault(RepositoryConstant.filed_model_version, RepositoryConstant.filed_value_model_version_default);
-            Map<String, Object> lastVersion = (Map<String, Object>) map.getOrDefault(RepositoryConstant.filed_last_version, new HashMap<>());
-            List<Map<String, Object>> versions = (List<Map<String, Object>>) map.getOrDefault(RepositoryConstant.filed_versions, "");
-            String component = (String) map.getOrDefault(RepositoryConstant.filed_component, "");
+            String modelName = (String) map.getOrDefault(RepoComponentConstant.filed_model_name, "");
+            String modelVersion = (String) map.getOrDefault(RepoComponentConstant.filed_model_version, RepoComponentConstant.filed_value_model_version_default);
+            Map<String, Object> lastVersion = (Map<String, Object>) map.getOrDefault(RepoComponentConstant.filed_last_version, new HashMap<>());
+            List<Map<String, Object>> versions = (List<Map<String, Object>>) map.getOrDefault(RepoComponentConstant.filed_versions, "");
+            String component = (String) map.getOrDefault(RepoComponentConstant.filed_component, "");
 
 
             // 验证last版本的破损状态
             int status = this.verifyMd5Status(modelType, modelName, modelVersion, component, lastVersion);
             if (RepositoryStatusConstant.status_damaged_package == status) {
-                lastVersion.put(RepositoryConstant.filed_status, status);
+                lastVersion.put(RepoComponentConstant.filed_status, status);
             } else {
                 if (this.verifyUpgradeStatus(modelType, modelName, modelVersion, lastVersion, versions)) {
-                    lastVersion.put(RepositoryConstant.filed_status, RepositoryStatusConstant.status_need_upgrade);
+                    lastVersion.put(RepoComponentConstant.filed_status, RepositoryStatusConstant.status_need_upgrade);
                 }
             }
 
@@ -346,7 +335,7 @@ public class RepositoryService {
             // 验证明细包的破损状态
             for (Map<String, Object> verEntity : versions) {
                 status = this.verifyMd5Status(modelType, modelName, modelVersion, component, verEntity);
-                verEntity.put(RepositoryConstant.filed_status, status);
+                verEntity.put(RepoComponentConstant.filed_status, status);
             }
         }
     }
@@ -369,7 +358,7 @@ public class RepositoryService {
         }
 
         // 在查询阶段，计算破损状态：本地和云端的MD5是否一致
-        String md5 = (String) verEntity.getOrDefault(RepositoryConstant.filed_md5, "");
+        String md5 = (String) verEntity.getOrDefault(RepoComponentConstant.filed_md5, "");
         if (!localMd5.equalsIgnoreCase(md5)) {
             return RepositoryStatusConstant.status_damaged_package;
         }
@@ -383,21 +372,21 @@ public class RepositoryService {
             return false;
         }
 
-        String lastVer = (String) lastVersion.get(RepositoryConstant.filed_version);
-        String lastStage = (String) lastVersion.get(RepositoryConstant.filed_stage);
-        String lastComponent = (String) lastVersion.get(RepositoryConstant.filed_component);
+        String lastVer = (String) lastVersion.get(RepoComponentConstant.filed_version);
+        String lastStage = (String) lastVersion.get(RepoComponentConstant.filed_stage);
+        String lastComponent = (String) lastVersion.get(RepoComponentConstant.filed_component);
 
         // 如果最新版本就是安装版本，那么不需要升级
-        Integer lastStatus = (Integer) Maps.getOrDefault(this.statusMap, modelType, modelName, modelVersion, lastVer, lastStage, lastComponent, RepositoryConstant.filed_status, RepositoryStatusConstant.status_not_scanned);
+        Integer lastStatus = (Integer) Maps.getOrDefault(this.statusMap, modelType, modelName, modelVersion, lastVer, lastStage, lastComponent, RepoComponentConstant.filed_status, RepositoryStatusConstant.status_not_scanned);
         if (RepositoryStatusConstant.status_installed == lastStatus) {
             return false;
         }
 
         // 明细版本
         for (Map<String, Object> verEntity : versions) {
-            String version = (String) verEntity.get(RepositoryConstant.filed_version);
-            String stage = (String) verEntity.get(RepositoryConstant.filed_stage);
-            String component = (String) verEntity.get(RepositoryConstant.filed_component);
+            String version = (String) verEntity.get(RepoComponentConstant.filed_version);
+            String stage = (String) verEntity.get(RepoComponentConstant.filed_stage);
+            String component = (String) verEntity.get(RepoComponentConstant.filed_component);
 
             // 排除last版本
             if (version.equals(lastVer) && stage.equals(lastStage) && component.equals(lastComponent)) {
@@ -405,7 +394,7 @@ public class RepositoryService {
             }
 
             // 检查：低版本是否处于安装状态，如果是安装状态，那么就是需要用最新版本来升级
-            Integer status = (Integer) Maps.getOrDefault(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepositoryConstant.filed_status, RepositoryStatusConstant.status_not_scanned);
+            Integer status = (Integer) Maps.getOrDefault(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoComponentConstant.filed_status, RepositoryStatusConstant.status_not_scanned);
             if (RepositoryStatusConstant.status_installed == status) {
                 return true;
             }
@@ -424,16 +413,16 @@ public class RepositoryService {
      * @param verEntity
      */
     private int verifyMd5Status(String modelType, String modelName, String modelVersion, String component, Map<String, Object> verEntity) {
-        String version = (String) verEntity.get(RepositoryConstant.filed_version);
-        String stage = (String) verEntity.get(RepositoryConstant.filed_stage);
+        String version = (String) verEntity.get(RepoComponentConstant.filed_version);
+        String stage = (String) verEntity.get(RepoComponentConstant.filed_stage);
         if (MethodUtils.hasEmpty(version, stage)) {
             return -1;
         }
 
-        Integer status = (Integer) Maps.getOrDefault(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepositoryConstant.filed_status, RepositoryStatusConstant.status_not_scanned);
-        String localMd5 = (String) Maps.getOrDefault(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepositoryConstant.filed_local_md5, "");
-        verEntity.put(RepositoryConstant.filed_status, status);
-        verEntity.put(RepositoryConstant.filed_local_md5, localMd5);
+        Integer status = (Integer) Maps.getOrDefault(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoComponentConstant.filed_status, RepositoryStatusConstant.status_not_scanned);
+        String localMd5 = (String) Maps.getOrDefault(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoComponentConstant.filed_local_md5, "");
+        verEntity.put(RepoComponentConstant.filed_status, status);
+        verEntity.put(RepoComponentConstant.filed_local_md5, localMd5);
 
         return this.verifyMd5Status(verEntity, status, localMd5);
     }
@@ -447,12 +436,16 @@ public class RepositoryService {
      */
     public void scanLocalStatus(String modelType, List<Map<String, Object>> list) {
         for (Map<String, Object> map : list) {
+            if (!modelType.equals(map.get(RepoComponentConstant.filed_model_type))) {
+                continue;
+            }
+
             // 提取业务参数
-            String modelName = (String) map.get(RepositoryConstant.filed_model_name);
-            String modelVersion = (String) map.get(RepositoryConstant.filed_model_version);
-            String version = (String) map.get(RepositoryConstant.filed_version);
-            String stage = (String) map.get(RepositoryConstant.filed_stage);
-            String component = (String) map.get(RepositoryConstant.filed_component);
+            String modelName = (String) map.get(RepoComponentConstant.filed_model_name);
+            String modelVersion = (String) map.get(RepoComponentConstant.filed_model_version);
+            String version = (String) map.get(RepoComponentConstant.filed_version);
+            String stage = (String) map.get(RepoComponentConstant.filed_stage);
+            String component = (String) map.get(RepoComponentConstant.filed_component);
 
             // 本地的状态
             this.scanLocalStatus(modelType, modelName, modelVersion, version, stage, component);
@@ -520,7 +513,7 @@ public class RepositoryService {
         String tarFile = absolutePath + "/repository/" + modelType + "/" + modelName + "/" + modelVersion + "/" + version + "/" + stage + "/" + component + "/" + this.getRepoLocalTarFileName(modelName, modelVersion, version);
         File check = new File(tarFile);
         if (!check.exists()) {
-            Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepositoryConstant.filed_status, status);
+            Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoComponentConstant.filed_status, status);
             return;
         }
         // 阶段2："已经下载，待安装!
@@ -530,7 +523,7 @@ public class RepositoryService {
         String tarDir = this.getRepoLocalPathTarFileName(absolutePath, modelType, modelName, modelVersion, version, stage, component);
         List<String> tarFileNames = FileNameUtils.findFileList(tarDir, true, true);
         if (tarFileNames.isEmpty()) {
-            Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepositoryConstant.filed_status, status);
+            Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoComponentConstant.filed_status, status);
             return;
         }
 
@@ -544,19 +537,19 @@ public class RepositoryService {
             String srcFileName = "";
             String jarFileName = "";
 
-            if (RepositoryConstant.repository_type_decoder.equals(modelType)) {
+            if (RepoComponentConstant.repository_type_decoder.equals(modelType)) {
                 srcFileName = tarDir + "/" + tarFileName;
                 jarFileName = absolutePath + "/jar/decoder/" + tarFileName;
             }
-            if (RepositoryConstant.repository_type_template.equals(modelType)) {
+            if (RepoComponentConstant.repository_type_template.equals(modelType)) {
                 srcFileName = tarDir + "/" + tarFileName;
                 jarFileName = absolutePath + "/template/" + modelName + "/" + modelVersion + "/" + version + "/" + tarFileName;
             }
-            if (RepositoryConstant.repository_type_service.equals(modelType)) {
+            if (RepoComponentConstant.repository_type_service.equals(modelType)) {
                 srcFileName = tarDir + "/" + tarFileName;
                 jarFileName = absolutePath + "/" + tarFileName;
             }
-            if (RepositoryConstant.repository_type_webpack.equals(modelType)) {
+            if (RepoComponentConstant.repository_type_webpack.equals(modelType)) {
                 srcFileName = tarDir + "/" + tarFileName;
                 jarFileName = absolutePath + "/" + tarFileName;
             }
@@ -582,7 +575,7 @@ public class RepositoryService {
             status = RepositoryStatusConstant.status_installed;
         }
 
-        Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepositoryConstant.filed_status, status);
+        Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoComponentConstant.filed_status, status);
     }
 
     /**
@@ -608,14 +601,14 @@ public class RepositoryService {
         String tarFile = absolutePath + "/repository/" + modelType + "/" + modelName + "/" + modelVersion + "/" + version + "/" + stage + "/" + component + "/" + this.getRepoLocalTarFileName(modelName, modelVersion, version);
         File check = new File(tarFile);
         if (!check.exists()) {
-            Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepositoryConstant.filed_local_md5, md5);
+            Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoComponentConstant.filed_local_md5, md5);
             return;
         }
 
         // 计算MD5
         md5 = MD5Utils.getMD5Txt(check);
 
-        Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepositoryConstant.filed_local_md5, md5);
+        Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoComponentConstant.filed_local_md5, md5);
     }
 
 
@@ -663,11 +656,11 @@ public class RepositoryService {
         }
         Set<String> components = new HashSet<>();
         components.add("bin");
-        components.add(RepositoryConstant.repository_type_template);
+        components.add(RepoComponentConstant.repository_type_template);
         components.add(ServiceVOFieldConstant.field_type_service);
         components.add(ServiceVOFieldConstant.field_type_system);
         components.add(ServiceVOFieldConstant.field_type_kernel);
-        components.add(RepositoryConstant.repository_type_webpack);
+        components.add(RepoComponentConstant.repository_type_webpack);
         if (!components.contains(component)) {
             throw new ServiceException("component必须为：" + components);
         }
@@ -767,20 +760,20 @@ public class RepositoryService {
             String tarDir = this.getRepoLocalPathTarFileName(file.getAbsolutePath(), modelType, modelName, modelVersion, version, stage, component);
 
             // 备份目标文件，然后将解压文件复制复制到目标目录
-            if (modelType.equals(RepositoryConstant.repository_type_decoder)) {
+            if (modelType.equals(RepoComponentConstant.repository_type_decoder)) {
                 this.installDecoderFile(tarDir, file.getAbsolutePath() + "/jar/decoder");
             }
-            if (modelType.equals(RepositoryConstant.repository_type_template)) {
+            if (modelType.equals(RepoComponentConstant.repository_type_template)) {
                 this.installTemplateFile(tarDir, file.getAbsolutePath() + "/template/" + modelName + "/" + modelVersion + "/" + version);
             }
-            if (modelType.equals(RepositoryConstant.repository_type_service)) {
+            if (modelType.equals(RepoComponentConstant.repository_type_service)) {
                 if (ServiceVOFieldConstant.field_type_kernel.equals(component) || ServiceVOFieldConstant.field_type_system.equals(component) || ServiceVOFieldConstant.field_type_service.equals(component)) {
                     this.installServiceFile(modelName, modelVersion, component, version, stage);
                 } else {
                     throw new ServiceException("component必须为service或者system或者kernel!");
                 }
             }
-            if (modelType.equals(RepositoryConstant.repository_type_webpack)) {
+            if (modelType.equals(RepoComponentConstant.repository_type_webpack)) {
                 this.installWebpackFile(tarDir, file.getAbsolutePath());
             }
 
@@ -953,7 +946,7 @@ public class RepositoryService {
         }
 
         // 获得跟该应用相关的各版本信息
-        Map<String, Object> versions = (Map<String, Object>) Maps.getOrDefault(this.statusMap, RepositoryConstant.repository_type_service, appName, new HashMap<>());
+        Map<String, Object> versions = (Map<String, Object>) Maps.getOrDefault(this.statusMap, RepoComponentConstant.repository_type_service, appName, new HashMap<>());
         if (MethodUtils.hasEmpty(versions)) {
             return;
         }
@@ -964,8 +957,8 @@ public class RepositoryService {
             for (String stage : stages.keySet()) {
                 Map<String, Object> components = (Map<String, Object>) stages.get(stage);
                 for (String component : components.keySet()) {
-                    this.scanLocalStatus(RepositoryConstant.repository_type_service, appName, RepositoryConstant.filed_value_model_version_default, version, stage, component);
-                    this.scanLocalMd5(RepositoryConstant.repository_type_service, appName, RepositoryConstant.filed_value_model_version_default, version, stage, component);
+                    this.scanLocalStatus(RepoComponentConstant.repository_type_service, appName, RepoComponentConstant.filed_value_model_version_default, version, stage, component);
+                    this.scanLocalMd5(RepoComponentConstant.repository_type_service, appName, RepoComponentConstant.filed_value_model_version_default, version, stage, component);
                 }
             }
         }

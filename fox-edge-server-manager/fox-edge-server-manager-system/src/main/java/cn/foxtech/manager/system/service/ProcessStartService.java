@@ -20,7 +20,7 @@ public class ProcessStartService {
     private ServerPortService serverPortService;
 
     @Autowired
-    private RepositoryService repositoryService;
+    private RepoComponentService repositoryComponentService;
 
 
     /**
@@ -96,7 +96,7 @@ public class ProcessStartService {
      * @throws InterruptedException
      */
     public void uninstallProcess(String appName, String appType) throws IOException, InterruptedException {
-        this.repositoryService.uninstallServiceFile(appName, appType);
+        this.repositoryComponentService.uninstallServiceFile(appName, appType);
     }
 
 }

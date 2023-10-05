@@ -170,4 +170,39 @@ public class CloudRemoteService {
 
         return respondVO;
     }
+
+    public Map<String, Object> executeGet(String res, Map<String,String> param) throws IOException {
+        // 检查：是否未登录
+        if (this.header.isEmpty()) {
+            this.login();
+        }
+
+        // 检查有没有获得登录成功后的云端令牌
+        if (this.header.isEmpty()) {
+            throw new RuntimeException("未登录到云端!");
+        }
+
+        String respondJson = HttpClientUtil.executeGet(this.host + res, param, this.header);
+
+        // 转换成json
+        ObjectMapper objectMapper = new ObjectMapper();        // 转换JSON结构
+        Map<String, Object> respondVO = objectMapper.readValue(respondJson, Map.class);
+
+        // 检查：是否登录成功
+        Object code = respondVO.get(AjaxResult.CODE_TAG);
+        Object message = respondVO.get(AjaxResult.MSG_TAG);
+
+        // 检查：登录是否已经失效
+        if (HttpStatus.NOT_LOGIN.equals(code)) {
+            // 清空上次登录的信息
+            this.header.clear();
+            throw new RuntimeException("发送数据到云端：" + this.host + "失败:code=" + code + "失败:message=" + message);
+        }
+
+        if (!HttpStatus.SUCCESS.equals(code)) {
+            throw new RuntimeException("发送数据到云端：" + this.host + "失败:code=" + code + "失败:message=" + message);
+        }
+
+        return respondVO;
+    }
 }

@@ -28,3 +28,4 @@ buildNumber.properties
 /.flattened-pom.xml
 /repository/template
 /temp
+/repository/product
