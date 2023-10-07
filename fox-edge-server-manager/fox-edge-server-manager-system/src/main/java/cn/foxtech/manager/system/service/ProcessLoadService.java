@@ -71,7 +71,7 @@ public class ProcessLoadService {
     public Boolean queryServiceLoad(String appName, String appType, Boolean defaultValue) {
         // 获得启动配置
         String configName = "serviceStartConfig";
-        ConfigEntity configEntity = this.entityManageService.getConfigEntity(appName, appType, configName);
+        ConfigEntity configEntity = this.entityManageService.getConfigEntity(this.foxServiceName, this.foxServiceType, configName);
         if (configEntity == null) {
             return defaultValue;
         }

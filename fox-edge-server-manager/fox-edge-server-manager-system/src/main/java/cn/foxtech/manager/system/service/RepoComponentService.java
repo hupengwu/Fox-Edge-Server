@@ -54,6 +54,9 @@ public class RepoComponentService {
     @Autowired
     private CloudRemoteService cloudRemoteService;
 
+    @Autowired
+    private JarFileInfoService jarFileService;
+
     @Value("${spring.fox-service.service.type}")
     private String foxServiceType = "undefinedServiceType";
 
@@ -133,6 +136,63 @@ public class RepoComponentService {
     }
 
 
+    public List<Map<String, Object>> findLocalModel(String modelType, String modelName, String modelVersion) {
+        List<Map<String, Object>> resultList = new ArrayList<>();
+
+        // 程序目录
+        File file = new File("");
+
+        // 组件级别的目录：\opt\fox-edge\repository\decoder\fox-edge-server-protocol-dlt645-1997\v1
+        File modelVersionDir = new File(file.getAbsolutePath() + "/repository/" + modelType + "/" + modelName + "/" + modelVersion);
+        if (!modelVersionDir.exists() || !modelVersionDir.isDirectory()) {
+            return resultList;
+        }
+
+
+        String[] versionFiles = modelVersionDir.list();
+        for (String versionFile : versionFiles) {
+            File versionDir = new File(modelVersionDir, versionFile);
+            if (versionDir.isFile()) {
+                continue;
+            }
+
+            // \opt\fox-edge\repository\decoder\fox-edge-server-protocol-bass260zj\v1\1.0.0\
+            String[] stageFiles = versionDir.list();
+            for (String stageFile : stageFiles) {
+                File stageDir = new File(versionDir, stageFile);
+                if (stageDir.isFile()) {
+                    continue;
+                }
+
+                String[] componentFiles = stageDir.list();
+                for (String componentFile : componentFiles) {
+                    File componentDir = new File(stageDir, componentFile);
+                    if (componentDir.isFile()) {
+                        continue;
+                    }
+
+                    // 提取业务参数
+                    String version = versionDir.getName();
+                    String stage = stageDir.getName();
+                    String component = componentDir.getName();
+
+                    Map<String, Object> map = new HashMap<>();
+                    map.put(RepoComponentConstant.filed_model_type, modelType);
+                    map.put(RepoComponentConstant.filed_model_name, modelName);
+                    map.put(RepoComponentConstant.filed_model_version, modelVersion);
+                    map.put(RepoComponentConstant.filed_version, version);
+                    map.put(RepoComponentConstant.filed_stage, stage);
+                    map.put(RepoComponentConstant.filed_component, component);
+
+                    resultList.add(map);
+                }
+            }
+
+        }
+
+        return resultList;
+    }
+
     /**
      * 查找本地已经下载的模块列表
      * 目录结构 \opt\fox-edge\repository\decoder\anno\1.0.0\bin
@@ -164,51 +224,9 @@ public class RepoComponentService {
             // \opt\fox-edge\repository\decoder\fox-edge-server-protocol-bass260zj\v1\1.0.0\
             String[] modelVersionFiles = modelDir.list();
             for (String modelVersionFile : modelVersionFiles) {
-                File modelVersionDir = new File(modelDir, modelVersionFile);
-                if (modelVersionDir.isFile()) {
-                    continue;
-                }
-
-                String[] versionFiles = modelVersionDir.list();
-                for (String versionFile : versionFiles) {
-                    File versionDir = new File(modelVersionDir, versionFile);
-                    if (versionDir.isFile()) {
-                        continue;
-                    }
-
-                    // \opt\fox-edge\repository\decoder\fox-edge-server-protocol-bass260zj\v1\1.0.0\
-                    String[] stageFiles = versionDir.list();
-                    for (String stageFile : stageFiles) {
-                        File stageDir = new File(versionDir, stageFile);
-                        if (stageDir.isFile()) {
-                            continue;
-                        }
-
-                        String[] componentFiles = stageDir.list();
-                        for (String componentFile : componentFiles) {
-                            File componentDir = new File(stageDir, componentFile);
-                            if (componentDir.isFile()) {
-                                continue;
-                            }
-
-                            // 提取业务参数
-                            String modelName = modelDir.getName();
-                            String modelVersion = modelVersionDir.getName();
-                            String version = versionDir.getName();
-                            String stage = stageDir.getName();
-                            String component = componentDir.getName();
-
-                            Map<String, Object> map = new HashMap<>();
-                            map.put(RepoComponentConstant.filed_model_name, modelName);
-                            map.put(RepoComponentConstant.filed_model_version, modelVersion);
-                            map.put(RepoComponentConstant.filed_version, version);
-                            map.put(RepoComponentConstant.filed_stage, stage);
-                            map.put(RepoComponentConstant.filed_component, component);
-
-                            resultList.add(map);
-                        }
-                    }
-                }
+                // 查找一个版本级别的信息
+                List<Map<String, Object>> versions = this.findLocalModel(modelType, modelFile, modelVersionFile);
+                resultList.addAll(versions);
             }
 
         }
@@ -344,6 +362,11 @@ public class RepoComponentService {
             for (Map<String, Object> verEntity : versions) {
                 status = this.verifyMd5Status(modelType, modelName, modelVersion, component, verEntity);
                 verEntity.put(RepoComponentConstant.filed_status, status);
+
+                // 检查：该版本是否为【已安装】版本，如果是，则该版本为当前版本，因为【已安装】版本为正在使用的唯一版本
+                if (RepositoryStatusConstant.status_installed == status) {
+                    entity.put(RepoComponentConstant.filed_used_version, verEntity);
+                }
             }
         }
     }
@@ -538,6 +561,47 @@ public class RepoComponentService {
     }
 
     /**
+     * 扫码本地已安装模块的状态
+     * 主要场景：用户在安装完成之后，删除了本地仓库中的安装包，此时只有安装文件，就涉及到它们的安装状态问题
+     *
+     * @param modelType    模块类型
+     * @param modelName    模块名称
+     * @param modelVersion
+     */
+    public Map<String, Object> scanModelStatus(String modelType, String modelName, String modelVersion) {
+        // 简单验证
+        if (MethodUtils.hasEmpty(modelType, modelName, modelVersion)) {
+            throw new ServiceException("参数不能为空: modelType, modelName, modelVersion");
+        }
+
+        if (RepoComponentConstant.repository_type_decoder.equals(modelType)) {
+            String fileName = modelName + "." + modelVersion + ".jar";
+            Map<String, Object> jarInfoMap = this.jarFileService.readJarFiles(fileName);
+            return jarInfoMap;
+        }
+        if (RepoComponentConstant.repository_type_template.equals(modelType)) {
+            File dir = new File("");
+            String modelPathName = dir.getAbsolutePath() + "/template/dobot-mg400/v1";
+            File file = new File(modelPathName);
+            if (!file.exists() || file.isFile()){
+                return null;
+            }
+
+            List<String> fileNames = Arrays.asList(file.list());
+            Collections.sort(fileNames);
+            if (fileNames.isEmpty()){
+                return null;
+            }
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("version",fileNames.get(fileNames.size()-1));
+            return result;
+        }
+
+        return null;
+    }
+
+    /**
      * 扫描某个文件版本包的状态
      *
      * @param modelType 仓库类型
@@ -587,7 +651,7 @@ public class RepoComponentService {
 
             if (RepoComponentConstant.repository_type_decoder.equals(modelType)) {
                 srcFileName = tarDir + "/" + tarFileName;
-                jarFileName = absolutePath + "/jar/decoder/" + tarFileName;
+                jarFileName = absolutePath + "/jar/decoder/" + modelName + "." + modelVersion + ".jar";
             }
             if (RepoComponentConstant.repository_type_template.equals(modelType)) {
                 srcFileName = tarDir + "/" + tarFileName;
@@ -809,7 +873,7 @@ public class RepoComponentService {
 
             // 备份目标文件，然后将解压文件复制复制到目标目录
             if (modelType.equals(RepoComponentConstant.repository_type_decoder)) {
-                this.installDecoderFile(tarDir, file.getAbsolutePath() + "/jar/decoder");
+                this.installDecoderFile(tarDir, file.getAbsolutePath() + "/jar/decoder", modelName, modelVersion);
             }
             if (modelType.equals(RepoComponentConstant.repository_type_template)) {
                 this.installTemplateFile(tarDir, file.getAbsolutePath() + "/template/" + modelName + "/" + modelVersion + "/" + version);
@@ -825,9 +889,18 @@ public class RepoComponentService {
                 this.installWebpackFile(tarDir, file.getAbsolutePath());
             }
 
-            // 将状态保存起来
-            this.scanLocalStatus(modelType, modelName, modelVersion, version, stage, component);
-            this.scanLocalMd5(modelType, modelName, modelVersion, version, stage, component);
+            // 安装某个文件版本后，其他文件版本的状态，都会联动变化，所以要扫描整个大版本
+            List<Map<String, Object>> versions = this.findLocalModel(modelType, modelName, modelVersion);
+            for (Map<String, Object> map : versions) {
+                String subVersion = (String) map.get(RepoComponentConstant.filed_version);
+                String subStage = (String) map.get(RepoComponentConstant.filed_stage);
+                String subComponent = (String) map.get(RepoComponentConstant.filed_component);
+
+                // 将状态保存起来
+                this.scanLocalStatus(modelType, modelName, modelVersion, subVersion, subStage, subComponent);
+                this.scanLocalMd5(modelType, modelName, modelVersion, subVersion, subStage, subComponent);
+            }
+
         } catch (Exception e) {
             throw new ServiceException(e.getMessage());
         }
@@ -855,6 +928,18 @@ public class RepoComponentService {
         }
     }
 
+    private void copyFile(String installFileDir, String fileName, String destFileDir, String destFileName) throws IOException, InterruptedException {
+        if (OSInfo.isWindows()) {
+            installFileDir = installFileDir.replace("/", "\\");
+            destFileDir = destFileDir.replace("/", "\\");
+
+            ShellUtils.executeCmd("copy /y \"" + installFileDir + "\\" + fileName + "\" \"" + destFileDir + "\\" + destFileName + "\"");
+        }
+        if (OSInfo.isLinux()) {
+            ShellUtils.executeShell("cp -f '" + installFileDir + "/" + fileName + "' '" + destFileDir + "/" + destFileName + "'");
+        }
+    }
+
     private void installTemplateFile(String installFileDir, String destFileDir) throws IOException, InterruptedException {
         // 获得所有bin下的所有文件名
         List<String> fileList = FileNameUtils.findFileList(installFileDir, false, false);
@@ -879,8 +964,8 @@ public class RepoComponentService {
      * @throws IOException          异常信息
      * @throws InterruptedException 异常信息
      */
-    private void installDecoderFile(String installFileDir, String destFileDir) throws IOException, InterruptedException {
-        // 获得所有bin下的所有文件名
+    private void installDecoderFile(String installFileDir, String destFileDir, String modelName, String modelVersion) throws IOException, InterruptedException {
+        // 获得repository目录下所有下的可安装所有文件名
         List<String> fileList = FileNameUtils.findFileList(installFileDir, false, false);
         if (fileList.isEmpty()) {
             throw new ServiceException(installFileDir + " 没有文件");
@@ -890,19 +975,26 @@ public class RepoComponentService {
         this.mkdirDir(destFileDir);
 
 
-        // 复制文件
+        // 复制文件：该目录实际上有且只有一个jar文件
         for (String fileName : fileList) {
             if (!fileName.endsWith(".jar")) {
                 continue;
             }
 
-            // 检查：两个文件是否一致，如果一致旧不需重复替换
-            if (FileCompareUtils.isSameFile(installFileDir + "/" + fileName, destFileDir + "/" + fileName)) {
-                continue;
+            String destFileName = modelName + "." + modelVersion + ".jar";
+
+            // 检查：该文件是否已经存在，如果存在，那么就检查文件内容是否相同
+            File exist = new File(destFileDir + "/" + destFileName);
+            if (exist.isFile() && exist.exists()) {
+                // 检查：两个文件是否一致，如果一致旧不需重复替换
+                if (FileCompareUtils.isSameFile(installFileDir + "/" + fileName, destFileDir + "/" + destFileName)) {
+                    continue;
+                }
             }
 
+
             // 拷贝文件
-            this.copyFile(installFileDir, fileName, destFileDir);
+            this.copyFile(installFileDir, fileName, destFileDir, destFileName);
         }
     }
 

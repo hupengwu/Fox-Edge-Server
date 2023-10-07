@@ -9,6 +9,8 @@ import cn.foxtech.common.utils.jar.info.JarInfoReader;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.device.protocol.RootLocation;
+import cn.foxtech.manager.system.constants.RepoComponentConstant;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -18,6 +20,10 @@ import java.util.*;
 
 @Component
 public class JarFileInfoService {
+    @Autowired
+    private DecoderConfigService loaderService;
+
+
     private Map<String, Object> buildDescription(List<Map<String, Object>> repoList) {
         Map<String, Object> result = new HashMap<>();
         for (Map<String, Object> map : repoList) {
@@ -30,12 +36,10 @@ public class JarFileInfoService {
         return result;
     }
 
-    public List<Map<String, Object>> findJarInfo(Map<String, Object> configValue, List<Map<String, Object>> repoList) throws IOException {
+    public List<Map<String, Object>> findJarInfo(Set<String> loadJars, List<Map<String, Object>> repoList) throws IOException {
         // 查找目录下所有的jar文件
         List<String> jarNameList = this.findJarFiles();
 
-        // 取出需要装载的数据
-        Set<String> loadJars = this.getLoads(configValue);
 
         // 分组：按解码器进行分组
         Map<String, Object> decoderMap = this.readJarFiles(jarNameList);
@@ -61,43 +65,19 @@ public class JarFileInfoService {
                 // 第2级：verNum
                 Map<String, Object> versionMap = (Map<String, Object>) verNumMap.get(verNum);
 
-                List<String> versionIds = new ArrayList<>();
-                versionIds.addAll(versionMap.keySet());
-                Collections.sort(versionIds);
-                Collections.reverse(versionIds);
-
-                // 待会用它从下面的列表中，找出默认的选择加载项目
-                Map<String, Object> first = (Map<String, Object>) versionMap.get(versionIds.get(0));
-
-                // 组成列表
-                List<Map<String, Object>> versions = new ArrayList<>();
-                for (String version : versionIds) {
-                    // 第3级：version
-                    Map<String, Object> map = (Map<String, Object>) versionMap.get(version);
-
-                    String jarFileName = packName + "-" + version + ".jar";
-                    map.put("fileName", jarFileName);
-                    map.put("createTime", createTime.get(jarFileName));
-                    map.put("updateTime", updateTime.get(jarFileName));
-                    map.put("size", size.get(jarFileName));
-                    map.put("load", loadJars.contains(jarFileName));
-
-                    // 如果已经被用户配置为加载项目，那么优先选择它
-                    if (loadJars.contains(jarFileName)) {
-                        first = map;
-                    }
-
-                    versions.add(map);
-                }
-
-
                 // 以二级列表返回：packName/verNum：HashMap
                 Map<String, Object> result = new HashMap<>();
+                result.putAll(versionMap);
                 result.put("packName", packName);
                 result.put("jarVer", verNum);
-                result.put("versions", versions);
-                result.put("first", first);
                 result.put("description", descriptionMap.get(packName + ":" + verNum));
+
+                String jarFileName = packName + "." + verNum + ".jar";
+                result.put("fileName", jarFileName);
+                result.put("createTime", createTime.get(jarFileName));
+                result.put("updateTime", updateTime.get(jarFileName));
+                result.put("size", size.get(jarFileName));
+                result.put("load", loadJars.contains(jarFileName));
 
                 resultList.add(result);
             }
@@ -131,7 +111,7 @@ public class JarFileInfoService {
         Map<String, Object> result = new HashMap<>();
         for (String jarFileName : jarNameList) {
             // 读取jar文件信息
-            Map<String, String> jarNameInfo = this.split(jarFileName);
+            Map<String, String> jarNameInfo = this.loaderService.split(jarFileName);
             if (jarNameInfo == null) {
                 continue;
             }
@@ -141,9 +121,28 @@ public class JarFileInfoService {
                 continue;
             }
 
-            Maps.setValue(result, jarNameInfo.get("decoder"), jarFileInfo.get("jarVer"), jarNameInfo.get("version"), jarFileInfo);
+            Maps.setValue(result, jarNameInfo.get(RepoComponentConstant.filed_model_name), jarFileInfo.get("jarVer"), jarFileInfo);
         }
 
+
+        return result;
+    }
+
+    public Map<String, Object> readJarFiles(String jarFileName) {
+        // 读取jar文件信息
+        Map<String, String> jarNameInfo = this.loaderService.split(jarFileName);
+        if (jarNameInfo == null) {
+            return null;
+        }
+
+        Map<String, Object> jarFileInfo = this.readJarFileInfo(jarFileName);
+        if (jarFileInfo == null) {
+            return null;
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.putAll(jarNameInfo);
+        result.putAll(jarFileInfo);
 
         return result;
     }
@@ -155,45 +154,6 @@ public class JarFileInfoService {
             updateTime.put(fileName, attributes.lastModifiedTime().toMillis());
             size.put(fileName, attributes.size());
         }
-    }
-
-    public String getPackName(String jarFileName) {
-        Map<String, String> map = this.split(jarFileName);
-        if (map == null) {
-            return "";
-        }
-
-        return map.get("decoder");
-    }
-
-    /**
-     * 将jar文件名称，拆分为包名称和版本号，两个部分
-     * 例如：fox-edge-server-protocol-utils-1.0.3.jar，拆分为fox-edge-server-protocol-utils和1.0.3
-     *
-     * @param jarFileName jar文件名称，例如fox-edge-server-protocol-utils-1.0.3.jar
-     * @return decoder，version的map
-     */
-    private Map<String, String> split(String jarFileName) {
-        // 检查：是否为。jar文件
-        if (!jarFileName.toLowerCase().endsWith(".jar")) {
-            return null;
-        }
-
-        // 去除.jar的后缀，为拆分数据做准备
-        jarFileName = jarFileName.substring(0, jarFileName.length() - ".jar".length());
-        String[] items = jarFileName.split("-");
-        if (items.length < 2) {
-            return null;
-        }
-
-        String version = items[items.length - 1];
-        String decoder = jarFileName.substring(0, jarFileName.length() - version.length() - 1);
-
-        Map<String, String> result = new HashMap<>();
-        result.put("decoder", decoder);
-        result.put("version", version);
-
-        return result;
     }
 
     private Map<String, Object> readJarFileInfo(String jarFileName) {

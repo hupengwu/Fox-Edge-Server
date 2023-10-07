@@ -17,6 +17,7 @@ public class RepoComponentConstant {
     public static final String filed_stage = "stage";
     public static final String filed_versions = "versions";
     public static final String filed_last_version = "lastVersion";
+    public static final String filed_used_version = "usedVersion";
 
     public static final String filed_component = "component";
     public static final String filed_status = "status";

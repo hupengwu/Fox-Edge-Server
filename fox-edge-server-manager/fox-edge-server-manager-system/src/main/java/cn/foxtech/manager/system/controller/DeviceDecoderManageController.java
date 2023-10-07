@@ -6,8 +6,8 @@ import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.manager.system.constants.RepoComponentConstant;
+import cn.foxtech.manager.system.service.DecoderConfigService;
 import cn.foxtech.manager.system.service.JarFileInfoService;
-import cn.foxtech.manager.system.service.ManageConfigService;
 import cn.foxtech.manager.system.service.ProcessStartService;
 import cn.foxtech.manager.system.service.RepoComponentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,23 +15,22 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/kernel/manager/device/decoder")
 public class DeviceDecoderManageController {
-    @Autowired
-    private ManageConfigService manageConfigService;
-
-
     @Autowired
     private ProcessStartService processStartService;
 
     @Autowired
     private JarFileInfoService jarFileInfoService;
 
+    @Autowired
+    private RepoComponentService componentService;
 
     @Autowired
-    private RepoComponentService repositoryComponentService;
+    private DecoderConfigService configService;
 
 
     @PostMapping("entities")
@@ -53,15 +52,14 @@ public class DeviceDecoderManageController {
      */
     private AjaxResult selectEntityList(Map<String, Object> body, boolean isPage) {
         try {
-
-            // 获得数据库中的配置
-            Map<String, Object> configValue = this.manageConfigService.getConfigValue("device-service", "system", "decoderConfig");
-
             // 从仓库获得解码器的描述信息
-            List<Map<String, Object>> repoList = this.repositoryComponentService.queryLocalListFile(RepoComponentConstant.repository_type_decoder);
+            List<Map<String, Object>> repoList = this.componentService.queryLocalListFile(RepoComponentConstant.repository_type_decoder);
+
+            // 取出需要装载的数据
+            Set<String> loadJars = this.configService.getLoads();
 
             // 扫描文件，获得解码器的信息
-            List<Map<String, Object>> resultList = this.jarFileInfoService.findJarInfo(configValue, repoList);
+            List<Map<String, Object>> resultList = this.jarFileInfoService.findJarInfo(loadJars, repoList);
 
             // 分页返回
             return PageUtils.getPageMapList(resultList, body);
@@ -92,28 +90,8 @@ public class DeviceDecoderManageController {
                 return AjaxResult.error("参数不能为空:fileName, load");
             }
 
-            // 获得数据库中的配置
-            Map<String, Object> configValue = this.manageConfigService.getConfigValue("device-service", "system", "decoderConfig");
-
-            // 取出列表数据
-            List<Map<String, Object>> dataList = (List<Map<String, Object>>) configValue.get(DeviceDecoderVOFieldConstant.field_list);
-
-            // 修改数值
-            for (Map<String, Object> map : dataList) {
-                String fileNameValue = (String) map.get(DeviceDecoderVOFieldConstant.field_file_name);
-
-                if (fileName.startsWith(this.jarFileInfoService.getPackName(fileNameValue))) {
-                    if (fileNameValue.equals(fileName)) {
-                        map.put(DeviceDecoderVOFieldConstant.field_load, load);
-                    } else {
-                        if (Boolean.TRUE.equals(load)) {
-                            map.put(DeviceDecoderVOFieldConstant.field_load, false);
-                        }
-                    }
-                }
-            }
-
-            this.manageConfigService.saveConfigValue("device-service", "system", "decoderConfig", configValue);
+            // 更新配置
+            this.configService.updateConfig(fileName, load);
 
             return AjaxResult.success();
         } catch (Exception e) {
