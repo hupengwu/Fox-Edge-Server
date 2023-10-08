@@ -19,10 +19,17 @@
             <artifactId>fox-edge-server-protocol-mitsubishi-plc-fx-core</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
+
         <dependency>
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-protocol-modbus-core</artifactId>
             <version>${fox-edge-server.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-core</artifactId>
+            <version>${cn.hutool.version}</version>
         </dependency>
     </dependencies>
 </project>

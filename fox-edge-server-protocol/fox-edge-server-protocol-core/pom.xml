@@ -43,13 +43,5 @@
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-core</artifactId>
-            <version>${cn.hutool.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
     </dependencies>
 </project>

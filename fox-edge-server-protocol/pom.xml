@@ -40,6 +40,7 @@
         <module>fox-edge-server-protocol-zxdu58</module>
         <module>fox-edge-server-protocol-cetups</module>
         <module>fox-edge-server-protocol-shmeter</module>
+        <module>fox-edge-server-protocol-siemens-s7-core</module>
         <module>fox-edge-server-protocol-mitsubishi-plc-fx-core</module>
         <module>fox-edge-server-protocol-mitsubishi-plc-fx</module>
         <module>fox-edge-server-protocol-omron-fins-core</module>

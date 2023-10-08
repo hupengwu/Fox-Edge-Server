@@ -19,10 +19,17 @@
             <artifactId>fox-edge-server-protocol-core</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
+
         <dependency>
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-protocol-iec104-core</artifactId>
             <version>${fox-edge-server.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-core</artifactId>
+            <version>${cn.hutool.version}</version>
         </dependency>
     </dependencies>
 
