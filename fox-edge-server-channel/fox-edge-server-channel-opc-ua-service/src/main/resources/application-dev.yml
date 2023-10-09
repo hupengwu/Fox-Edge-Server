@@ -1,6 +1,6 @@
 spring:
   application:
-    name: fox-edge-server-channel-udpsocket-service
+    name: fox-edge-server-channel-opc-ua-service
 
   channel:
     init-mode: "redis"                   # 可选参数：初始化数据来源:redis或者local

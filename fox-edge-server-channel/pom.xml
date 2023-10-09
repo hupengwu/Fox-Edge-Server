@@ -35,6 +35,7 @@
         <module>fox-edge-server-channel-proxy-service</module>
         <module>fox-edge-server-channel-gdana-digester</module>
         <module>fox-edge-server-channel-snmp-service</module>
+        <module>fox-edge-server-channel-s7plc-client</module>
     </modules>
 
 

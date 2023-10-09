@@ -1,0 +1,7 @@
+value_name,data_area,byte_index,bit_index,data_type,count,remark
+数据测量点1,DB1,0,1,BOOL,1,count必须为１
+数据测量点2,DB1,4,,UINT16,1,count必须为１
+数据测量点3,DB1,20,,FLOAT64,1,count必须为１
+数据测量点4,DB1,28,,BYTE,3,只有BYTE和STRING，count才有效
+数据测量点5,DB1,31,,STRING,10,只有BYTE和STRING，count才有效
+数据测量点6,DB1,43,,TIME,1,count必须为１
