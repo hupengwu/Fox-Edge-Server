@@ -31,7 +31,7 @@ public class S7PLCReadData {
         }
 
         JDefaultTemplate template = TemplateFactory.getTemplate("fox-edge-server-protocol-s7plc").getTemplate(templateName, tableName, JDefaultTemplate.class);
-        List<Map<String,Object>> params = template.encodeObjects(objectNames);
+        List<Map<String,Object>> params = template.encodeReadObjects(objectNames);
 
         Map<String, Object> result = new HashMap<>();
         result.put("method", "readData");
@@ -55,6 +55,6 @@ public class S7PLCReadData {
 
 
         JDefaultTemplate template = TemplateFactory.getTemplate("fox-edge-server-protocol-snmp").getTemplate(templateName, tableName, JDefaultTemplate.class);
-        return template.decodeValue(list);
+        return template.decodeReadValue(list);
     }
 }

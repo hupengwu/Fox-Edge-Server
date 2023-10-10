@@ -102,7 +102,7 @@ public class JDefaultTemplate implements ITemplate {
     }
 
 
-    public List<Map<String, Object>> encodeObjects(List<String> objectNameList) {
+    public List<Map<String, Object>> encodeReadObjects(List<String> objectNameList) {
         List<Map<String, Object>> objects = new ArrayList<>();
         for (String objectName : objectNameList) {
             JDecoderValueParam jDecoderValueParam = this.operate.decoderParam.nameMap.get(objectName);
@@ -122,7 +122,29 @@ public class JDefaultTemplate implements ITemplate {
         return objects;
     }
 
-    public Map<String, Object> decodeValue(List<Map<String, Object>> values) {
+    public List<Map<String, Object>> encodeWriteObjects(Map<String, Object> values) {
+        List<Map<String, Object>> objects = new ArrayList<>();
+        for (String name : values.keySet()) {
+            Object value = values.get(name);
+
+            JDecoderValueParam jDecoderValueParam = this.operate.decoderParam.nameMap.get(name);
+            if (jDecoderValueParam == null) {
+                throw new ProtocolException("csv中未定义该对象的信息:" + name);
+            }
+
+            Map<String, Object> param = new HashMap<>();
+            param.put("address", jDecoderValueParam.oid);
+            param.put("dataType", jDecoderValueParam.data_type);
+            param.put("value", value);
+
+            objects.add(param);
+        }
+
+
+        return objects;
+    }
+
+    public Map<String, Object> decodeReadValue(List<Map<String, Object>> values) {
         Map<String, Object> result = new HashMap<>();
 
         for (Map<String, Object> map : values) {
