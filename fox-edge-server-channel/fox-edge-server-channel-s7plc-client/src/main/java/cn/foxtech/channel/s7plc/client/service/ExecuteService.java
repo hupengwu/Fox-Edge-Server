@@ -48,9 +48,9 @@ public class ExecuteService {
 
             this.convertArrays(list);
 
-            Map<String,Object> result = new HashMap<>();
-            result.put("method",method);
-            result.put("list",list);
+            Map<String, Object> result = new HashMap<>();
+            result.put("method", method);
+            result.put("list", list);
 
 
             ChannelRespondVO respondVO = new ChannelRespondVO();
@@ -138,6 +138,16 @@ public class ExecuteService {
                 count = str.length();
 
                 parameter = new S7Parameter(address, type, count, str);
+            } else if (EDataType.UINT16.equals(type)) {
+                parameter = new S7Parameter(address, type, count, Integer.valueOf(value.toString()));
+            } else if (EDataType.INT16.equals(type)) {
+                parameter = new S7Parameter(address, type, count, Short.valueOf(value.toString()));
+            } else if (EDataType.TIME.equals(type) || EDataType.UINT32.equals(type)) {
+                parameter = new S7Parameter(address, type, count, Long.valueOf(value.toString()));
+            } else if (EDataType.FLOAT32.equals(type)) {
+                parameter = new S7Parameter(address, type, count, Float.valueOf(value.toString()));
+            } else if (EDataType.FLOAT64.equals(type)) {
+                parameter = new S7Parameter(address, type, count, Double.valueOf(value.toString()));
             } else {
                 parameter = new S7Parameter(address, type, 1, value);
             }

@@ -397,16 +397,16 @@ public class S7Serializer implements IPLCSerializable {
                 break;
             case UINT16:
                 item.setDataItem(DataItem.createReqByByte(ByteWriteBuff.newInstance(2)
-                        .putShort(Integer.valueOf(data.toString())).getData()));
+                        .putShort((Integer) data).getData()));
                 break;
             case INT16:
                 item.setDataItem(DataItem.createReqByByte(ByteWriteBuff.newInstance(2)
-                        .putShort(Short.valueOf(data.toString())).getData()));
+                        .putShort((Short) data).getData()));
                 break;
             case TIME:
             case UINT32:
                 item.setDataItem(DataItem.createReqByByte(ByteWriteBuff.newInstance(4)
-                        .putInteger(Long.valueOf(data.toString())).getData()));
+                        .putInteger((Long) data).getData()));
                 break;
             case INT32:
                 item.setDataItem(DataItem.createReqByByte(ByteWriteBuff.newInstance(4)
@@ -414,11 +414,11 @@ public class S7Serializer implements IPLCSerializable {
                 break;
             case FLOAT32:
                 item.setDataItem(DataItem.createReqByByte(ByteWriteBuff.newInstance(4)
-                        .putFloat(Float.valueOf(data.toString())).getData()));
+                        .putFloat((Float) data).getData()));
                 break;
             case FLOAT64:
                 item.setDataItem(DataItem.createReqByByte(ByteWriteBuff.newInstance(8)
-                        .putDouble(Double.valueOf(data.toString())).getData()));
+                        .putDouble((Double) data).getData()));
                 break;
             case STRING:
                 byte[] bytes = ((String) data).getBytes(Charset.forName("GB2312"));
