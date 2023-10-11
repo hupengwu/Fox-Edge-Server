@@ -5,7 +5,7 @@ import cn.foxtech.common.entity.constant.EntityPublishConstant;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.entity.service.redis.AgileMapRedisService;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
-import cn.foxtech.proxy.cloud.publisher.service.CloudEntityManageService;
+import cn.foxtech.proxy.cloud.common.service.EntityManageService;
 import cn.foxtech.proxy.cloud.publisher.service.CloudEntityRemoteService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class ConfigEntityManageScheduler extends PeriodTaskService {
      * 实体管理者
      */
     @Autowired
-    private CloudEntityManageService publishEntityManageService;
+    private EntityManageService publishEntityManageService;
 
     /**
      * 云端发布者

@@ -42,7 +42,6 @@ public class ApplicationConfig {
     /**
      * MQTT Server的位置
      */
-    @Value("${mqtt.client.ip}")
     private String ip = "127.0.0.1";
 
     /**

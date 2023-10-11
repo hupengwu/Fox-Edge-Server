@@ -1,11 +1,12 @@
 package cn.foxtech.proxy.cloud.publisher.service;
 
 import cn.foxtech.common.constant.HttpStatus;
-import cn.foxtech.common.entity.entity.ConfigEntity;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
-import cn.foxtech.common.utils.http.HttpClientUtil;
 import cn.foxtech.common.utils.Maps;
+import cn.foxtech.common.utils.http.HttpClientUtil;
 import cn.foxtech.core.domain.AjaxResult;
+import cn.foxtech.proxy.cloud.common.service.ConfigManageService;
+import cn.foxtech.proxy.cloud.common.service.EntityManageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -55,7 +56,10 @@ public class CloudEntityRemoteService {
     private String foxServiceName = "undefinedServiceName";
 
     @Autowired
-    private CloudEntityManageService manageService;
+    private ConfigManageService configManageService;
+
+    @Autowired
+    private EntityManageService manageService;
 
     @Autowired
     private RedisConsoleService consoleService;
@@ -80,24 +84,21 @@ public class CloudEntityRemoteService {
      * @throws IOException
      */
     public synchronized void login() throws IOException {
-        // 获得账号/密码
-        ConfigEntity configEntity = this.manageService.getConfigEntity(this.foxServiceName, this.foxServiceType, "cloudService");
-        if (configEntity == null) {
-            throw new RuntimeException("登录云端服务器：从Redis配置中获得账号/密码失败！");
-        }
+        // 获得账号密码
+        Map<String, Object> configs = this.configManageService.loadInitConfig("publisherConfig", "publisherConfig.json");
 
         // 取出信息
-        this.uri = (String) configEntity.getConfigValue().getOrDefault("host", "http://localhost:8080");
-        this.username = (String) configEntity.getConfigValue().getOrDefault("username", "username");
-        this.password = (String) configEntity.getConfigValue().getOrDefault("password", "");
-        this.lockdown = (Integer) configEntity.getConfigValue().getOrDefault("lockdown", 60);
+        this.uri = (String) configs.getOrDefault("host", "http://localhost:8080");
+        this.username = (String) configs.getOrDefault("username", "username");
+        this.password = (String) configs.getOrDefault("password", "");
+        this.lockdown = (Integer) configs.getOrDefault("lockdown", 60);
 
         Map<String, Object> request = new HashMap<>();
         request.put("username", this.username);
         request.put("password", this.password);
 
         // 不用产生后台日志：这个自动操作，会产生太多的垃圾数据
-        this.logger.info("登录云端服务器：开始登录！");
+        logger.info("登录云端服务器：开始登录！");
 
         // 发送请求
         Map<String, Object> respond = HttpClientUtil.executePost(this.uri + "/auth/login", request, Map.class);
@@ -126,7 +127,7 @@ public class CloudEntityRemoteService {
 
         String logMessage = "登录云端服务器：登录成功！";
         this.consoleService.info(logMessage);
-        this.logger.info(logMessage);
+        logger.info(logMessage);
     }
 
     public <REQ> Map<String, Object> executePost(String res, REQ requestVO) throws IOException {

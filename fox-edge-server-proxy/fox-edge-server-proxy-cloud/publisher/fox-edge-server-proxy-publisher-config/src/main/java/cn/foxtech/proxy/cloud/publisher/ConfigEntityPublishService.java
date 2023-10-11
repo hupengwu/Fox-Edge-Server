@@ -5,7 +5,7 @@ import cn.foxtech.common.entity.service.redis.AgileMapRedisService;
 import cn.foxtech.common.entity.service.redis.HashMapRedisService;
 import cn.foxtech.common.utils.osinfo.OSInfoUtils;
 import cn.foxtech.core.exception.ServiceException;
-import cn.foxtech.proxy.cloud.publisher.service.CloudEntityManageService;
+import cn.foxtech.proxy.cloud.common.service.EntityManageService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,7 +32,7 @@ public class ConfigEntityPublishService {
      * 数据实体管理者
      */
     @Autowired
-    private CloudEntityManageService publishEntityManageService;
+    private EntityManageService publishEntityManageService;
 
     /**
      * 实体同步到云端

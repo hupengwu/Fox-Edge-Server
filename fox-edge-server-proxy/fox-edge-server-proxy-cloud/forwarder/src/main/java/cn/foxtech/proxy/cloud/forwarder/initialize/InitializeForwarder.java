@@ -25,11 +25,7 @@ public class InitializeForwarder {
     @Autowired
     private MqttClientService mqttClientService;
 
-
     public void initialize() {
-        this.configManageService.loadInitConfig("forwarderConfig", "forwarderConfig.json");
-
-
         // 初始化restful服务
         this.httpRestfulProxyService.Initialize();
 

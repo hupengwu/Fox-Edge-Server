@@ -1,7 +1,7 @@
 package cn.foxtech.proxy.cloud.publisher;
 
 import cn.foxtech.common.entity.constant.EntityPublishConstant;
-import cn.foxtech.proxy.cloud.publisher.service.CloudEntityManageService;
+import cn.foxtech.proxy.cloud.common.service.EntityManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +17,7 @@ public class ValueEntityLocalDataBase {
     private final Map<String, Long> entityServiceMap = new ConcurrentHashMap<>();
 
     @Autowired
-    private CloudEntityManageService entityManageService;
+    private EntityManageService entityManageService;
 
     public Set<String> getEntityTypeList() {
         // 查询各服务的发布订阅

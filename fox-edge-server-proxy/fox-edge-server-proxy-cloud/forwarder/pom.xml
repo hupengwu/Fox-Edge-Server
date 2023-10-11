@@ -50,10 +50,9 @@
 
         <dependency>
             <groupId>net.dreamlu</groupId>
-            <artifactId>mica-mqtt-client-spring-boot-starter</artifactId>
+            <artifactId>mica-mqtt-client</artifactId>
             <version>${mica-mqtt.version}</version>
         </dependency>
-
 
         <dependency>
             <groupId>cn.fox-tech</groupId>

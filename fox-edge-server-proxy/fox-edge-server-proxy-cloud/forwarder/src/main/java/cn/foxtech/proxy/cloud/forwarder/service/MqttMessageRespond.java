@@ -2,14 +2,13 @@ package cn.foxtech.proxy.cloud.forwarder.service;
 
 
 import cn.foxtech.common.utils.json.JsonUtils;
-import cn.foxtech.proxy.cloud.forwarder.config.ApplicationConfig;
-import cn.foxtech.proxy.cloud.forwarder.vo.RestfulLikeRequestVO;
-import cn.foxtech.proxy.cloud.forwarder.vo.RestfulLikeRespondVO;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import cn.foxtech.core.exception.ServiceException;
+import cn.foxtech.proxy.cloud.forwarder.config.ApplicationConfig;
 import cn.foxtech.proxy.cloud.forwarder.service.proxy.HttpRestfulProxyService;
 import cn.foxtech.proxy.cloud.forwarder.service.proxy.RedisTopicProxyService;
-import net.dreamlu.iot.mqtt.spring.client.MqttClientTemplate;
+import cn.foxtech.proxy.cloud.forwarder.vo.RestfulLikeRequestVO;
+import cn.foxtech.proxy.cloud.forwarder.vo.RestfulLikeRespondVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +30,7 @@ public class MqttMessageRespond extends PeriodTaskService {
     private MqttMessageMapping mqttMessageQueue;
 
     @Autowired
-    private MqttClientTemplate mqttClientTemplate;
+    private MqttClientService clientService;
 
     @Autowired
     private ApplicationConfig constant;
@@ -53,7 +52,7 @@ public class MqttMessageRespond extends PeriodTaskService {
                 String rspContext = JsonUtils.buildJson(respondVO);
 
                 String pubTopic = this.constant.getPublish();
-                this.mqttClientTemplate.publish(pubTopic, rspContext.getBytes(StandardCharsets.UTF_8));
+                this.clientService.getMqttClient().publish(pubTopic, rspContext.getBytes(StandardCharsets.UTF_8));
             }
         }
 
@@ -71,7 +70,7 @@ public class MqttMessageRespond extends PeriodTaskService {
                 // 返回响应消息
                 String rspContext = JsonUtils.buildJson(respondVO);
                 String pubTopic = this.constant.getPublish();
-                this.mqttClientTemplate.publish(pubTopic, rspContext.getBytes(StandardCharsets.UTF_8));
+                this.clientService.getMqttClient().publish(pubTopic, rspContext.getBytes(StandardCharsets.UTF_8));
 
                 // 删除任务
                 this.mqttMessageQueue.deleteRequestVO(requestVO.getUuid());

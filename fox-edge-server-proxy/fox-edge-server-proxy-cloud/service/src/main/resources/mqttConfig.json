@@ -1,0 +1,31 @@
+{
+  "configValue": {
+    "mqtt": {
+      "client": {
+        "ip": "39.108.137.38",
+        "name": "Mica-Mqtt-Client",
+        "port": 1883,
+        "topic": {
+          "publish": "/fox/edge/proxy/%s/request",
+          "subscribe": "/fox/edge/proxy/%s/respond"
+        },
+        "enabled": true,
+        "timeout": 5,
+        "use-ssl": false,
+        "version": "mqtt_3_1_1",
+        "clientId": "000001",
+        "password": 123456,
+        "reconnect": true,
+        "user-name": "mica",
+        "re-interval": 5000,
+        "clean-session": true,
+        "keep-alive-secs": 60,
+        "buffer-allocator": "heap",
+        "read-buffer-size": "8KB",
+        "max-bytes-in-message": "10MB"
+      }
+    }
+  },
+  "configParam": {},
+  "remark": "连接云端MQTT Broker的MQTT配置\\n\\nenabled: true   # 是否开启客户端，默认：true\\nip: 120.79.69.201  # 连接的服务端 ip ，默认：127.0.0.1\\nport: 1883  # 端口：默认：1883\\nname: Mica-Mqtt-Client  # 名称，默认：Mica-Mqtt-Client\\nclientId: 000001# 客户端Id（非常重要，一般为设备 sn，不可重复）\\nuser-name: mica # 认证的用户名\\npassword: 123456# 认证的密码\\ntimeout: 5  # 超时时间，单位：秒，默认：5秒\\nreconnect: true # 是否重连，默认：true\\nre-interval: 5000   # 重连时间，默认 5000 毫秒\\nversion: mqtt_3_1_1 # mqtt 协议版本，可选 MQTT_3_1、mqtt_3_1_1、mqtt_5，默认：mqtt_3_1_1\\nread-buffer-size: 8KB   # 接收数据的 buffer size，默认：8k\\nmax-bytes-in-message: 10MB  # 消息解析最大 bytes 长度，默认：10M\\nbuffer-allocator: heap  # 堆内存和堆外内存，默认：堆内存\\nkeep-alive-secs: 60 # keep-alive 时间，单位：秒\\nclean-session: true # mqtt clean session，默认：true\\nuse-ssl: false  # 是否启用 ssl，默认：false\\n\\ntopic: # 上位机的接收响应topic：设备会把数据写入这个位置，其中#是设备的ID，MqttClient可以订阅这个消息\\nsubscribe: \\\"/fox/edge/proxy/%s/respond\\\"\\npublish: \\\"/fox/edge/proxy/%s/request\\\" # 设备的接收请求topic：设备模在这个位置等待消息，其中#是设备的ID，MqttClient可以把对设备的请求发布到这个位置"
+}

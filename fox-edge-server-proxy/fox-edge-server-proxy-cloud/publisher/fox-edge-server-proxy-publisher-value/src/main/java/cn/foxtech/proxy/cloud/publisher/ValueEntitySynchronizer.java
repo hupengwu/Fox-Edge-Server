@@ -2,7 +2,7 @@ package cn.foxtech.proxy.cloud.publisher;
 
 import cn.foxtech.common.constant.HttpStatus;
 import cn.foxtech.common.entity.service.redis.RedisReader;
-import cn.foxtech.proxy.cloud.publisher.service.CloudEntityManageService;
+import cn.foxtech.proxy.cloud.common.service.EntityManageService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,7 +33,7 @@ public class ValueEntitySynchronizer {
     private ValueEntityLocalDataBase entityLocalDataBase;
 
     @Autowired
-    private CloudEntityManageService publishEntityManageService;
+    private EntityManageService publishEntityManageService;
 
     /**
      * 云端发布者

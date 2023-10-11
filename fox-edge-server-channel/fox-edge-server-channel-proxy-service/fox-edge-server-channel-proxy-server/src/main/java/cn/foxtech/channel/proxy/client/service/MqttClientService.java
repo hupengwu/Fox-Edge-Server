@@ -24,7 +24,7 @@ import java.util.UUID;
 /**
  * @author wsq
  */
-@Component
+//@Component
 @Getter(value = AccessLevel.PUBLIC)
 public class MqttClientService {
     private static final Logger logger = LoggerFactory.getLogger(MqttClientService.class);

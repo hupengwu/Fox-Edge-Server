@@ -1,10 +1,18 @@
 {
   "configValue": {
-    "host": "http://120.25.241.120:8080",
+    "host": "http://cloud.fox-tech.cn/prod-api",
     "username": "fox-edge",
     "password": "12345678",
     "lockdown": 60
   },
-  "configParam": {},
+  "configParam": {
+    "list": [{
+      "saveMode": "Raw",
+      "showMode": "Security",
+      "fieldName": "password",
+      "valueType": "string",
+      "defaultValue": ""
+    }]
+  },
   "remark": "proxy-cloud-service服务所需要的云端配置：\n\nhost：云端fox-cloud的API服务器\nusername：fox-cloud上的账号\npassword：fox-cloud上的密码\nlockdown：为了避免登录失败后，反复登录fox-cloud，需要等待一段时间，避免被fox-cloud认为是恶意攻击"
 }
