@@ -32,9 +32,6 @@ public class InitializePublisher {
 
 
     public void initialize() {
-        // 初始化启动参数：向管理服务注册cloudService初始化信息
-        this.configManageService.loadInitConfig("publisherConfig", "publisherConfig.json");
-
         // 启动同步线程
         this.configEntityManageScheduler.schedule();
 

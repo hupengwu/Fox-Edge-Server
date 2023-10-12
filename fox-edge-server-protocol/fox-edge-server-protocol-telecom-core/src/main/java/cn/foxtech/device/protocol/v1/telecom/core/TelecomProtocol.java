@@ -587,10 +587,10 @@ public class TelecomProtocol {
 
 
         TelecomEntity entity = new TelecomEntity();
-        entity.setVer(Byte.decode(param.get(VER).toString()));
-        entity.setAddr(Byte.decode(param.get(ADR).toString()));
-        entity.setCID1(Byte.decode(param.get(CID1).toString()));
-        entity.setCID2(Byte.decode(param.get(CID2).toString()));
+        entity.setVer(Integer.decode(param.get(VER).toString()).byteValue());
+        entity.setAddr(Integer.decode(param.get(ADR).toString()).byteValue());
+        entity.setCID1(Integer.decode(param.get(CID1).toString()).byteValue());
+        entity.setCID2(Integer.decode(param.get(CID2).toString()).byteValue());
         entity.setData((byte[]) param.get(INFO));
 
         return packCmd4Entity(entity);

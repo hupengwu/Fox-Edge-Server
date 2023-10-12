@@ -96,7 +96,7 @@ public abstract class ModBusProtocol {
         }
 
         ModBusReadRegistersRequest request = new ModBusReadRegistersRequest();
-        request.getEntity().setDevAddr(Byte.decode(param.get(ModBusConstants.ADDR).toString()));
+        request.getEntity().setDevAddr(Integer.decode(param.get(ModBusConstants.ADDR).toString()).byteValue());
         request.setMemAddr(Integer.decode(param.get(ModBusConstants.REG_ADDR).toString()));
         request.setCount(Integer.decode(param.get(ModBusConstants.REG_CNT).toString()));
         if (param.containsKey(ModBusConstants.SN)) {
@@ -158,7 +158,7 @@ public abstract class ModBusProtocol {
         }
 
         ModBusReadStatusRequest request = new ModBusReadStatusRequest();
-        request.getEntity().setDevAddr(Byte.decode(param.get(ModBusConstants.ADDR).toString()));
+        request.getEntity().setDevAddr(Integer.decode(param.get(ModBusConstants.ADDR).toString()).byteValue());
         request.setMemAddr(Integer.decode(param.get(ModBusConstants.REG_ADDR).toString()));
         request.setCount(Integer.decode(param.get(ModBusConstants.REG_CNT).toString()));
         if (param.containsKey(ModBusConstants.SN)) {

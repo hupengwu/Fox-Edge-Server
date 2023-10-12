@@ -60,8 +60,8 @@ public class MqttClientService {
         this.configService.initialize(configs);
 
 
-        String subTopic = String.format(this.configService.getSubscribe(), this.edgeId);
-        String pubTopic = String.format(this.configService.getPublish(), this.edgeId);
+        String subTopic = this.configService.getSubscribe().replace("{devId}",this.edgeId);
+        String pubTopic = this.configService.getPublish().replace("{devId}",this.edgeId);
         String clientId = this.configService.getClientId() + ":" + UUID.randomUUID().toString().replace("-", "");
 
         logger.info("mqtt clientId       :" + clientId);

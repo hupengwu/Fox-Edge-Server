@@ -116,8 +116,8 @@ public class ModBusTcpProtocol extends ModBusProtocol {
 
         ModBusEntity entity = new ModBusEntity();
         entity.setSn(Integer.decode(param.get(ModBusConstants.SN).toString()));
-        entity.setDevAddr(Byte.decode(param.get(ModBusConstants.ADDR).toString()));
-        entity.setFunc(Byte.decode(param.get(ModBusConstants.FUNC).toString()));
+        entity.setDevAddr(Integer.decode(param.get(ModBusConstants.ADDR).toString()).byteValue());
+        entity.setFunc(Integer.decode(param.get(ModBusConstants.FUNC).toString()).byteValue());
         entity.setData(((byte[]) param.get(ModBusConstants.DATA)));
 
         return packCmd4Entity(entity);

@@ -89,8 +89,8 @@ public class ModBusRtuProtocol extends ModBusProtocol {
         }
 
         ModBusEntity entity = new ModBusEntity();
-        entity.setDevAddr(Byte.decode(param.get(ModBusConstants.ADDR).toString()));
-        entity.setFunc(Byte.decode(param.get(ModBusConstants.FUNC).toString()));
+        entity.setDevAddr(Integer.decode(param.get(ModBusConstants.ADDR).toString()).byteValue());
+        entity.setFunc(Integer.decode(param.get(ModBusConstants.FUNC).toString()).byteValue());
         entity.setData(((byte[]) param.get(ModBusConstants.DATA)));
 
 

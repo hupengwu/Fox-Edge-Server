@@ -272,7 +272,7 @@ public class DLT645Protocol {
             return null;
         }
 
-        byte byFun = Byte.decode(param.get(FUN).toString());
+        byte byFun = Integer.decode(param.get(FUN).toString()).byteValue();
         byte[] byAddr = (byte[]) (param.get(ADR));
         byte[] arrData = (byte[]) (param.get(DAT));
 

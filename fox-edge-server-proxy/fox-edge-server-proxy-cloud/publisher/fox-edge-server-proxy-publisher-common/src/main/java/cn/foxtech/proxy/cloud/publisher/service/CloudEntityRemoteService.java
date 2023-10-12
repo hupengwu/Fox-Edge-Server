@@ -85,7 +85,7 @@ public class CloudEntityRemoteService {
      */
     public synchronized void login() throws IOException {
         // 获得账号密码
-        Map<String, Object> configs = this.configManageService.loadInitConfig("publisherConfig", "publisherConfig.json");
+        Map<String, Object> configs = this.configManageService.loadInitConfig("httpConfig", "httpConfig.json");
 
         // 取出信息
         this.uri = (String) configs.getOrDefault("host", "http://localhost:8080");

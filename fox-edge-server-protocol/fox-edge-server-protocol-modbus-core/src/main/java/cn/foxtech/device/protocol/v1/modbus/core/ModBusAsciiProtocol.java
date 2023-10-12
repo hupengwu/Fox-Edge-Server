@@ -235,8 +235,8 @@ public class ModBusAsciiProtocol extends ModBusProtocol {
         }
 
         ModBusEntity entity = new ModBusEntity();
-        entity.setDevAddr(Byte.decode(param.get(ModBusConstants.ADDR).toString()));
-        entity.setFunc(Byte.decode(param.get(ModBusConstants.FUNC).toString()));
+        entity.setDevAddr(Integer.decode(param.get(ModBusConstants.ADDR).toString()).byteValue());
+        entity.setFunc(Integer.decode(param.get(ModBusConstants.FUNC).toString()).byteValue());
         entity.setData(((byte[]) param.get(ModBusConstants.DATA)));
 
         return packCmd4Entity(entity);
@@ -335,8 +335,8 @@ public class ModBusAsciiProtocol extends ModBusProtocol {
             return null;
         }
 
-        byte byAddr = Byte.decode(param.get(ModBusConstants.ADDR).toString());
-        byte byFunc = Byte.decode(param.get(ModBusConstants.FUNC).toString());
+        byte byAddr = Integer.decode(param.get(ModBusConstants.ADDR).toString()).byteValue();
+        byte byFunc = Integer.decode(param.get(ModBusConstants.FUNC).toString()).byteValue();
         byte[] arrData = ((byte[]) param.get(ModBusConstants.DATA));
 
         ModBusEntity entity = new ModBusEntity();
