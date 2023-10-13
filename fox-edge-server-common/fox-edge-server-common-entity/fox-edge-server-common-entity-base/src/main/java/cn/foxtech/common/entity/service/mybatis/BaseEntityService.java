@@ -5,6 +5,7 @@ import cn.foxtech.common.entity.entity.BaseEntity;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -80,6 +81,10 @@ public abstract class BaseEntityService {
 
     public List selectListBatchIds(List idList) {
         this.bindMapper();
+
+        if (idList.isEmpty()){
+            return new ArrayList<>();
+        }
 
         return mapper.selectBatchIds(idList);
     }

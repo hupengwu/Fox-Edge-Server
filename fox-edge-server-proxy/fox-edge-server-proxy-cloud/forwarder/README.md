@@ -34,180 +34,49 @@
 
 ``` 
 1、查询system 通道查询API 接口
-发送：/fox/edge/proxy/BFEBFBFF000406E3/request
-{
-	"uuid": "1b1df78266b9449c9d5705f821a2b4c1",
-	"resource": "/manager/system/channel/entities",
-	"method": "get"
-}
-返回：/fox/edge/proxy/BFEBFBFF000406E3/respond
-{
-  "uuid" : "1b1df78266b9449c9d5705f821a2b4c1",
-  "resource" : "/manager/system/channel/entities",
-  "method" : "get",
-  "body" : {
-    "msg" : "操作成功",
-    "code" : 200,
-    "data" : [ {
-      "createTime" : 1651843479427,
-      "channelName" : "slaver1",
-      "channelType" : "iec104-master",
-      "updateTime" : 1651843479427,
-      "id" : 14
-    }, {
-      "createTime" : 1651843479427,
-      "channelName" : "/v1/device/request/12345",
-      "channelType" : "mqtt_client",
-      "updateTime" : 1651843479427,
-      "id" : 20
-    }, {
-      "createTime" : 1651843479555,
-      "channelName" : "COM5",
-      "channelType" : "forward",
-      "updateTime" : 1651843479555,
-      "id" : 18
-    }, {
-      "createTime" : 1651843479427,
-      "channelName" : "channel-simulator",
-      "channelType" : "simulator",
-      "updateTime" : 1651843479427,
-      "id" : 16
-    }, {
-      "createTime" : 1651843479358,
-      "channelName" : "COM3",
-      "channelType" : "serialport",
-      "updateTime" : 1651843479358,
-      "id" : 15
-    }, {
-      "createTime" : 1651843479595,
-      "channelName" : "COM1",
-      "channelType" : "forward",
-      "updateTime" : 1651843479595,
-      "id" : 19
-    }, {
-      "createTime" : 1651843479520,
-      "channelName" : "COM9",
-      "channelType" : "forward",
-      "updateTime" : 1651843479520,
-      "id" : 17
-    } ]
-  },
-  "msg" : "",
-  "code" : 200
-}
-
-2、查询system 通道查询API 接口
 发送：/fox/edge/proxy/BFEBFBFF000906A3/request
 {
 	"uuid": "1b1df78266b9449c9d5705f821a2b4c1",
-	"resource": "/manager/system/device/value/page",
+	"resource": "/kernel/manager/channel/page",
 	"method": "post",
 	"body": {
 		"pageNum": 1,
-		"pageSize": 10
+		"pageSize": 2
 	}
 }
-
 返回：/fox/edge/proxy/BFEBFBFF000906A3/respond
 {
 	"uuid": "1b1df78266b9449c9d5705f821a2b4c1",
-	"resource": "/manager/system/device/value/page",
+	"resource": "/kernel/manager/channel/page",
 	"method": "post",
 	"body": {
 		"msg": "操作成功",
 		"code": 200,
 		"data": {
-			"total": 95606,
+			"total": 24,
 			"list": [{
-				"deviceType": "ZXDU58",
-				"createTime": 1670924863349,
-				"objectName": "模块02输出电流",
-				"updateTime": 1676632838084,
-				"objectValue": 3.9799995,
-				"objectTime": 2329,
-				"id": 532131,
-				"deviceName": "浙江移动-丽水移动-丹霞山5号基站-4号电源设备"
+				"channelParam": {
+					"ip": "127.0.0.1",
+					"port": 102,
+					"rack": 0,
+					"slot": 1,
+					"plcType": "S1200"
+				},
+				"createTime": 1696820977407,
+				"channelName": "西门子-S7-PLC-1",
+				"channelType": "s7plc",
+				"updateTime": 1696907665211,
+				"id": 59
 			}, {
-				"deviceType": "ZXDU58",
-				"createTime": 1670924864924,
-				"objectName": "模块07输出电流",
-				"updateTime": 1676632838084,
-				"objectValue": 3.8999999,
-				"objectTime": 2329,
-				"id": 532132,
-				"deviceName": "浙江移动-丽水移动-丹霞山5号基站-4号电源设备"
-			}, {
-				"deviceType": "ZXDU58",
-				"createTime": 1670924865007,
-				"objectName": "模块04输出电流",
-				"updateTime": 1676632838084,
-				"objectValue": 3.9799995,
-				"objectTime": 2329,
-				"id": 532133,
-				"deviceName": "浙江移动-丽水移动-丹霞山5号基站-4号电源设备"
-			}, {
-				"deviceType": "ZXDU58",
-				"createTime": 1670924865071,
-				"objectName": "模块12输出电流",
-				"updateTime": 1676632838084,
-				"objectValue": 0.0,
-				"objectTime": 2329,
-				"id": 532134,
-				"deviceName": "浙江移动-丽水移动-丹霞山5号基站-4号电源设备"
-			}, {
-				"deviceType": "ZXDU58",
-				"createTime": 1670924865113,
-				"objectName": "模块06输出电流",
-				"updateTime": 1676632838084,
-				"objectValue": 4.0,
-				"objectTime": 2329,
-				"id": 532135,
-				"deviceName": "浙江移动-丽水移动-丹霞山5号基站-4号电源设备"
-			}, {
-				"deviceType": "ZXDU58",
-				"createTime": 1670924865161,
-				"objectName": "模块10输出电流",
-				"updateTime": 1676632838084,
-				"objectValue": 0.0,
-				"objectTime": 2329,
-				"id": 532136,
-				"deviceName": "浙江移动-丽水移动-丹霞山5号基站-4号电源设备"
-			}, {
-				"deviceType": "ZXDU58",
-				"createTime": 1670924865202,
-				"objectName": "模块08输出电流",
-				"updateTime": 1676632838084,
-				"objectValue": 0.0,
-				"objectTime": 2329,
-				"id": 532137,
-				"deviceName": "浙江移动-丽水移动-丹霞山5号基站-4号电源设备"
-			}, {
-				"deviceType": "ZXDU58",
-				"createTime": 1670924865232,
-				"objectName": "整流模块数量",
-				"updateTime": 1676632838084,
-				"objectValue": 12,
-				"objectTime": 2329,
-				"id": 532138,
-				"deviceName": "浙江移动-丽水移动-丹霞山5号基站-4号电源设备"
-			}, {
-				"deviceType": "ZXDU58",
-				"createTime": 1670924865308,
-				"objectName": "模块03输出电流",
-				"updateTime": 1676632838084,
-				"objectValue": 3.8199997,
-				"objectTime": 2329,
-				"id": 532139,
-				"deviceName": "浙江移动-丽水移动-丹霞山5号基站-4号电源设备"
-			}, {
-				"deviceType": "ZXDU58",
-				"createTime": 1670924865405,
-				"objectName": "模块01输出电流",
-				"updateTime": 1676632838084,
-				"objectValue": 3.76,
-				"objectTime": 2329,
-				"id": 532140,
-				"deviceName": "浙江移动-丽水移动-丹霞山5号基站-4号电源设备"
+				"channelParam": {
+					"host": "192.168.2.80",
+					"port": 9528
+				},
+				"createTime": 1695801924643,
+				"channelName": "192.168.2.80:9527",
+				"channelType": "tcp-client",
+				"updateTime": 1695801924643,
+				"id": 58
 			}]
 		}
 	},

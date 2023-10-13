@@ -2,8 +2,6 @@ package cn.foxtech.common.entity.manager;
 
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.service.redis.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import cn.foxtech.common.entity.service.redis.*;
 import cn.foxtech.utils.common.utils.redis.service.RedisService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +56,15 @@ public class EntityRedisComponent {
             return (T) consumerRedisService.getEntity(entityKey);
         }
 
+        if (this.reader.contains(clazz.getSimpleName())) {
+            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisTemplate);
+            try {
+                return (T) redisReader.readEntity(entityKey);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
         return null;
     }
 
@@ -70,7 +77,7 @@ public class EntityRedisComponent {
         return null;
     }
 
-    protected <T> Map<String, Object> readHashMap(String entityKey, Class<T> clazz){
+    protected <T> Map<String, Object> readHashMap(String entityKey, Class<T> clazz) {
         if (this.reader.contains(clazz.getSimpleName())) {
             RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisTemplate);
             return redisReader.readHashMap(entityKey);

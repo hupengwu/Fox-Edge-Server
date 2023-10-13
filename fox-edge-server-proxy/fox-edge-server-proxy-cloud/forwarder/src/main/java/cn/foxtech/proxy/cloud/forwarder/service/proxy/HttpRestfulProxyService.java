@@ -1,12 +1,13 @@
 package cn.foxtech.proxy.cloud.forwarder.service.proxy;
 
 import cn.foxtech.common.constant.HttpStatus;
+import cn.foxtech.common.utils.http.HttpClientUtils;
 import cn.foxtech.common.utils.json.JsonUtils;
+import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.proxy.cloud.forwarder.config.ApplicationConfig;
 import cn.foxtech.proxy.cloud.forwarder.vo.RestfulLikeRequestVO;
 import cn.foxtech.proxy.cloud.forwarder.vo.RestfulLikeRespondVO;
-import cn.foxtech.common.utils.http.HttpClientUtils;
-import cn.foxtech.core.exception.ServiceException;
+import cn.hutool.http.HttpResponse;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,13 @@ public class HttpRestfulProxyService {
     @Autowired
     private ApplicationConfig constant;
 
+    @Autowired
+    private HttpProxyService httpProxyService;
+
 
     public void Initialize() {
         // manager-system服务
-        this.proxyMapping.put("/manager/system", "http://localhost:9000");
+        this.proxyMapping.put("/kernel/manager", "http://localhost:9000");
         // gateway的user服务
         this.proxyMapping.put("/user", "http://localhost:9000");
     }
@@ -78,7 +82,7 @@ public class HttpRestfulProxyService {
             // 执行restful请求
             String method = requestVO.getMethod();
             String json = JsonUtils.buildJson(requestVO.getBody());
-            Map body = this.executeRestful(host, requestVO.getResource(), method, json);
+            Map body = this.httpProxyService.executeRestful(requestVO.getResource(), method, json);
 
             // 返回操作结果
             RestfulLikeRespondVO respondVO = new RestfulLikeRespondVO();
@@ -103,16 +107,19 @@ public class HttpRestfulProxyService {
      * @param json     报文
      * @return 返回内容
      */
-    private Map executeRestful(String host, String resource, String method, String json) throws IOException {
+    private Map executeRestful1(String host, String resource, String method, String json) throws IOException {
         // 发送restful请求
         String respond = HttpClientUtils.executeRestful(host + resource, method, json).body();
         Map body = JsonUtils.buildObject(respond, Map.class);
 
-        // 检查：是否因为登录问题被拒绝
-        if (this.isNotLogin(body)) {
+        // 检查：是否因为登录问题被拒绝，此时返回401错误
+        if (HttpStatus.NOT_LOGIN.equals(body.get("code"))) {
+
+            Map<String, Object> result = this.httpProxyService.executeRestful(resource, method, json);
+
             // 登录
-            String url = host + "/user/login?username=" + this.constant.getLoginUserName() + "&password=" + this.constant.getLoginPassword();
-            HttpClientUtils.executeRestful(url, "get");
+            String url = host + "/auth/login?username=" + this.constant.getLoginUserName() + "&password=" + this.constant.getLoginPassword();
+            HttpResponse response = HttpClientUtils.executeRestful(url, "get");
 
             // 再次发送请求
             respond = HttpClientUtils.executeRestful(host + resource, method, json).body();
@@ -120,23 +127,5 @@ public class HttpRestfulProxyService {
         }
 
         return body;
-    }
-
-    /**
-     * 检查返回的内容是否为登录失败的响应
-     * 特征是出错码=500，data=null，msg包含token字符串特征
-     *
-     * @param body
-     * @return
-     */
-    private boolean isNotLogin(Map body) {
-        if (!Integer.valueOf(HttpStatus.NOT_LOGIN).equals(body.get("code"))) {
-            return false;
-        }
-        if (body.get("data") == null) {
-            return false;
-        }
-        String msg = (String) body.get("msg");
-        return msg != null;
     }
 }
