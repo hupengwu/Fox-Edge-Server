@@ -9,7 +9,7 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>fox-edge-server-channel-opc-ua-service</artifactId>
+    <artifactId>fox-edge-server-channel-opc-ua</artifactId>
     <version>${revision}</version>
     <name>${project.artifactId}</name>
     <description>${project.artifactId}</description>
@@ -87,19 +87,19 @@
         <dependency>
             <groupId>org.eclipse.milo</groupId>
             <artifactId>stack-client</artifactId>
-            <version>0.6.9</version>
+            <version>0.6.10</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.milo</groupId>
             <artifactId>stack-server</artifactId>
-            <version>0.6.9</version>
+            <version>0.6.10</version>
         </dependency>
 
         <!--Milo客户端的依赖-->
         <dependency>
             <groupId>org.eclipse.milo</groupId>
             <artifactId>sdk-client</artifactId>
-            <version>0.6.9</version>
+            <version>0.6.10</version>
         </dependency>
 
         <dependency>

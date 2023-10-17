@@ -2,6 +2,7 @@ package cn.foxtech.proxy.cloud.publisher.service;
 
 import cn.foxtech.common.constant.HttpStatus;
 import cn.foxtech.core.exception.ServiceException;
+import cn.foxtech.proxy.cloud.common.service.RemoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ import java.util.Set;
  */
 public abstract class EntityRemoteCloudService {
     @Autowired
-    private CloudEntityRemoteService remoteService;
+    private RemoteService remoteService;
 
     public abstract String getUrlTimestamp();
 

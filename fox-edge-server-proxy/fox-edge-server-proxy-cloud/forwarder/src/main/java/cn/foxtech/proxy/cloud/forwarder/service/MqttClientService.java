@@ -19,6 +19,7 @@ import org.tio.core.ChannelContext;
 import org.tio.utils.buffer.ByteBufferUtil;
 
 import java.nio.ByteBuffer;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -54,10 +55,12 @@ public class MqttClientService {
     private ConfigManageService configManageService;
 
     public boolean Initialize() {
-        Map<String, Object> configs = this.configManageService.loadInitConfig("mqttConfig", "mqttConfig.json");
+        Map<String, Object> configs = this.configManageService.loadInitConfig("serverConfig", "serverConfig.json");
+        Map<String, Object> cloudConfig = (Map<String, Object>)configs.getOrDefault("cloud",new HashMap<>());
+        Map<String, Object> mqttConfig = (Map<String, Object>)cloudConfig.getOrDefault("mqtt",new HashMap<>());
 
         // 初始化配置
-        this.configService.initialize(configs);
+        this.configService.initialize(mqttConfig);
 
 
         String subTopic = this.configService.getSubscribe().replace("{devId}",this.edgeId);

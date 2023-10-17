@@ -4,6 +4,7 @@ import cn.foxtech.common.constant.HttpStatus;
 import cn.foxtech.common.utils.http.HttpClientUtils;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.core.exception.ServiceException;
+import cn.foxtech.proxy.cloud.common.service.proxy.LocalHttpProxyService;
 import cn.foxtech.proxy.cloud.forwarder.config.ApplicationConfig;
 import cn.foxtech.proxy.cloud.forwarder.vo.RestfulLikeRequestVO;
 import cn.foxtech.proxy.cloud.forwarder.vo.RestfulLikeRespondVO;
@@ -29,7 +30,7 @@ public class HttpRestfulProxyService {
     private ApplicationConfig constant;
 
     @Autowired
-    private HttpProxyService httpProxyService;
+    private LocalHttpProxyService localHttpProxyService;
 
 
     public void Initialize() {
@@ -82,7 +83,7 @@ public class HttpRestfulProxyService {
             // 执行restful请求
             String method = requestVO.getMethod();
             String json = JsonUtils.buildJson(requestVO.getBody());
-            Map body = this.httpProxyService.executeRestful(requestVO.getResource(), method, json);
+            Map body = this.localHttpProxyService.executeRestful(requestVO.getResource(), method, json);
 
             // 返回操作结果
             RestfulLikeRespondVO respondVO = new RestfulLikeRespondVO();
@@ -115,7 +116,7 @@ public class HttpRestfulProxyService {
         // 检查：是否因为登录问题被拒绝，此时返回401错误
         if (HttpStatus.NOT_LOGIN.equals(body.get("code"))) {
 
-            Map<String, Object> result = this.httpProxyService.executeRestful(resource, method, json);
+            Map<String, Object> result = this.localHttpProxyService.executeRestful(resource, method, json);
 
             // 登录
             String url = host + "/auth/login?username=" + this.constant.getLoginUserName() + "&password=" + this.constant.getLoginPassword();

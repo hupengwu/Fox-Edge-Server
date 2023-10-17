@@ -1,4 +1,4 @@
-package cn.foxtech.proxy.cloud.forwarder.service.proxy;
+package cn.foxtech.proxy.cloud.common.service.proxy;
 
 import cn.foxtech.common.constant.HttpStatus;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
@@ -13,24 +13,27 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * 本地HTTP访问组件：访问本地gateway需要使用的http组件
+ */
 @Component
 @Getter(value = AccessLevel.PUBLIC)
-public class HttpProxyService {
-    private static final Logger logger = Logger.getLogger(HttpProxyService.class);
+public class LocalHttpProxyService {
+    private static final Logger logger = Logger.getLogger(LocalHttpProxyService.class);
 
     /**
      * header
      */
     private final Map<String, String> header = new ConcurrentHashMap<>();
     /**
-     * 云端服务
+     * 本地gateway的服务位置
      */
     private final String uri = "http://localhost:9000";
     /**
@@ -46,13 +49,6 @@ public class HttpProxyService {
      * 登录失败后，等60秒再重新登录，避免云端认为是恶意攻击，而锁定账号
      */
     private Integer lockdown = 60;
-
-
-    @Value("${spring.fox-service.service.type}")
-    private String foxServiceType = "undefinedServiceType";
-
-    @Value("${spring.fox-service.service.name}")
-    private String foxServiceName = "undefinedServiceName";
 
     @Autowired
     private ConfigManageService configManageService;
@@ -81,12 +77,13 @@ public class HttpProxyService {
      */
     public synchronized void login() throws IOException {
         // 获得账号密码
-        Map<String, Object> configs = this.configManageService.loadInitConfig("localConfig", "localConfig.json");
+        Map<String, Object> configs = this.configManageService.loadInitConfig("serverConfig", "serverConfig.json");
+        Map<String, Object> localConfig = (Map<String, Object>) configs.getOrDefault("local", new HashMap<>());
 
         // 取出信息
-        this.username = (String) configs.getOrDefault("username", "username");
-        this.password = (String) configs.getOrDefault("password", "");
-        this.lockdown = (Integer) configs.getOrDefault("lockdown", 60);
+        this.username = (String) localConfig.getOrDefault("username", "username");
+        this.password = (String) localConfig.getOrDefault("password", "");
+        this.lockdown = (Integer) localConfig.getOrDefault("lockdown", 60);
 
 
         // 不用产生后台日志：这个自动操作，会产生太多的垃圾数据

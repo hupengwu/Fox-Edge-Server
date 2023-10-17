@@ -3,6 +3,7 @@ package cn.foxtech.common.entity.service.config;
 import cn.foxtech.common.entity.constant.ConfigParamVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.ConfigEntity;
+import cn.foxtech.common.utils.Maps;
 import cn.foxtech.common.utils.method.MethodUtils;
 import lombok.AccessLevel;
 import lombok.Setter;
@@ -45,7 +46,7 @@ public class ConfigVOMaker {
     /**
      * 后期加工
      *
-     * @param entityList 实体列表
+     * @param entityList  实体列表
      * @param processMode 加工模式
      * @return 实体列表
      */
@@ -67,7 +68,7 @@ public class ConfigVOMaker {
     /**
      * 前期处理
      *
-     * @param param 参数
+     * @param param       参数
      * @param configValue 配置值
      */
     private void process(Map<String, Object> param, Map<String, Object> configValue, String processMode) {
@@ -78,13 +79,18 @@ public class ConfigVOMaker {
             String showMode = (String) param.get("showMode");
             String saveMode = (String) param.get("saveMode");
 
+            Object[] fields = fieldName.split("\\.");
+            Object value = Maps.getValue(configValue, fields);
+            if (value == null) {
+                value = defaultValue;
+            }
+
             // 至少包含fieldName和valueType字段
-            if (MethodUtils.hasEmpty(fieldName, valueType)) {
+            if (MethodUtils.hasEmpty(value)) {
                 return;
             }
 
             // 验证数值的类型是否正确
-            Object value = configValue.getOrDefault(fieldName, defaultValue);
             if (!verifyValueType(valueType, value)) {
                 return;
             }
@@ -92,19 +98,22 @@ public class ConfigVOMaker {
             // 下面是各种具体行为
 
 
+            // 隐藏信息用的覆盖字符串
+            String hideString = "****";
+
             // 后期处理
             if (ConfigVOMaker.mode_post.equals(processMode)) {
                 // 场景1：密码的安全显示
                 if ("Security".equals(showMode)) {
-                    configValue.put(fieldName, "****");
+                    Maps.setValue(configValue, fields, hideString);
                 }
             }
             // 前期处理
             if (ConfigVOMaker.mode_prev.equals(processMode)) {
                 // 场景1：密码的加密存储
-                if ("Security".equals(saveMode)) {
+                if ("Security".equals(saveMode) && !hideString.equals(value)) {
                     String newValue = this.saveMode.process(value);
-                    configValue.put(fieldName, newValue);
+                    Maps.setValue(configValue, fields, newValue);
                 }
             }
 

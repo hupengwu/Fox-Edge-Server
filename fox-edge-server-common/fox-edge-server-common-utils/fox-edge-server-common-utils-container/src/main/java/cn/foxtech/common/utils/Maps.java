@@ -96,7 +96,7 @@ public class Maps {
     /**
      * 获取多级路径的数据
      *
-     * @param map Map
+     * @param map  Map
      * @param keys 各级的Key
      * @return 返回的数值
      * @throws ClassCastException 类型转换异常
@@ -128,7 +128,7 @@ public class Maps {
     /**
      * 设置多级数据
      *
-     * @param map Map
+     * @param map  Map
      * @param keys 各级key
      * @throws ClassCastException 转换异常
      */
@@ -158,6 +158,36 @@ public class Maps {
         self.put(keys[keys.length - 2], keys[keys.length - 1]);
     }
 
+    public static void setValue(Map map, Object[] path, Object value) throws ClassCastException {
+        Map self = map;
+
+        for (int i = 0; i < path.length; i++) {
+            Object key = path[i];
+            Object child = self.get(key);
+
+            if (i < path.length - 1) {
+                // 如果为空，那么预创建该Map节点
+                if (child == null) {
+                    if (map instanceof HashMap) {
+                        child = new HashMap();
+                    } else if (map instanceof ConcurrentHashMap) {
+                        child = new ConcurrentHashMap();
+                    } else {
+                        throw new ClassCastException("只支持:HashMap和ConcurrentHashMap，而输入的是" + map.getClass().getSimpleName());
+                    }
+
+                    self.put(key, child);
+                }
+
+                // 切换节点
+                self = (Map) child;
+                continue;
+            }
+
+
+            self.put(key, value);
+        }
+    }
 
     public static void main(String[] args) {
         Map<String, Object> map = new ConcurrentHashMap<>();

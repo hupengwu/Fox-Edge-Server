@@ -6,7 +6,7 @@ import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.entity.service.redis.AgileMapRedisService;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import cn.foxtech.proxy.cloud.common.service.EntityManageService;
-import cn.foxtech.proxy.cloud.publisher.service.CloudEntityRemoteService;
+import cn.foxtech.proxy.cloud.common.service.RemoteService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,7 +42,7 @@ public class ConfigEntityManageScheduler extends PeriodTaskService {
     private ConfigEntityPublishService configEntityPublishService;
 
     @Autowired
-    private CloudEntityRemoteService remoteService;
+    private RemoteService remoteService;
 
     @Override
     public void execute(long threadId) throws Exception {

@@ -44,17 +44,17 @@ public class MqttConfigService {
 
     public void initialize(Map<String, Object> configs) {
         // 从redis中装载配置：如果redis没有，则默认采用application.yml的配置数据
-        this.ip = Maps.getOrDefault(configs, String.class, "mqtt", "client", "ip", this.ip);
-        this.port = Maps.getOrDefault(configs, Integer.class, "mqtt", "client", "port", this.port);
-        this.clientId = Maps.getOrDefault(configs, String.class, "mqtt", "client", "clientId", this.clientId);
-        this.userName = Maps.getOrDefault(configs, String.class, "mqtt", "client", "user-name", this.userName);
-        this.password = Maps.getOrDefault(configs, String.class, "mqtt", "client", "password", this.password);
-        this.name = Maps.getOrDefault(configs, String.class, "mqtt", "client", "name", this.name);
-        this.version = Maps.getOrDefault(configs, String.class, "mqtt", "client", "version", this.version);
-        this.keepAliveSecs = Maps.getOrDefault(configs, Integer.class, "mqtt", "client", "keep-alive-secs", this.keepAliveSecs);
-        this.reInterval = Maps.getOrDefault(configs, Integer.class, "mqtt", "client", "re-interval", this.reInterval);
+        this.ip = Maps.getOrDefault(configs, String.class, "ip", this.ip);
+        this.port = Maps.getOrDefault(configs, Integer.class, "port", this.port);
+        this.clientId = Maps.getOrDefault(configs, String.class, "clientId", this.clientId);
+        this.userName = Maps.getOrDefault(configs, String.class, "user-name", this.userName);
+        this.password = Maps.getOrDefault(configs, String.class, "password", this.password);
+        this.name = Maps.getOrDefault(configs, String.class, "name", this.name);
+        this.version = Maps.getOrDefault(configs, String.class, "version", this.version);
+        this.keepAliveSecs = Maps.getOrDefault(configs, Integer.class, "keep-alive-secs", this.keepAliveSecs);
+        this.reInterval = Maps.getOrDefault(configs, Integer.class, "re-interval", this.reInterval);
 
-        this.subscribe = Maps.getOrDefault(configs, String.class, "mqtt", "client", "topic", "subscribe", this.subscribe);
-        this.publish = Maps.getOrDefault(configs, String.class, "mqtt", "client", "topic", "publish", this.publish);
+        this.subscribe = Maps.getOrDefault(configs, String.class, "topic", "subscribe", this.subscribe);
+        this.publish = Maps.getOrDefault(configs, String.class, "topic", "publish", this.publish);
     }
 }

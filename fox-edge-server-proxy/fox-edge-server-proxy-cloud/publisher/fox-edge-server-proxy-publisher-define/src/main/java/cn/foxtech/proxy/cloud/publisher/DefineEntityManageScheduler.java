@@ -2,7 +2,7 @@ package cn.foxtech.proxy.cloud.publisher;
 
 import cn.foxtech.common.utils.osinfo.OSInfoUtils;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
-import cn.foxtech.proxy.cloud.publisher.service.CloudEntityRemoteService;
+import cn.foxtech.proxy.cloud.common.service.RemoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +21,7 @@ public class DefineEntityManageScheduler extends PeriodTaskService {
     private DefineEntitySynchronizer defineEntitySynchronizer;
 
     @Autowired
-    private CloudEntityRemoteService remoteService;
+    private RemoteService remoteService;
 
     @Override
     public void execute(long threadId) throws Exception {

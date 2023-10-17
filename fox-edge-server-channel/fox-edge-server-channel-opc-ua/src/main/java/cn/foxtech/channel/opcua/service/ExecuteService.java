@@ -140,6 +140,7 @@ public class ExecuteService {
 
         EndpointDescription endpoint = endpoints.stream().filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getUri())).filter(endpointFilter()).findFirst().orElseThrow(() -> new ServiceException("no desired endpoints returned"));
 
+
         // 验证方式：根据idp用户名/密码，确定是何种验证方式
         IdentityProvider identityProvider;
         if (MethodUtils.hasEmpty(channelEntity.getIdpUsername(), channelEntity.getIdpPassword())) {

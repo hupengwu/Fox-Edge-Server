@@ -34,6 +34,10 @@ public class HttpClientUtils {
         return execute(url, method, headers, null);
     }
 
+    public static HttpResponse executeRestful(String url, String method, Map<String, String> headers) {
+        return execute(url, method, headers, null);
+    }
+
     public static HttpResponse executeRestful(String url, String method, String json) {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");

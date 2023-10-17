@@ -23,7 +23,7 @@
         <module>fox-edge-server-channel-coap-client</module>
         <module>fox-edge-server-channel-serialport-service</module>
         <module>fox-edge-server-channel-simulator-service</module>
-        <module>fox-edge-server-channel-opc-ua-service</module>
+        <module>fox-edge-server-channel-opc-ua</module>
         <module>fox-edge-server-channel-tcp-server</module>
         <module>fox-edge-server-channel-tcp-client</module>
         <module>fox-edge-server-channel-udp-server</module>

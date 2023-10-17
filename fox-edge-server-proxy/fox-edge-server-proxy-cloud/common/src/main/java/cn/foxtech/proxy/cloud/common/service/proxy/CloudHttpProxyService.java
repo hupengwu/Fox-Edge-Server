@@ -1,18 +1,18 @@
-package cn.foxtech.proxy.cloud.publisher.service;
+package cn.foxtech.proxy.cloud.common.service.proxy;
 
 import cn.foxtech.common.constant.HttpStatus;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.Maps;
-import cn.foxtech.common.utils.http.HttpClientUtil;
+import cn.foxtech.common.utils.http.HttpClientUtils;
+import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.proxy.cloud.common.service.ConfigManageService;
-import cn.foxtech.proxy.cloud.common.service.EntityManageService;
+import cn.hutool.http.HttpResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -22,13 +22,17 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @Getter(value = AccessLevel.PUBLIC)
-public class CloudEntityRemoteService {
-    private static final Logger logger = Logger.getLogger(CloudEntityRemoteService.class);
+public class CloudHttpProxyService {
+    private static final Logger logger = Logger.getLogger(CloudHttpProxyService.class);
 
     /**
      * header
      */
     private final Map<String, String> header = new ConcurrentHashMap<>();
+    /**
+     * 服务
+     */
+    private String uri = "http://localhost:9000";
     /**
      * 用户名
      */
@@ -38,28 +42,14 @@ public class CloudEntityRemoteService {
      */
     private String password = "";
     /**
-     * 云端服务
-     */
-    private String uri = "http://localhost:8080";
-
-    /**
      * 锁定时间：默认60秒
      * 登录失败后，等60秒再重新登录，避免云端认为是恶意攻击，而锁定账号
      */
     private Integer lockdown = 60;
 
 
-    @Value("${spring.fox-service.service.type}")
-    private String foxServiceType = "undefinedServiceType";
-
-    @Value("${spring.fox-service.service.name}")
-    private String foxServiceName = "undefinedServiceName";
-
     @Autowired
     private ConfigManageService configManageService;
-
-    @Autowired
-    private EntityManageService manageService;
 
     @Autowired
     private RedisConsoleService consoleService;
@@ -83,25 +73,33 @@ public class CloudEntityRemoteService {
      *
      * @throws IOException
      */
-    public synchronized void login() throws IOException {
+    private synchronized void login() throws IOException {
         // 获得账号密码
-        Map<String, Object> configs = this.configManageService.loadInitConfig("httpConfig", "httpConfig.json");
+        Map<String, Object> configs = this.configManageService.loadInitConfig("serverConfig", "serverConfig.json");
+        Map<String, Object> cloudConfig = (Map<String, Object>)configs.getOrDefault("cloud",new HashMap<>());
+        Map<String, Object> httpConfig = (Map<String, Object>)cloudConfig.getOrDefault("http",new HashMap<>());
 
         // 取出信息
-        this.uri = (String) configs.getOrDefault("host", "http://localhost:8080");
-        this.username = (String) configs.getOrDefault("username", "username");
-        this.password = (String) configs.getOrDefault("password", "");
-        this.lockdown = (Integer) configs.getOrDefault("lockdown", 60);
+        this.uri = (String) httpConfig.getOrDefault("host", "http://localhost:8080");
+        this.username = (String) httpConfig.getOrDefault("username", "username");
+        this.password = (String) httpConfig.getOrDefault("password", "");
+        this.lockdown = (Integer) httpConfig.getOrDefault("lockdown", 60);
 
-        Map<String, Object> request = new HashMap<>();
-        request.put("username", this.username);
-        request.put("password", this.password);
 
         // 不用产生后台日志：这个自动操作，会产生太多的垃圾数据
         logger.info("登录云端服务器：开始登录！");
 
+        Map<String, Object> request = new HashMap<>();
+        request.put("username", this.username);
+        request.put("password", this.password);
+        String body = JsonUtils.buildJsonWithoutException(request);
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
+
         // 发送请求
-        Map<String, Object> respond = HttpClientUtil.executePost(this.uri + "/auth/login", request, Map.class);
+        HttpResponse response = HttpClientUtils.executeRestful(this.uri + "/auth/login", "post", headers, body);
+        Map<String, Object> respond = JsonUtils.buildObjectWithoutException(response.body(), Map.class);
         if (respond == null) {
             this.loginLastTime = System.currentTimeMillis();
             throw new RuntimeException("登录云端服务器：登录失敗！ " + this.uri);
@@ -122,7 +120,9 @@ public class CloudEntityRemoteService {
             throw new RuntimeException("云端返回的token异常");
         }
 
-        // 保存token，方便后面反复使用
+        // 保存token，方便后面反复使用：SaToken必须填写在Cookie之中
+        this.header.put("Connection", "keep-alive");
+        this.header.put("Content-Type", "application/json");
         this.header.put("Authorization", "Bearer " + token);
 
         String logMessage = "登录云端服务器：登录成功！";
@@ -130,13 +130,7 @@ public class CloudEntityRemoteService {
         logger.info(logMessage);
     }
 
-    public <REQ> Map<String, Object> executePost(String res, REQ requestVO) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(requestVO);
-        return this.executePost(res, json);
-    }
-
-    public Map<String, Object> executePost(String res, String requestJson) throws IOException {
+    public Map<String, Object> executeRestful(String res, String method, String requestJson) throws IOException {
         // 检查：是否未登录
         if (this.header.isEmpty()) {
             this.login();
@@ -147,11 +141,11 @@ public class CloudEntityRemoteService {
             throw new RuntimeException("未登录到云端!");
         }
 
-        String respondJson = HttpClientUtil.executePost(this.uri + res, requestJson, this.header);
+        HttpResponse response = HttpClientUtils.executeRestful(this.uri + res, method, this.header, requestJson);
 
         // 转换成json
         ObjectMapper objectMapper = new ObjectMapper();        // 转换JSON结构
-        Map<String, Object> respondVO = objectMapper.readValue(respondJson, Map.class);
+        Map<String, Object> respondVO = objectMapper.readValue(response.body(), Map.class);
 
         // 检查：是否登录成功
         Object code = respondVO.get(AjaxResult.CODE_TAG);
