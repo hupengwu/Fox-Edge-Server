@@ -36,7 +36,13 @@ public class RemoteService {
     }
 
     public boolean isLogin() {
-        return this.httpProxyService.isLogin();
+        if (this.getMode().equals("mqtt")) {
+            return this.mqttProxyService.isLogin();
+        } else {
+            return this.httpProxyService.isLogin();
+        }
+
+
     }
 
     private String getMode() {

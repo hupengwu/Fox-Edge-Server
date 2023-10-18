@@ -16,7 +16,6 @@
     <modules>
         <module>fox-edge-server-proxy-cloud</module>
         <module>fox-edge-server-proxy-coap-service</module>
-        <module>fox-edge-server-proxy-redis-topic-service</module>
     </modules>
 
 

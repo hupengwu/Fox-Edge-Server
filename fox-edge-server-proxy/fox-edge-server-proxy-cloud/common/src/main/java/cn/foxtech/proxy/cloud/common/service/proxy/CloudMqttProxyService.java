@@ -22,6 +22,13 @@ public class CloudMqttProxyService {
     private MqttClientService mqttProxyService;
 
 
+    public boolean isLogin() {
+        if (this.mqttProxyService.getMqttClient() == null) {
+            return false;
+        }
+        return this.mqttProxyService.getMqttClient().isConnected();
+    }
+
     public <REQ> Map<String, Object> executeRestful(String res, String method, REQ request) {
         try {
             // 构造发送报文

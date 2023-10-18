@@ -23,10 +23,10 @@ public class EntityManageService extends EntityServiceManager {
     private ServiceStatus serviceStatus;
 
     public void instance() {
-        // 注册消费者
+        // 注册消费者：里面的ConfigEntity，这是proxy-cloud自己需要用到的消费者
         this.instanceConsumer();
 
-        // 注册订阅
+        // 注册订阅：这些才是发布者们委托发布的数据，里面的那个ConfigEntity跟上面的那个ConfigEntity，用途是两回事
         this.instancePublishConfig();
         this.instancePublishValue();
     }
@@ -41,9 +41,8 @@ public class EntityManageService extends EntityServiceManager {
     private void instancePublishConfig() {
         Set<String> statusTypeList = this.getPublishEntityTypeList(EntityPublishConstant.value_mode_config);
 
-        Set<String> consumer = this.entityAgileMapComponent.getConsumer();
-        consumer.addAll(statusTypeList);
-
+        this.entityAgileMapComponent.getConsumer().addAll(statusTypeList);
+        this.entityHashMapComponent.getConsumer().addAll(statusTypeList);
     }
 
     private void instancePublishValue() {
