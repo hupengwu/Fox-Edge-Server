@@ -4,11 +4,12 @@ package cn.foxtech.proxy.cloud.forwarder.service;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import cn.foxtech.core.exception.ServiceException;
-import cn.foxtech.proxy.cloud.forwarder.config.ApplicationConfig;
+import cn.foxtech.proxy.cloud.common.mqtt.MqttClientService;
+import cn.foxtech.proxy.cloud.common.mqtt.MqttMessageC2E;
+import cn.foxtech.proxy.cloud.common.vo.RestfulLikeRequestVO;
+import cn.foxtech.proxy.cloud.common.vo.RestfulLikeRespondVO;
 import cn.foxtech.proxy.cloud.forwarder.service.proxy.HttpRestfulProxyService;
 import cn.foxtech.proxy.cloud.forwarder.service.proxy.RedisTopicProxyService;
-import cn.foxtech.proxy.cloud.forwarder.vo.RestfulLikeRequestVO;
-import cn.foxtech.proxy.cloud.forwarder.vo.RestfulLikeRespondVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,13 +28,10 @@ public class MqttMessageRespond extends PeriodTaskService {
     private RedisTopicProxyService redisTopicProxyService;
 
     @Autowired
-    private MqttMessageMapping mqttMessageQueue;
+    private MqttMessageC2E mqttMessageQueue;
 
     @Autowired
     private MqttClientService clientService;
-
-    @Autowired
-    private ApplicationConfig constant;
 
 
     @Override
@@ -44,20 +42,20 @@ public class MqttMessageRespond extends PeriodTaskService {
         }
 
         // 场景1：发送前面预处理阶段中的拒绝报文
-        if (!this.mqttMessageQueue.isEmpty(MqttMessageMapping.TYPE_RESPOND)) {
+        if (!this.mqttMessageQueue.isEmpty(MqttMessageC2E.TYPE_RESPOND)) {
             List<RestfulLikeRespondVO> respondVOList = this.mqttMessageQueue.removeRespondVOList();
 
             for (RestfulLikeRespondVO respondVO : respondVOList) {
                 // 返回响应消息
                 String rspContext = JsonUtils.buildJson(respondVO);
 
-                String pubTopic = this.constant.getPublish();
+                String pubTopic = this.clientService.getPublish2forward();
                 this.clientService.getMqttClient().publish(pubTopic, rspContext.getBytes(StandardCharsets.UTF_8));
             }
         }
 
         // 场景2：通过预处理的待执行报文
-        if (!this.mqttMessageQueue.isEmpty(MqttMessageMapping.TYPE_REQUEST)) {
+        if (!this.mqttMessageQueue.isEmpty(MqttMessageC2E.TYPE_REQUEST)) {
             List<RestfulLikeRequestVO> requestVOList = this.mqttMessageQueue.queryRequestVOList();
 
             for (RestfulLikeRequestVO requestVO : requestVOList) {
@@ -69,7 +67,7 @@ public class MqttMessageRespond extends PeriodTaskService {
 
                 // 返回响应消息
                 String rspContext = JsonUtils.buildJson(respondVO);
-                String pubTopic = this.constant.getPublish();
+                String pubTopic = this.clientService.getPublish2forward();
                 this.clientService.getMqttClient().publish(pubTopic, rspContext.getBytes(StandardCharsets.UTF_8));
 
                 // 删除任务

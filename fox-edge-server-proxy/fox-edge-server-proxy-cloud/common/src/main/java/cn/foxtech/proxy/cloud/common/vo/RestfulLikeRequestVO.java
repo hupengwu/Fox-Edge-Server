@@ -1,4 +1,4 @@
-package cn.foxtech.proxy.cloud.forwarder.vo;
+package cn.foxtech.proxy.cloud.common.vo;
 
 import lombok.AccessLevel;
 import lombok.Getter;

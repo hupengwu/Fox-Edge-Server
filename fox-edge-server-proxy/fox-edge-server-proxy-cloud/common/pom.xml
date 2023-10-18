@@ -52,13 +52,37 @@
         </dependency>
 
         <dependency>
+            <groupId>net.dreamlu</groupId>
+            <artifactId>mica-mqtt-client</artifactId>
+            <version>${mica-mqtt.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-http</artifactId>
+            <artifactId>fox-edge-server-common-utils-hutool-http</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-common-utils-json</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-common-utils-osinfo</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-common-utils-uuid</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
         <dependency>
             <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-hutool-http</artifactId>
+            <artifactId>fox-edge-server-common-utils-sync-obejct</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
 

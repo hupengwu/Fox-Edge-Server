@@ -10,14 +10,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class RecordEntityRemoteCloud extends EntityRemoteCloudService {
     public String getUrlTimestamp() {
-        return "/aggregator/record/timestamp";
+        return "/record/timestamp";
     }
 
     public String getUrlReset() {
-        return "/aggregator/record/reset";
+        return "/record/reset";
     }
 
     public String getUrlEntity() {
-        return "/aggregator/record/entity";
+        return "/record/entity";
     }
 }

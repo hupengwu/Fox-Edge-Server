@@ -1,4 +1,4 @@
-package cn.foxtech.proxy.cloud.forwarder.service;
+package cn.foxtech.proxy.cloud.common.mqtt;
 
 
 import cn.foxtech.common.utils.Maps;
@@ -16,12 +16,13 @@ public class MqttConfigService {
     /**
      * MQTT订阅位置
      */
-    private String subscribe = "/foxteam/v1/proxy/response";
+    private final String subscribe = "/fox/proxy/c2e";
 
     /**
      * MQTT发布位置
      */
-    private String publish = "/foxteam/v1/proxy/request";
+    private final String publish2Aggregate = "/fox/proxy/e2c/aggregate";
+    private final String publish2Forward = "/fox/proxy/e2c/forward";
 
 
     private String ip = "127.0.0.1";
@@ -53,8 +54,5 @@ public class MqttConfigService {
         this.version = Maps.getOrDefault(configs, String.class, "version", this.version);
         this.keepAliveSecs = Maps.getOrDefault(configs, Integer.class, "keep-alive-secs", this.keepAliveSecs);
         this.reInterval = Maps.getOrDefault(configs, Integer.class, "re-interval", this.reInterval);
-
-        this.subscribe = Maps.getOrDefault(configs, String.class, "topic", "subscribe", this.subscribe);
-        this.publish = Maps.getOrDefault(configs, String.class, "topic", "publish", this.publish);
     }
 }

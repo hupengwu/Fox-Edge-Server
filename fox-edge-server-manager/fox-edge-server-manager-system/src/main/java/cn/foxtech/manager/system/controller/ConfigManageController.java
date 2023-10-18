@@ -8,8 +8,6 @@ import cn.foxtech.common.entity.service.config.ConfigVOMaker;
 import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
-import cn.foxtech.common.utils.rsa.RSAEncrypt;
-import cn.foxtech.common.utils.security.SecurityUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.manager.system.service.EntityManageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +66,7 @@ public class ConfigManageController {
             });
 
             // 对返回的内容进行后期处理：主要是涉及密码的显示
-            entityList = ConfigVOMaker.build().process(entityList, ConfigVOMaker.mode_post);
+            entityList = ConfigVOMaker.build().postProcess(entityList);
 
             // 获得分页数据
             if (isPage) {
@@ -156,7 +154,7 @@ public class ConfigManageController {
 
                 // 进行加密预处理
                 ConfigVOMaker maker = ConfigVOMaker.build();
-                maker.process(entity, ConfigVOMaker.mode_prev);
+                maker.preProcess(entity,exist);
 
                 // 修改数据
                 entity.setId(id);

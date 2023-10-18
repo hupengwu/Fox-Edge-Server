@@ -1,7 +1,7 @@
-package cn.foxtech.proxy.cloud.forwarder.service;
+package cn.foxtech.proxy.cloud.common.mqtt;
 
-import cn.foxtech.proxy.cloud.forwarder.vo.RestfulLikeRequestVO;
-import cn.foxtech.proxy.cloud.forwarder.vo.RestfulLikeRespondVO;
+import cn.foxtech.proxy.cloud.common.vo.RestfulLikeRequestVO;
+import cn.foxtech.proxy.cloud.common.vo.RestfulLikeRespondVO;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -10,10 +10,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 消息队列
+ * Fox-Cloud对Fox-Edge发起的请求
+ * 比如，Fox-Cloud想通过MQTT对Fox-Edge进行远程控制操作
  */
 @Component
-public class MqttMessageMapping {
+public class MqttMessageC2E {
     public static final String TYPE_REQUEST = "request";
     public static final String TYPE_RESPOND = "respond";
 
@@ -51,10 +52,10 @@ public class MqttMessageMapping {
     }
 
     public synchronized boolean isEmpty(String type) {
-        if (MqttMessageMapping.TYPE_REQUEST.equals(type)) {
+        if (MqttMessageC2E.TYPE_REQUEST.equals(type)) {
             return this.isEmptyRequest();
         }
-        if (MqttMessageMapping.TYPE_RESPOND.equals(type)) {
+        if (MqttMessageC2E.TYPE_RESPOND.equals(type)) {
             return this.isEmptyRespond();
         }
 

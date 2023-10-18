@@ -1,11 +1,12 @@
-package cn.foxtech.proxy.cloud.forwarder.service;
+package cn.foxtech.proxy.cloud.common.mqtt;
 
 import cn.foxtech.common.utils.json.JsonUtils;
+import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.osinfo.OSInfoUtils;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.proxy.cloud.common.service.ConfigManageService;
-import cn.foxtech.proxy.cloud.forwarder.vo.RestfulLikeRequestVO;
-import cn.foxtech.proxy.cloud.forwarder.vo.RestfulLikeRespondVO;
+import cn.foxtech.proxy.cloud.common.vo.RestfulLikeRequestVO;
+import cn.foxtech.proxy.cloud.common.vo.RestfulLikeRespondVO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import net.dreamlu.iot.mqtt.codec.MqttPublishMessage;
@@ -39,7 +40,7 @@ public class MqttClientService {
      */
     private final String edgeId = OSInfoUtils.getCPUID();
     @Autowired
-    private MqttMessageMapping mqttMessageQueue;
+    private MqttMessageC2E mqttMessageQueue;
 
     /**
      * 配置服务：从redis中获得配置信息
@@ -54,22 +55,36 @@ public class MqttClientService {
     @Autowired
     private ConfigManageService configManageService;
 
+    private String subTopic;
+
+    private String subscribeAggregate;
+    private String publish2aggregate;
+
+    private String subscribeForward;
+    private String publish2forward;
+
+
     public boolean Initialize() {
         Map<String, Object> configs = this.configManageService.loadInitConfig("serverConfig", "serverConfig.json");
-        Map<String, Object> cloudConfig = (Map<String, Object>)configs.getOrDefault("cloud",new HashMap<>());
-        Map<String, Object> mqttConfig = (Map<String, Object>)cloudConfig.getOrDefault("mqtt",new HashMap<>());
+        Map<String, Object> cloudConfig = (Map<String, Object>) configs.getOrDefault("cloud", new HashMap<>());
+        Map<String, Object> mqttConfig = (Map<String, Object>) cloudConfig.getOrDefault("mqtt", new HashMap<>());
+
 
         // 初始化配置
         this.configService.initialize(mqttConfig);
 
 
-        String subTopic = this.configService.getSubscribe().replace("{devId}",this.edgeId);
-        String pubTopic = this.configService.getPublish().replace("{devId}",this.edgeId);
         String clientId = this.configService.getClientId() + ":" + UUID.randomUUID().toString().replace("-", "");
+        this.subTopic = this.configService.getSubscribe() + "/" + this.edgeId + "/#";
+        this.publish2aggregate = this.configService.getPublish2Aggregate() + "/" + this.edgeId;
+        this.publish2forward = this.configService.getPublish2Forward() + "/" + this.edgeId;
+        this.subscribeAggregate = this.configService.getSubscribe() + "/" + this.edgeId + "/aggregate";
+        this.subscribeForward = this.configService.getSubscribe() + "/" + this.edgeId + "/forward";
 
         logger.info("mqtt clientId       :" + clientId);
-        logger.info("mqtt topic subscribe:" + subTopic);
-        logger.info("mqtt topic publish:  " + pubTopic);
+        logger.info("mqtt topic subscribe:" + this.subTopic);
+        logger.info("mqtt topic publish2aggregate:  " + this.publish2aggregate);
+        logger.info("mqtt topic publish2forward:  " + this.publish2forward);
 
         // 从把配置参数填入组件当中
         this.creator.ip(this.configService.getIp());
@@ -95,7 +110,30 @@ public class MqttClientService {
     public void onMessage(ChannelContext context, String topic, MqttPublishMessage message, ByteBuffer payload) {
         String messageTxt = ByteBufferUtil.toString(payload);
 
+        if (this.subscribeAggregate.equals(topic)) {
+            this.receiveAggregate(messageTxt);
+        }
+        if (this.subscribeForward.equals(topic)) {
+            this.receiveForward(messageTxt);
+        }
+    }
+
+    private void receiveAggregate(String messageTxt) {
+        RestfulLikeRespondVO respondVO = JsonUtils.buildObjectWithoutException(messageTxt, RestfulLikeRespondVO.class);
+        if (respondVO == null) {
+            return;
+        }
+
+        if (MethodUtils.hasEmpty(respondVO.getUuid())) {
+            return;
+        }
+
+        MqttMessageE2C.inst().notifyConstant(respondVO.getUuid(), respondVO);
+    }
+
+    private void receiveForward(String messageTxt) {
         RestfulLikeRequestVO requestVO = null;
+
         try {
             requestVO = JsonUtils.buildObject(messageTxt, RestfulLikeRequestVO.class);
             if (requestVO.getUuid() == null || requestVO.getUuid().isEmpty()) {

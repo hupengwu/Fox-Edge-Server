@@ -98,4 +98,14 @@ public class JsonUtils {
             return null;
         }
     }
+
+    public static <T> T clone(T value) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String json = objectMapper.writeValueAsString(value);
+            return (T)objectMapper.readValue(json, value.getClass());
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

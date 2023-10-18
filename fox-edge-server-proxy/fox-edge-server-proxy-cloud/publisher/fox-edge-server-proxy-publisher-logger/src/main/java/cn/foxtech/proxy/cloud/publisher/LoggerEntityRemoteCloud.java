@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class LoggerEntityRemoteCloud extends EntityRemoteCloudService {
-    private final String url_timestamp = "/aggregator/logger/timestamp";
-    private final String url_reset = "/aggregator/logger/reset";
-    private final String url_entity = "/aggregator/logger/entity";
+    private final String url_timestamp = "/logger/timestamp";
+    private final String url_reset = "/logger/reset";
+    private final String url_entity = "/logger/entity";
 
     public String getUrlTimestamp() {
         return this.url_timestamp;

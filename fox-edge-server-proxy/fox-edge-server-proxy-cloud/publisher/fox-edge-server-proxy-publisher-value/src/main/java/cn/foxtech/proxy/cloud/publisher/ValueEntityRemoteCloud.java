@@ -11,21 +11,21 @@ import org.springframework.stereotype.Component;
 public class ValueEntityRemoteCloud extends EntityRemoteCloudService {
     @Override
     public String getUrlTimestamp() {
-        return "/aggregator/value/timestamp";
+        return "/value/timestamp";
     }
 
     @Override
     public String getUrlReset() {
-        return "/aggregator/value/reset";
+        return "/value/reset";
     }
 
     @Override
     public String getUrlComplete() {
-        return "/aggregator/value/complete";
+        return "/value/complete";
     }
 
     @Override
     public String getUrlEntity() {
-        return "/aggregator/value/entity";
+        return "/value/entity";
     }
 }

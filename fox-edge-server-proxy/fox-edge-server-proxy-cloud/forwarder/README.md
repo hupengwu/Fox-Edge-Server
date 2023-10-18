@@ -34,7 +34,7 @@
 
 ``` 
 1、查询system 通道查询API 接口
-发送：/fox/edge/proxy/BFEBFBFF000906A3/request
+发送：/fox/proxy/c2e/BFEBFBFF000906A3/forward
 {
 	"uuid": "1b1df78266b9449c9d5705f821a2b4c1",
 	"resource": "/kernel/manager/channel/page",
@@ -44,7 +44,7 @@
 		"pageSize": 2
 	}
 }
-返回：/fox/edge/proxy/BFEBFBFF000906A3/respond
+返回：/fox/proxy/e2c/forward/BFEBFBFF000906A3
 {
 	"uuid": "1b1df78266b9449c9d5705f821a2b4c1",
 	"resource": "/kernel/manager/channel/page",

@@ -4,6 +4,7 @@ package cn.foxtech.proxy.cloud.common.initialize;
 import cn.foxtech.common.status.ServiceStatusScheduler;
 import cn.foxtech.proxy.cloud.common.scheduler.EntityManageScheduler;
 import cn.foxtech.proxy.cloud.common.service.EntityManageService;
+import cn.foxtech.proxy.cloud.common.mqtt.MqttClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,9 @@ public class InitializeCommon {
     @Autowired
     private EntityManageScheduler entityManageScheduler;
 
+    @Autowired
+    private MqttClientService mqttClientService;
+
     public void initialize() {
         // 初始化进程的状态：通告本身服务的信息给其他服务
         this.serviceStatusScheduler.initialize();
@@ -32,5 +36,8 @@ public class InitializeCommon {
 
         // 启动同步线程
         this.entityManageScheduler.schedule();
+
+        // 初始化mqtt服务
+        this.mqttClientService.Initialize();
     }
 }

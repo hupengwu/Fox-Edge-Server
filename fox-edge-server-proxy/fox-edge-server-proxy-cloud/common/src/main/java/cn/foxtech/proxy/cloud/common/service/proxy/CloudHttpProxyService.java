@@ -143,9 +143,10 @@ public class CloudHttpProxyService {
 
         HttpResponse response = HttpClientUtils.executeRestful(this.uri + res, method, this.header, requestJson);
 
-        // 转换成json
+        // 转换成Map
+        String body = response.body();
         ObjectMapper objectMapper = new ObjectMapper();        // 转换JSON结构
-        Map<String, Object> respondVO = objectMapper.readValue(response.body(), Map.class);
+        Map<String, Object> respondVO = objectMapper.readValue(body, Map.class);
 
         // 检查：是否登录成功
         Object code = respondVO.get(AjaxResult.CODE_TAG);

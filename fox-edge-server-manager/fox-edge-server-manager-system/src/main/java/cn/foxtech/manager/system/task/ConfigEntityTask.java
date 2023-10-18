@@ -11,6 +11,7 @@ import cn.foxtech.manager.system.service.EntityManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -78,6 +79,7 @@ public class ConfigEntityTask extends PeriodTask {
                         newConfig.setRemark((String) remark);
                         newConfig.getConfigValue().putAll((Map) configValue);
                         newConfig.getConfigParam().putAll((Map) configParam);
+
 
                         this.entityManageService.insertEntity(newConfig);
                     }

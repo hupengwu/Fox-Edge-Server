@@ -6,7 +6,7 @@
       "lockdown": 60
     },
     "cloud": {
-      "mode": "mix",
+      "mode": "mqtt",
       "http": {
         "host": "http://cloud.fox-tech.cn/prod-api",
         "username": "fox-edge",
@@ -17,10 +17,6 @@
         "ip": "39.108.137.38",
         "name": "Mica-Mqtt-Client",
         "port": 1883,
-        "topic": {
-          "publish": "/fox/edge/proxy/{devId}/respond",
-          "subscribe": "/fox/edge/proxy/{devId}/request"
-        },
         "enabled": true,
         "timeout": 5,
         "use-ssl": false,
