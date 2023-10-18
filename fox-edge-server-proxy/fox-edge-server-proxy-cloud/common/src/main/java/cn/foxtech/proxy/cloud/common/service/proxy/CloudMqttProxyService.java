@@ -51,6 +51,14 @@ public class CloudMqttProxyService {
 
             // 等待返回
             RestfulLikeRespondVO respondVO = (RestfulLikeRespondVO) MqttMessageE2C.inst().waitDynamic(requestVO.getUuid(), 60 * 1000);
+            if (respondVO == null) {
+                String body = "";
+                if (context != null) {
+                    body = context.substring(0, Math.min(context.length(), 1024));
+                }
+
+                throw new ServiceException("对远端的操作，通信超时！res=" + res + " method=" + method + " body=" + body);
+            }
 
             return (Map<String, Object>) respondVO.getBody();
         } catch (Exception e) {
