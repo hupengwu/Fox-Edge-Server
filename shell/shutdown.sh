@@ -1,6 +1,10 @@
 #!/bin/bash
 #定义进程启动命令中的唯一性特征
 
+#系统目录
+shell_path=$(cd `dirname $0`; pwd)
+app_home=${shell_path%/*}
+
 function killApp()
 {
 	#特征值
@@ -18,7 +22,7 @@ function killApp()
 	fi
 }
 
-result=$(killApp /opt/fox-edge/bin )
+result=$(killApp ${app_home}/bin )
 
 
 

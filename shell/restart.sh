@@ -1,5 +1,10 @@
 #!/bin/bash 
 
+#系统目录
+shell_path=$(cd `dirname $0`; pwd)
+app_home=${shell_path%/*}
+
+
 #命令行说明： 
 #    参数1：模块/业务，例如 system/controller-service
 #    参数2：带-p的服务端口或者-d的调试端口，例如 -p9001 -d192.168.3.133:5005
@@ -27,8 +32,6 @@ function readINI()
 #=============================================配置文件的读写函数定义区============================================#
 
 #=============================================读取fox-edge.ini的全局配置==========================================#
-#系统目录
-app_home=/opt/fox-edge
 
 #redis参数
 app_param_redis_host=$(readINI $app_home/shell/fox-edge.ini redis host)

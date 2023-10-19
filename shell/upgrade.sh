@@ -1,5 +1,9 @@
 #!/bin/bash 
 
+#系统目录
+shell_path=$(cd `dirname $0`; pwd)
+app_home=${shell_path%/*}
+
 #命令行范例：
 #./upgrade.sh kernel manager-service 1.0.0 master 9000
 
@@ -42,8 +46,6 @@ if [ -z ${server_port:1:1} ]; then
 	exit
 fi
 
-#系统目录
-app_home=/opt/fox-edge
 
 #=============================================读取service.ini的业务配置===========================================#
 #背景：采用sorce读取，是因为spring_param可能包含非shell格式允许的"="参数，spring参数基本上都是跟shell冲突的

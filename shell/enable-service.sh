@@ -1,5 +1,7 @@
 #!/bin/bash
-app_home=/opt/fox-edge
+
+shell_path=$(cd `dirname $0`; pwd)
+app_home=${shell_path%/*}
 
 #切换当前目录
 cd $app_home
