@@ -3,13 +3,13 @@ package cn.foxtech.manager.system.task;
 
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.Maps;
-import cn.foxtech.common.utils.osinfo.OSInfo;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTask;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTaskType;
 import cn.foxtech.common.utils.shell.ShellUtils;
 import cn.foxtech.manager.common.utils.OSInfoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sun.awt.OSInfo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +44,7 @@ public class CleanCacheTask extends PeriodTask {
     public void execute() {
         try {
             // windows版本没有对操作系统进行CleanCache的操作
-            if (OSInfo.isWindows()) {
+            if (OSInfo.getOSType().equals(OSInfo.OSType.WINDOWS)) {
                 return;
             }
 

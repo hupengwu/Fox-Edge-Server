@@ -41,8 +41,9 @@ app_param_redis_password=$(readINI $app_home/shell/fox-edge.ini redis password)
 app_param_mysql_host=$(readINI $app_home/shell/fox-edge.ini mysql host)
 app_param_mysql_username=$(readINI $app_home/shell/fox-edge.ini mysql username)
 app_param_mysql_password=$(readINI $app_home/shell/fox-edge.ini mysql password)
-#绑定的本地IP
+#环境变量
 app_local_ip=$(readINI $app_home/shell/fox-edge.ini environment ip)
+app_local_type=$(readINI $app_home/shell/fox-edge.ini environment type)
 
 #=============================================读取fox-edge.ini的全局配置==========================================#
 
@@ -145,15 +146,6 @@ else
 fi
 #=======================================生成变量server_port和dubeg_param==========================================#
 
-#=============================================授权loader的可执行权限 =============================================#
-#如果配置了serverPort
-if [ -n "$loader_name" ]; then  
-  # 给启动器设置启动权限
-  chmod 755 $app_home/bin/$app_type/$app_name/$loader_name
-fi
-
-#=============================================授权loader的可执行权限 =============================================#
-
 
 #=========================================组织命令行参数，并重启业务进程==========================================#
 #杀死进程
@@ -168,39 +160,20 @@ cd $app_home
 
 
 #启动进程
-if [ -n "$loader_name" ]; then  
-	#启动loader java的命令
-	nohup \
-	$app_home/bin/$app_type/$app_name/$loader_name \
-	java \
-	$dubeg_param \
-	--add-opens java.base/jdk.internal.loader=ALL-UNNAMED  \
-	--add-opens java.base/java.net=ALL-UNNAMED  \
-	-jar \
-	$app_home/bin/$app_type/$app_name/$jar_name \
-	--app_name=$app_name \
-	-Dspring.profiles.active=prod \
-	$spring_param \
-	$server_port \
-	--spring.redis.host=$app_param_redis_host --spring.redis.port=$app_param_redis_port --spring.redis.password=$app_param_redis_password \
-	--spring.datasource.username=$app_param_mysql_username --spring.datasource.password=$app_param_mysql_password  --spring.datasource.url=jdbc:mysql://$app_param_mysql_host:3306/fox_edge \
-	>$app_home/logs/start_$jar_name.out 2>&1 & 
- 
-else
-	#启动java的命令
-	nohup \
-	java \
-	$dubeg_param \
-	--add-opens java.base/java.net=ALL-UNNAMED  \
-	-jar \
-	$app_home/bin/$app_type/$app_name/$jar_name \
-	--app_name=$app_name \
-	-Dspring.profiles.active=prod \
-	$spring_param \
-	$server_port \
-	--spring.redis.host=$app_param_redis_host --spring.redis.port=$app_param_redis_port --spring.redis.password=$app_param_redis_password \
-	--spring.datasource.username=$app_param_mysql_username --spring.datasource.password=$app_param_mysql_password  --spring.datasource.url=jdbc:mysql://$app_param_mysql_host:3306/fox_edge \
-	 >$app_home/logs/start_$jar_name.out 2>&1 & \
-fi
+nohup \
+java \
+$dubeg_param \
+--add-opens java.base/java.net=ALL-UNNAMED  \
+-jar \
+$app_home/bin/$app_type/$app_name/$jar_name \
+--app_type=$app_type \
+--app_name=$app_name \
+--env_type=$app_local_type \
+-Dspring.profiles.active=prod \
+$spring_param \
+$server_port \
+--spring.redis.host=$app_param_redis_host --spring.redis.port=$app_param_redis_port --spring.redis.password=$app_param_redis_password \
+--spring.datasource.username=$app_param_mysql_username --spring.datasource.password=$app_param_mysql_password  --spring.datasource.url=jdbc:mysql://$app_param_mysql_host:3306/fox_edge \
+>$app_home/logs/start_$jar_name.out 2>&1 & \
 
 #=========================================组织命令行参数，并重启业务进程==========================================#

@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.QueryParam;
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/kernel/manager/repository/product")

@@ -23,7 +23,6 @@ public class ConfigManageController {
     @Autowired
     private EntityManageService entityManageService;
 
-
     @GetMapping("entities")
     public AjaxResult selectEntityList() {
         List<BaseEntity> entityList = this.entityManageService.getEntityList(ConfigEntity.class);
@@ -154,7 +153,7 @@ public class ConfigManageController {
 
                 // 进行加密预处理
                 ConfigVOMaker maker = ConfigVOMaker.build();
-                maker.preProcess(entity,exist);
+                maker.preProcess(entity, exist);
 
                 // 修改数据
                 entity.setId(id);

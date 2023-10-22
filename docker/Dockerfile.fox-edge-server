@@ -1,0 +1,77 @@
+#指定基础镜像为openjdk 11环境
+#注意：该版本提供了jmap，而fox-edge会通过jmap的智能gc能力，进行内存老化周期的释放，来达到多服务下的内存管理能力，
+#传统的-Xms配置，是面向服务器领域开发的单服务的配置，它并不适用于fox-edge所在精简设备下，特别是多服务场景的内存管理。
+FROM openjdk:11
+
+#维护者信息
+MAINTAINER fox-edge
+
+#工作路径
+WORKDIR /opt/fox-edge
+
+#用于指定持久化目录，方便各容器共享该目录
+#引用到宿主机的数据卷/dev
+#注意，docker容器启动时，要带上--privileged 和  -v /dev:/dev  两个参数，否则容器中会出现无权限和空的错误
+VOLUME ["/dev","/tmp"]
+
+
+
+#在容器中，提取安装好需要用到的LINUX命令，如下：
+#更新安装源
+RUN apt-get update -y
+#安装TOP命令：这是查询CPU占用率的命令包
+RUN apt-get install procps -y
+#安装dmidecode命令：这是查询CPUID的命令包
+RUN apt-get install dmidecode -y
+
+
+#在容器中预先创建 /jar  /template /shell /conf目录
+RUN mkdir -p /opt/fox-edge/jar
+RUN mkdir -p /opt/fox-edge/template
+RUN mkdir -p /opt/fox-edge/shell
+RUN mkdir -p /opt/fox-edge/conf
+
+
+#将本地文件复制到容器中
+COPY /opt/fox-edge/jar /opt/fox-edge/jar
+COPY /opt/fox-edge/template /opt/fox-edge/template
+COPY /opt/fox-edge/shell /opt/fox-edge/shell
+COPY /opt/fox-edge/conf /opt/fox-edge/conf
+
+#在容器中预先创建bin目录
+RUN mkdir -p /opt/fox-edge/bin/kernel/gateway-service/
+RUN mkdir -p /opt/fox-edge/bin/kernel/manager-service/
+RUN mkdir -p /opt/fox-edge/bin/system/device-service/
+RUN mkdir -p /opt/fox-edge/bin/system/persist-service/
+RUN mkdir -p /opt/fox-edge/bin/system/controller-service/
+RUN mkdir -p /opt/fox-edge/bin/service/channel-simulator-service/
+RUN mkdir -p /opt/fox-edge/bin/service/channel-serialport-service/
+RUN mkdir -p /opt/fox-edge/bin/service/channel-tcp-server/
+
+#将本地bin文件复制到容器中
+COPY /opt/fox-edge/bin/kernel/gateway-service/fox-edge-server-manager-gateway.jar /opt/fox-edge/bin/kernel/gateway-service/fox-edge-server-manager-gateway.jar
+COPY /opt/fox-edge/bin/kernel/manager-service/fox-edge-server-manager-system.jar /opt/fox-edge/bin/kernel/manager-service/fox-edge-server-manager-system.jar
+COPY /opt/fox-edge/bin/system/device-service/fox-edge-server-device-service.jar /opt/fox-edge/bin/system/device-service/fox-edge-server-device-service.jar
+COPY /opt/fox-edge/bin/system/persist-service/fox-edge-server-persist-service.jar /opt/fox-edge/bin/system/persist-service/fox-edge-server-persist-service.jar
+COPY /opt/fox-edge/bin/system/controller-service/fox-edge-server-controller-service.jar /opt/fox-edge/bin/system/controller-service/fox-edge-server-controller-service.jar
+COPY /opt/fox-edge/bin/service/channel-simulator-service/fox-edge-server-channel-simulator-service.jar /opt/fox-edge/bin/service/channel-simulator-service/fox-edge-server-channel-simulator-service.jar
+COPY /opt/fox-edge/bin/service/channel-serialport-service/fox-edge-server-channel-serialport-service.jar /opt/fox-edge/bin/service/channel-serialport-service/fox-edge-server-channel-serialport-service.jar
+COPY /opt/fox-edge/bin/service/channel-tcp-server/fox-edge-server-channel-tcp-server.jar /opt/fox-edge/bin/service/channel-tcp-server/fox-edge-server-channel-tcp-server.jar
+
+#映射端口
+#9000 gateway-service的服务端口：必须配置的端口
+#9101 manager-service的服务端口：必须配置的端口
+#9301 9302 channel-tcp-server配置中提供的两个服务端口：可选端口，这只是一个其他服务端口的使用范例
+#注意，docker容器启动时，要带上 -p 9000:9000 -p 9101:9101 参数，否则没有完成内外端口的映射
+EXPOSE 9000 9101 9301 9302
+
+#配置容器，使其可执行化，相当于在环境中执行命令java -jar xxx.jar --输入参数
+CMD \
+java --add-opens java.base/java.net=ALL-UNNAMED -jar /opt/fox-edge/bin/kernel/gateway-service/fox-edge-server-manager-gateway.jar --app_type=kernel --app_name=gateway-service --env_type=docker -Dspring.profiles.active=prod --server.port=9000 --spring.redis.host=172.17.0.1 --spring.redis.port=6379 --spring.redis.password=12345678 --spring.datasource.username=fox-edge --spring.datasource.password=12345678 --spring.datasource.url=jdbc:mysql://172.17.0.1:3306/fox_edge & \
+java --add-opens java.base/java.net=ALL-UNNAMED -jar /opt/fox-edge/bin/kernel/manager-service/fox-edge-server-manager-system.jar --app_type=kernel --app_name=manager-service --env_type=docker -Dspring.profiles.active=prod --server.port=9101 --spring.redis.host=172.17.0.1 --spring.redis.port=6379 --spring.redis.password=12345678 --spring.datasource.username=fox-edge --spring.datasource.password=12345678 --spring.datasource.url=jdbc:mysql://172.17.0.1:3306/fox_edge & \
+java --add-opens java.base/java.net=ALL-UNNAMED -jar /opt/fox-edge/bin/system/controller-service/fox-edge-server-controller-service.jar --app_type=system --app_name=controller-service --env_type=docker -Dspring.profiles.active=prod --server.port=9021 --spring.redis.host=172.17.0.1 --spring.redis.port=6379 --spring.redis.password=12345678 --spring.datasource.username=fox-edge --spring.datasource.password=12345678 --spring.datasource.url=jdbc:mysql://172.17.0.1:3306/fox_edge & \
+java --add-opens java.base/java.net=ALL-UNNAMED -jar /opt/fox-edge/bin/system/device-service/fox-edge-server-device-service.jar --app_type=system --app_name=device-service --env_type=docker -Dspring.profiles.active=prod --server.port=9024 --spring.redis.host=172.17.0.1 --spring.redis.port=6379 --spring.redis.password=12345678 --spring.datasource.username=fox-edge --spring.datasource.password=12345678 --spring.datasource.url=jdbc:mysql://172.17.0.1:3306/fox_edge & \
+java --add-opens java.base/java.net=ALL-UNNAMED -jar /opt/fox-edge/bin/system/persist-service/fox-edge-server-persist-service.jar --app_type=system --app_name=persist-service --env_type=docker -Dspring.profiles.active=prod --server.port=9015 --spring.redis.host=172.17.0.1 --spring.redis.port=6379 --spring.redis.password=12345678 --spring.datasource.username=fox-edge --spring.datasource.password=12345678 --spring.datasource.url=jdbc:mysql://172.17.0.1:3306/fox_edge & \
+java --add-opens java.base/java.net=ALL-UNNAMED -jar /opt/fox-edge/bin/service/channel-tcp-server/fox-edge-server-channel-tcp-server.jar --app_type=service --app_name=channel-tcp-server --env_type=docker -Dspring.profiles.active=prod --server.port=9008 --spring.redis.host=172.17.0.1 --spring.redis.port=6379 --spring.redis.password=12345678 --spring.datasource.username=fox-edge --spring.datasource.password=12345678 --spring.datasource.url=jdbc:mysql://172.17.0.1:3306/fox_edge & \
+java --add-opens java.base/java.net=ALL-UNNAMED -jar /opt/fox-edge/bin/service/channel-serialport-service/fox-edge-server-channel-serialport-service.jar --app_type=service --app_name=channel-serialport-service --env_type=docker -Dspring.profiles.active=prod --server.port=9014 --spring.redis.host=172.17.0.1 --spring.redis.port=6379 --spring.redis.password=12345678 --spring.datasource.username=fox-edge --spring.datasource.password=12345678 --spring.datasource.url=jdbc:mysql://172.17.0.1:3306/fox_edge & \
+java --add-opens java.base/java.net=ALL-UNNAMED -jar /opt/fox-edge/bin/service/channel-simulator-service/fox-edge-server-channel-simulator-service.jar --app_type=service --app_name=channel-simulator-service --env_type=docker -Dspring.profiles.active=prod --server.port=9001 --spring.redis.host=172.17.0.1 --spring.redis.port=6379 --spring.redis.password=12345678 --spring.datasource.username=fox-edge --spring.datasource.password=12345678 --spring.datasource.url=jdbc:mysql://172.17.0.1:3306/fox_edge

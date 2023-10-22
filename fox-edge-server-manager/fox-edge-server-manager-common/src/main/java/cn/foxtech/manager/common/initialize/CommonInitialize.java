@@ -24,7 +24,7 @@ public class CommonInitialize {
         String message;
         message = "------------------------CommonInitialize初始化开始！------------------------";
         this.console.info(message);
-        this.logger.info(message);
+        logger.info(message);
 
         // 进程状态
         this.serviceStatusScheduler.initialize();
@@ -33,6 +33,6 @@ public class CommonInitialize {
 
         message = "------------------------CommonInitialize初始化结束！------------------------";
         this.console.info(message);
-        this.logger.info(message);
+        logger.info(message);
     }
 }

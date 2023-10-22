@@ -1,0 +1,21 @@
+#指定基础镜像为nginx
+FROM nginx:alpine
+
+#维护者信息
+MAINTAINER fox-edge
+
+#在容器中预先创建 /opt/fox-edge 目录
+RUN mkdir -p /opt/fox-edge
+
+#将本地文件复制到容器中
+COPY /opt/fox-edge/dist /opt/fox-edge/dist
+COPY /opt/fox-edge/doc/nginx/conf.d/fox-edge.com.ipadr.conf /etc/nginx/conf.d
+
+#将主机版本的nginx文件中的127.0.0.1，修改为容器版本下的172.17.0.1
+RUN sed -i s/127.0.0.1/172.17.0.1/g /etc/nginx/conf.d/fox-edge.com.ipadr.conf
+
+#映射端口
+EXPOSE 80
+
+#配置容器，使其可执行化，相当于在环境中执行命令java -jar xxx.jar --输入参数
+CMD ["nginx", "-g", "daemon off;"]

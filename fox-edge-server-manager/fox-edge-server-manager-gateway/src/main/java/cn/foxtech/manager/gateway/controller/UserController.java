@@ -11,6 +11,8 @@ import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.security.SecurityUtils;
 import cn.foxtech.core.domain.AjaxResult;
+import cn.foxtech.manager.common.constants.EdgeServiceConstant;
+import cn.foxtech.manager.common.service.EdgeService;
 import cn.foxtech.manager.gateway.service.EntityManageService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private EntityManageService entityManageService;
+
+    @Autowired
+    private EdgeService edgeService;
 
     @RequestMapping("login")
     public String doLogin(String username, String password) {
@@ -117,8 +122,14 @@ public class UserController {
                 throw new RuntimeException("不存在该用户：" + username);
             }
 
+            // docker模式下，菜单名称为xxx-DOCKER
+            String menuName = existUserEntity.getMenu();
+            if (EdgeServiceConstant.value_env_type_docker.equals(this.edgeService.getEnvType())) {
+                menuName = menuName + "-DOCKER";
+            }
+
             UserMenuEntity userMenuEntity = new UserMenuEntity();
-            userMenuEntity.setName(existUserEntity.getMenu());
+            userMenuEntity.setName(menuName);
             UserMenuEntity exitUserMenuEntity = this.entityManageService.readEntity(userMenuEntity.makeServiceKey(), UserMenuEntity.class);
             if (MethodUtils.hasNull(exitUserMenuEntity)) {
                 throw new RuntimeException("userMenuEntity实体不存在");

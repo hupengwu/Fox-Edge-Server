@@ -1,6 +1,5 @@
 package cn.foxtech.manager.system.controller;
 
-import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.ChannelEntity;
 import cn.foxtech.common.entity.entity.DeviceStatusEntity;
 import cn.foxtech.common.entity.service.device.DeviceEntityService;
@@ -14,10 +13,7 @@ import cn.foxtech.manager.common.utils.OSInfoUtils;
 import cn.foxtech.manager.system.service.EntityManageService;
 import com.fasterxml.jackson.core.JsonParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -33,8 +29,10 @@ public class DashboardManageController {
     private EntityManageService entityManageService;
     @Autowired
     private DeviceObjectEntityMapper objectEntityMapper;
+
     @Autowired
     private EdgeService edgeService;
+
 
     /**
      * 查询一级列表
@@ -82,8 +80,8 @@ public class DashboardManageController {
                 continue;
             }
 
-            Map<String, Object> map = (Map<String, Object>)data;
-            Integer commFailedCount = (Integer) map.getOrDefault("commFailedCount",0);
+            Map<String, Object> map = (Map<String, Object>) data;
+            Integer commFailedCount = (Integer) map.getOrDefault("commFailedCount", 0);
 
             if (commFailedCount > 0) {
                 failedCount.getAndIncrement();
@@ -130,6 +128,7 @@ public class DashboardManageController {
         Map<String, Object> memInfo = OSInfoUtils.getMemInfo();
         Map<String, Object> cpuInfo = OSInfoUtils.getCpuInfo();
         indicators.put("cpuUID", this.edgeService.getCPUID());
+        indicators.put("envType", this.edgeService.isDockerEnv());
 
         indicators.put("diskSizeTxt", diskInfo.get("sizeTxt"));
         indicators.put("diskSize", diskInfo.getOrDefault("size", 1));

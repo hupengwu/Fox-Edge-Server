@@ -1,5 +1,7 @@
 package cn.foxtech.common.utils.file;
 
+import sun.awt.OSInfo;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +53,22 @@ public class FileNameUtils {
                 // 如果是目录，并且需要深度搜索,回调自身继续查询
                 findFileList(file, depth, fullName, fileNames);
             }
+        }
+    }
+
+    /**
+     * 获得匹配操作系统的文件路径名称
+     * 在window下和linux下的文件路径/和\是不一样的，会导致访问不了
+     *
+     * @param filePath 用户输入的\或者/文件路径
+     * @return 匹配操作系统的文件路径
+     */
+    public static String getOsFilePath(String filePath){
+        if (OSInfo.getOSType().equals(OSInfo.OSType.WINDOWS)) {
+            return filePath.replace("/", "\\");
+        }
+        else {
+            return filePath.replace("\\", "/");
         }
     }
 }

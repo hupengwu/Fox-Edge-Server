@@ -5,5 +5,5 @@ public class Constant {
     public static final String PASSWORD = "password";
     public static final String LICENSE = "license";
 
-    public static final String CPUID = "cpuid";
+    public static final String CPUID = "cpuId";
 }

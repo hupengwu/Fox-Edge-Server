@@ -5,6 +5,7 @@ import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
+import cn.foxtech.manager.common.service.EdgeService;
 import cn.foxtech.manager.system.constants.RepoComponentConstant;
 import cn.foxtech.manager.system.scheduler.PeriodTasksScheduler;
 import cn.foxtech.manager.system.service.RepoComponentService;
@@ -38,6 +39,9 @@ public class RepoComponentManageController {
      */
     @Autowired
     private PeriodTasksScheduler periodTasksScheduler;
+
+    @Autowired
+    private EdgeService edgeService;
 
     @PostMapping("/page")
     public AjaxResult selectPageList(@RequestBody Map<String, Object> body) {
@@ -114,6 +118,8 @@ public class RepoComponentManageController {
     @PostMapping("/download")
     public AjaxResult downloadPackFile(@RequestBody Map<String, Object> body) {
         try {
+            this.edgeService.disable4Docker();
+
             // 提取业务参数
             List<Map<String, Object>> list = (List<Map<String, Object>>) body.get("list");
 
@@ -153,6 +159,8 @@ public class RepoComponentManageController {
     @PostMapping("/scan")
     public AjaxResult deleteDecoderFile(@RequestBody Map<String, Object> body) {
         try {
+            this.edgeService.disable4Docker();
+
             // 提取业务参数
             String modelType = (String) body.get(RepoComponentConstant.filed_model_type);
 
@@ -171,6 +179,8 @@ public class RepoComponentManageController {
     @PostMapping("/install")
     public AjaxResult installPackFile(@RequestBody Map<String, Object> body) {
         try {
+            this.edgeService.disable4Docker();
+
             // 提取业务参数
             String modelType = (String) body.get(RepoComponentConstant.filed_model_type);
             String modelName = (String) body.get(RepoComponentConstant.filed_model_name);
@@ -194,6 +204,8 @@ public class RepoComponentManageController {
     @PostMapping("/delete")
     public AjaxResult deletePackageFile(@RequestBody Map<String, Object> body) {
         try {
+            this.edgeService.disable4Docker();
+
             // 提取业务参数
             List<Map<String, Object>> list = (List<Map<String, Object>>) body.get("list");
 

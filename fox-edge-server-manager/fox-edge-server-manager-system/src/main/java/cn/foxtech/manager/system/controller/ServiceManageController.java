@@ -6,6 +6,8 @@ import cn.foxtech.common.status.ServiceStatus;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
+import cn.foxtech.manager.common.constants.EdgeServiceConstant;
+import cn.foxtech.manager.common.service.EdgeService;
 import cn.foxtech.manager.system.service.ProcessLoadService;
 import cn.foxtech.manager.system.service.ProcessStartService;
 import cn.foxtech.manager.system.utils.ServiceIniFilesUtils;
@@ -13,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.QueryParam;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +33,9 @@ public class ServiceManageController {
     @Autowired
     private ServiceStatus serviceStatus;
 
+    @Autowired
+    private EdgeService edgeService;
+
 
     @GetMapping("/status/entities")
     public AjaxResult selectEntityList() {
@@ -42,6 +49,9 @@ public class ServiceManageController {
             // 从磁盘中查找所有的shell文件信息
             List<Map<String, Object>> confFileInfoList = ServiceIniFilesUtils.getConfFileInfoList();
 
+            // 按docker模式处理一遍
+            confFileInfoList = this.buildDockerMode(confFileInfoList);
+
             // 扩展数据库中的启动配置信息
             this.processLoadService.extendStartConfig(confFileInfoList);
 
@@ -54,9 +64,41 @@ public class ServiceManageController {
         }
     }
 
+    private List<Map<String, Object>> buildDockerMode(List<Map<String, Object>> confFileInfoList) throws IOException, InterruptedException {
+        if (!EdgeServiceConstant.value_env_type_docker.equals(this.edgeService.getEnvType())) {
+            return confFileInfoList;
+        }
+
+        Map<String, Object> confFileInfoMaps = new HashMap<>();
+        for (Map<String, Object> confFileInfo : confFileInfoList) {
+            String appType = (String) confFileInfo.getOrDefault("appType", "");
+            String appName = (String) confFileInfo.getOrDefault("appName", "");
+
+            confFileInfoMaps.put(appType + ":" + appName, confFileInfo);
+        }
+
+
+        List<Map<String, Object>> processList = ProcessUtils.getProcess();
+        for (Map<String, Object> process : processList) {
+            String appType = (String) process.getOrDefault("appType", "");
+            String appName = (String) process.getOrDefault("appName", "");
+
+            Map<String, Object> confFileInfo = (Map<String, Object>) confFileInfoMaps.get(appType + ":" + appName);
+            if (confFileInfo == null) {
+                continue;
+            }
+
+            process.putAll(confFileInfo);
+        }
+
+        return processList;
+    }
+
     @PostMapping("config/load")
     public AjaxResult setServiceLoad(@RequestBody Map<String, Object> body) {
         try {
+            this.edgeService.disable4Docker();
+
             // 提取业务参数
             String appName = (String) body.get(ServiceVOFieldConstant.field_app_name);
             String appType = (String) body.get(ServiceVOFieldConstant.field_app_type);
@@ -86,6 +128,8 @@ public class ServiceManageController {
     @PostMapping("process/restart")
     public AjaxResult restartProcess(@RequestBody Map<String, Object> body) {
         try {
+            this.edgeService.disable4Docker();
+
             // 提取业务参数
             String appName = (String) body.get(ServiceVOFieldConstant.field_app_name);
             String appType = (String) body.get(ServiceVOFieldConstant.field_app_type);
@@ -110,6 +154,8 @@ public class ServiceManageController {
     @PostMapping("process/stop")
     public AjaxResult stopProcess(@RequestBody Map<String, Object> body) {
         try {
+            this.edgeService.disable4Docker();
+
             // 提取业务参数
             String appName = (String) body.get(ServiceVOFieldConstant.field_app_name);
             String appType = (String) body.get(ServiceVOFieldConstant.field_app_type);
@@ -135,6 +181,7 @@ public class ServiceManageController {
     @PostMapping("process/uninstall")
     public AjaxResult uninstallProcess(@RequestBody Map<String, Object> body) {
         try {
+            this.edgeService.disable4Docker();
             // 提取业务参数
             String appName = (String) body.get(ServiceVOFieldConstant.field_app_name);
             String appType = (String) body.get(ServiceVOFieldConstant.field_app_type);
@@ -149,7 +196,7 @@ public class ServiceManageController {
             }
 
             // 停止进程
-            this.processStartService.uninstallProcess(appName, appType );
+            this.processStartService.uninstallProcess(appName, appType);
 
             return AjaxResult.success();
         } catch (Exception e) {

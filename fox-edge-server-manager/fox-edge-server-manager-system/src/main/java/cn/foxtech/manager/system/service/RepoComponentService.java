@@ -11,7 +11,6 @@ import cn.foxtech.common.utils.http.DownLoadUtil;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.md5.MD5Utils;
 import cn.foxtech.common.utils.method.MethodUtils;
-import cn.foxtech.common.utils.osinfo.OSInfo;
 import cn.foxtech.common.utils.shell.ShellUtils;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.manager.system.constants.RepoComponentConstant;
@@ -21,6 +20,7 @@ import cn.foxtech.manager.system.utils.ServiceIniFilesUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import sun.awt.OSInfo;
 
 import java.io.File;
 import java.io.IOException;
@@ -514,14 +514,13 @@ public class RepoComponentService {
         }
 
         // 切换目录
-        fileDir = file.getAbsolutePath();
+        fileDir = FileNameUtils.getOsFilePath(file.getAbsolutePath());
 
-        if (OSInfo.isWindows()) {
+        if (OSInfo.getOSType().equals(OSInfo.OSType.WINDOWS)) {
             // 删除可能存在的目录
-            fileDir = fileDir.replace("/", "\\");
             ShellUtils.executeCmd("rd /s /q " + fileDir);
         }
-        if (OSInfo.isLinux()) {
+        if (OSInfo.getOSType().equals(OSInfo.OSType.LINUX)) {
             ShellUtils.executeShell("rm -rf '" + fileDir + "'");
         }
     }
@@ -787,10 +786,10 @@ public class RepoComponentService {
         String tarDir = localPath + "/" + "tar";
         String localFile = localPath + "/" + fileName;
 
-        if (OSInfo.isWindows()) {
-            tarDir = tarDir.replace("/", "\\");
-            localFile = localFile.replace("/", "\\");
+        tarDir = FileNameUtils.getOsFilePath(tarDir);
+        localFile = FileNameUtils.getOsFilePath(localFile);
 
+        if (OSInfo.getOSType().equals(OSInfo.OSType.WINDOWS)) {
             // 删除已经存在的解压目录
             ShellUtils.executeCmd("rd /s /q " + tarDir);
 
@@ -800,7 +799,7 @@ public class RepoComponentService {
             // 解压文件到解压目录:tar -xf 静默解压，windows下不能返回太多内容，否则会死锁
             ShellUtils.executeCmd("tar -xf " + localFile + " -C " + tarDir);
         }
-        if (OSInfo.isLinux()) {
+        if (OSInfo.getOSType().equals(OSInfo.OSType.LINUX)) {
             // 删除已经存在的解压目录
             ShellUtils.executeShell("rm -r  '" + tarDir + "'");
 
@@ -836,12 +835,13 @@ public class RepoComponentService {
             String modelVersionDir = modelNameDir + "/" + modelVersion;
             String packageDir = modelVersionDir + "/" + version;
 
+            packageDir = FileNameUtils.getOsFilePath(packageDir);
+
             //  删除安装包文件
-            if (OSInfo.isWindows()) {
-                packageDir = packageDir.replace("/", "\\");
+            if (OSInfo.getOSType().equals(OSInfo.OSType.WINDOWS)) {
                 ShellUtils.executeCmd("rd /s /q " + packageDir);
             }
-            if (OSInfo.isLinux()) {
+            if (OSInfo.getOSType().equals(OSInfo.OSType.LINUX)) {
                 ShellUtils.executeShell("rm -rf '" + packageDir + "'");
             }
 
@@ -907,35 +907,36 @@ public class RepoComponentService {
     }
 
     private void mkdirDir(String destFileDir) throws IOException, InterruptedException {
-        if (OSInfo.isWindows()) {
-            destFileDir = destFileDir.replace("/", "\\");
+        destFileDir = FileNameUtils.getOsFilePath(destFileDir);
+
+        if (OSInfo.getOSType().equals(OSInfo.OSType.WINDOWS)) {
             ShellUtils.executeCmd("mkdir " + destFileDir);
         }
-        if (OSInfo.isLinux()) {
+        if (OSInfo.getOSType().equals(OSInfo.OSType.LINUX)) {
             ShellUtils.executeShell("mkdir -p '" + destFileDir + "'");
         }
     }
 
     private void copyFile(String installFileDir, String fileName, String destFileDir) throws IOException, InterruptedException {
-        if (OSInfo.isWindows()) {
-            installFileDir = installFileDir.replace("/", "\\");
-            destFileDir = destFileDir.replace("/", "\\");
+        installFileDir = FileNameUtils.getOsFilePath(installFileDir);
+        destFileDir = FileNameUtils.getOsFilePath(destFileDir);
 
+        if (OSInfo.getOSType().equals(OSInfo.OSType.WINDOWS)) {
             ShellUtils.executeCmd("xcopy /r/Y/F \"" + installFileDir + "\\" + fileName + "\" \"" + destFileDir + "\"");
         }
-        if (OSInfo.isLinux()) {
+        if (OSInfo.getOSType().equals(OSInfo.OSType.LINUX)) {
             ShellUtils.executeShell("cp -f '" + installFileDir + "/" + fileName + "' '" + destFileDir + "'");
         }
     }
 
     private void copyFile(String installFileDir, String fileName, String destFileDir, String destFileName) throws IOException, InterruptedException {
-        if (OSInfo.isWindows()) {
-            installFileDir = installFileDir.replace("/", "\\");
-            destFileDir = destFileDir.replace("/", "\\");
+        installFileDir = FileNameUtils.getOsFilePath(installFileDir);
+        destFileDir = FileNameUtils.getOsFilePath(destFileDir);
 
+        if (OSInfo.getOSType().equals(OSInfo.OSType.WINDOWS)) {
             ShellUtils.executeCmd("copy /y \"" + installFileDir + "\\" + fileName + "\" \"" + destFileDir + "\\" + destFileName + "\"");
         }
-        if (OSInfo.isLinux()) {
+        if (OSInfo.getOSType().equals(OSInfo.OSType.LINUX)) {
             ShellUtils.executeShell("cp -f '" + installFileDir + "/" + fileName + "' '" + destFileDir + "/" + destFileName + "'");
         }
     }
@@ -1021,16 +1022,16 @@ public class RepoComponentService {
     }
 
     private void installWebpackFile(String installFileDir, String destFileDir) throws IOException, InterruptedException {
-        if (OSInfo.isWindows()) {
-            installFileDir = installFileDir.replace("/", "\\");
-            destFileDir = destFileDir.replace("/", "\\");
+        installFileDir = FileNameUtils.getOsFilePath(installFileDir);
+        destFileDir = FileNameUtils.getOsFilePath(destFileDir);
 
+        if (OSInfo.getOSType().equals(OSInfo.OSType.WINDOWS)) {
             // 删除旧文件
             ShellUtils.executeCmd("rd /s /q " + destFileDir + "\\dist");
             // 复制新文件
             ShellUtils.executeCmd("xcopy /s/r/Y/F/q " + installFileDir + " " + destFileDir);
         }
-        if (OSInfo.isLinux()) {
+        if (OSInfo.getOSType().equals(OSInfo.OSType.LINUX)) {
             ShellUtils.executeShell("cp -rf '" + installFileDir + "/dist' '" + destFileDir + "'");
         }
     }

@@ -1,5 +1,7 @@
 package cn.foxtech.common.utils.osinfo;
 
+import sun.awt.OSInfo;
+
 import java.io.*;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -19,10 +21,10 @@ public class OSInfoUtils {
     }
 
     public static String getMainBordId() {
-        if (OSInfo.isWindows()) {
+        if (OSInfo.getOSType().equals(OSInfo.OSType.WINDOWS)) {
             return getMainBordId_windows();
         }
-        if (OSInfo.isLinux()) {
+        if (OSInfo.getOSType().equals(OSInfo.OSType.LINUX)) {            
             return getMainBordId_linux();
         }
         return "";
@@ -78,10 +80,10 @@ public class OSInfoUtils {
     }
 
     public static String getMAC() {
-        if (OSInfo.isWindows()) {
+        if (OSInfo.getOSType().equals(OSInfo.OSType.WINDOWS)) {
             return getMAC_windows();
         }
-        if (OSInfo.isLinux()) {
+        if (OSInfo.getOSType().equals(OSInfo.OSType.LINUX)) {
             return getMAC_linux();
         }
         return "";
@@ -223,10 +225,10 @@ public class OSInfoUtils {
     }
 
     public static String getCPUID() {
-        if (OSInfo.isWindows()) {
+        if (OSInfo.getOSType().equals(OSInfo.OSType.WINDOWS)) {
             return getCPUID_Windows().replace(" ", "");
         }
-        if (OSInfo.isLinux()) {
+        if (OSInfo.getOSType().equals(OSInfo.OSType.LINUX)) {
             try {
                 String arch = getArch().toLowerCase();
                 if ("aarch64".equals(arch)) {

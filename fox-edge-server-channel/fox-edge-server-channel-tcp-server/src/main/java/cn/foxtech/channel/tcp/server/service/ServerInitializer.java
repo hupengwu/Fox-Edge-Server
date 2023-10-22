@@ -4,6 +4,7 @@ import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.common.service.ConfigManageService;
 import cn.foxtech.channel.tcp.server.handler.ChannelHandler;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
+import cn.foxtech.common.utils.file.FileNameUtils;
 import cn.foxtech.common.utils.netty.server.tcp.NettyTcpServer;
 import cn.foxtech.common.utils.reflect.JarLoaderUtils;
 import cn.foxtech.device.protocol.RootLocation;
@@ -12,6 +13,7 @@ import cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler;
 import cn.foxtech.device.protocol.v1.utils.netty.SplitMessageHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sun.awt.OSInfo;
 
 import java.io.File;
 import java.util.List;
@@ -48,7 +50,7 @@ public class ServerInitializer {
 
 
         // 记录启动参数，方便后面全局使用
-        this.channelProperties.setLogger((Boolean) configs.getOrDefault("logger",false));
+        this.channelProperties.setLogger((Boolean) configs.getOrDefault("logger", false));
 
         // 启动多个服务器
         this.startServers(configs);
@@ -96,8 +98,11 @@ public class ServerInitializer {
                     continue;
                 }
 
+                // 不同操作系统下的文件路径是不同的
+                String filePath = FileNameUtils.getOsFilePath(absolutePath + fileName);
+
                 // 装载器：装载jar包
-                JarLoaderUtils.loadJar(absolutePath + fileName);
+                JarLoaderUtils.loadJar(filePath);
             }
 
             // 装载器：加载类信息
