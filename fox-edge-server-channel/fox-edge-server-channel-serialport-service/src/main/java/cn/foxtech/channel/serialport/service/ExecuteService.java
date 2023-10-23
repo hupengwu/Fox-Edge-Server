@@ -4,7 +4,6 @@ import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.common.utils.hex.HexUtils;
 import cn.foxtech.common.utils.serialport.ISerialPort;
-import cn.foxtech.common.utils.serialport.linux.entity.OutValue;
 import cn.foxtech.core.exception.ServiceException;
 import org.springframework.stereotype.Component;
 
@@ -52,21 +51,17 @@ public class ExecuteService {
         serialPort.clearRecvFlush();
 
         // 发送数据
-        OutValue sendLen = new OutValue();
-        if (!serialPort.sendData(send, sendLen)) {
-            throw new ServiceException("串口发送数据失败！");
-        }
+        serialPort.sendData(send);
 
         // 接收数据
         byte[] data = new byte[4096];
-        OutValue recvLen = new OutValue();
-        serialPort.recvData(data, timeout, recvLen);
-        if (((int) recvLen.getObj()) == 0) {
+        int recvLen = serialPort.recvData(data, timeout);
+        if (recvLen <= 0) {
             throw new ServiceException("串口在超时范围内，未接收到返回数据！");
         }
 
         // 截取数据
-        byte[] recv = Arrays.copyOfRange(data, 0, (int) recvLen.getObj());
+        byte[] recv = Arrays.copyOfRange(data, 0, recvLen);
 
         // 格式转换
         String hexString = HexUtils.byteArrayToHexString(recv, true);
@@ -114,9 +109,6 @@ public class ExecuteService {
         serialPort.clearSendFlush();
 
         // 发送数据
-        OutValue sendLen = new OutValue();
-        if (!serialPort.sendData(send, sendLen)) {
-            throw new ServiceException("串口发送数据失败！");
-        }
+        serialPort.sendData(send);
     }
 }

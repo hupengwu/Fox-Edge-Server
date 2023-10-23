@@ -1,7 +1,6 @@
 package cn.foxtech.common.utils.serialport;
 
 import cn.foxtech.common.utils.serialport.linux.SerialPortLinux;
-import cn.foxtech.common.utils.serialport.linux.entity.OutValue;
 import cn.foxtech.common.utils.serialport.win32.SerialPortWin32;
 import com.sun.jna.Platform;
 
@@ -51,20 +50,18 @@ public interface ISerialPort {
      * 发送数据
      *
      * @param data    缓冲区
-     * @param sendLen
-     * @return 操作是否成功
+     * @return 实际发送的数据长度
      */
-    boolean sendData(byte[] data, OutValue sendLen);
+    int sendData(byte[] data);
 
     /**
      * 接收数据
      *
      * @param data     准备发送的数据库
      * @param mTimeout 最大超时等待时间，单位毫秒
-     * @param recvLen  接收到数据
-     * @return 操作是否成功
+     * @return 接收到数据
      */
-    boolean recvData(byte[] data, long mTimeout, OutValue recvLen);
+    int recvData(byte[] data, long mTimeout);
 
     /**
      * 清空缓冲区

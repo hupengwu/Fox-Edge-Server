@@ -1,7 +1,6 @@
 package cn.foxtech.common.utils.serialport.win32;
 
 import cn.foxtech.common.utils.serialport.ISerialPort;
-import cn.foxtech.common.utils.serialport.linux.entity.OutValue;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinBase;
@@ -43,14 +42,12 @@ public class SerialPortWin32 implements ISerialPort {
         serialPort.open("COM1");
         serialPort.setParam(9600, "n", 8, 1, 0);
 
-        OutValue sendLen = new OutValue();
-        serialPort.sendData(sendBuff, sendLen);
+        serialPort.sendData(sendBuff);
 
         byte[] recvBuff = new byte[4096];
         while (true) {
-            serialPort.recvData(recvBuff, 50 * 1000, sendLen);
-            int i = (Integer) sendLen.getObj();
-            i = 0;
+            int recv = serialPort.recvData(recvBuff, 50 * 1000);
+            recv = 0;
         }
     }
 
@@ -202,27 +199,24 @@ public class SerialPortWin32 implements ISerialPort {
      * @return
      */
     @Override
-    public boolean sendData(byte[] data, OutValue sendLen) {
+    public int sendData(byte[] data) {
         if (!this.isOpen()) {
-            return false;
+            throw new RuntimeException("串口尚未打开：" + this.name);
         }
-        if (sendLen == null) {
-            return false;
-        }
+
 
         // 清空串口的出错标识
         Win32Macro.COMSTAT ComStat = new Win32Macro.COMSTAT();
         WinDef.DWORDByReference dwErrorFlags = new WinDef.DWORDByReference();
         if (!KERNELPLUS.ClearCommError(this.handle, dwErrorFlags, ComStat)) {
-            return false;
+            throw new RuntimeException("ClearCommError异常：" + this.name);
         }
 
         // 发送数据
         IntByReference dwBytesWritten = new IntByReference();
         boolean bWriteStat = KERNEL.WriteFile(this.handle, data, data.length, dwBytesWritten, null);
 
-        sendLen.setObject(dwBytesWritten.getValue());
-        return true;
+        return dwBytesWritten.getValue();
     }
 
     /**
@@ -240,18 +234,12 @@ public class SerialPortWin32 implements ISerialPort {
     /**
      * @param recvBuffer 接收缓冲区
      * @param uTimeout   最大超时等待时间，单位微秒
-     * @param recvLen    接收到数据
-     * @return 操作是否成功
+     * @return 接收到数据
      */
     @Override
-    public boolean recvData(byte[] recvBuffer, long uTimeout, OutValue recvLen) {
-        if (recvLen == null) {
-            return false;
-        }
-        recvLen.setObject(0);
-
+    public int recvData(byte[] recvBuffer, long uTimeout) {
         if (!this.isOpen()) {
-            return false;
+            throw new RuntimeException("串口尚未打开：" + this.name);
         }
 
 
@@ -296,8 +284,7 @@ public class SerialPortWin32 implements ISerialPort {
             }
         }
 
-        recvLen.setObject(recvCount);
-        return true;
+        return recvCount;
     }
 
     @Override

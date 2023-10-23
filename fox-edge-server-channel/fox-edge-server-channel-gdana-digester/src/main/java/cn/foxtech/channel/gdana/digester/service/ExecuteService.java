@@ -1,14 +1,13 @@
 package cn.foxtech.channel.gdana.digester.service;
 
-import cn.foxtech.common.utils.method.MethodUtils;
-import cn.foxtech.device.protocol.v1.utils.HexUtils;
-import cn.foxtech.device.protocol.v1.gdana.digester.DigesterEntity;
-import cn.foxtech.device.protocol.v1.gdana.digester.DigesterProtocolFrame;
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
+import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.serialport.ISerialPort;
-import cn.foxtech.common.utils.serialport.linux.entity.OutValue;
 import cn.foxtech.core.exception.ServiceException;
+import cn.foxtech.device.protocol.v1.gdana.digester.DigesterEntity;
+import cn.foxtech.device.protocol.v1.gdana.digester.DigesterProtocolFrame;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -72,21 +71,17 @@ public class ExecuteService {
         serialPort.clearRecvFlush();
 
         // 发送数据
-        OutValue sendLen = new OutValue();
-        if (!serialPort.sendData(send, sendLen)) {
-            throw new ServiceException("串口发送数据失败！");
-        }
+        serialPort.sendData(send);
 
         // 接收数据：可能是确认数据，也可能是直接应答的数据
         byte[] data = new byte[4096];
-        OutValue recvLen = new OutValue();
-        serialPort.recvData(data, 1000, recvLen);
-        if (((int) recvLen.getObj()) == 0) {
+        int recvLen = serialPort.recvData(data, 1000);
+        if (recvLen <= 0) {
             throw new ServiceException("串口在超时范围内，未接收到返回数据！");
         }
 
         // 截取数据
-        byte[] recv = Arrays.copyOfRange(data, 0, (int) recvLen.getObj());
+        byte[] recv = Arrays.copyOfRange(data, 0, recvLen);
 
         // 解码：可能收到1个包，或者两个包
         List<DigesterEntity> entityList = DigesterProtocolFrame.decodeStickPack(recv);
@@ -104,11 +99,11 @@ public class ExecuteService {
                 // 成功的场景
                 if (entity.getData()[0] == 0x01) {
                     // 继续等待第二个数据包的抵达
-                    serialPort.recvData(data, timeout, recvLen);
-                    if (((int) recvLen.getObj()) == 0) {
+                    recvLen = serialPort.recvData(data, timeout);
+                    if (recvLen <= 0) {
                         throw new ServiceException("串口在超时范围内，未接收到返回数据！");
                     }
-                    recv = Arrays.copyOfRange(data, 0, (int) recvLen.getObj());
+                    recv = Arrays.copyOfRange(data, 0, recvLen);
 
                     return HexUtils.byteArrayToHexString(recv, true);
                 }
@@ -162,9 +157,6 @@ public class ExecuteService {
         serialPort.clearSendFlush();
 
         // 发送数据
-        OutValue sendLen = new OutValue();
-        if (!serialPort.sendData(send, sendLen)) {
-            throw new ServiceException("串口发送数据失败！");
-        }
+        serialPort.sendData(send);
     }
 }

@@ -2,7 +2,6 @@ package cn.foxtech.common.utils.serialport.linux;
 
 import cn.foxtech.common.utils.serialport.ISerialPort;
 import cn.foxtech.common.utils.serialport.linux.entity.FD_SET;
-import cn.foxtech.common.utils.serialport.linux.entity.OutValue;
 import cn.foxtech.common.utils.serialport.linux.entity.TERMIOS;
 import cn.foxtech.common.utils.serialport.linux.entity.TIMEVAL;
 
@@ -11,16 +10,6 @@ import cn.foxtech.common.utils.serialport.linux.entity.TIMEVAL;
  */
 public class SerialPortLinux implements ISerialPort {
     private static final LinuxAPI API = LinuxAPI.INSTANCE;
-
-    /**
-     * 串口设备名称，例："/dev/ttyS0"
-     */
-    private String name = "/dev/ttyS0";
-    /**
-     * 串口设备ID
-     */
-    private int fd = -1;
-
     /**
      * 新的串口设备选项
      */
@@ -37,6 +26,14 @@ public class SerialPortLinux implements ISerialPort {
      * SELECT超时
      */
     private final long uTimeOut = 100 * 1000;
+    /**
+     * 串口设备名称，例："/dev/ttyS0"
+     */
+    private String name = "/dev/ttyS0";
+    /**
+     * 串口设备ID
+     */
+    private int fd = -1;
 
     /**
      * 串口是否已经打开
@@ -223,14 +220,13 @@ public class SerialPortLinux implements ISerialPort {
     /**
      * 发送数据
      *
-     * @param data    缓冲区
-     * @param sendLen
+     * @param data 缓冲区
      * @return
      */
     @Override
-    public boolean sendData(byte[] data, OutValue sendLen) {
+    public int sendData(byte[] data) {
         if (this.fd < 0) {
-            return false;
+            throw new RuntimeException("串口尚未打开：" + this.name);
         }
 
         // 不停的发送数据，直到发送完为止
@@ -245,8 +241,7 @@ public class SerialPortLinux implements ISerialPort {
                 // 复制尚未发完的后半截数据，到新的数组，准备重新发送
                 int newLength = dataLen - postion;
                 byte[] copy = new byte[newLength];
-                System.arraycopy(sendData, postion, copy, 0,
-                        Math.min(sendData.length, newLength));
+                System.arraycopy(sendData, postion, copy, 0, Math.min(sendData.length, newLength));
                 sendData = copy;
 
                 dataLen = newLength;
@@ -256,8 +251,7 @@ public class SerialPortLinux implements ISerialPort {
         }
 
         // 输出发送的数据量
-        sendLen.setObject(postion);
-        return true;
+        return postion;
     }
 
     /**
@@ -265,15 +259,12 @@ public class SerialPortLinux implements ISerialPort {
      *
      * @param data     准备发送的数据库
      * @param mTimeout 最大超时等待时间，单位毫秒
-     * @param recvLen  接收到数据
-     * @return
+     * @return 接收到数据
      */
     @Override
-    public boolean recvData(byte[] data, long mTimeout, OutValue recvLen) {
-        recvLen.setObject(0);
-
+    public int recvData(byte[] data, long mTimeout) {
         if (this.fd < 0) {
-            return false;
+            throw new RuntimeException("串口尚未打开：" + this.name);
         }
 
 
@@ -291,16 +282,16 @@ public class SerialPortLinux implements ISerialPort {
         // select：readset中是否有描述符被改变
         int maxfd = this.fd + 1;
         if (API.select(maxfd, readset, null, null, tv) < 0) {
-            return false;
+            throw new RuntimeException("串口select异常：" + this.name);
         }
 
         // 检查返回结果
         if (LinuxMacro.FD_ISSET(this.fd, readset)) {
             int recv = API.read(this.fd, data, data.length);
-            recvLen.setObject(recv);
+            return recv;
         }
 
-        return true;
+        return 0;
     }
 
     /**
