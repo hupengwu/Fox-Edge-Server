@@ -45,13 +45,13 @@ public class ConsoleManageController {
             List<Map<String, Object>> range = this.consoleService.range();
             List list = new ArrayList<>();
             for (Map<String, Object> object : range) {
-                if (!MethodUtils.hasEmpty(serviceType) && !serviceType.equals(object.get(RedisStatusConstant.field_service_type))) {
+                if (!MethodUtils.hasEmpty(serviceType) && !this.like(object, RedisStatusConstant.field_service_type, serviceType)) {
                     continue;
                 }
-                if (!MethodUtils.hasEmpty(serviceName) && !serviceName.equals(object.get(RedisStatusConstant.field_service_name))) {
+                if (!MethodUtils.hasEmpty(serviceName) && !this.like(object, RedisStatusConstant.field_service_name, serviceName)) {
                     continue;
                 }
-                if (!MethodUtils.hasEmpty(level) && !level.equals(object.get("level"))) {
+                if (!MethodUtils.hasEmpty(level) && !this.like(object, "level", level)) {
                     continue;
                 }
 
@@ -78,5 +78,22 @@ public class ConsoleManageController {
             data.put("total", total);
             return AjaxResult.success(data);
         }
+    }
+
+    private boolean like(Map<String, Object> map, String key, String value) {
+        if (value == null) {
+            return false;
+        }
+
+        Object data = map.get(key);
+        if (data == null) {
+            return false;
+        }
+
+        if (data instanceof String) {
+            return ((String) data).contains(value);
+        }
+
+        return false;
     }
 }
