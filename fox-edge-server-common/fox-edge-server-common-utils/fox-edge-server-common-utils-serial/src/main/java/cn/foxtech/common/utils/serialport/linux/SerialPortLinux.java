@@ -19,14 +19,6 @@ public class SerialPortLinux implements ISerialPort {
      */
     private final TERMIOS otm = new TERMIOS();
     /**
-     * 接收的数据
-     */
-    private final byte[] data = new byte[1024];
-    /**
-     * SELECT超时
-     */
-    private final long uTimeOut = 100 * 1000;
-    /**
      * 串口设备名称，例："/dev/ttyS0"
      */
     private String name = "/dev/ttyS0";
@@ -35,6 +27,10 @@ public class SerialPortLinux implements ISerialPort {
      */
     private int fd = -1;
 
+    @Override
+    public String getName(){
+        return this.name;
+    }
     /**
      * 串口是否已经打开
      *
@@ -255,14 +251,27 @@ public class SerialPortLinux implements ISerialPort {
     }
 
     /**
-     * 接收数据
+     * 线程的sleep
      *
-     * @param data     准备发送的数据库
-     * @param mTimeout 最大超时等待时间，单位毫秒
-     * @return 接收到数据
+     * @param ms
+     */
+    private void sleep(long ms) {
+        try {
+            Thread.sleep(5);
+        } catch (Exception e) {
+        }
+    }
+
+    /**
+     * 读取串口数据
+     *
+     * @param recvBuffer      缓存
+     * @param minPackInterval 两组数据报文之间，最小的时间间隔
+     * @param maxPackInterval 两组数据报文之间，最大的时间间隔
+     * @return 报文长度
      */
     @Override
-    public int recvData(byte[] data, long mTimeout) {
+    public int recvData(byte[] recvBuffer, long minPackInterval, long maxPackInterval) {
         if (this.fd < 0) {
             throw new RuntimeException("串口尚未打开：" + this.name);
         }
@@ -276,8 +285,8 @@ public class SerialPortLinux implements ISerialPort {
 
         // 指明select的最大等待时间1000微秒
         TIMEVAL tv = new TIMEVAL();
-        tv.tv_sec = mTimeout / 1000;
-        tv.tv_usec = mTimeout % 1000;
+        tv.tv_sec = maxPackInterval / 1000;
+        tv.tv_usec = maxPackInterval % 1000;
 
         // select：readset中是否有描述符被改变
         int maxfd = this.fd + 1;
@@ -285,13 +294,28 @@ public class SerialPortLinux implements ISerialPort {
             throw new RuntimeException("串口select异常：" + this.name);
         }
 
+        // 等待一些时间，确保数据完全抵达
+        this.sleep(minPackInterval);
+
         // 检查返回结果
         if (LinuxMacro.FD_ISSET(this.fd, readset)) {
-            int recv = API.read(this.fd, data, data.length);
+            int recv = API.read(this.fd, recvBuffer, recvBuffer.length);
             return recv;
         }
 
         return 0;
+    }
+
+    /**
+     * 接收数据
+     *
+     * @param data     准备发送的数据库
+     * @param mTimeout 最大超时等待时间，单位毫秒
+     * @return 接收到数据
+     */
+    @Override
+    public int recvData(byte[] data, long mTimeout) {
+        return recvData(data, 10, mTimeout);
     }
 
     /**

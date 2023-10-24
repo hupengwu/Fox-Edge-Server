@@ -1,19 +1,38 @@
 package cn.foxtech.channel.serialport.service;
 
+import cn.foxtech.channel.common.properties.ChannelProperties;
+import cn.foxtech.channel.domain.ChannelBaseVO;
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
+import cn.foxtech.channel.serialport.entity.SerialChannelEntity;
+import cn.foxtech.common.domain.constant.RedisTopicConstant;
 import cn.foxtech.common.utils.hex.HexUtils;
+import cn.foxtech.common.utils.serialport.AsyncExecutor;
 import cn.foxtech.common.utils.serialport.ISerialPort;
 import cn.foxtech.core.exception.ServiceException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 执行者
  */
 @Component
 public class ExecuteService {
+    /**
+     * 主动上报的topic
+     */
+    private final String reportTopic = RedisTopicConstant.topic_channel_respond + RedisTopicConstant.model_manager;
+    /**
+     * 属性信息
+     */
+    @Autowired
+    private ChannelProperties channelProperties;
+
     /**
      * 查询串口数据:增加同步锁，避免并发访问带来的多线程异常。
      *
@@ -78,7 +97,7 @@ public class ExecuteService {
      * @param requestVO 发布报文
      * @throws ServiceException 异常信息
      */
-    public void publish(ISerialPort serialPort, ChannelRequestVO requestVO) throws ServiceException {
+    public void publish(SerialChannelEntity channelEntity, ChannelRequestVO requestVO) throws ServiceException {
         String sendData = (String) requestVO.getSend();
         Integer timeout = requestVO.getTimeout();
 
@@ -92,11 +111,15 @@ public class ExecuteService {
             throw new ServiceException("超时参数不能大于10秒！");
         }
 
+        if (!channelEntity.getConfig().getFullDuplex()) {
+            throw new ServiceException("半双工模式，不允许进行单向操作:" + requestVO.getName());
+        }
+
         // 检查串口
-        if (serialPort == null) {
+        if (channelEntity.getSerialPort() == null) {
             throw new ServiceException("串口不存在！");
         }
-        if (!serialPort.isOpen()) {
+        if (!channelEntity.getSerialPort().isOpen()) {
             throw new ServiceException("串口没有打开！");
         }
 
@@ -104,11 +127,60 @@ public class ExecuteService {
         // 格式转换
         byte[] send = HexUtils.hexStringToByteArray(sendData);
 
+        // 通过异步线程执行前期，发送数据
+        channelEntity.getAsyncExecutor().waitWriteable(send);
+    }
 
-        // 清空串口上的发送/接收缓冲区
-        serialPort.clearSendFlush();
+    public List<ChannelRespondVO> report(Map<String, SerialChannelEntity> channelEntityMap) throws ServiceException {
+        List<ChannelRespondVO> respondVOList = new ArrayList<>();
+        for (String channelName : channelEntityMap.keySet()) {
+            SerialChannelEntity channelEntity = channelEntityMap.get(channelName);
+            if (channelEntity == null) {
+                continue;
+            }
 
-        // 发送数据
-        serialPort.sendData(send);
+            // 检测：串口是否打开
+            if (channelEntity.getSerialPort() == null) {
+                continue;
+            }
+
+            if (!channelEntity.getSerialPort().isOpen()) {
+                continue;
+            }
+
+            // 检测：是否为全双工模式
+            if (!channelEntity.getConfig().getFullDuplex()) {
+                continue;
+            }
+
+            // 取得异步执行器
+            AsyncExecutor asyncExecutor = channelEntity.getAsyncExecutor();
+            if (asyncExecutor == null) {
+                continue;
+            }
+
+            // 检测：是否有数据到达
+            if (!asyncExecutor.isReadable()) {
+                continue;
+            }
+
+            // 取出数据
+            List<byte[]> list = asyncExecutor.waitReadable(100);
+
+            for (byte[] data : list) {
+                String hex = HexUtils.byteArrayToHexString(data);
+                ChannelRespondVO respondVO = new ChannelRespondVO();
+                respondVO.setName(channelName);
+                respondVO.setRoute(this.reportTopic);
+                respondVO.setMode(ChannelBaseVO.MODE_RECEIVE);
+                respondVO.setType(this.channelProperties.getChannelType());
+                respondVO.setRecv(hex);
+
+
+                respondVOList.add(respondVO);
+            }
+        }
+
+        return respondVOList;
     }
 }

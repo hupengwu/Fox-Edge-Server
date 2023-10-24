@@ -18,6 +18,8 @@ public interface ISerialPort {
         }
     }
 
+    public String getName();
+
     /**
      * 串口是否打开
      *
@@ -62,6 +64,16 @@ public interface ISerialPort {
      * @return 接收到数据
      */
     int recvData(byte[] data, long mTimeout);
+
+    /**
+     * 读取串口数据
+     *
+     * @param recvBuffer      缓存
+     * @param minPackInterval 两组数据报文之间，最小的时间间隔
+     * @param maxPackInterval 两组数据报文之间，最大的时间间隔
+     * @return 报文长度
+     */
+    public int recvData(byte[] recvBuffer, long minPackInterval, long maxPackInterval);
 
     /**
      * 清空缓冲区

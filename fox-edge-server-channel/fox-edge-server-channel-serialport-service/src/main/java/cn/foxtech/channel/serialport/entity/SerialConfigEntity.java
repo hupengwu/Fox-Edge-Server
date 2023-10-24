@@ -35,4 +35,9 @@ public class SerialConfigEntity {
      */
     private Integer commTimeOuts;
 
+    /**
+     * 是否为全双工模式
+     */
+    private Boolean fullDuplex;
+
 }

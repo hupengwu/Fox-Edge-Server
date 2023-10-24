@@ -9,6 +9,7 @@ import cn.foxtech.channel.serialport.entity.SerialChannelEntity;
 import cn.foxtech.channel.serialport.entity.SerialConfigEntity;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.method.MethodUtils;
+import cn.foxtech.common.utils.serialport.AsyncExecutor;
 import cn.foxtech.common.utils.serialport.ISerialPort;
 import cn.foxtech.core.exception.ServiceException;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -26,10 +27,8 @@ public class ChannelService extends ChannelServerAPI {
     private static final Logger logger = Logger.getLogger(ChannelService.class);
 
     private final Map<String, SerialChannelEntity> channelEntityMap = new ConcurrentHashMap<>();
-
     @Autowired
     private RedisConsoleService console;
-
     @Autowired
     private ExecuteService executeService;
 
@@ -64,7 +63,7 @@ public class ChannelService extends ChannelServerAPI {
 
         // 这个参数默认是不填写的，使用的是默认值0。除非遇到设备的通信传输比较不稳定，此时可能需要设置1~5的数据
         Integer commTimeOuts = (Integer) channelParam.get("commTimeOuts");
-        if (commTimeOuts == null){
+        if (commTimeOuts == null) {
             commTimeOuts = 0;
         }
 
@@ -76,8 +75,10 @@ public class ChannelService extends ChannelServerAPI {
         configEntity.setParity(parity);
         configEntity.setStopbits(stopbits);
         configEntity.setCommTimeOuts(commTimeOuts);
-        channelEntity.setConfig(configEntity);
+        configEntity.setFullDuplex(Boolean.TRUE.equals(channelParam.get("fullDuplex")));
 
+        // 保存配置
+        channelEntity.setConfig(configEntity);
 
         // 打开串口
         this.openSerial(channelName);
@@ -114,6 +115,14 @@ public class ChannelService extends ChannelServerAPI {
 
             // 记录打开的串口对象
             channelEntity.setSerialPort(serialPort);
+
+            // 全双工模式：创建一个异步执行器
+            if (channelEntity.getConfig().getFullDuplex()) {
+                AsyncExecutor asyncExecutor = new AsyncExecutor();
+                asyncExecutor.createExecutor(serialPort);
+
+                channelEntity.setAsyncExecutor(asyncExecutor);
+            }
         }
     }
 
@@ -134,6 +143,13 @@ public class ChannelService extends ChannelServerAPI {
         //  关闭串口
         if (channelEntity.getSerialPort() != null) {
             try {
+                // 关闭异步执行器
+                if (channelEntity.getAsyncExecutor() != null) {
+                    channelEntity.getAsyncExecutor().closeExecutor();
+                    channelEntity.setAsyncExecutor(null);
+                }
+
+                // 关闭串口
                 channelEntity.getSerialPort().close();
                 channelEntity.setSerialPort(null);
             } catch (Exception e) {
@@ -206,6 +222,10 @@ public class ChannelService extends ChannelServerAPI {
             throw new ServiceException("串口无法打开:" + requestVO.getName());
         }
 
+        if (channelEntity.getConfig().getFullDuplex()) {
+            throw new ServiceException("异步全双工模式，不允许进行半双工操作:" + requestVO.getName());
+        }
+
         return this.executeService.execute(channelEntity.getSerialPort(), requestVO);
     }
 
@@ -229,6 +249,11 @@ public class ChannelService extends ChannelServerAPI {
             throw new ServiceException("串口未打开:" + requestVO.getName());
         }
 
-        this.executeService.publish(channelEntity.getSerialPort(), requestVO);
+        this.executeService.publish(channelEntity, requestVO);
+    }
+
+    @Override
+    public List<ChannelRespondVO> report() throws ServiceException {
+        return this.executeService.report(this.channelEntityMap);
     }
 }

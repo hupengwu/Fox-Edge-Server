@@ -1,5 +1,6 @@
 package cn.foxtech.channel.serialport.entity;
 
+import cn.foxtech.common.utils.serialport.AsyncExecutor;
 import cn.foxtech.common.utils.serialport.ISerialPort;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,6 +23,11 @@ public class SerialChannelEntity {
      * 串口
      */
     private ISerialPort serialPort;
+
+    /**
+     * 异步执行器：全双工模式
+     */
+    private AsyncExecutor asyncExecutor;
 
     /**
      * 激活时间
