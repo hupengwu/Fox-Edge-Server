@@ -35,15 +35,6 @@ public class RedisTopicProxyService {
     @Autowired
     private ServiceStatus serviceStatus;
 
-    /**
-     * 发送报文
-     *
-     * @param url
-     * @param queryString
-     * @param body
-     * @param method
-     * @return
-     */
     public String execute(String url, String queryString, String body, RequestMethod method) throws InterruptedException, IOException {
         if (url.startsWith(channel_head)) {
             return this.executeChannel(url, body, method);

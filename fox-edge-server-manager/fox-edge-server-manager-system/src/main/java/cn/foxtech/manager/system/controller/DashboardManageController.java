@@ -13,7 +13,10 @@ import cn.foxtech.manager.common.utils.OSInfoUtils;
 import cn.foxtech.manager.system.service.EntityManageService;
 import com.fasterxml.jackson.core.JsonParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -37,8 +40,8 @@ public class DashboardManageController {
     /**
      * 查询一级列表
      *
-     * @param params
-     * @return
+     * @param params 用戶参数
+     * @return 查询结果
      */
     @PostMapping("indicator")
     public AjaxResult queryIndicator(@RequestBody Map<String, Object> params) {

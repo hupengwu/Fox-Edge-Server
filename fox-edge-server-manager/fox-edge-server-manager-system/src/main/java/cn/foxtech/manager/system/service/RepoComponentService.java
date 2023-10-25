@@ -237,9 +237,9 @@ public class RepoComponentService {
     /**
      * 从云端查询仓库列表，并保存到本地
      *
-     * @param modelType
-     * @return
-     * @throws IOException
+     * @param modelType 模块类型
+     * @return uri信息
+     * @throws IOException 异常信息
      */
     public List<Map<String, Object>> queryUriListFile(String modelType) throws IOException {
         Map<String, Object> body = new HashMap<>();
@@ -860,6 +860,12 @@ public class RepoComponentService {
 
     /**
      * 安装模块
+     * @param modelType 模块类型
+     * @param modelName 模块名称
+     * @param modelVersion 模块版本
+     * @param version jar版本
+     * @param stage 发布状态
+     * @param component 组件类型
      */
     public void installFile(String modelType, String modelName, String modelVersion, String version, String stage, String component) {
         try {

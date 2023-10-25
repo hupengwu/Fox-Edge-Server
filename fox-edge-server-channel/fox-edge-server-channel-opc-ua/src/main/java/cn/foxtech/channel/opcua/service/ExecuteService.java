@@ -1,6 +1,5 @@
 package cn.foxtech.channel.opcua.service;
 
-import cn.foxtech.channel.common.service.TempDirManageService;
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.channel.opcua.certificate.KeyStoreLoader;
@@ -12,6 +11,7 @@ import cn.foxtech.channel.opcua.enums.BrowseModeEnum;
 import cn.foxtech.channel.opcua.handler.OpcUaHandler;
 import cn.foxtech.channel.opcua.utils.BrowseNodeUtils;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
+import cn.foxtech.common.file.TempDirManageService;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.exception.ServiceException;

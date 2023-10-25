@@ -78,7 +78,7 @@ public class CloudRemoteService {
     /**
      * 登录
      *
-     * @throws IOException
+     * @throws IOException 异常信息
      */
     public synchronized void login() throws IOException {
         // 获得账号/密码

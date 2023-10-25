@@ -31,8 +31,8 @@ public class OptionManageController {
     /**
      * 查询一级列表
      *
-     * @param params
-     * @return
+     * @param params 用户参数
+     * @return 查询结果
      */
     @PostMapping("data")
     public AjaxResult selectDataList(@RequestBody Map<String, Object> params) {
@@ -153,10 +153,10 @@ public class OptionManageController {
     /**
      * 获得选项
      *
-     * @param mapList
-     * @param valueField
-     * @param labelField
-     * @return
+     * @param mapList mapList
+     * @param valueField 数值字段
+     * @param labelField 标签字段
+     * @return 转换结果
      */
     private List<Object> getOptionList(List<Map<String, Object>> mapList, String valueField, String labelField) {
         List<Object> result = new ArrayList<>();
@@ -178,10 +178,10 @@ public class OptionManageController {
     /**
      * 获得二级选项
      *
-     * @param mapList
-     * @param field1
-     * @param field2
-     * @return
+     * @param mapList 数据列表
+     * @param field1 字段1
+     * @param field2 字段2
+     * @return 返回结果
      */
     private List<Object> getOptionTree(List<Map<String, Object>> mapList, String field1, String field2) {
         // 先进行分组

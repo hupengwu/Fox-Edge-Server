@@ -1,6 +1,7 @@
 package cn.foxtech.manager.system.controller;
 
 
+import cn.foxtech.common.constant.HttpStatus;
 import cn.foxtech.common.entity.constant.DeviceStatusVOFieldConstant;
 import cn.foxtech.common.entity.constant.DeviceVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
@@ -13,15 +14,28 @@ import cn.foxtech.common.entity.service.redis.RedisReader;
 import cn.foxtech.common.entity.service.redis.RedisWriter;
 import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.entity.utils.PageUtils;
+import cn.foxtech.common.file.TempDirManageService;
+import cn.foxtech.common.utils.file.FileTextUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.manager.system.service.EntityManageService;
+import cn.foxtech.manager.system.utils.CsvUtils;
 import com.fasterxml.jackson.core.JsonParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.QueryParam;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,8 +49,15 @@ public class DeviceManageController {
     @Autowired
     private EntityManageService manageService;
 
+    @Autowired
+    private TempDirManageService tempDirManageService;
+
     @PostMapping("page")
-    public AjaxResult selectEntityListByPage(@RequestBody Map<String, Object> body) {
+    public AjaxResult selectEntityPage(@RequestBody Map<String, Object> body) {
+        return this.selectEntityListByPage(body);
+    }
+
+    private AjaxResult selectEntityListByPage(Map<String, Object> body) {
         // 提取业务参数
         Object id = body.get(DeviceVOFieldConstant.field_id);
         String deviceName = (String) body.get(DeviceVOFieldConstant.field_device_name);
@@ -45,7 +66,6 @@ public class DeviceManageController {
         String channelType = (String) body.get(DeviceVOFieldConstant.field_channel_type);
         Integer pageNum = (Integer) body.get(DeviceVOFieldConstant.field_page_num);
         Integer pageSize = (Integer) body.get(DeviceVOFieldConstant.field_page_size);
-
 
 
         // 简单校验参数
@@ -103,6 +123,7 @@ public class DeviceManageController {
 
     /**
      * 扩展设备状态
+     *
      * @param mapList
      * @throws JsonParseException
      */
@@ -264,5 +285,89 @@ public class DeviceManageController {
         }
 
         return AjaxResult.success();
+    }
+
+    @PostMapping("/export")
+    public AjaxResult downloadEntityList(@RequestBody Map<String, Object> body) {
+        AjaxResult result = this.selectEntityListByPage(body);
+        if (!HttpStatus.SUCCESS.equals(result.get(AjaxResult.CODE_TAG))) {
+            return result;
+        }
+
+        try {
+            this.tempDirManageService.createTempDir();
+            this.tempDirManageService.getTempDir();
+
+            Map<String, Object> data = (Map<String, Object>) result.get(AjaxResult.DATA_TAG);
+            List<Map<String, Object>> dataList = (List<Map<String, Object>>) data.get("list");
+
+            List<String> headerLine = new ArrayList<>();
+            headerLine.add(DeviceVOFieldConstant.field_device_name);
+            headerLine.add(DeviceVOFieldConstant.field_device_type);
+            headerLine.add(DeviceVOFieldConstant.field_channel_name);
+            headerLine.add(DeviceVOFieldConstant.field_channel_type);
+            headerLine.add(DeviceVOFieldConstant.field_create_time);
+            headerLine.add(DeviceVOFieldConstant.field_update_time);
+
+            List<String> list = new ArrayList<>();
+            // 头行
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < headerLine.size(); i++) {
+                if (i + 1 != headerLine.size()) {
+                    sb.append(headerLine.get(i) + ",");
+                } else {
+                    sb.append(headerLine.get(i));
+                }
+            }
+            list.add(sb.toString());
+
+            // 数据行
+            for (Map<String, Object> row : dataList) {
+                sb = new StringBuilder();
+                for (int i = 0; i < headerLine.size(); i++) {
+
+                    Object value = row.get(headerLine.get(i));
+                    String sValue = "";
+                    if (value != null) {
+                        sValue = value.toString();
+                    }
+
+                    if (i + 1 != headerLine.size()) {
+                        sb.append(sValue + ",");
+                    } else {
+                        sb.append(sValue);
+                    }
+                }
+                list.add(sb.toString());
+            }
+
+            String fileName = System.currentTimeMillis() + ".csv";
+            CsvUtils.writeCSV(this.tempDirManageService.getTempDir() + "/" + fileName, list,"UTF-8");
+
+            HttpServletResponse resp = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+
+
+            File download = new File(this.tempDirManageService.getTempDir() + "/" + fileName);
+            if (download.exists()) {
+                resp.setContentType("application/x-msdownload");
+                resp.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes(), "UTF-8"));
+                InputStream inputStream = new FileInputStream(download);
+                ServletOutputStream ouputStream = resp.getOutputStream();
+                byte[] b = new byte[1024];
+                int n;
+                while ((n = inputStream.read(b)) != -1) {
+                    ouputStream.write(b, 0, n);
+                }
+                ouputStream.close();
+                inputStream.close();
+            }
+
+            download.delete();
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
+
+
+        return AjaxResult.error("");
     }
 }

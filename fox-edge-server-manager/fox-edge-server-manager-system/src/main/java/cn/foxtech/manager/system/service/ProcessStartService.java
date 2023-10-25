@@ -26,10 +26,10 @@ public class ProcessStartService {
     /**
      * 重启进程
      *
-     * @param appName
-     * @param appType
-     * @throws IOException
-     * @throws InterruptedException
+     * @param appName 应用名称
+     * @param appType 应用类型
+     * @throws IOException 异常信息
+     * @throws InterruptedException 异常信息
      */
     public void restartProcess(String appName, String appType) throws IOException, InterruptedException {
         // 简单校验参数
@@ -52,10 +52,10 @@ public class ProcessStartService {
     /**
      * 重启进程
      *
-     * @param appName
-     * @param appType
-     * @throws IOException
-     * @throws InterruptedException
+     * @param appName 应用名称
+     * @param appType 应用类型
+     * @throws IOException 异常信息
+     * @throws InterruptedException 异常信息
      */
     public void stopProcess(String appName, String appType) throws IOException, InterruptedException {
         // 简单校验参数
@@ -90,10 +90,10 @@ public class ProcessStartService {
     /**
      * 卸载进程
      *
-     * @param appName
-     * @param appType
-     * @throws IOException
-     * @throws InterruptedException
+     * @param appName 应用名称
+     * @param appType 应用类型
+     * @throws IOException 异常信息
+     * @throws InterruptedException 异常信息
      */
     public void uninstallProcess(String appName, String appType) throws IOException, InterruptedException {
         this.repositoryComponentService.uninstallServiceFile(appName, appType);

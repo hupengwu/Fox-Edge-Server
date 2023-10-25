@@ -1,4 +1,4 @@
-package cn.foxtech.link.common.service;
+package cn.foxtech.common.file;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

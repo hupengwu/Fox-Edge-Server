@@ -69,15 +69,6 @@ public class TriggerValueManageController {
         return this.selectEntityListPage(filter, "ASC", pageNum, pageSize);
     }
 
-    /**
-     * 分页查询数据
-     *
-     * @param filter
-     * @param order
-     * @param pageNmu
-     * @param pageSize
-     * @return
-     */
     public AjaxResult selectEntityListPage(String filter, String order, long pageNmu, long pageSize) {
         try {
             // 从数据库的deviceObject中查询总数

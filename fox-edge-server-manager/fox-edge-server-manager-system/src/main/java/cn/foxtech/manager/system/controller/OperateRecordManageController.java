@@ -1,13 +1,13 @@
 package cn.foxtech.manager.system.controller;
 
+import cn.foxtech.common.entity.constant.OperateRecordVOFieldConstant;
+import cn.foxtech.common.entity.entity.OperateRecordEntity;
 import cn.foxtech.common.entity.entity.OperateRecordPo;
 import cn.foxtech.common.entity.service.operaterecord.OperateRecordEntityMapper;
 import cn.foxtech.common.entity.service.operaterecord.OperateRecordMaker;
 import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
-import cn.foxtech.common.entity.constant.OperateRecordVOFieldConstant;
-import cn.foxtech.common.entity.entity.OperateRecordEntity;
 import cn.foxtech.core.domain.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,15 +63,6 @@ public class OperateRecordManageController {
         return this.selectEntityListPage(filter, "DESC", pageNum, pageSize);
     }
 
-    /**
-     * 分页查询数据
-     *
-     * @param filter
-     * @param order
-     * @param pageNmu
-     * @param pageSize
-     * @return
-     */
     public AjaxResult selectEntityListPage(String filter, String order, long pageNmu, long pageSize) {
         try {
             // 查询总数

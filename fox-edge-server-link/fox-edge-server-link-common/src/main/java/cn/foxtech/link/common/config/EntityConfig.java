@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * Device服务不使用数据库，所以不通过扫描map来实例化MyBatis组件
  */
 @Configuration
-@ComponentScan(basePackages = { "cn.foxtech.common.entity.manager"})
+@ComponentScan(basePackages = { "cn.foxtech.common.entity.manager","cn.foxtech.common.file"})
 public class EntityConfig {
 }
 

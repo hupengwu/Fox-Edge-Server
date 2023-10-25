@@ -72,7 +72,7 @@ public class RedisTopicSuberService extends RedisTopicSubscriber {
     /**
      * 该接口会收到两种格式的响应报文，所以在解析JSON格式的时候，不需要捕获异常，总有一款是格式是适合的。
      *
-     * @param message
+     * @param message 接收到的消息
      */
     @Override
     public void receiveTopic3rd(String message) {

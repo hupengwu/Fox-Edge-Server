@@ -134,6 +134,12 @@
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-common-file</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+	
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-process</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
