@@ -11,9 +11,14 @@ import java.util.List;
 public class DevicePo extends DeviceBase {
 
     /**
-     * 设备的配置参数
+     * 配置参数：这是工作参数
      */
     private String deviceParam;
+
+    /**
+     * 扩展参数（非工作参数）：主要是一些备注信息，它并不参与fox-edge本身的工作
+     */
+    private String extendParam;
 
     /**
      * 获取业务值
@@ -23,6 +28,8 @@ public class DevicePo extends DeviceBase {
     public List<Object> makeServiceValueList() {
         List<Object> list = super.makeServiceValueList();
         list.add(this.deviceParam);
+        list.add(this.extendParam);
+
 
         return list;
     }

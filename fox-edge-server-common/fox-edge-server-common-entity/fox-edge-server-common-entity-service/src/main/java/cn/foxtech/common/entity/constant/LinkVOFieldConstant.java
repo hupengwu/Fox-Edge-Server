@@ -6,4 +6,6 @@ public class LinkVOFieldConstant extends BaseVOFieldConstant {
     public static final String field_link_type = "linkType";
 
     public static final String field_link_param = "linkParam";
+
+    public static final String field_extend_param = "extendParam";
 }

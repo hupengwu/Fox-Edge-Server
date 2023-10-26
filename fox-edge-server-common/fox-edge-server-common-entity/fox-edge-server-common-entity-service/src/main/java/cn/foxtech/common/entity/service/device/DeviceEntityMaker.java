@@ -37,6 +37,7 @@ public class DeviceEntityMaker {
         result.bind(entity);
 
         result.setDeviceParam(JsonUtils.buildJsonWithoutException(entity.getDeviceParam()));
+        result.setExtendParam(JsonUtils.buildJsonWithoutException(entity.getExtendParam()));
         return result;
     }
 
@@ -53,6 +54,18 @@ public class DeviceEntityMaker {
             }
         } catch (Exception e) {
             System.out.println("设备配置参数转换Json对象失败：" + entity.getDeviceName() + ":" + entity.getDeviceParam());
+            e.printStackTrace();
+        }
+
+        try {
+            Map<String, Object> params = JsonUtils.buildObject(entity.getExtendParam(), Map.class);
+            if (params != null) {
+                result.setExtendParam(params);
+            } else {
+                System.out.println("设备扩展参数转换Json对象失败：" + entity.getDeviceName() + ":" + entity.getExtendParam());
+            }
+        } catch (Exception e) {
+            System.out.println("设备扩展参数转换Json对象失败：" + entity.getDeviceName() + ":" + entity.getExtendParam());
             e.printStackTrace();
         }
 

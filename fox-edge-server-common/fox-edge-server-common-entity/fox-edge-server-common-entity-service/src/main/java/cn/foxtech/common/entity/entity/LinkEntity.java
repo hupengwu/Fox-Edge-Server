@@ -18,6 +18,10 @@ public class LinkEntity extends LinkBase {
      * 参数信息
      */
     private Map<String, Object> linkParam = new HashMap<>();
+    /**
+     * 扩展参数（非工作参数）：主要是一些备注信息，它并不参与fox-edge本身的工作
+     */
+    private Map<String, Object> extendParam = new HashMap<>();
 
 
     /**
@@ -40,7 +44,15 @@ public class LinkEntity extends LinkBase {
     public List<Object> makeServiceValueList() {
         List<Object> list = super.makeServiceValueList();
         list.add(this.linkParam);
+        list.add(this.extendParam);
 
         return list;
+    }
+
+    public void bind(LinkEntity other) {
+        super.bind(other);
+
+        this.linkParam = other.linkParam;
+        this.extendParam = other.extendParam;
     }
 }

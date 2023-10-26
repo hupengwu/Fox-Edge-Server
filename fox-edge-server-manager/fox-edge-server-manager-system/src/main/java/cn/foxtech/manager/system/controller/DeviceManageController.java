@@ -190,10 +190,11 @@ public class DeviceManageController {
             String channelType = (String) params.get(DeviceVOFieldConstant.field_channel_type);
             String channelName = (String) params.get(DeviceVOFieldConstant.field_channel_name);
             Map<String, Object> deviceParam = (Map<String, Object>) params.get(DeviceVOFieldConstant.field_device_param);
+            Map<String, Object> extendParam = (Map<String, Object>) params.get(DeviceVOFieldConstant.field_extend_param);
 
             // 简单校验参数
-            if (MethodUtils.hasNull(deviceName, deviceType, channelType, channelName, deviceParam)) {
-                return AjaxResult.error("参数不能为空:deviceName, deviceType, channelType, channelName, deviceParam");
+            if (MethodUtils.hasNull(deviceName, deviceType, channelType, channelName, deviceParam, extendParam)) {
+                return AjaxResult.error("参数不能为空:deviceName, deviceType, channelType, channelName, deviceParam, extendParam");
             }
 
             // 构造作为参数的实体
@@ -203,6 +204,7 @@ public class DeviceManageController {
             entity.setChannelType(channelType);
             entity.setChannelName(channelName);
             entity.setDeviceParam(deviceParam);
+            entity.setExtendParam(extendParam);
 
             // 简单验证实体的合法性
             if (entity.hasNullServiceKey()) {

@@ -37,6 +37,7 @@ public class ChannelMaker {
         result.bind(entity);
 
         result.setChannelParam(JsonUtils.buildJsonWithoutException(entity.getChannelParam()));
+        result.setExtendParam(JsonUtils.buildJsonWithoutException(entity.getExtendParam()));
         return result;
     }
 
@@ -49,10 +50,22 @@ public class ChannelMaker {
             if (params != null) {
                 result.setChannelParam(params);
             } else {
-                System.out.println("设备配置参数转换Json对象失败：" + entity.getChannelName() + ":" + entity.getChannelParam());
+                System.out.println("通道配置参数转换Json对象失败：" + entity.getChannelName() + ":" + entity.getChannelParam());
             }
         } catch (Exception e) {
-            System.out.println("设备配置参数转换Json对象失败：" + entity.getChannelName() + ":" + entity.getChannelParam());
+            System.out.println("通道配置参数转换Json对象失败：" + entity.getChannelName() + ":" + entity.getChannelParam());
+            e.printStackTrace();
+        }
+
+        try {
+            Map<String, Object> params = JsonUtils.buildObject(entity.getExtendParam(), Map.class);
+            if (params != null) {
+                result.setExtendParam(params);
+            } else {
+                System.out.println("通道扩展参数转换Json对象失败：" + entity.getChannelName() + ":" + entity.getExtendParam());
+            }
+        } catch (Exception e) {
+            System.out.println("通道扩展参数转换Json对象失败：" + entity.getChannelName() + ":" + entity.getExtendParam());
             e.printStackTrace();
         }
 

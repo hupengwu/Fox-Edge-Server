@@ -1,8 +1,5 @@
 package cn.foxtech.manager.system.controller;
 
-import cn.foxtech.link.domain.LinkRequestVO;
-import cn.foxtech.link.domain.LinkRespondVO;
-import cn.foxtech.link.domain.LinkVOConstant;
 import cn.foxtech.common.constant.HttpStatus;
 import cn.foxtech.common.domain.constant.RedisStatusConstant;
 import cn.foxtech.common.domain.constant.RedisTopicConstant;
@@ -18,6 +15,9 @@ import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.redis.topic.service.RedisTopicPublisher;
 import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
 import cn.foxtech.core.domain.AjaxResult;
+import cn.foxtech.link.domain.LinkRequestVO;
+import cn.foxtech.link.domain.LinkRespondVO;
+import cn.foxtech.link.domain.LinkVOConstant;
 import cn.foxtech.manager.system.service.EntityManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -166,10 +166,11 @@ public class LinkManageController {
             String linkType = (String) params.get(LinkVOFieldConstant.field_link_type);
             String linkName = (String) params.get(LinkVOFieldConstant.field_link_name);
             Map<String, Object> linkParam = (Map<String, Object>) params.get(LinkVOFieldConstant.field_link_param);
+            Map<String, Object> extendParam = (Map<String, Object>) params.get(LinkVOFieldConstant.field_extend_param);
 
             // 简单校验参数
-            if (MethodUtils.hasNull(linkType, linkName, linkParam)) {
-                return AjaxResult.error("参数不能为空:linkType, linkName, linkParam");
+            if (MethodUtils.hasNull(linkType, linkName, linkParam, extendParam)) {
+                return AjaxResult.error("参数不能为空: linkType, linkName, linkParam, extendParam");
             }
 
             // 构造作为参数的实体
@@ -177,6 +178,7 @@ public class LinkManageController {
             entity.setLinkType(linkType);
             entity.setLinkName(linkName);
             entity.setLinkParam(linkParam);
+            entity.setExtendParam(extendParam);
 
             // 简单验证实体的合法性
             if (entity.hasNullServiceKey()) {

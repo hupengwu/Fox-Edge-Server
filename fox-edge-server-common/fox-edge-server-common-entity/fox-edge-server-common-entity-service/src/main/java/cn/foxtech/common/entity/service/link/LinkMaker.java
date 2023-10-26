@@ -37,6 +37,7 @@ public class LinkMaker {
         result.bind(entity);
 
         result.setLinkParam(JsonUtils.buildJsonWithoutException(entity.getLinkParam()));
+        result.setExtendParam(JsonUtils.buildJsonWithoutException(entity.getExtendParam()));
         return result;
     }
 
@@ -49,10 +50,22 @@ public class LinkMaker {
             if (params != null) {
                 result.setLinkParam(params);
             } else {
-                System.out.println("设备配置参数转换Json对象失败：" + entity.getLinkName() + ":" + entity.getLinkParam());
+                System.out.println("链路配置参数转换Json对象失败：" + entity.getLinkName() + ":" + entity.getLinkParam());
             }
         } catch (Exception e) {
-            System.out.println("设备配置参数转换Json对象失败：" + entity.getLinkName() + ":" + entity.getLinkParam());
+            System.out.println("链路配置参数转换Json对象失败：" + entity.getLinkName() + ":" + entity.getLinkParam());
+            e.printStackTrace();
+        }
+
+        try {
+            Map<String, Object> params = JsonUtils.buildObject(entity.getExtendParam(), Map.class);
+            if (params != null) {
+                result.setExtendParam(params);
+            } else {
+                System.out.println("链路扩展参数转换Json对象失败：" + entity.getLinkName() + ":" + entity.getExtendParam());
+            }
+        } catch (Exception e) {
+            System.out.println("链路扩展参数转换Json对象失败：" + entity.getLinkName() + ":" + entity.getExtendParam());
             e.printStackTrace();
         }
 

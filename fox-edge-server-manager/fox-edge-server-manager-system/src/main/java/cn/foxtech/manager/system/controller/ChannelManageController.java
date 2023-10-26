@@ -166,10 +166,11 @@ public class ChannelManageController {
             String channelType = (String) params.get(ChannelVOFieldConstant.field_channel_type);
             String channelName = (String) params.get(ChannelVOFieldConstant.field_channel_name);
             Map<String, Object> channelParam = (Map<String, Object>) params.get(ChannelVOFieldConstant.field_channel_param);
+            Map<String, Object> extendParam = (Map<String, Object>) params.get(ChannelVOFieldConstant.field_extend_param);
 
             // 简单校验参数
-            if (MethodUtils.hasNull(channelType, channelName, channelParam)) {
-                return AjaxResult.error("参数不能为空:channelType, channelName, channelParam");
+            if (MethodUtils.hasNull(channelType, channelName, channelParam, extendParam)) {
+                return AjaxResult.error("参数不能为空:channelType, channelName, channelParam, extendParam");
             }
 
             // 构造作为参数的实体
@@ -177,6 +178,8 @@ public class ChannelManageController {
             entity.setChannelType(channelType);
             entity.setChannelName(channelName);
             entity.setChannelParam(channelParam);
+            entity.setExtendParam(extendParam);
+
 
             // 简单验证实体的合法性
             if (entity.hasNullServiceKey()) {
