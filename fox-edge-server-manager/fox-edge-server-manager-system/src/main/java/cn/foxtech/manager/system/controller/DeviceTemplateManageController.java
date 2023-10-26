@@ -34,8 +34,6 @@ public class DeviceTemplateManageController {
     private TemplateFileService fileService;
 
 
-
-
     @PostMapping("/page")
     public AjaxResult selectEntityList(@RequestBody Map<String, Object> body) {
         try {
@@ -87,7 +85,7 @@ public class DeviceTemplateManageController {
     }
 
     @PostMapping("/download")
-    public AjaxResult downloadEntityList(@RequestBody Map<String, Object> body) {
+    public void downloadEntityList(@RequestBody Map<String, Object> body) {
         try {
             // 提取业务参数
             String modelName = (String) body.get(RepoComponentConstant.filed_model_name);
@@ -118,10 +116,8 @@ public class DeviceTemplateManageController {
                 ouputStream.close();
                 inputStream.close();
             }
-
-            return AjaxResult.success();
         } catch (Exception e) {
-            return AjaxResult.error(e.getMessage());
+            return;
         }
     }
 }
