@@ -1,5 +1,6 @@
 package cn.foxtech.proxy.cloud.common.service;
 
+import cn.foxtech.common.entity.manager.ConfigManageService;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.proxy.cloud.common.service.proxy.CloudHttpProxyService;
 import cn.foxtech.proxy.cloud.common.service.proxy.CloudMqttProxyService;

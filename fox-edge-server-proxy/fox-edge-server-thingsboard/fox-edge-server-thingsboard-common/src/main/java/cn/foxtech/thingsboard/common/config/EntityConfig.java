@@ -1,4 +1,4 @@
-package cn.foxtech.channel.proxy.client.config;
+package cn.foxtech.thingsboard.common.config;
 
 //import org.mybatis.spring.annotation.MapperScan;
 
@@ -13,3 +13,4 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(basePackages = { "cn.foxtech.common.entity.manager"})
 public class EntityConfig {
 }
+

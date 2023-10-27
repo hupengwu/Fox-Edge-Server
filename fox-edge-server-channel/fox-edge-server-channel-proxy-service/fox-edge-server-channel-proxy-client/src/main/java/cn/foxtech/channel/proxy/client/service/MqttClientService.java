@@ -1,8 +1,8 @@
 package cn.foxtech.channel.proxy.client.service;
 
 import cn.foxtech.channel.common.properties.ChannelProperties;
-import cn.foxtech.channel.common.service.ConfigManageService;
 import cn.foxtech.channel.domain.ChannelRespondVO;
+import cn.foxtech.common.entity.manager.ConfigManageService;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
 import cn.foxtech.common.utils.syncobject.SyncQueueObjectMap;

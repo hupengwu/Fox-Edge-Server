@@ -1,12 +1,12 @@
 package cn.foxtech.proxy.cloud.common.service.proxy;
 
 import cn.foxtech.common.constant.HttpStatus;
+import cn.foxtech.common.entity.manager.ConfigManageService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.Maps;
 import cn.foxtech.common.utils.http.HttpClientUtils;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.core.domain.AjaxResult;
-import cn.foxtech.proxy.cloud.common.service.ConfigManageService;
 import cn.hutool.http.HttpResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;

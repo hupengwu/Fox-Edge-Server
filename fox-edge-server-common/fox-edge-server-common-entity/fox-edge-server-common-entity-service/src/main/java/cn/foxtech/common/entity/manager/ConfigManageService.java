@@ -1,9 +1,5 @@
-package cn.foxtech.channel.proxy.client.service;
+package cn.foxtech.common.entity.manager;
 
-import cn.foxtech.common.entity.manager.EntityConfigInitializer;
-import cn.foxtech.common.entity.manager.EntityConfigManager;
-import cn.foxtech.common.entity.manager.EntityServiceManager;
-import cn.foxtech.common.entity.manager.RedisConsoleService;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,10 +1,10 @@
 package cn.foxtech.proxy.cloud.common.mqtt;
 
+import cn.foxtech.common.entity.manager.ConfigManageService;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.osinfo.OSInfoUtils;
 import cn.foxtech.core.exception.ServiceException;
-import cn.foxtech.proxy.cloud.common.service.ConfigManageService;
 import cn.foxtech.proxy.cloud.common.vo.RestfulLikeRequestVO;
 import cn.foxtech.proxy.cloud.common.vo.RestfulLikeRespondVO;
 import lombok.AccessLevel;

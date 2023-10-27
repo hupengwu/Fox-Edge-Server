@@ -1,8 +1,8 @@
 package cn.foxtech.channel.tcp.server.service;
 
 import cn.foxtech.channel.common.properties.ChannelProperties;
-import cn.foxtech.channel.common.service.ConfigManageService;
 import cn.foxtech.channel.tcp.server.handler.ChannelHandler;
+import cn.foxtech.common.entity.manager.ConfigManageService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.netty.server.udp.NettyUdpServer;
 import cn.foxtech.common.utils.reflect.JarLoaderUtils;
@@ -47,7 +47,7 @@ public class ServerInitializer {
         Map<String, Object> configs = this.configManageService.loadInitConfig("serverConfig", "serverConfig.json");
 
         // 记录启动参数，方便后面全局使用
-        this.channelProperties.setLogger((Boolean) configs.getOrDefault("logger",false));
+        this.channelProperties.setLogger((Boolean) configs.getOrDefault("logger", false));
 
         // 启动多个服务器
         this.startServers(configs);

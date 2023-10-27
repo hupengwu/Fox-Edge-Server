@@ -2,6 +2,7 @@ package cn.foxtech.channel.proxy.client.service;
 
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
+import cn.foxtech.common.entity.manager.ConfigManageService;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.core.exception.ServiceException;
 import lombok.AccessLevel;
@@ -24,18 +25,16 @@ import java.util.UUID;
 /**
  * @author wsq
  */
-//@Component
+@Component
 @Getter(value = AccessLevel.PUBLIC)
 public class MqttClientService {
     private static final Logger logger = LoggerFactory.getLogger(MqttClientService.class);
-
-    @Autowired
-    private ConfigManageService configManageService;
-
     /**
      * MQTT的创建者
      */
     private final MqttClientCreator creator = MqttClient.create();
+    @Autowired
+    private ConfigManageService configManageService;
     /**
      * 配置服务：从redis中获得配置信息
      */

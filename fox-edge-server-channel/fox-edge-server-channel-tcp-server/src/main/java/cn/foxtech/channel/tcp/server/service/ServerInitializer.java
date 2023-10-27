@@ -1,8 +1,8 @@
 package cn.foxtech.channel.tcp.server.service;
 
 import cn.foxtech.channel.common.properties.ChannelProperties;
-import cn.foxtech.channel.common.service.ConfigManageService;
 import cn.foxtech.channel.tcp.server.handler.ChannelHandler;
+import cn.foxtech.common.entity.manager.ConfigManageService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.file.FileNameUtils;
 import cn.foxtech.common.utils.netty.server.tcp.NettyTcpServer;
@@ -13,7 +13,6 @@ import cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler;
 import cn.foxtech.device.protocol.v1.utils.netty.SplitMessageHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sun.awt.OSInfo;
 
 import java.io.File;
 import java.util.List;

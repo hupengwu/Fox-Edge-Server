@@ -1,7 +1,7 @@
 package cn.foxtech.channel.mqtt.service;
 
 
-import cn.foxtech.channel.common.service.ConfigManageService;
+import cn.foxtech.common.entity.manager.ConfigManageService;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

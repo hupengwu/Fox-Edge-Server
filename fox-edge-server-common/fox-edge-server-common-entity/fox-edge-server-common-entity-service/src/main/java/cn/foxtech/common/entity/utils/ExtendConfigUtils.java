@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ExtendConfigUtils {
-    private static <T> Map<String, ExtendConfigEntity> getExtendConfigList(List<BaseEntity> extendConfigEntityList, Class<T> clazz) {
+    public static <T> Map<String, ExtendConfigEntity> getExtendConfigList(List<BaseEntity> extendConfigEntityList, Class<T> clazz) {
         Map<String, ExtendConfigEntity> result = new HashMap<>();
         for (BaseEntity entity : extendConfigEntityList) {
             ExtendConfigEntity extendConfigEntity = (ExtendConfigEntity) entity;

@@ -4,19 +4,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>fox-edge-server</artifactId>
+        <artifactId>fox-edge-server-proxy</artifactId>
         <groupId>cn.fox-tech</groupId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>fox-edge-server-proxy</artifactId>
+    <artifactId>fox-edge-server-thingsboard</artifactId>
     <packaging>pom</packaging>
     <description>${project.artifactId}</description>
 
     <modules>
-        <module>fox-edge-server-proxy-cloud</module>
-        <module>fox-edge-server-thingsboard</module>
-        <module>fox-edge-server-proxy-coap-service</module>
+        <module>fox-edge-server-thingsboard-common</module>
+        <module>fox-edge-server-thingsboard-service</module>
     </modules>
 
 
