@@ -11,16 +11,16 @@ import java.util.List;
  */
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
-public class ParamTemplateBase extends BaseEntity {
+public class ExtendConfigBase extends BaseEntity {
     /**
      * 模板名称
      */
-    private String templateName;
+    private String extendName;
 
     /**
      * 模板类型
      */
-    private String templateType;
+    private String extendType;
 
 
     /**
@@ -30,7 +30,7 @@ public class ParamTemplateBase extends BaseEntity {
      */
     public List<Object> makeServiceKeyList() {
         List<Object> list = new ArrayList<>();
-        list.add(this.templateName);
+        list.add(this.extendName);
 
         return list;
     }
@@ -43,7 +43,7 @@ public class ParamTemplateBase extends BaseEntity {
      */
     public Object makeWrapperKey() {
         QueryWrapper queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("template_name", this.templateName);
+        queryWrapper.eq("extend_name", this.extendName);
 
 
         return queryWrapper;
@@ -57,14 +57,14 @@ public class ParamTemplateBase extends BaseEntity {
      */
     public List<Object> makeServiceValueList() {
         List<Object> list = new ArrayList<>();
-        list.add(this.templateType);
+        list.add(this.extendType);
 
         return list;
     }
 
-    public void bind(ParamTemplateBase other) {
-        this.templateName = other.templateName;
-        this.templateType = other.templateType;
+    public void bind(ExtendConfigBase other) {
+        this.extendName = other.extendName;
+        this.extendType = other.extendType;
 
 
         this.setId(other.getId());

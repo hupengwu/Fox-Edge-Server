@@ -18,7 +18,7 @@ import cn.foxtech.common.entity.service.operaterecord.OperateRecordEntityService
 import cn.foxtech.common.entity.service.operatetask.channel.OperateChannelTaskEntityService;
 import cn.foxtech.common.entity.service.operatetask.manual.OperateManualTaskEntityService;
 import cn.foxtech.common.entity.service.operatetask.monitor.OperateMonitorTaskEntityService;
-import cn.foxtech.common.entity.service.paramtemplate.ParamTemplateEntityService;
+import cn.foxtech.common.entity.service.extendconfig.ExtendConfigEntityService;
 import cn.foxtech.common.entity.service.probe.ProbeEntityService;
 import cn.foxtech.common.entity.service.trigger.TriggerEntityService;
 import cn.foxtech.common.entity.service.triggerconfig.TriggerConfigService;
@@ -53,7 +53,7 @@ public class EntityManageService extends EntityServiceManager {
     protected DeviceMapperEntityService deviceMapperEntityService;
 
     @Autowired
-    protected ParamTemplateEntityService paramTemplateEntityService;
+    protected ExtendConfigEntityService extendConfigEntityService;
 
     @Autowired
     protected DeviceRecordEntityService deviceRecordEntityService;
@@ -134,7 +134,7 @@ public class EntityManageService extends EntityServiceManager {
         dBService.put(UserPermissionEntity.class.getSimpleName(), this.userPermissionEntityService);
         dBService.put(DeviceObjectEntity.class.getSimpleName(), this.deviceObjectEntityService);
         dBService.put(DeviceMapperEntity.class.getSimpleName(), this.deviceMapperEntityService);
-        dBService.put(ParamTemplateEntity.class.getSimpleName(), this.paramTemplateEntityService);
+        dBService.put(ExtendConfigEntity.class.getSimpleName(), this.extendConfigEntityService);
         dBService.put(DeviceRecordEntity.class.getSimpleName(), this.deviceRecordEntityService);
         dBService.put(ProbeEntity.class.getSimpleName(), this.probeEntityService);
         dBService.put(TriggerConfigEntity.class.getSimpleName(), this.triggerConfigEntityService);
@@ -154,7 +154,7 @@ public class EntityManageService extends EntityServiceManager {
         producer.add(UserMenuEntity.class.getSimpleName());
         producer.add(UserRoleEntity.class.getSimpleName());
         producer.add(UserPermissionEntity.class.getSimpleName());
-        producer.add(ParamTemplateEntity.class.getSimpleName());
+        producer.add(ExtendConfigEntity.class.getSimpleName());
         producer.add(ProbeEntity.class.getSimpleName());
         producer.add(TriggerEntity.class.getSimpleName());
         producer.add(TriggerConfigEntity.class.getSimpleName());
@@ -174,7 +174,7 @@ public class EntityManageService extends EntityServiceManager {
         this.getSourceMySQL().add(UserMenuEntity.class.getSimpleName());
         this.getSourceMySQL().add(UserRoleEntity.class.getSimpleName());
         this.getSourceMySQL().add(UserPermissionEntity.class.getSimpleName());
-        this.getSourceMySQL().add(ParamTemplateEntity.class.getSimpleName());
+        this.getSourceMySQL().add(ExtendConfigEntity.class.getSimpleName());
         this.getSourceMySQL().add(ProbeEntity.class.getSimpleName());
         this.getSourceMySQL().add(TriggerEntity.class.getSimpleName());
         this.getSourceMySQL().add(TriggerConfigEntity.class.getSimpleName());
@@ -210,7 +210,7 @@ public class EntityManageService extends EntityServiceManager {
         this.entityPublishManager.setPublishEntityUpdateTime(UserRoleEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, UserRoleEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(UserPermissionEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, UserPermissionEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(DeviceEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, DeviceEntity.class.getSimpleName());
-        this.entityPublishManager.setPublishEntityUpdateTime(ParamTemplateEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, ParamTemplateEntity.class.getSimpleName());
+        this.entityPublishManager.setPublishEntityUpdateTime(ExtendConfigEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, ExtendConfigEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(ProbeEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, ProbeEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(TriggerEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, TriggerEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(TriggerConfigEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, TriggerConfigEntity.class.getSimpleName());

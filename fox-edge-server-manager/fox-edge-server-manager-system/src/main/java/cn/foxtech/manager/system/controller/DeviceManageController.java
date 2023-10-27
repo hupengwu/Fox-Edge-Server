@@ -3,15 +3,13 @@ package cn.foxtech.manager.system.controller;
 
 import cn.foxtech.common.entity.constant.DeviceStatusVOFieldConstant;
 import cn.foxtech.common.entity.constant.DeviceVOFieldConstant;
-import cn.foxtech.common.entity.entity.BaseEntity;
-import cn.foxtech.common.entity.entity.DeviceEntity;
-import cn.foxtech.common.entity.entity.DevicePo;
-import cn.foxtech.common.entity.entity.DeviceStatusEntity;
+import cn.foxtech.common.entity.entity.*;
 import cn.foxtech.common.entity.service.device.DeviceEntityMaker;
 import cn.foxtech.common.entity.service.device.DeviceEntityService;
 import cn.foxtech.common.entity.service.redis.RedisReader;
 import cn.foxtech.common.entity.service.redis.RedisWriter;
 import cn.foxtech.common.entity.utils.EntityVOBuilder;
+import cn.foxtech.common.entity.utils.ExtendConfigUtils;
 import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.common.file.TempDirManageService;
 import cn.foxtech.common.utils.method.MethodUtils;
@@ -47,6 +45,9 @@ public class DeviceManageController {
 
     @Autowired
     private TempDirManageService tempDirManageService;
+
+    @Autowired
+    private EntityManageService entityManageService;
 
     @PostMapping("page")
     public AjaxResult selectEntityPage(@RequestBody Map<String, Object> body) {
@@ -105,7 +106,12 @@ public class DeviceManageController {
             List<BaseEntity> entityList = DeviceEntityMaker.makePoList2EntityList(poList);
             List<Map<String, Object>> mapList = EntityVOBuilder.buildVOList(entityList);
 
+            // 扩展设备的状态信息
             this.extend(mapList);
+
+            // 扩展设备的扩展配置信息
+            List<BaseEntity> extendConfigEntityList = this.entityManageService.getEntityList(ExtendConfigEntity.class);
+            ExtendConfigUtils.extend(mapList, extendConfigEntityList, DeviceEntity.class);
 
             Map<String, Object> data = new HashMap<>();
             data.put("list", mapList);

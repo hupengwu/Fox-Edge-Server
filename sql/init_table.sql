@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_history` (
   PRIMARY KEY (`id`),
   KEY `device_id` (`device_id`),
   KEY `object_name` (`object_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=84834466 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=87048704 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -152,6 +152,22 @@ CREATE TABLE IF NOT EXISTS `tb_device_status` (
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- 数据导出被取消选择。
+
+-- 导出  表 fox_edge.tb_extend 结构
+DROP TABLE IF EXISTS `tb_extend`;
+CREATE TABLE IF NOT EXISTS `tb_extend` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `extend_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '扩展名称',
+  `extend_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '扩展类型',
+  `extend_param` json DEFAULT NULL COMMENT '设备参数（JSON格式）',
+  `create_time` bigint DEFAULT NULL COMMENT '创建时间',
+  `update_time` bigint DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `extend_name` (`extend_name`),
+  KEY `extend_type` (`extend_type`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -265,22 +281,6 @@ CREATE TABLE IF NOT EXISTS `tb_operate_record` (
   KEY `device_type` (`device_type`) USING BTREE,
   KEY `event_name` (`record_name`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=23321 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- 数据导出被取消选择。
-
--- 导出  表 fox_edge.tb_param_template 结构
-DROP TABLE IF EXISTS `tb_param_template`;
-CREATE TABLE IF NOT EXISTS `tb_param_template` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `template_name` varchar(50) DEFAULT NULL COMMENT '模板名称',
-  `template_type` varchar(50) DEFAULT NULL COMMENT '模板类型（提供给谁使用）',
-  `template_param` json DEFAULT NULL COMMENT '设备参数（JSON格式）',
-  `create_time` bigint DEFAULT NULL COMMENT '创建时间',
-  `update_time` bigint DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `device_name` (`template_name`) USING BTREE,
-  KEY `device_type` (`template_type`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='为用户界面配置tb_device.device_param和tb_operate_monitor_task.operate_param时候，提供直接复制的工具';
 
 -- 数据导出被取消选择。
 

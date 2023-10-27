@@ -11,12 +11,12 @@ import java.util.List;
  */
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
-@TableName("tb_param_template")
-public class ParamTemplatePo extends ParamTemplateBase {
+@TableName("tb_extend")
+public class ExtendConfigPo extends ExtendConfigBase {
     /**
      * 配置参数
      */
-    private String templateParam;
+    private String extendParam;
 
     /**
      * 获取业务值
@@ -25,7 +25,7 @@ public class ParamTemplatePo extends ParamTemplateBase {
      */
     public List<Object> makeServiceValueList() {
         List<Object> list = super.makeServiceValueList();
-        list.add(this.templateParam);
+        list.add(this.extendParam);
 
         return list;
     }

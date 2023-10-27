@@ -1,8 +1,9 @@
 package cn.foxtech.common.entity.entity;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -10,11 +11,11 @@ import java.util.List;
  */
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
-public class ParamTemplateEntity extends ParamTemplateBase {
+public class ExtendConfigEntity extends ExtendConfigBase {
     /**
      * 配置集合
      */
-    private Object templateParam = new HashMap<>();
+    private ExtendParam extendParam = new ExtendParam();
 
     /**
      * 获取业务值
@@ -23,7 +24,7 @@ public class ParamTemplateEntity extends ParamTemplateBase {
      */
     public List<Object> makeServiceValueList() {
         List<Object> list = super.makeServiceValueList();
-        list.add(this.templateParam);
+        list.add(this.extendParam);
 
         return list;
     }
