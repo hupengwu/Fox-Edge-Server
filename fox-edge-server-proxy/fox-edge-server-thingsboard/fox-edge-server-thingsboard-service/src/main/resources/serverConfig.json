@@ -1,60 +1,13 @@
 {
   "configValue": {
-    "local": {
-      "username": "admin",
-      "password": "12345678",
-      "lockdown": 60
-    },
-    "cloud": {
-      "mode": "mqtt",
-      "http": {
-        "host": "http://cloud.fox-tech.cn/prod-api",
-        "username": "fox-edge",
-        "password": "12345678",
-        "lockdown": 60
-      },
-      "mqtt": {
-        "ip": "39.108.137.38",
-        "name": "Mica-Mqtt-Client",
-        "port": 1883,
-        "enabled": true,
-        "timeout": 5,
-        "use-ssl": false,
-        "version": "mqtt_3_1_1",
-        "clientId": "000001",
-        "password": "123456",
-        "reconnect": true,
-        "user-name": "mica",
-        "re-interval": 5000,
-        "clean-session": true,
-        "keep-alive-secs": 60,
-        "buffer-allocator": "heap",
-        "read-buffer-size": "8KB",
-        "max-bytes-in-message": "10MB"
-      }
+    "mode": "period",
+    "period": {
+      "unit": "minute",
+      "interval": 30
     }
   },
 
   "configParam": {
-    "list": [{
-      "saveMode": "Raw",
-      "showMode": "Security",
-      "fieldName": "local.password",
-      "valueType": "string",
-      "defaultValue": ""
-    }, {
-      "saveMode": "Raw",
-      "showMode": "Security",
-      "fieldName": "cloud.http.password",
-      "valueType": "string",
-      "defaultValue": ""
-    }, {
-      "saveMode": "Raw",
-      "showMode": "Security",
-      "fieldName": "cloud.mqtt.password",
-      "valueType": "string",
-      "defaultValue": ""
-    }]
   },
-  "remark": "proxy-cloud-service·şÎñËùĞèÒªµÄÔÆ¶ËÅäÖÃ£º  \n\n1. cloud\n¸úfox-cloudÁ¬½ÓµÄÔÆ¶ËÅäÖÃ\n\nmode£ºÁ¬½ÓÄ£Ê½£¬²ÎÊı¿ÉÒÔÊÇ mqtt ºÍ http\nmqtt£ºmqttÄ£Ê½ÏÂµÄ²ÎÊı£¬´ËÊ±Ê¹ÓÃMQTTĞ­Òé£¬°ÑÊı¾İ·¢ËÍµ½fox-cloud\nhttp£º httpÄ£Ê½ÏÂµÄ²ÎÊı£¬´ËÊ±Ê¹ÓÃhttpĞ­Òé£¬°ÑÊı¾İ·¢ËÍµ½fox-cloud\n\n1.1 cloud -> http\nhost£ºÔÆ¶Ëfox-cloudµÄAPI·şÎñÆ÷\nusername£ºfox-cloudÉÏµÄÕËºÅ\npassword£ºfox-cloudÉÏµÄÃÜÂë\nlockdown£ºÎªÁË±ÜÃâµÇÂ¼Ê§°Üºó£¬·´¸´µÇÂ¼fox-cloud£¬ĞèÒªµÈ´ıÒ»¶ÎÊ±¼ä£¬±ÜÃâ±»fox-cloudÈÏÎªÊÇ¶ñÒâ¹¥»÷\n\n1.2 cloud -> mqtt\nÁ¬½ÓÔÆ¶ËMQTT BrokerµÄMQTTÅäÖÃ\n\nenabled: true   # ÊÇ·ñ¿ªÆô¿Í»§¶Ë£¬Ä¬ÈÏ£ºtrue\nip: 120.79.69.201  # Á¬½ÓµÄ·şÎñ¶Ë ip £¬Ä¬ÈÏ£º127.0.0.1\nport: 1883  # ¶Ë¿Ú£ºÄ¬ÈÏ£º1883\nname: Mica-Mqtt-Client  # Ãû³Æ£¬Ä¬ÈÏ£ºMica-Mqtt-Client\nclientId: 000001# ¿Í»§¶ËId£¨·Ç³£ÖØÒª£¬Ò»°ãÎªÉè±¸ sn£¬²»¿ÉÖØ¸´£©\nuser-name: mica # ÈÏÖ¤µÄÓÃ»§Ãû\npassword: 123456# ÈÏÖ¤µÄÃÜÂë\ntimeout: 5  # ³¬Ê±Ê±¼ä£¬µ¥Î»£ºÃë£¬Ä¬ÈÏ£º5Ãë\nreconnect: true # ÊÇ·ñÖØÁ¬£¬Ä¬ÈÏ£ºtrue\nre-interval: 5000   # ÖØÁ¬Ê±¼ä£¬Ä¬ÈÏ 5000 ºÁÃë\nversion: mqtt_3_1_1 # mqtt Ğ­Òé°æ±¾£¬¿ÉÑ¡ MQTT_3_1¡¢mqtt_3_1_1¡¢mqtt_5£¬Ä¬ÈÏ£ºmqtt_3_1_1\nread-buffer-size: 8KB   # ½ÓÊÕÊı¾İµÄ buffer size£¬Ä¬ÈÏ£º8k\nmax-bytes-in-message: 10MB  # ÏûÏ¢½âÎö×î´ó bytes ³¤¶È£¬Ä¬ÈÏ£º10M\nbuffer-allocator: heap  # ¶ÑÄÚ´æºÍ¶ÑÍâÄÚ´æ£¬Ä¬ÈÏ£º¶ÑÄÚ´æ\nkeep-alive-secs: 60 # keep-alive Ê±¼ä£¬µ¥Î»£ºÃë\nclean-session: true # mqtt clean session£¬Ä¬ÈÏ£ºtrue\nuse-ssl: false  # ÊÇ·ñÆôÓÃ ssl£¬Ä¬ÈÏ£ºfalse\n\n\n2. local\n½ÓÊÜÔÆ¶Ë²Ù×÷ÇëÇóµÄÊ±ºò£¬fox-edgeµÄµÇÂ¼ÕËºÅĞÅÏ¢£¬´ËÊ±»áÍ¨¹ıÅäÖÃĞÅÏ¢£¬»á½ÓÊÜÔÆ¶ËMQTT´úÀíµÄ²Ù×÷ÇëÇó\n\nusername£ºfox-edgeÉÏµÄÕËºÅ\npassword£ºfox-edgeÉÏµÄÃÜÂë\nlockdown£ºÎªÁË±ÜÃâµÇÂ¼Ê§°Üºó£¬·´¸´µÇÂ¼fox-cloud£¬ĞèÒªµÈ´ıÒ»¶ÎÊ±¼ä£¬±ÜÃâ±»fox-cloudÈÏÎªÊÇ¶ñÒâ¹¥»÷"
+  "remark": "ç¬¬ä¸‰æ–¹ç‰©è”ç½‘äº‘å¹³å°ThingsBoardçš„æ•°æ®æ¨é€é…ç½®å‚æ•°ï¼š\n\nå­—æ®µè¯´æ˜\nmode ï¼š å‘å¸ƒæ¨¡å¼ï¼Œå¯é€‰å€¼period æˆ–è€… trigger\ntriggeræ¨¡å¼ï¼Œä¸ºæ•°æ®å˜æ›´å°±å‘é€ï¼Œè¿™ç§æ–¹å¼éå¸¸å®æ—¶ï¼Œä½†æ˜¯æ¨é€çš„æ•°æ®é‡ä¼šéå¸¸å¤§ï¼ŒThingsBoardé‚£è¾¹ä¸ä¸€å®šé¡¶å¾—ä½è¿™ä¹ˆå¤§çš„æ•°æ®é‡ã€‚\nperiodæ¨¡å¼ï¼Œä¸ºå®šæ—¶å‘é€æ•°æ®æ–¹å¼ï¼Œå•ä½æœ‰secondã€minuteã€hourä¸‰ç§å•ä½"
 }

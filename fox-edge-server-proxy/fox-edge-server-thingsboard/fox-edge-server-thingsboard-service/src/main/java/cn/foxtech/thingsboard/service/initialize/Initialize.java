@@ -2,7 +2,7 @@ package cn.foxtech.thingsboard.service.initialize;
 
 
 import cn.foxtech.thingsboard.common.initialize.InitializeCommon;
-import cn.foxtech.thingsboard.service.service.PublishDeviceValueEntityScheduler;
+import cn.foxtech.thingsboard.service.service.DeviceValueEntityScheduler;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -20,7 +20,7 @@ public class Initialize implements CommandLineRunner {
     private InitializeCommon initializeCommon;
 
     @Autowired
-    private PublishDeviceValueEntityScheduler publishDeviceValueEntityScheduler;
+    private DeviceValueEntityScheduler deviceValueEntityScheduler;
 
     @Override
     public void run(String... args) {
@@ -28,7 +28,8 @@ public class Initialize implements CommandLineRunner {
 
         this.initializeCommon.initialize();
 
-        this.publishDeviceValueEntityScheduler.schedule();
+        this.deviceValueEntityScheduler.initialize();
+        this.deviceValueEntityScheduler.schedule();
 
         logger.info("------------------------初始化结束！------------------------");
     }

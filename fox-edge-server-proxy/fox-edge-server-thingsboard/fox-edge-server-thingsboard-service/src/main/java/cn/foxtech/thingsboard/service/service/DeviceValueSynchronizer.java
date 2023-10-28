@@ -3,105 +3,29 @@ package cn.foxtech.thingsboard.service.service;
 import cn.foxtech.common.entity.constant.DeviceVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.DeviceEntity;
-import cn.foxtech.common.entity.entity.DeviceValueEntity;
 import cn.foxtech.common.entity.entity.ExtendConfigEntity;
-import cn.foxtech.common.entity.service.redis.RedisReader;
 import cn.foxtech.common.entity.utils.ExtendConfigUtils;
-import cn.foxtech.common.utils.DifferUtils;
 import cn.foxtech.common.utils.bean.BeanMapUtils;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.thingsboard.common.service.CloudHttpProxyService;
 import cn.foxtech.thingsboard.common.service.EntityManageService;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Component
-public class PublishDeviceValueEntitySynchronizer {
-    private static final Logger logger = Logger.getLogger(PublishDeviceValueEntitySynchronizer.class);
-    private final Map<String, Object> localAgileMap = new HashMap<>();
-    private Object localTimeStamp = 0L;
+public class DeviceValueSynchronizer {
     @Autowired
     private EntityManageService entityManageService;
 
     @Autowired
     private CloudHttpProxyService httpProxyService;
 
-
-    public void syncEntity() {
-        try {
-            if (!this.entityManageService.isInitialized()) {
-                return;
-            }
-            // 获得直接读取redis的部件
-            RedisReader redisReader = this.entityManageService.getRedisReader(DeviceValueEntity.class.getSimpleName());
-            if (redisReader == null) {
-                return;
-            }
-
-            // 获取redis上的时间戳,用来判断是否本地redis发生了变化
-            Object redisTimeStamp = redisReader.readSync();
-            if (redisTimeStamp == null) {
-                return;
-            }
-
-            // 比较时间戳
-            if (redisTimeStamp.equals(this.localTimeStamp)) {
-                return;
-            }
-
-            // redis的数据
-            Map<String, Object> redisAgileMap = redisReader.readAgileMap();
-            if (redisAgileMap == null) {
-                return;
-            }
-
-            Set<String> addList = new HashSet<>();
-            Set<String> delList = new HashSet<>();
-            Set<String> eqlList = new HashSet<>();
-            DifferUtils.differByValue(this.localAgileMap.keySet(), redisAgileMap.keySet(), addList, delList, eqlList);
-
-            Set<String> pushKeys = new HashSet<>();
-
-            // 新增的的数据，需要推送
-            for (String key : addList) {
-                Object redisTime = redisAgileMap.get(key);
-                this.localAgileMap.put(key, redisTime);
-
-                pushKeys.add(key);
-            }
-
-            // 删除的数据，不需要推送
-            for (String key : delList) {
-                this.localAgileMap.remove(key);
-            }
-
-            // 变更的数据，需要推送
-            for (String key : eqlList) {
-                Object localTime = localAgileMap.get(key);
-                Object redisTime = redisAgileMap.get(key);
-                if (localTime.equals(redisTime)) {
-                    continue;
-                }
-
-                pushKeys.add(key);
-            }
-
-            this.localTimeStamp = redisTimeStamp;
-
-            if (!pushKeys.isEmpty()) {
-                Map<String, Object> redisHashMap = redisReader.readHashMap();
-                this.publish(pushKeys, redisHashMap);
-            }
-
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void publish(Set<String> serviceKeys, Map<String, Object> redisHashMap) {
+    public void publish(Set<String> serviceKeys, Map<String, Object> redisHashMap) {
         List<BaseEntity> entityList = this.entityManageService.getEntityList(ExtendConfigEntity.class);
         Map<String, ExtendConfigEntity> extendMap = ExtendConfigUtils.getExtendConfigList(entityList, DeviceEntity.class);
 
@@ -134,7 +58,7 @@ public class PublishDeviceValueEntitySynchronizer {
 
                 // 取出配置的token信息
                 String token = (String) extendParam.get("thingsboardHttpToken");
-                if (token == null || token.isEmpty()) {
+                if (token == null || token.isEmpty() || token.length() < 10) {
                     continue;
                 }
 

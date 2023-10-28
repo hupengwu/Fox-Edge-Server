@@ -334,6 +334,9 @@ public class DeviceManageController {
 
     private String exportFile(List<Map<String, Object>> dataList) {
         List<String> headerLine = new ArrayList<>();
+        headerLine.add("name");
+        headerLine.add("type");
+        headerLine.add(DeviceVOFieldConstant.field_id);
         headerLine.add(DeviceVOFieldConstant.field_device_name);
         headerLine.add(DeviceVOFieldConstant.field_device_type);
         headerLine.add(DeviceVOFieldConstant.field_channel_name);
@@ -357,11 +360,17 @@ public class DeviceManageController {
         for (Map<String, Object> row : dataList) {
             sb = new StringBuilder();
             for (int i = 0; i < headerLine.size(); i++) {
-
-                Object value = row.get(headerLine.get(i));
                 String sValue = "";
-                if (value != null) {
-                    sValue = value.toString();
+
+                if (i == 0) {
+                    sValue = (String) row.get(DeviceVOFieldConstant.field_device_name);
+                } else if (i == 1) {
+                    sValue = (String) row.get(DeviceVOFieldConstant.field_device_type);
+                } else {
+                    Object value = row.get(headerLine.get(i));
+                    if (value != null) {
+                        sValue = value.toString();
+                    }
                 }
 
                 if (i + 1 != headerLine.size()) {
