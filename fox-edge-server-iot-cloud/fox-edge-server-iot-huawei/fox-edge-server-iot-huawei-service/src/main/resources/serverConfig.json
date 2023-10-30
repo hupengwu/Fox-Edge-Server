@@ -1,0 +1,38 @@
+{
+  "configValue": {
+    "mqtt": {
+      "host": "1cd5baf642.st1.iotda-device.cn-north-4.myhuaweicloud.com",
+      "name": "Mica-Mqtt-Client",
+      "port": 1883,
+      "enabled": true,
+      "timeout": 5,
+      "use-ssl": false,
+      "version": "mqtt_3_1_1",
+      "clientId": "653d1b13585c81787ad06a33_Fox-Edge-54060500FFFB8B0F_0_0_2023102814",
+      "password": "6009eee886f53891b39bbd5802a87ff03024bf2d00a7a3db2c3d6026034c031f",
+      "reconnect": true,
+      "user-name": "653d1b13585c81787ad06a33_Fox-Edge-54060500FFFB8B0F",
+      "re-interval": 5000,
+      "clean-session": true,
+      "keep-alive-secs": 60,
+      "buffer-allocator": "heap",
+      "read-buffer-size": "8KB",
+      "max-bytes-in-message": "10MB"
+    },
+    "productId": "653d1b13585c81787ad06a33",
+    "nodeId": "Fox-Edge-54060500FFFB8B0F",
+    "deviceId": "653d1b13585c81787ad06a33_Fox-Edge-54060500FFFB8B0F",
+    "deviceOnlinePush": 30
+  },
+
+  "configParam": {
+    "list": [{
+      "saveMode": "Raw",
+      "showMode": "Security",
+      "fieldName": "cloud.mqtt.password",
+      "valueType": "string",
+      "defaultValue": ""
+    }]
+  },
+  "remark": "proxy-cloud-service服务所需要的云端配置：  \n\n1. cloud\n跟fox-cloud连接的云端配置\n\nmode：连接模式，参数可以是 mqtt 和 http\nmqtt：mqtt模式下的参数，此时使用MQTT协议，把数据发送到fox-cloud\nhttp： http模式下的参数，此时使用http协议，把数据发送到fox-cloud\n\n1.1 cloud -> http\nhost：云端fox-cloud的API服务器\nusername：fox-cloud上的账号\npassword：fox-cloud上的密码\nlockdown：为了避免登录失败后，反复登录fox-cloud，需要等待一段时间，避免被fox-cloud认为是恶意攻击\n\n1.2 cloud -> mqtt\n连接云端MQTT Broker的MQTT配置\n\nenabled: true   # 是否开启客户端，默认：true\nip: 120.79.69.201  # 连接的服务端 ip ，默认：127.0.0.1\nport: 1883  # 端口：默认：1883\nname: Mica-Mqtt-Client  # 名称，默认：Mica-Mqtt-Client\nclientId: 000001# 客户端Id（非常重要，一般为设备 sn，不可重复）\nuser-name: mica # 认证的用户名\npassword: 123456# 认证的密码\ntimeout: 5  # 超时时间，单位：秒，默认：5秒\nreconnect: true # 是否重连，默认：true\nre-interval: 5000   # 重连时间，默认 5000 毫秒\nversion: mqtt_3_1_1 # mqtt 协议版本，可选 MQTT_3_1、mqtt_3_1_1、mqtt_5，默认：mqtt_3_1_1\nread-buffer-size: 8KB   # 接收数据的 buffer size，默认：8k\nmax-bytes-in-message: 10MB  # 消息解析最大 bytes 长度，默认：10M\nbuffer-allocator: heap  # 堆内存和堆外内存，默认：堆内存\nkeep-alive-secs: 60 # keep-alive 时间，单位：秒\nclean-session: true # mqtt clean session，默认：true\nuse-ssl: false  # 是否启用 ssl，默认：false\n\n\n2. local\n接受云端操作请求的时候，fox-edge的登录账号信息，此时会通过配置信息，会接受云端MQTT代理的操作请求\n\nusername：fox-edge上的账号\npassword：fox-edge上的密码\nlockdown：为了避免登录失败后，反复登录fox-cloud，需要等待一段时间，避免被fox-cloud认为是恶意攻击"
+}

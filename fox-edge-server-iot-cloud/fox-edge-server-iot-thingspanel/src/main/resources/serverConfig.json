@@ -1,0 +1,21 @@
+{
+  "configValue": {
+    "mode": "trigger",
+    "period": {
+      "unit": "minute",
+      "interval": 30
+    },
+    "remote": {
+      "http": {
+        "host": "http://dev.thingspanel.cn:9988/api"
+      }
+    },
+    "extend": {
+      "accessToken": "thingspanelHttpToken"
+    }
+  },
+
+  "configParam": {
+  },
+  "remark": "第三方物联网云平台ThingsPanel的数据推送配置参数：\n\n字段说明\nmode ： 发布模式，可选值period 或者 trigger\ntrigger模式，为数据变更就发送，这种方式非常实时，但是推送的数据量会非常大，ThingsPanel那边不一定顶得住这么大的数据量。\nperiod模式，为定时发送数据方式，单位有second、minute、hour三种单位"
+}
