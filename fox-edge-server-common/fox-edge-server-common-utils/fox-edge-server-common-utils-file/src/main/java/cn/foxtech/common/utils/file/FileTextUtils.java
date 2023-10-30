@@ -73,12 +73,40 @@ public class FileTextUtils {
      *
      * @param fileName 文件目录
      * @param content  待写入内容
-     * @throws IOException
+     * @param charsetName 字符集
+     * @throws IOException 异常信息
      */
-    public static void writeTextFile(String fileName, String content) throws IOException {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-            bufferedWriter.write(content);
+    public static void writeTextFile(String fileName, String content, String charsetName) throws IOException {
+        if (charsetName == null || charsetName.isEmpty()) {
+            charsetName = "UTF-8";
         }
+
+        FileOutputStream fos = new FileOutputStream(fileName);
+
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fos, charsetName);
+        BufferedWriter writer = new BufferedWriter(outputStreamWriter);
+        writer.write(content);
+        writer.close();
     }
 
+    public static void writeTextFile(String filePath, List<String> list, String charsetName, boolean withBom) throws IOException {
+        if (charsetName == null || charsetName.isEmpty()) {
+            charsetName = "UTF-8";
+        }
+
+        FileOutputStream fos = new FileOutputStream(filePath);
+
+        if (withBom) {
+            byte[] bom = {(byte) 0xEF, (byte) 0xBB, (byte) 0xBF};
+            fos.write(bom);
+        }
+
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fos, charsetName);
+        BufferedWriter writer = new BufferedWriter(outputStreamWriter);
+        for (String s : list) {
+            writer.write(s);
+            writer.newLine();
+        }
+        writer.close();
+    }
 }

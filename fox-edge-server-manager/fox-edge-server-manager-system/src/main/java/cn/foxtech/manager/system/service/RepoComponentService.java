@@ -279,7 +279,7 @@ public class RepoComponentService {
         }
 
         // 将获得的list信息保存到本地
-        FileTextUtils.writeTextFile(localPath + "/" + listFileName, json);
+        FileTextUtils.writeTextFile(localPath + "/" + listFileName, json, "UTF-8");
 
         return list;
     }
@@ -582,18 +582,18 @@ public class RepoComponentService {
             File dir = new File("");
             String modelPathName = dir.getAbsolutePath() + "/template/dobot-mg400/v1";
             File file = new File(modelPathName);
-            if (!file.exists() || file.isFile()){
+            if (!file.exists() || file.isFile()) {
                 return null;
             }
 
             List<String> fileNames = Arrays.asList(file.list());
             Collections.sort(fileNames);
-            if (fileNames.isEmpty()){
+            if (fileNames.isEmpty()) {
                 return null;
             }
 
             Map<String, Object> result = new HashMap<>();
-            result.put("version",fileNames.get(fileNames.size()-1));
+            result.put("version", fileNames.get(fileNames.size() - 1));
             return result;
         }
 
@@ -860,12 +860,13 @@ public class RepoComponentService {
 
     /**
      * 安装模块
-     * @param modelType 模块类型
-     * @param modelName 模块名称
+     *
+     * @param modelType    模块类型
+     * @param modelName    模块名称
      * @param modelVersion 模块版本
-     * @param version jar版本
-     * @param stage 发布状态
-     * @param component 组件类型
+     * @param version      jar版本
+     * @param stage        发布状态
+     * @param component    组件类型
      */
     public void installFile(String modelType, String modelName, String modelVersion, String version, String stage, String component) {
         try {

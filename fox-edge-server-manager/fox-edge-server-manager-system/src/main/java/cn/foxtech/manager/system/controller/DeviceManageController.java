@@ -12,11 +12,11 @@ import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.entity.utils.ExtendConfigUtils;
 import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.common.file.TempDirManageService;
+import cn.foxtech.common.utils.file.FileTextUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.manager.system.service.EntityManageService;
-import cn.foxtech.manager.system.utils.CsvUtils;
 import com.fasterxml.jackson.core.JsonParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.QueryParam;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -332,7 +333,7 @@ public class DeviceManageController {
         }
     }
 
-    private String exportFile(List<Map<String, Object>> dataList) {
+    private String exportFile(List<Map<String, Object>> dataList) throws IOException {
         List<String> headerLine = new ArrayList<>();
         headerLine.add("name");
         headerLine.add("type");
@@ -383,8 +384,7 @@ public class DeviceManageController {
         }
 
         String fileName = System.currentTimeMillis() + ".csv";
-        CsvUtils.writeCSV(this.tempDirManageService.getTempDir() + "/" + fileName, list, "UTF-8");
-
+        FileTextUtils.writeTextFile(this.tempDirManageService.getTempDir() + "/" + fileName, list, "UTF-8", true);
         return fileName;
     }
 }
