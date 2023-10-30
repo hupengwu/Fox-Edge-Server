@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>fox-edge-server-cloud</artifactId>
+        <groupId>cn.fox-tech</groupId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>fox-edge-server-proxy-coap-service</artifactId>
+    <version>${revision}</version>
+    <name>${project.artifactId}</name>
+    <description>${project.artifactId}</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- 核心模块-->
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-common-core</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
+        <!-- 工具模块-->
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-common-utils-hex</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-channel-domain</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>net.sf.json-lib</groupId>
+            <artifactId>json-lib</artifactId>
+            <version>2.4</version>
+            <classifier>jdk15</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.californium</groupId>
+            <artifactId>californium-core</artifactId>
+            <version>${californium-coap.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.californium</groupId>
+            <artifactId>element-connector</artifactId>
+            <version>${californium-coap.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.californium</groupId>
+            <artifactId>scandium</artifactId>
+            <version>${californium-coap.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <!-- 产生的构件的文件名，指定为artifactId格式 -->
+        <finalName>${artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

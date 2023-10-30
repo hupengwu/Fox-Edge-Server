@@ -70,6 +70,22 @@ public abstract class EntityBaseManager {
     @Getter(value = AccessLevel.PUBLIC)
     private boolean isInitialized = false;
 
+    public void addReader(String entityType) {
+        this.entityRedisComponent.getReader().add(entityType);
+    }
+
+    public void addReader(Set<String> entityTypes) {
+        this.entityRedisComponent.getReader().addAll(entityTypes);
+    }
+
+    public void addConsumer(String entityType) {
+        this.entityRedisComponent.getConsumer().add(entityType);
+    }
+
+    public void addConsumer(Set<String> entityTypes) {
+        this.entityRedisComponent.getConsumer().addAll(entityTypes);
+    }
+
 
     private boolean initLoadProducerEntity(String simpleName) {
         // 如果不需要这个生产者，按成功处理，直接返回成功

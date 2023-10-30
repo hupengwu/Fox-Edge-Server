@@ -11,7 +11,7 @@ public class BeanMapUtils {
     /**
      * map转java对象
      *
-     * @param map Map对象
+     * @param map       Map对象
      * @param beanClass 待构造的对象类型
      * @return 对象
      * @throws Exception 转换异常
@@ -25,6 +25,7 @@ public class BeanMapUtils {
 
     /**
      * 将对象转换为Map
+     *
      * @param obj 对象
      * @return Map
      */
@@ -44,7 +45,7 @@ public class BeanMapUtils {
      *
      * @param objectList 对象
      * @param filterKeys 要剔除的Key
-     * @param <T> 类型名
+     * @param <T>        类型名
      * @return map
      */
     public static <T> List<Map<String, Object>> objectToMap(Collection<T> objectList, List<String> filterKeys) {
@@ -55,6 +56,17 @@ public class BeanMapUtils {
             for (String filter : filterKeys) {
                 map.remove(filter);
             }
+
+            result.add(map);
+        }
+
+        return result;
+    }
+
+    public static <T> List<Map<String, Object>> objectToMap(Collection<T> objectList) {
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (T entity : objectList) {
+            Map<String, Object> map = BeanMapUtils.objectToMap(entity);
 
             result.add(map);
         }
