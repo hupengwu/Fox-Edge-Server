@@ -60,7 +60,7 @@ public class DeviceValueSynchronizer {
                 }
 
                 // 扩展配置
-                ExtendConfigUtils.extend(deviceMap, extendMap);
+                ExtendConfigUtils.extendMapList(deviceMap, extendMap);
 
                 Map<String, Object> extendParam = (Map<String, Object>) deviceMap.get(DeviceVOFieldConstant.field_extend_param);
                 if (extendParam == null) {

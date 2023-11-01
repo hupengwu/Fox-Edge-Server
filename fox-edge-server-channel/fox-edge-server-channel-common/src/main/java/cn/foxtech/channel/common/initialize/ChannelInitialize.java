@@ -1,8 +1,8 @@
 package cn.foxtech.channel.common.initialize;
 
-import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.common.linker.LinkerMethodScanner;
 import cn.foxtech.channel.common.linker.LinkerScheduler;
+import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.common.scheduler.ChannelRedisScheduler;
 import cn.foxtech.channel.common.service.EntityManageService;
 import cn.foxtech.channel.common.service.RedisTopicRespondDeviceService;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ChannelInitialize {
+
     /**
      * redis的通道状态更新
      */

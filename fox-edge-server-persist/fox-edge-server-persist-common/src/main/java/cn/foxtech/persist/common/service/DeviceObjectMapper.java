@@ -30,6 +30,10 @@ public class DeviceObjectMapper {
         return (Map<String, Object>) Maps.getValue(this.mapperEntityMap, deviceType);
     }
 
+    /**
+     * 从Redis读取来自管理服务的DeviceMapperEntity的配置信息，缓存到本地内存，
+     * 方便后续数据加工的时候使用
+     */
     public void syncEntity() {
         // 检查：是否有重新状态的配置到达
         Long updateTime = this.entityManageService.removeReloadedFlag(DeviceMapperEntity.class.getSimpleName());

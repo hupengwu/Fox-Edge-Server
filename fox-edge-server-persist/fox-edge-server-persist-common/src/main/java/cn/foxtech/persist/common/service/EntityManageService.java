@@ -81,6 +81,8 @@ public class EntityManageService extends EntityServiceManager {
         writer.add(DeviceValueEntity.class.getSimpleName());
         reader.add(DeviceStatusEntity.class.getSimpleName());
         writer.add(DeviceStatusEntity.class.getSimpleName());
+        reader.add(DeviceObjInfEntity.class.getSimpleName());
+        writer.add(DeviceObjInfEntity.class.getSimpleName());
     }
 
     private void instancePublish() {

@@ -39,6 +39,7 @@ app_param_redis_port=$(readINI $app_home/shell/fox-edge.ini redis port)
 app_param_redis_password=$(readINI $app_home/shell/fox-edge.ini redis password)
 #mysql参数
 app_param_mysql_host=$(readINI $app_home/shell/fox-edge.ini mysql host)
+app_param_mysql_port=$(readINI $app_home/shell/fox-edge.ini mysql port)
 app_param_mysql_username=$(readINI $app_home/shell/fox-edge.ini mysql username)
 app_param_mysql_password=$(readINI $app_home/shell/fox-edge.ini mysql password)
 #环境变量
@@ -173,7 +174,7 @@ $app_home/bin/$app_type/$app_name/$jar_name \
 $spring_param \
 $server_port \
 --spring.redis.host=$app_param_redis_host --spring.redis.port=$app_param_redis_port --spring.redis.password=$app_param_redis_password \
---spring.datasource.username=$app_param_mysql_username --spring.datasource.password=$app_param_mysql_password  --spring.datasource.url=jdbc:mysql://$app_param_mysql_host:3306/fox_edge \
+--spring.datasource.username=$app_param_mysql_username --spring.datasource.password=$app_param_mysql_password  --spring.datasource.url=jdbc:mysql://$app_param_mysql_host:$app_param_mysql_port/fox_edge \
 >$app_home/logs/start_$jar_name.out 2>&1 & \
 
 #=========================================组织命令行参数，并重启业务进程==========================================#

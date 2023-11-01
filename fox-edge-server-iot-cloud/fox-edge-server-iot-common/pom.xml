@@ -68,6 +68,12 @@
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-common-mqtt</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-entity-base</artifactId>
             <version>${fox-edge-server.version}</version>
             <!-- Channel服务不需要数据库，剔除不必要的数据库部件 -->

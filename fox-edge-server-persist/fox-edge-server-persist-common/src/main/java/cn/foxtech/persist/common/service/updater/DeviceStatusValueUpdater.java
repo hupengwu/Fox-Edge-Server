@@ -165,6 +165,11 @@ public class DeviceStatusValueUpdater {
             entity.setDeviceType(deviceEntity.getDeviceType());
             entity.setObjectName(key);
 
+            Object value = statusValues.get(key);
+            if (value != null){
+                entity.setValueType(value.getClass().getSimpleName());
+            }
+
             // 检查：是否已经存在
             if (this.entityManageService.hasEntity(entity.makeServiceKey(), DeviceObjInfEntity.class)) {
                 continue;

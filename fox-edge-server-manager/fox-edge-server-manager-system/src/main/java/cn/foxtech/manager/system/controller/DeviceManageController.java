@@ -112,7 +112,7 @@ public class DeviceManageController {
 
             // 扩展设备的扩展配置信息
             List<BaseEntity> extendConfigEntityList = this.entityManageService.getEntityList(ExtendConfigEntity.class);
-            ExtendConfigUtils.extend(mapList, extendConfigEntityList, DeviceEntity.class);
+            ExtendConfigUtils.extendMapList(mapList, extendConfigEntityList, DeviceEntity.class);
 
             Map<String, Object> data = new HashMap<>();
             data.put("list", mapList);

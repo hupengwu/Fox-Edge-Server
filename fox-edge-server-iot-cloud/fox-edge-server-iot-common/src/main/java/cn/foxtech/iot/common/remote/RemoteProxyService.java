@@ -1,12 +1,14 @@
 package cn.foxtech.iot.common.remote;
 
 import cn.foxtech.common.entity.manager.LocalConfigService;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Getter
 @Component
 public class RemoteProxyService {
     @Autowired
@@ -15,14 +17,28 @@ public class RemoteProxyService {
     @Autowired
     private RemoteHttpProxyService httpProxyService;
 
+    @Autowired
+    private RemoteMqttService mqttService;
+
+
+    private String mode;
+
     public void initialize() {
         // 读取配置参数
         Map<String, Object> configs = this.localConfigService.getConfigs();
 
         Map<String, Object> remote = (Map<String, Object>) configs.getOrDefault("remote", new HashMap<>());
-        Map<String, Object> http = (Map<String, Object>) remote.getOrDefault("http", new HashMap<>());
-        String host = (String) http.getOrDefault("host", "http://localhost");
+        this.mode = (String) remote.getOrDefault("mode", "http");
 
-        this.httpProxyService.setUri(host);
+
+        if ("http".equals(this.mode)) {
+            Map<String, Object> http = (Map<String, Object>) remote.getOrDefault("http", new HashMap<>());
+            String host = (String) http.getOrDefault("host", "http://localhost");
+            this.httpProxyService.setUri(host);
+        }
+        if ("mqtt".equals(this.mode)) {
+            Map<String, Object> mqtt = (Map<String, Object>) remote.getOrDefault("mqtt", new HashMap<>());
+            this.mqttService.setMqttConfig(mqtt);
+        }
     }
 }

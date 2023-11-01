@@ -39,11 +39,8 @@ public class MqttClientService {
     private MqttClientListener mqttClientListener;
 
     public boolean Initialize(Map<String, Object> configs) {
-        Map<String, Object> mqttConfig = (Map<String, Object>) configs.getOrDefault("mqtt", new HashMap<>());
-
-
         // 初始化配置
-        this.configService.initialize(mqttConfig);
+        this.configService.initialize(configs);
 
 
         String clientId = this.configService.getClientId();

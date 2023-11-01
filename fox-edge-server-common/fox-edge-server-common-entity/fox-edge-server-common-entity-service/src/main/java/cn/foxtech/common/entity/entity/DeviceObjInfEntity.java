@@ -27,7 +27,10 @@ public class DeviceObjInfEntity extends BaseEntity {
      * 对象名称
      */
     private String objectName;
-
+    /**
+     * 对象名称
+     */
+    private String valueType;
 
     /**
      * 业务Key
@@ -62,12 +65,15 @@ public class DeviceObjInfEntity extends BaseEntity {
      */
     public List<Object> makeServiceValueList() {
         List<Object> list = new ArrayList<>();
+        list.add(this.valueType);
+
         return list;
     }
 
     public void bind(DeviceObjInfEntity other) {
         this.deviceType = other.deviceType;
         this.objectName = other.objectName;
+        this.valueType = other.valueType;
 
 
         this.setId(other.getId());

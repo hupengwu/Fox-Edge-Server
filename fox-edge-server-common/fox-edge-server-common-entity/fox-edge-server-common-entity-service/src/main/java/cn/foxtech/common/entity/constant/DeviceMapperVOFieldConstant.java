@@ -5,6 +5,10 @@ public class DeviceMapperVOFieldConstant extends BaseVOFieldConstant {
     public static final String field_object_name = "objectName";
     public static final String field_mapper_name = "mapperName";
     public static final String field_mapper_mode = "mapperMode";
+    public static final String field_value_Type = "valueType";
+
+    public static final String field_extend_param = "extendParam";
+
 
 
     /**

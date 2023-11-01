@@ -1,30 +1,22 @@
 package cn.foxtech.common.entity.entity;
 
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
-@TableName("tb_device_mapper")
-public class DeviceMapperEntity extends DeviceObjInfEntity {
+public class DeviceMapperEntity extends DeviceMapperBase {
     /**
-     * 映射名称
+     * 扩展参数（非工作参数）：主要是一些备注信息，它并不参与fox-edge本身的工作
      */
-    private String mapperName;
-    /**
-     * 映射模式：
-     * replace    0  替换，例如将"对象1"重命名成“object 1”，只保留
-     * duplicate  1  副本，例如为“对象1”新增一个"object 1"的副本，同时保留"对象1"
-     * filter     2  过滤，例如将“对象1”剔除掉
-     */
-    private Integer mapperMode;
+    private Map<String, Object> extendParam = new HashMap<>();
 
     /**
      * 获得init方法
@@ -60,23 +52,14 @@ public class DeviceMapperEntity extends DeviceObjInfEntity {
      * @return 数值成员列表
      */
     public List<Object> makeServiceValueList() {
-        List<Object> list = new ArrayList<>();
-        list.add(this.mapperName);
-        list.add(this.mapperMode);
+        List<Object> list = super.makeServiceValueList();
+        list.add(this.extendParam);
         return list;
     }
 
     public void bind(DeviceMapperEntity other) {
         super.bind(other);
 
-        this.mapperName = other.mapperName;
-        this.mapperMode = other.mapperMode;
-    }
-
-    public void init(DeviceObjInfEntity other) {
-        this.bind(other);
-
-        this.mapperName = other.getObjectName();
-        this.mapperMode = 0;
+        this.extendParam = other.extendParam;
     }
 }
