@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- 主机:                           192.168.1.6
--- 服务器版本:                        8.0.34-0ubuntu0.20.04.1 - (Ubuntu)
+-- 服务器版本:                        8.0.35-0ubuntu0.20.04.1 - (Ubuntu)
 -- 服务器操作系统:                      Linux
 -- HeidiSQL 版本:                  12.2.0.6576
 -- --------------------------------------------------------
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `tb_config` (
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `service_name_service_type_config_name` (`service_name`,`service_type`,`config_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=122 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='该参数是由manage服务来配置，再给各个服务消费';
+) ENGINE=InnoDB AUTO_INCREMENT=137 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='该参数是由manage服务来配置，再给各个服务消费';
 
 -- 数据导出被取消选择。
 
@@ -80,14 +80,14 @@ DROP TABLE IF EXISTS `tb_device_history`;
 CREATE TABLE IF NOT EXISTS `tb_device_history` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主表ID',
   `device_id` bigint NOT NULL DEFAULT '0' COMMENT '设备ID',
-  `object_name` varchar(128) NOT NULL DEFAULT '' COMMENT '对象名称',
+  `object_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '对象名称',
   `param_type` varchar(32) DEFAULT NULL COMMENT '参数类型',
   `param_value` varchar(64) DEFAULT NULL COMMENT '参数值',
   `create_time` bigint DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`),
   KEY `device_id` (`device_id`),
   KEY `object_name` (`object_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=87048704 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=100688107 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -96,14 +96,34 @@ DROP TABLE IF EXISTS `tb_device_mapper`;
 CREATE TABLE IF NOT EXISTS `tb_device_mapper` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '序号',
   `device_type` varchar(50) DEFAULT NULL COMMENT '设备型号',
-  `object_name` varchar(128) DEFAULT NULL COMMENT '对象名称',
-  `mapper_name` varchar(128) DEFAULT NULL COMMENT '对象重命名',
+  `object_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '对象名称',
+  `mapper_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '对象重命名',
   `mapper_mode` int DEFAULT NULL COMMENT '映射方式（0：不进行处理，1：替换，3：副本，3：剔除）',
+  `value_type` varchar(50) DEFAULT NULL COMMENT '数据类型',
+  `extend_param` json DEFAULT NULL COMMENT '扩展配置',
   `create_time` bigint DEFAULT NULL COMMENT '创建时间',
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `device_type_object_name` (`device_type`,`object_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=628341 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='对象重命名';
+) ENGINE=InnoDB AUTO_INCREMENT=238 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='对象重命名';
+
+-- 数据导出被取消选择。
+
+-- 导出  表 fox_edge.tb_device_model 结构
+DROP TABLE IF EXISTS `tb_device_model`;
+CREATE TABLE IF NOT EXISTS `tb_device_model` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '序号',
+  `model_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '模型名称',
+  `model_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '模型类型（设备属性/设备操作）',
+  `provider` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '模型提供方（平台厂商）',
+  `service_param` json DEFAULT NULL COMMENT '业务参数（描述类的信息）',
+  `model_schema` json DEFAULT NULL COMMENT '模型结构（模型信息）',
+  `create_time` bigint DEFAULT NULL COMMENT '创建时间',
+  `update_time` bigint DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `model_name` (`model_name`),
+  KEY `model_provider` (`provider`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='设备的物模型';
 
 -- 数据导出被取消选择。
 
@@ -113,7 +133,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_object` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '序号',
   `device_name` varchar(50) DEFAULT NULL COMMENT '设备名称',
   `device_type` varchar(50) DEFAULT NULL COMMENT '设备型号',
-  `object_name` varchar(128) DEFAULT NULL COMMENT '对象名称',
+  `object_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '对象名称',
   `create_time` bigint DEFAULT NULL COMMENT '创建时间',
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
@@ -121,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_object` (
   KEY `device_type` (`device_type`),
   KEY `device_name` (`device_name`),
   KEY `object_name` (`object_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=1112530 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='设备的一个个数据对象信息';
+) ENGINE=InnoDB AUTO_INCREMENT=1208115 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='设备的一个个数据对象信息';
 
 -- 数据导出被取消选择。
 
@@ -167,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `tb_extend` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `extend_name` (`extend_name`),
   KEY `extend_type` (`extend_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -383,7 +403,7 @@ CREATE TABLE IF NOT EXISTS `tb_trigger_object` (
   `device_name` varchar(50) DEFAULT NULL COMMENT '设备名称',
   `device_type` varchar(50) NOT NULL COMMENT '设备类型',
   `trigger_config_name` varchar(50) NOT NULL COMMENT '配置名称',
-  `object_name` varchar(128) NOT NULL COMMENT '告警范围(全局/设备/对象)',
+  `object_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '告警范围(全局/设备/对象)',
   `create_time` bigint NOT NULL COMMENT '创建时间',
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,

@@ -30,9 +30,7 @@
       "nodeId": "Fox-Edge-54060500FFFB8B0F",
       "deviceId": "653d1b13585c81787ad06a33_Fox-Edge-54060500FFFB8B0F",
       "deviceOnlinePush": 30,
-      "models": ["/iot-huawei/v1/1.0.0/service/CJT188/profile/servicetype-capability.json",
-        "/iot-huawei/v1/1.0.0/service/CE_T_UPS/profile/servicetype-capability.json"
-      ]
+      "provider": "HuaWei-IoTDA"
     }
   },
 

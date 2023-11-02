@@ -56,11 +56,11 @@
             <artifactId>fox-edge-server-common-utils-container</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
+
         <dependency>
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-utils-uuid</artifactId>
-            <version>1.0.5</version>
-            <scope>compile</scope>
+            <version>${fox-edge-server.version}</version>
         </dependency>
 
     </dependencies>

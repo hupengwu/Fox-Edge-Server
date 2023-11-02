@@ -9,6 +9,7 @@ import cn.foxtech.common.entity.service.channel.ChannelEntityService;
 import cn.foxtech.common.entity.service.config.ConfigEntityService;
 import cn.foxtech.common.entity.service.device.DeviceEntityService;
 import cn.foxtech.common.entity.service.devicemapping.DeviceMapperEntityService;
+import cn.foxtech.common.entity.service.devicemodel.DeviceModelEntityService;
 import cn.foxtech.common.entity.service.deviceobject.DeviceObjectEntityService;
 import cn.foxtech.common.entity.service.devicerecord.DeviceRecordEntityService;
 import cn.foxtech.common.entity.service.link.LinkEntityService;
@@ -48,6 +49,9 @@ public class EntityManageService extends EntityServiceManager {
 
     @Autowired
     protected DeviceObjectEntityService deviceObjectEntityService;
+
+    @Autowired
+    protected DeviceModelEntityService deviceModelEntityService;
 
     @Autowired
     protected DeviceMapperEntityService deviceMapperEntityService;
@@ -144,6 +148,7 @@ public class EntityManageService extends EntityServiceManager {
         dBService.put(OperateChannelTaskEntity.class.getSimpleName(), this.operateChannelTaskEntityService);
         dBService.put(OperateEntity.class.getSimpleName(), this.operateEntityService);
         dBService.put(TriggerEntity.class.getSimpleName(), this.triggerEntityService);
+        dBService.put(DeviceModelEntity.class.getSimpleName(), this.deviceModelEntityService);
 
 
         // 注册生产者
@@ -164,6 +169,7 @@ public class EntityManageService extends EntityServiceManager {
         producer.add(OperateChannelTaskEntity.class.getSimpleName());
         producer.add(DeviceTimeOutEntity.class.getSimpleName());
         producer.add(DeviceMapperEntity.class.getSimpleName());
+        producer.add(DeviceModelEntity.class.getSimpleName());
 
 
         // 告知：生产者如何装载数据源
@@ -183,7 +189,10 @@ public class EntityManageService extends EntityServiceManager {
         this.getSourceMySQL().add(OperateManualTaskEntity.class.getSimpleName());
         this.getSourceMySQL().add(OperateChannelTaskEntity.class.getSimpleName());
         this.getSourceMySQL().add(DeviceMapperEntity.class.getSimpleName());
+        this.getSourceMySQL().add(DeviceModelEntity.class.getSimpleName());
+
         this.getSourceRedis().add(DeviceTimeOutEntity.class.getSimpleName());
+
 
         // 注册消费者
         consumer.add(TriggerStatusEntity.class.getSimpleName());
@@ -220,6 +229,7 @@ public class EntityManageService extends EntityServiceManager {
         this.entityPublishManager.setPublishEntityUpdateTime(OperateChannelTaskEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, OperateChannelTaskEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(DeviceTimeOutEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, DeviceTimeOutEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(DeviceMapperEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, DeviceMapperEntity.class.getSimpleName());
+        this.entityPublishManager.setPublishEntityUpdateTime(DeviceModelEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, DeviceMapperEntity.class.getSimpleName());
     }
 
     private void instanceOption() {

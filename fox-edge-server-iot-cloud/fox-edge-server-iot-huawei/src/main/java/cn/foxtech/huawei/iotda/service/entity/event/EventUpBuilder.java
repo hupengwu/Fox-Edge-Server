@@ -34,6 +34,27 @@ public class EventUpBuilder {
         return event;
     }
 
+    public static EventUp delete_sub_device_request(String productId, List<Long> deviceIds, String eventId) {
+        EventUp event = new EventUp();
+        event.setObject_device_id("{object_device_id}");
+
+        Service service = new Service();
+        event.getServices().add(service);
+        service.setService_id("$sub_device_manager");
+        service.setEvent_type("delete_sub_device_request");
+        service.setEvent_time(TimeUtils.getUTCTime());
+        service.setEvent_id(eventId);
+        service.setParas(new SubDevRegisterParas());
+
+        SubDevUnRegisterParas subDevUnRegisterParas = (SubDevUnRegisterParas) service.getParas();
+        for (Long deviceId : deviceIds) {
+            subDevUnRegisterParas.getDevices().add(getSubDevId(productId, deviceId));
+        }
+
+
+        return event;
+    }
+
     public static EventUp sub_device_update_status(String productId, Map<Long, Boolean> deviceStatuss, String eventId) {
         EventUp event = new EventUp();
         event.setObject_device_id("{object_device_id}");

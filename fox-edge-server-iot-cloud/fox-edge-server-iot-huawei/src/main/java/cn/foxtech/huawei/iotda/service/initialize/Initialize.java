@@ -4,9 +4,6 @@ package cn.foxtech.huawei.iotda.service.initialize;
 import cn.foxtech.common.entity.entity.*;
 import cn.foxtech.huawei.iotda.service.huawei.HuaweiIoTDAService;
 import cn.foxtech.huawei.iotda.service.service.DevicePushScheduler;
-import cn.foxtech.huawei.iotda.service.service.DevValueExecutor;
-import cn.foxtech.huawei.iotda.service.service.DeviceOnlineExecutor;
-import cn.foxtech.huawei.iotda.service.service.DeviceRegisterExecutor;
 import cn.foxtech.iot.common.initialize.InitializeCommon;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +28,6 @@ public class Initialize implements CommandLineRunner {
     private DevicePushScheduler devicePushScheduler;
 
     @Autowired
-    private DeviceRegisterExecutor deviceRegisterExecutor;
-
-    @Autowired
-    private DeviceOnlineExecutor deviceOnlineExecutor;
-
-    @Autowired
-    private DevValueExecutor devValueExecutor;
-
-    @Autowired
     private HuaweiIoTDAService huaweiIoTDAService;
 
 
@@ -52,6 +40,7 @@ public class Initialize implements CommandLineRunner {
         Set<String> reader = new HashSet<>();
         consumer.add(ConfigEntity.class.getSimpleName());
         consumer.add(ExtendConfigEntity.class.getSimpleName());
+        consumer.add(DeviceModelEntity.class.getSimpleName());
         consumer.add(DeviceEntity.class.getSimpleName());
         consumer.add(DeviceStatusEntity.class.getSimpleName());
         reader.add(DeviceValueEntity.class.getSimpleName());
@@ -66,8 +55,6 @@ public class Initialize implements CommandLineRunner {
         this.devicePushScheduler.initialize();
         this.devicePushScheduler.schedule();
 
-      //      this.subDeviceOnlineExecutor.subDeviceUpdateStatus();
-      //  this.subDevPropertyExecutor.subDevPropertyReportRequest();
 
         logger.info("------------------------初始化结束！------------------------");
     }

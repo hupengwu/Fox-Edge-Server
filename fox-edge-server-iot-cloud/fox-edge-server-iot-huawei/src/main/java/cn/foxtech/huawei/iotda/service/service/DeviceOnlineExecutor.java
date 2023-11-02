@@ -34,7 +34,7 @@ public class DeviceOnlineExecutor {
     /**
      * 通知华为云，在网关设备下，添加子设备
      */
-    public void pushDeviceStatus() {
+    public void pushDeviceStatus(boolean force) {
         // 获得华为物联网相关的设备
         Map<String, DeviceEntity> key2Entity = this.deviceExecutor.getKey2Entity();
 
@@ -60,6 +60,10 @@ public class DeviceOnlineExecutor {
             }
         }
 
+        if (force){
+            pushStatusMap.putAll(newStatusMap);
+        }
+
         // 检查：是否有需要推送的数据
         if (pushStatusMap.isEmpty()) {
             return;
@@ -68,6 +72,7 @@ public class DeviceOnlineExecutor {
         // 推送设备在线状态
         this.pushDeviceStatus(pushStatusMap, key2Entity);
     }
+
 
     private void pushDeviceStatus(Map<String, Boolean> statusMap, Map<String, DeviceEntity> key2Entity) {
         // 分批发送

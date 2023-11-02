@@ -32,7 +32,7 @@ public class DeviceRegisterExecutor {
     /**
      * 添加全部设备
      */
-    public void registerDevice() {
+    public void registerDevice(boolean force) {
         // 获得华为物联网平台相关的设备
         Map<String, DeviceEntity> key2Entity = this.deviceExecutor.getKey2Entity();
 
@@ -47,12 +47,30 @@ public class DeviceRegisterExecutor {
             this.deviceEntityMap.put(key, key2Entity.get(key));
         }
 
+        if (force){
+            // 强制推送全部设备
+            this.registerDevices(this.deviceEntityMap.keySet(),key2Entity);
+            return;
+        }
+        else{
+            // 动态注册/注销设备
+            this.registerDevices(addList,key2Entity);
+            this.unregisterDevices(delList,key2Entity);
+        }
+
+    }
+
+    private void registerDevices(Set<String> addList, Map<String, DeviceEntity> key2Entity) {
         // 分批发送
         List<List<String>> pages = SplitUtils.split(addList, 40);
         for (List<String> page : pages) {
             // 添加设备，要求的是device的id来构造DEVICE-XXX的设备名称
             List<Long> ids = new ArrayList<>();
             for (String key : page) {
+                if (!key2Entity.containsKey(key)){
+                    continue;
+                }
+
                 ids.add(key2Entity.get(key).getId());
             }
 
@@ -60,20 +78,11 @@ public class DeviceRegisterExecutor {
         }
     }
 
-    /**
-     * 添加单个设备
-     *
-     * @param deviceEntity 设备实体
-     */
-    public void registerDevice(DeviceEntity deviceEntity) {
-        // 添加设备，要求的是device的id来构造DEVICE-XXX的设备名称
-        List<Long> ids = new ArrayList<>();
-        ids.add(deviceEntity.getId());
-
-        this.registerDevices(ids);
-    }
-
     private void registerDevices(List<Long> ids) {
+        if (ids.isEmpty()){
+            return;
+        }
+
         // 分批发送
         String productId = this.huaweiIoTDAService.getProductId();
         String nodeId = this.huaweiIoTDAService.getNodeId();
@@ -84,6 +93,49 @@ public class DeviceRegisterExecutor {
         // 生成子设备注册事件
         String eventId = UuidUtils.randomUUID();
         EventUp event = EventUpBuilder.add_sub_device_request(productId, ids, eventId);
+
+        // 转换为JSON报文
+        String body = JsonUtils.buildJsonWithoutException(event);
+
+        // 对应的topic
+        String topic = EventUpBuilder.getTopic(nodeId);
+
+        // 发送注册请求
+        this.remoteMqttService.getClient().publish(topic, body.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private void unregisterDevices(Set<String> delList, Map<String, DeviceEntity> key2Entity) {
+        // 分批发送
+        List<List<String>> pages = SplitUtils.split(delList, 40);
+        for (List<String> page : pages) {
+            // 添加设备，要求的是device的id来构造DEVICE-XXX的设备名称
+            List<Long> ids = new ArrayList<>();
+            for (String key : page) {
+                if (!key2Entity.containsKey(key)){
+                    continue;
+                }
+
+                ids.add(key2Entity.get(key).getId());
+            }
+
+            this.unregisterDevices(ids);
+        }
+    }
+
+    private void unregisterDevices(List<Long> ids) {
+        if (ids.isEmpty()){
+            return;
+        }
+
+        // 分批发送
+        String productId = this.huaweiIoTDAService.getProductId();
+        String nodeId = this.huaweiIoTDAService.getNodeId();
+
+        // 添加设备，要求的是device的id来构造DEVICE-XXX的设备名称
+
+        // 生成子设备注册事件
+        String eventId = UuidUtils.randomUUID();
+        EventUp event = EventUpBuilder.delete_sub_device_request(productId, ids, eventId);
 
         // 转换为JSON报文
         String body = JsonUtils.buildJsonWithoutException(event);
