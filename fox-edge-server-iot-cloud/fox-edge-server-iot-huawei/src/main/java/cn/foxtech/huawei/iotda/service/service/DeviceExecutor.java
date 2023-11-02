@@ -4,6 +4,7 @@ import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.DeviceEntity;
 import cn.foxtech.common.entity.entity.ExtendConfigEntity;
 import cn.foxtech.common.entity.utils.ExtendConfigUtils;
+import cn.foxtech.huawei.iotda.service.huawei.HuaweiIoTDAService;
 import cn.foxtech.iot.common.service.EntityManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,9 @@ import java.util.Map;
 public class DeviceExecutor {
     @Autowired
     private EntityManageService entityManageService;
+
+    @Autowired
+    private HuaweiIoTDAService huaweiIoTDAService;
 
     public Map<String, DeviceEntity> getKey2Entity() {
         // 获得全体扩展配置信息
@@ -31,7 +35,7 @@ public class DeviceExecutor {
         for (BaseEntity entity : deviceEntityList) {
             DeviceEntity deviceEntity = (DeviceEntity) entity;
 
-            if (!Boolean.TRUE.equals(deviceEntity.getExtendParam().get("huaweiIotDA"))) {
+            if (!Boolean.TRUE.equals(deviceEntity.getExtendParam().get(this.huaweiIoTDAService.getExtendField()))) {
                 continue;
             }
 

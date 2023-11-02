@@ -4,7 +4,6 @@ import cn.foxtech.common.entity.manager.LocalConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.iot.common.remote.RemoteMqttService;
 import lombok.Getter;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +12,6 @@ import java.util.Map;
 
 @Component
 public class HuaweiIoTDAService {
-    private static final Logger logger = Logger.getLogger(HuaweiIoTDAService.class);
     /**
      * 从华为物联网平台，导出来的物模型文件
      */
@@ -31,6 +29,9 @@ public class HuaweiIoTDAService {
 
     @Getter
     private String provider = "";
+
+    @Getter
+    private String extendField = "";
 
     @Getter
     private Integer deviceOnlinePush = 30;
@@ -51,5 +52,9 @@ public class HuaweiIoTDAService {
         this.deviceId = (String) huaweiIoTDA.getOrDefault("deviceId", "");
         this.provider = (String) huaweiIoTDA.getOrDefault("provider", "HuaWei-IoTDA");
         this.deviceOnlinePush = (Integer) huaweiIoTDA.getOrDefault("deviceOnlinePush", 30);
+
+        Map<String, Object> extend = (Map<String, Object>) this.localConfigService.getConfigs().getOrDefault("extend", new HashMap<>());
+        this.extendField = (String) extend.getOrDefault("extendField", "huaweiIotDA");
+
     }
 }
