@@ -77,7 +77,10 @@ public class LocalHttpProxyService {
      */
     public synchronized void login() throws IOException {
         // 获得账号密码
-        Map<String, Object> configs = this.configManageService.loadInitConfig("serverConfig", "serverConfig.json");
+        this.configManageService.initialize("serverConfig", "serverConfig.json");
+        Map<String, Object> configs = this.configManageService.getConfigParam("serverConfig");
+
+
         Map<String, Object> localConfig = (Map<String, Object>) configs.getOrDefault("local", new HashMap<>());
 
         // 取出信息

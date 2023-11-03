@@ -1,15 +1,15 @@
 package cn.foxtech.persist.common.scheduler;
 
 
-import cn.foxtech.common.entity.entity.ConfigEntity;
+import cn.foxtech.common.entity.manager.ConfigManageService;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import cn.foxtech.persist.common.service.DeviceObjectMapper;
 import cn.foxtech.persist.common.service.EntityManageService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -26,11 +26,8 @@ public class EntityManageScheduler extends PeriodTaskService {
     @Autowired
     private DeviceObjectMapper deviceObjectMapper;
 
-    @Value("${spring.fox-service.service.type}")
-    private String foxServiceType = "undefinedServiceType";
-
-    @Value("${spring.fox-service.service.name}")
-    private String foxServiceName = "undefinedServiceName";
+    @Autowired
+    private ConfigManageService configManageService;
 
     /**
      * 上次处理时间
@@ -59,15 +56,11 @@ public class EntityManageScheduler extends PeriodTaskService {
                 return;
             }
 
-            // 获取配置参数
-            ConfigEntity configEntity = this.entityManageService.getConfigEntity(this.foxServiceName, this.foxServiceType, "deviceHistoryConfig");
-            if (configEntity == null) {
-                return;
-            }
+            Map<String, Object> configs = this.configManageService.getConfigParam("serverConfig");
+            Map<String, Object> params = (Map<String, Object>) configs.getOrDefault("deviceHistory", new HashMap<>());
 
-            Map<String, Object> params = configEntity.getConfigValue();
-            Integer maxCount = (Integer) params.get("maxCount");
-            Integer period = (Integer) params.get("period");
+            Integer maxCount = (Integer) params.getOrDefault("maxCount", 1000000);
+            Integer period = (Integer) params.getOrDefault("period", 3600);
 
             // 检查：执行周期是否到达
             long currentTime = System.currentTimeMillis();
@@ -89,15 +82,12 @@ public class EntityManageScheduler extends PeriodTaskService {
                 return;
             }
 
-            // 获取配置参数
-            ConfigEntity configEntity = this.entityManageService.getConfigEntity(this.foxServiceName, this.foxServiceType, "operateRecordConfig");
-            if (configEntity == null) {
-                return;
-            }
+            Map<String, Object> configs = this.configManageService.getConfigParam("serverConfig");
+            Map<String, Object> params = (Map<String, Object>) configs.getOrDefault("operateRecord", new HashMap<>());
 
-            Map<String, Object> params = configEntity.getConfigValue();
-            Integer maxCount = (Integer) params.get("maxCount");
-            Integer period = (Integer) params.get("period");
+            Integer maxCount = (Integer) params.getOrDefault("maxCount", 10000);
+            Integer period = (Integer) params.getOrDefault("period", 3600);
+
 
             // 检查：执行周期是否到达
             long currentTime = System.currentTimeMillis();

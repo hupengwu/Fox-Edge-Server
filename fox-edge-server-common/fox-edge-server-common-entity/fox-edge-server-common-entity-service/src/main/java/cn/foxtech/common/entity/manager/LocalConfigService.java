@@ -26,7 +26,10 @@ public class LocalConfigService {
 
     public void initialize() {
         // 从redis缓存之中，从Redis中读取配置信息，该信息由ConfigManageService组件，自动冲serverConfig.json、redis缓存、管理服务通告，三者中自动判定出数值
-        Map<String, Object> configs = this.configManageService.loadInitConfig("serverConfig", "serverConfig.json");
+        this.configManageService.initialize("serverConfig", "serverConfig.json");
+
+        // 读取配置数据
+        Map<String, Object> configs = this.configManageService.getConfigParam("serverConfig");
 
         // 本应用反正不想动态根据全局变化，调整，将上面艰难获得的信息，缓存起来，反复使用
         this.configs = JsonUtils.clone(configs);
@@ -34,7 +37,10 @@ public class LocalConfigService {
 
     public void initialize(String configName, String classpathFile) {
         // 从redis缓存之中，从Redis中读取配置信息，该信息由ConfigManageService组件，自动冲serverConfig.json、redis缓存、管理服务通告，三者中自动判定出数值
-        Map<String, Object> configs = this.configManageService.loadInitConfig(configName, classpathFile);
+        this.configManageService.initialize(configName, classpathFile);
+
+        // 读取配置数据
+        Map<String, Object> configs = this.configManageService.getConfigParam("serverConfig");
 
         // 本应用反正不想动态根据全局变化，调整，将上面艰难获得的信息，缓存起来，反复使用
         this.configs = JsonUtils.clone(configs);

@@ -76,8 +76,8 @@ public class ConfigVOMaker {
     /**
      * 后期处理
      *
-     * @param entityList
-     * @return
+     * @param entityList 加工前的实体列表
+     * @return 加工后的实体列表
      */
     public List<BaseEntity> postProcess(List<BaseEntity> entityList) {
         List<BaseEntity> result = new ArrayList<>();
@@ -94,12 +94,6 @@ public class ConfigVOMaker {
     }
 
 
-    /**
-     * 前期处理
-     *
-     * @param param       参数
-     * @param configValue 配置值
-     */
     /**
      * 数据处理
      * 如果填写了existValue，那么为预处理，否则为后期处理

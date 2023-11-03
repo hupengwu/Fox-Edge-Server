@@ -48,7 +48,9 @@ public class RemoteService {
 
     private String getMode() {
         if (MethodUtils.hasEmpty(this.mode)) {
-            Map<String, Object> configs = this.configManageService.loadInitConfig("serverConfig", "serverConfig.json");
+            this.configManageService.initialize("serverConfig", "serverConfig.json");
+            Map<String, Object> configs = this.configManageService.getConfigParam("serverConfig");
+
             Map<String, Object> cloudConfig = (Map<String, Object>) configs.getOrDefault("cloud", new HashMap<>());
             this.mode = (String) cloudConfig.getOrDefault("mode", "mix");
         }

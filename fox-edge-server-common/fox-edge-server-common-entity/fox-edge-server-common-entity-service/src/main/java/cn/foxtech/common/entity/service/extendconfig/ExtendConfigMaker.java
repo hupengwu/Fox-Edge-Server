@@ -8,7 +8,6 @@ import cn.foxtech.common.utils.json.JsonUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * DeviceConfigPo是数据库格式的对象，DeviceConfigEntity是内存格式的对象，两者需要进行转换
@@ -17,20 +16,20 @@ public class ExtendConfigMaker {
     /**
      * PO转Entity
      *
-     * @param deviceList
-     * @return
+     * @param entityList 实体列表
+     * @return PO列表
      */
-    public static List<BaseEntity> makePoList2EntityList(List<BaseEntity> deviceList) {
-        List<BaseEntity> deviceConfigList = new ArrayList<>();
-        for (BaseEntity entity : deviceList) {
+    public static List<BaseEntity> makePoList2EntityList(List<BaseEntity> entityList) {
+        List<BaseEntity> entityConfigList = new ArrayList<>();
+        for (BaseEntity entity : entityList) {
             ExtendConfigPo po = (ExtendConfigPo) entity;
 
 
             ExtendConfigEntity config = ExtendConfigMaker.makePo2Entity(po);
-            deviceConfigList.add(config);
+            entityConfigList.add(config);
         }
 
-        return deviceConfigList;
+        return entityConfigList;
     }
 
     public static ExtendConfigPo makeEntity2Po(ExtendConfigEntity entity) {

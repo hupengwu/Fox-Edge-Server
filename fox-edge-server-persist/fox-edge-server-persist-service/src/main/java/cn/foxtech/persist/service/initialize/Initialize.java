@@ -1,6 +1,7 @@
 package cn.foxtech.persist.service.initialize;
 
 
+import cn.foxtech.common.entity.manager.ConfigManageService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.persist.common.initialize.PersistInitialize;
 import cn.foxtech.persist.service.controller.ManagerController;
@@ -31,6 +32,9 @@ public class Initialize implements CommandLineRunner {
     @Autowired
     private PersistInitialize persistInitialize;
 
+    @Autowired
+    private ConfigManageService configManageService;
+
 
     @Override
     public void run(String... args) {
@@ -39,8 +43,12 @@ public class Initialize implements CommandLineRunner {
         // 装载数据实体，并启动同步线程
         this.persistInitialize.initialize();
 
+        // 初始化全局配置参数
+        this.configManageService.initialize("serverConfig", "serverConfig.json");
+
         // 调度设备上报收集任务
         this.persistController.schedule();
+
         // 调度管理服务
         this.managerController.schedule();
 

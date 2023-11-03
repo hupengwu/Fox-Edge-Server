@@ -65,7 +65,9 @@ public class MqttClientService {
 
 
     public boolean Initialize() {
-        Map<String, Object> configs = this.configManageService.loadInitConfig("serverConfig", "serverConfig.json");
+        this.configManageService.initialize("serverConfig", "serverConfig.json");
+        Map<String, Object> configs =this.configManageService.getConfigParam("serverConfig");
+
         Map<String, Object> cloudConfig = (Map<String, Object>) configs.getOrDefault("cloud", new HashMap<>());
         Map<String, Object> mqttConfig = (Map<String, Object>) cloudConfig.getOrDefault("mqtt", new HashMap<>());
 

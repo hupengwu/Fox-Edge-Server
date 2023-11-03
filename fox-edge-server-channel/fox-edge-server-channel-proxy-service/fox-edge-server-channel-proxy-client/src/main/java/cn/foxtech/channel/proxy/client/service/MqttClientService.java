@@ -52,7 +52,8 @@ public class MqttClientService {
     private ConfigManageService configManageService;
 
     public boolean Initialize() {
-        Map<String, Object> configs = this.configManageService.loadInitConfig("serverConfig", "serverConfig.json");
+        this.configManageService.initialize("serverConfig", "serverConfig.json");
+        Map<String, Object> configs = this.configManageService.getConfigParam("serverConfig");
 
         // 初始化配置
         this.configService.initialize(configs);

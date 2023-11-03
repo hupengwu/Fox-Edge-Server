@@ -1,5 +1,6 @@
 package cn.foxtech.persist.common.initialize;
 
+import cn.foxtech.common.entity.manager.ConfigManageService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.status.ServiceStatusScheduler;
 import cn.foxtech.persist.common.scheduler.EntityManageScheduler;
@@ -9,6 +10,8 @@ import cn.foxtech.persist.common.service.EntityVerifyService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * 初始化
@@ -45,7 +48,6 @@ public class PersistInitialize {
 
     @Autowired
     private EntityVerifyService entityVerifyService;
-
 
     public void initialize() {
         // 进程状态

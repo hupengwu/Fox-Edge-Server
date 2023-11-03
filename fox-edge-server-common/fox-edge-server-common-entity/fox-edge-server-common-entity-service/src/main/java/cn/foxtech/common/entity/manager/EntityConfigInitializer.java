@@ -1,5 +1,6 @@
 package cn.foxtech.common.entity.manager;
 
+import cn.foxtech.common.entity.constant.ConfigVOFieldConstant;
 import cn.foxtech.common.entity.entity.ConfigEntity;
 import cn.foxtech.common.utils.Maps;
 import cn.foxtech.common.utils.file.FileTextUtils;
@@ -21,18 +22,17 @@ import java.util.Map;
  */
 public abstract class EntityConfigInitializer {
 
+    private Map<String, Object> defaultConfig = new HashMap<>();
+
     public abstract RedisConsoleService getLogger();
 
     public abstract EntityServiceManager getEntityManageService();
 
     public abstract EntityConfigManager getEntityConfigManager();
 
-
     public abstract String getFoxServiceType();
 
-
     public abstract String getFoxServiceName();
-
 
     /**
      * 获得配置信息
@@ -41,19 +41,21 @@ public abstract class EntityConfigInitializer {
      * @return 配置表
      */
     public Map<String, Object> getConfigParam(String configName) {
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> configValue = new HashMap<>();
 
-        // 读取解码器配置信息
+        // 取出本服务提供的缺省配置
+        configValue.putAll((Map<String, Object>) this.defaultConfig.getOrDefault(ConfigVOFieldConstant.field_config_value, new HashMap<>()));
+
+        // 取出管理服务提供的用户配置
         ConfigEntity configEntity = this.getEntityManageService().getConfigEntity(this.getFoxServiceName(), this.getFoxServiceType(), configName);
         if (configEntity == null) {
-            if (this.getLogger() != null) {
-                this.getLogger().error("找不到指定的配置信息:" + configName);
-            }
-
-            return result;
+            return configValue;
         }
 
-        return configEntity.getConfigValue();
+
+        // 如果能取到，那么合并用户的配置值
+        configValue.putAll(configEntity.getConfigValue());
+        return configValue;
     }
 
     public <T> T getOrDefaultValue(String configName, Class<T> clazz, Object... keys) {
@@ -66,28 +68,28 @@ public abstract class EntityConfigInitializer {
      *
      * @param configName    配置名称
      * @param classpathFile resource下的json文件
-     * @return 启动参数
      */
-    public Map<String, Object> loadInitConfig(String configName, String classpathFile) {
+    public void initialize(String configName, String classpathFile) {
         try {
             // 从配置文件中，读取缺省的配置参数
-            ClassPathResource classPathResource = new ClassPathResource(classpathFile);
-            InputStream inputStream = classPathResource.getInputStream();
-            String json = FileTextUtils.readTextFile(inputStream, StandardCharsets.UTF_8);
-            Map<String, Object> defaultConfig = JsonUtils.buildObject(json, Map.class);
+            if (this.defaultConfig.isEmpty()) {
+                ClassPathResource classPathResource = new ClassPathResource(classpathFile);
+                InputStream inputStream = classPathResource.getInputStream();
+                String json = FileTextUtils.readTextFile(inputStream, StandardCharsets.UTF_8);
+                this.defaultConfig = JsonUtils.buildObject(json, Map.class);
+            }
+
 
             // 填写该信息：通告给管理服务，添加该配置作为缺省配置
-            this.getEntityConfigManager().setConfigEntity(configName, defaultConfig);
+            this.getEntityConfigManager().setConfigEntity(configName, this.defaultConfig);
 
             // 取出管理服务通告的配置信息
             Map<String, Object> systemConfig = this.getConfigParam(configName);
 
             // 通过合并两者信息，获得配置参数
             Map<String, Object> configValue = new HashMap<>();
-            configValue.putAll((Map<String, Object>) defaultConfig.getOrDefault("configValue", new HashMap<>()));
+            configValue.putAll((Map<String, Object>) this.defaultConfig.getOrDefault(ConfigVOFieldConstant.field_config_value, new HashMap<>()));
             configValue.putAll(systemConfig);
-            return configValue;
-
         } catch (Exception e) {
             if (this.getLogger() != null) {
                 this.getLogger().error(e.getMessage());

@@ -75,9 +75,11 @@ public class CloudHttpProxyService {
      */
     private synchronized void login() throws IOException {
         // 获得账号密码
-        Map<String, Object> configs = this.configManageService.loadInitConfig("serverConfig", "serverConfig.json");
-        Map<String, Object> cloudConfig = (Map<String, Object>)configs.getOrDefault("cloud",new HashMap<>());
-        Map<String, Object> httpConfig = (Map<String, Object>)cloudConfig.getOrDefault("http",new HashMap<>());
+        this.configManageService.initialize("serverConfig", "serverConfig.json");
+        Map<String, Object> configs = this.configManageService.getConfigParam("serverConfig");
+
+        Map<String, Object> cloudConfig = (Map<String, Object>) configs.getOrDefault("cloud", new HashMap<>());
+        Map<String, Object> httpConfig = (Map<String, Object>) cloudConfig.getOrDefault("http", new HashMap<>());
 
         // 取出信息
         this.uri = (String) httpConfig.getOrDefault("host", "http://localhost:8080");
