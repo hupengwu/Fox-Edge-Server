@@ -1,0 +1,18 @@
+{
+  "configValue": {
+    "decoderList": [
+      {
+        "jarFile": "/jar/decoder/fox-edge-server-protocol-core.v1.jar"
+      },
+      {
+        "jarFile": "/jar/decoder/fox-edge-server-protocol-zktl-air6in1.v1.jar"
+      },
+      {
+        "jarFile": "/jar/decoder/fox-edge-server-protocol-zktl-air5in1.v1.jar"
+      }
+    ],
+    "logger": false
+  },
+  "configParam": {},
+  "remark": "channel-tcp-listener全局的配置信息：\n\njarFile：解码器所在的文件位置"
+}
