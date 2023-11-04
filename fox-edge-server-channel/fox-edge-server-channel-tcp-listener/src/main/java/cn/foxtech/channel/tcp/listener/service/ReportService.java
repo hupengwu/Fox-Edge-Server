@@ -34,46 +34,24 @@ public class ReportService {
     }
 
 
-    public List<ChannelRespondVO> popAll() {
+    public List<ChannelRespondVO> popAll(Map<String, String> serviceKey2ChanelName) {
         List<ChannelRespondVO> respondVOList = new ArrayList<>();
         for (String serviceKey : this.channelMap.keySet()) {
             List<byte[]> list = this.channelMap.get(serviceKey);
 
-            ChannelEntity channelEntity = this.entityManageService.getEntity(ChannelEntity.class, (Object value) -> {
-                ChannelEntity entity = (ChannelEntity) value;
+            // 获得该serviceKey相对应的通道
+            ChannelEntity channelEntity = this.getChannelEntity(serviceKey, serviceKey2ChanelName);
+            if (channelEntity != null) {
+                // 把收到的数据提交给该通道
+                for (byte[] pdu : list) {
+                    ChannelRespondVO respondVO = new ChannelRespondVO();
+                    respondVO.setUuid(null);
+                    respondVO.setType(this.channelProperties.getChannelType());
+                    respondVO.setName(channelEntity.getChannelName());
+                    respondVO.setRecv(HexUtils.byteArrayToHexString(pdu));
 
-                // 检查：是否为本通道类型
-                if (!entity.getChannelType().equals(this.channelProperties.getChannelType())) {
-                    return false;
+                    respondVOList.add(respondVO);
                 }
-
-                // 检查：是否为相同的serviceKey
-                Object handler = entity.getChannelParam().get("handler");
-                if (handler == null) {
-                    return false;
-                }
-                if (!(handler instanceof Map)) {
-                    return false;
-                }
-                Object key = ((Map<String, Object>) handler).get("serviceKey");
-
-                return serviceKey.equals(key);
-            });
-
-            if (channelEntity == null) {
-                this.channelMap.remove(serviceKey);
-                continue;
-            }
-
-
-            for (byte[] pdu : list) {
-                ChannelRespondVO respondVO = new ChannelRespondVO();
-                respondVO.setUuid(null);
-                respondVO.setType(this.channelProperties.getChannelType());
-                respondVO.setName(channelEntity.getChannelName());
-                respondVO.setRecv(HexUtils.byteArrayToHexString(pdu));
-
-                respondVOList.add(respondVO);
             }
 
             this.channelMap.remove(serviceKey);
@@ -81,5 +59,21 @@ public class ReportService {
 
         return respondVOList;
 
+    }
+
+    private ChannelEntity getChannelEntity(String serviceKey, Map<String, String> serviceKey2ChanelName) {
+        String channelName = serviceKey2ChanelName.get(serviceKey);
+        if (channelName == null) {
+            return null;
+        }
+
+        ChannelEntity find = new ChannelEntity();
+        find.setChannelName(channelName);
+        find.setChannelType(this.channelProperties.getChannelType());
+
+
+        ChannelEntity channelEntity = this.entityManageService.getEntity(find.makeServiceKey(), ChannelEntity.class);
+
+        return channelEntity;
     }
 }

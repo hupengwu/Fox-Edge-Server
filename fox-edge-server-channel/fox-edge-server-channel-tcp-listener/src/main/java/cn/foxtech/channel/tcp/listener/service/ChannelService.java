@@ -24,6 +24,8 @@ public class ChannelService extends ChannelServerAPI {
     @Getter
     private final Map<String, TcpListenerEntity> channelName2Entity = new ConcurrentHashMap<>();
 
+    private final Map<String, String> serviceKey2ChanelName = new ConcurrentHashMap<>();
+
     @Autowired
     private ChannelManager channelManager;
 
@@ -32,6 +34,9 @@ public class ChannelService extends ChannelServerAPI {
 
     @Autowired
     private ReportService reportService;
+
+    @Autowired
+    private ExecuteService executeService;
 
     @Autowired
     private ClassManager classManager;
@@ -47,13 +52,30 @@ public class ChannelService extends ChannelServerAPI {
     public void openChannel(String channelName, Map<String, Object> channelParam) {
         String host = (String) channelParam.get("host");
         Integer port = (Integer) channelParam.get("port");
+        String mode = (String) channelParam.get("mode");
         Map<String, Object> handler = (Map<String, Object>) channelParam.get("handler");
 
         // 检查：参数是否为空
-        if (MethodUtils.hasEmpty(host, port, handler)) {
-            throw new ServiceException("参数不能为空: host, port, handler ");
+        if (MethodUtils.hasEmpty(host, port)) {
+            throw new ServiceException("参数不能为空: host, port ");
         }
 
+        TcpListenerEntity entity = null;
+        if ("full-duplex".equals(mode)) {
+            entity = this.buildFullDuplexEntity(channelName, host, port, handler);
+        } else {
+            entity = this.buildHalfDuplexEntity(channelName, host, port);
+        }
+
+        // 记录信息
+        this.channelName2Entity.put(channelName, entity);
+        this.serviceKey2ChanelName.put(entity.getServiceKey(), channelName);
+    }
+
+    private TcpListenerEntity buildFullDuplexEntity(String channelName, String host, Integer port, Map<String, Object> handler) {
+        if (handler == null) {
+            throw new ServiceException("全双工模式下，参数不能为空: handler ");
+        }
         String splitMessageHandler = (String) handler.get("splitMessageHandler");
         String serviceKeyHandler = (String) handler.get("serviceKeyHandler");
         String serviceKey = (String) handler.get("serviceKey");
@@ -61,10 +83,6 @@ public class ChannelService extends ChannelServerAPI {
             throw new ServiceException("参数不能为空: splitMessageHandler, serviceKeyHandler, serviceKey ");
         }
 
-        TcpListenerEntity listenerEntity = this.channelName2Entity.get(channelName);
-        if (listenerEntity != null) {
-            return;
-        }
 
         // 构造拆包的对象实例
         SplitMessageHandler splitMessageHandlerInstance = null;
@@ -92,21 +110,36 @@ public class ChannelService extends ChannelServerAPI {
         }
 
         // 建立实体对象
-        listenerEntity = new TcpListenerEntity();
-        listenerEntity.setRemoteHost(host);
-        listenerEntity.setRemotePort(port);
-        listenerEntity.setSocketAddress(new InetSocketAddress(host, port));
-        listenerEntity.setSplitMessageHandler(splitMessageHandlerInstance);
-        listenerEntity.setServiceKeyHandler(serviceKeyHandlerInstance);
-        listenerEntity.setServiceKey(serviceKey);
-        listenerEntity.setChannelHandler(new ChannelHandler());
-        listenerEntity.getChannelHandler().setReportService(this.reportService);
-        listenerEntity.getChannelHandler().setChannelManager(this.channelManager);
-        listenerEntity.getChannelHandler().setSplitMessageHandler(splitMessageHandlerInstance);
-        listenerEntity.getChannelHandler().setServiceKeyHandler(serviceKeyHandlerInstance);
+        TcpListenerEntity entity = new TcpListenerEntity();
+        entity.setRemoteHost(host);
+        entity.setRemotePort(port);
+        entity.setSocketAddress(new InetSocketAddress(host, port));
+        entity.setSplitMessageHandler(splitMessageHandlerInstance);
+        entity.setServiceKeyHandler(serviceKeyHandlerInstance);
+        entity.setServiceKey(serviceKey);
+        entity.setChannelHandler(new ChannelHandler());
+        entity.getChannelHandler().setReportService(this.reportService);
+        entity.getChannelHandler().setChannelManager(this.channelManager);
+        entity.getChannelHandler().setSplitMessageHandler(splitMessageHandlerInstance);
+        entity.getChannelHandler().setServiceKeyHandler(serviceKeyHandlerInstance);
+        return entity;
+    }
 
-
-        this.channelName2Entity.put(channelName, listenerEntity);
+    private TcpListenerEntity buildHalfDuplexEntity(String channelName, String host, Integer port) {
+        // 建立实体对象
+        TcpListenerEntity entity = new TcpListenerEntity();
+        entity.setRemoteHost(host);
+        entity.setRemotePort(port);
+        entity.setSocketAddress(new InetSocketAddress(host, port));
+        entity.setSplitMessageHandler(null);
+        entity.setServiceKeyHandler(null);
+        entity.setServiceKey(new InetSocketAddress(host, port).toString());
+        entity.setChannelHandler(new ChannelHandler());
+        entity.getChannelHandler().setReportService(this.reportService);
+        entity.getChannelHandler().setChannelManager(this.channelManager);
+        entity.getChannelHandler().setSplitMessageHandler(null);
+        entity.getChannelHandler().setServiceKeyHandler(null);
+        return entity;
     }
 
     /**
@@ -117,12 +150,18 @@ public class ChannelService extends ChannelServerAPI {
      */
     @Override
     public void closeChannel(String channelName, Map<String, Object> channelParam) {
-        String serviceKey = (String) channelParam.get("serviceKey");
-        if (MethodUtils.hasEmpty(serviceKey)) {
-            throw new ServiceException("参数不能为空: serviceKey");
+        TcpListenerEntity entity = this.channelName2Entity.get(channelName);
+
+        // 关闭socket
+        ChannelHandlerContext ctx = this.channelManager.getContext(entity.getServiceKey());
+        if (ctx != null) {
+            ctx.channel().disconnect();
+            ctx.channel().closeFuture();
         }
 
+        // 删除记录
         this.channelName2Entity.remove(channelName);
+        this.serviceKey2ChanelName.remove(entity.getServiceKey());
     }
 
     /**
@@ -133,14 +172,14 @@ public class ChannelService extends ChannelServerAPI {
      */
     @Override
     public synchronized void publish(ChannelRequestVO requestVO) throws ServiceException {
-        TcpListenerEntity listenerEntity = this.channelName2Entity.get(requestVO.getName());
-        if (listenerEntity == null) {
+        TcpListenerEntity entity = this.channelName2Entity.get(requestVO.getName());
+        if (entity == null) {
             throw new ServiceException("该通道尚未打开: " + requestVO.getName());
         }
 
-        ChannelHandlerContext ctx = this.channelManager.getContext(listenerEntity.getServiceKey());
+        ChannelHandlerContext ctx = this.channelManager.getContext(entity.getServiceKey());
         if (ctx == null) {
-            throw new ServiceException("该通道尚未与对端设备建立连接，或者对端设备尚未通过身份认证:" + requestVO.getName());
+            throw new ServiceException("该通道尚未与对端设备建立连接，或者对端设备尚未主动发起身份认证:" + requestVO.getName());
         }
 
         this.publishService.publish(ctx, requestVO);
@@ -154,6 +193,25 @@ public class ChannelService extends ChannelServerAPI {
      */
     @Override
     public synchronized List<ChannelRespondVO> report() throws ServiceException {
-        return this.reportService.popAll();
+        return this.reportService.popAll(this.serviceKey2ChanelName);
+    }
+
+    @Override
+    public synchronized ChannelRespondVO execute(ChannelRequestVO requestVO) throws ServiceException {
+        TcpListenerEntity entity = this.channelName2Entity.get(requestVO.getName());
+        if (entity == null) {
+            throw new ServiceException("通道的配置参数不正确，未能注册通道成功！:" + requestVO.getName());
+        }
+
+        if (entity.getServiceKeyHandler() != null) {
+            throw new ServiceException("当前是全双工方式，只支持publish和report两种操作:" + requestVO.getName());
+        }
+
+        ChannelHandlerContext ctx = this.channelManager.getContext(entity.getServiceKey());
+        if (ctx == null) {
+            throw new ServiceException("与远端尚未建立连接:" + requestVO.getName());
+        }
+
+        return this.executeService.execute(ctx, requestVO);
     }
 }

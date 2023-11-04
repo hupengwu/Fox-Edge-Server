@@ -5,7 +5,6 @@ import cn.foxtech.device.protocol.v1.utils.netty.SplitMessageHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import lombok.Getter;
 import lombok.Setter;
 
 public class NettyTcpClientInitializer extends ChannelInitializer<NioSocketChannel> {
@@ -21,7 +20,7 @@ public class NettyTcpClientInitializer extends ChannelInitializer<NioSocketChann
         pipeline.addLast(new BytesToByteEncoder());
 
         // 第1道拦截器：沾包拆包工具，根据报文的头标识+帧长度结构，进行拆包/粘包处理
-        if (this.splitMessageHandler !=null){
+        if (this.splitMessageHandler != null) {
             BeforeBytesDecoder beforeMessageDecoder = new BeforeBytesDecoder();
             beforeMessageDecoder.setHandler(this.splitMessageHandler);
             pipeline.addLast(beforeMessageDecoder);

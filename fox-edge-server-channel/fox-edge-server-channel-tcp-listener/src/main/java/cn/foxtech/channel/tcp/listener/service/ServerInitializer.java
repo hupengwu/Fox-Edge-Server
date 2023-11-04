@@ -120,22 +120,14 @@ public class ServerInitializer {
 
     private void execute() {
         for (String key : this.channelService.getChannelName2Entity().keySet()) {
-            TcpListenerEntity listenerEntity = this.channelService.getChannelName2Entity().get(key);
-
-            // 取出处理数据的java类
-            SplitMessageHandler splitMessageHandler = listenerEntity.getSplitMessageHandler();
-            ServiceKeyHandler serviceKeyHandler = listenerEntity.getServiceKeyHandler();
-            if (MethodUtils.hasNull(splitMessageHandler, serviceKeyHandler)) {
-                continue;
-            }
+            TcpListenerEntity entity = this.channelService.getChannelName2Entity().get(key);
 
             // 检查：南向通道是否建立，如果没有建立，那么重新发起连接
-            if (this.channelManager.getContext(listenerEntity.getSocketAddress()) == null) {
-                ChannelFuture channelFuture = this.connectRemote(listenerEntity.getRemoteHost(), listenerEntity.getRemotePort(), listenerEntity.getChannelHandler());
-                listenerEntity.setChannelFuture(channelFuture);
+            if (this.channelManager.getContext(entity.getSocketAddress()) == null) {
+                ChannelFuture channelFuture = this.connectRemote(entity.getRemoteHost(), entity.getRemotePort(), entity.getChannelHandler());
+                entity.setChannelFuture(channelFuture);
             }
         }
-
     }
 
     private ChannelFuture connectRemote(String remoteHost, int remotePort, ChannelHandler channelHandler) {

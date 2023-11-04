@@ -120,7 +120,7 @@ public class RedisTopicSuberService extends RedisTopicSubscriber {
             respondVO.setRecv(null);
             return respondVO;
         } catch (Exception e) {
-            return ChannelRespondVO.error(requestVO, "publish 操作失败：" + e);
+            return ChannelRespondVO.error(requestVO, "publish 操作失败：" + e.getMessage());
         }
     }
 
@@ -128,7 +128,7 @@ public class RedisTopicSuberService extends RedisTopicSubscriber {
         try {
             return this.channelService.manageChannel(requestVO);
         } catch (Exception e) {
-            return ChannelRespondVO.error(requestVO, "publish 操作失败：" + e);
+            return ChannelRespondVO.error(requestVO, "publish 操作失败：" + e.getMessage());
         }
     }
 }

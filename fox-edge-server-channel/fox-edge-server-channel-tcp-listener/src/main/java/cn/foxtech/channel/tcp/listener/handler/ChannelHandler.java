@@ -3,6 +3,7 @@ package cn.foxtech.channel.tcp.listener.handler;
 import cn.foxtech.channel.tcp.listener.service.ChannelManager;
 import cn.foxtech.channel.tcp.listener.service.ReportService;
 import cn.foxtech.common.utils.netty.handler.SocketChannelHandler;
+import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler;
 import cn.foxtech.device.protocol.v1.utils.netty.SplitMessageHandler;
@@ -47,8 +48,13 @@ public class ChannelHandler extends SocketChannelHandler {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         LOGGER.info("建立连接:" + ctx.channel().remoteAddress());
 
-        this.channelManager.insert(ctx);
+        // 半双工模式：在连接的时候，登记身份特征
+        if (this.serviceKeyHandler == null) {
+            String serviceKey = ctx.channel().remoteAddress().toString();
+            this.channelManager.setServiceKey(ctx, serviceKey);
+        }
 
+        this.channelManager.insert(ctx);
     }
 
     /**
@@ -58,10 +64,6 @@ public class ChannelHandler extends SocketChannelHandler {
      * @param msg 信息
      */
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-        if (this.serviceKeyHandler == null) {
-            return;
-        }
-
         byte[] data = (byte[]) msg;
 
         // 记录接收到的报文
@@ -70,18 +72,27 @@ public class ChannelHandler extends SocketChannelHandler {
         }
 
 
-        // 检查：channel是否已经标识上了信息
-        String serviceKey = this.channelManager.getServiceKey(ctx.channel().remoteAddress());
-        if (serviceKey == null) {
-            // 从报文总获得业务特征信息
-            serviceKey = this.serviceKeyHandler.getServiceKey(data);
+        if (this.serviceKeyHandler != null) {
+            // 全双工模式：从报文总获得业务特征信息
 
-            // 标记:serviceKey信息
-            this.channelManager.setServiceKey(ctx, serviceKey);
+            String serviceKey = this.channelManager.getServiceKey(ctx.channel().remoteAddress());
+            if (serviceKey == null) {
+                serviceKey = this.serviceKeyHandler.getServiceKey(data);
+
+                // 标记:serviceKey信息
+                this.channelManager.setServiceKey(ctx, serviceKey);
+            }
+
+            // 保存PDU到接收缓存，由reportService主动上报
+            this.reportService.push(serviceKey, (byte[]) msg);
+        } else {
+            // 半双工模式：用host:port作为业务特征
+            String serviceKey = ctx.channel().remoteAddress().toString();
+
+            // 通知数据到达
+            SyncFlagObjectMap.inst().notifyConstant(serviceKey, data);
         }
 
-        // 保存PDU到接收缓存
-        this.reportService.push(serviceKey, (byte[]) msg);
     }
 
     /**

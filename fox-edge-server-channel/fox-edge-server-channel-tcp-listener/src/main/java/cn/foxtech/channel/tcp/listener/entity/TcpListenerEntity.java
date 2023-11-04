@@ -4,7 +4,6 @@ import cn.foxtech.channel.tcp.listener.handler.ChannelHandler;
 import cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler;
 import cn.foxtech.device.protocol.v1.utils.netty.SplitMessageHandler;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandlerContext;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,10 +36,6 @@ public class TcpListenerEntity {
      * 设备在报文中夹带的身份特征
      */
     private String serviceKey;
-    /**
-     * 建立连接的socket通道
-     */
-    private ChannelHandlerContext channelHandlerContext;
     /**
      * 通道连接的Handler
      */
