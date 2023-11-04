@@ -1,6 +1,6 @@
-package cn.foxtech.channel.tcp.listener.entity;
+package cn.foxtech.channel.tcp.client.entity;
 
-import cn.foxtech.channel.tcp.listener.handler.ChannelHandler;
+import cn.foxtech.channel.tcp.client.handler.ChannelHandler;
 import cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler;
 import cn.foxtech.device.protocol.v1.utils.netty.SplitMessageHandler;
 import io.netty.channel.ChannelFuture;
@@ -11,7 +11,7 @@ import java.net.SocketAddress;
 
 @Getter
 @Setter
-public class TcpListenerEntity {
+public class TcpClientEntity {
     /**
      * 设备的IP
      */

@@ -1,7 +1,7 @@
-package cn.foxtech.channel.tcp.listener.handler;
+package cn.foxtech.channel.tcp.client.handler;
 
-import cn.foxtech.channel.tcp.listener.service.ChannelManager;
-import cn.foxtech.channel.tcp.listener.service.ReportService;
+import cn.foxtech.channel.tcp.client.service.ChannelManager;
+import cn.foxtech.channel.tcp.client.service.ReportService;
 import cn.foxtech.common.utils.netty.handler.SocketChannelHandler;
 import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
@@ -13,6 +13,9 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * socket触发响应的Handler
+ */
 public class ChannelHandler extends SocketChannelHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelHandler.class);
 

@@ -1,4 +1,4 @@
-package cn.foxtech.channel.tcp.listener.service;
+package cn.foxtech.channel.tcp.client.service;
 
 import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.domain.ChannelRequestVO;

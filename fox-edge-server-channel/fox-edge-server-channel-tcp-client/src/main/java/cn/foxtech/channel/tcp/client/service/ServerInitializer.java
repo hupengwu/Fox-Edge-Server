@@ -1,8 +1,8 @@
-package cn.foxtech.channel.tcp.listener.service;
+package cn.foxtech.channel.tcp.client.service;
 
 import cn.foxtech.channel.common.properties.ChannelProperties;
-import cn.foxtech.channel.tcp.listener.entity.TcpListenerEntity;
-import cn.foxtech.channel.tcp.listener.handler.ChannelHandler;
+import cn.foxtech.channel.tcp.client.entity.TcpClientEntity;
+import cn.foxtech.channel.tcp.client.handler.ChannelHandler;
 import cn.foxtech.common.entity.manager.LocalConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.file.FileNameUtils;
@@ -10,8 +10,6 @@ import cn.foxtech.common.utils.netty.client.tcp.NettyTcpClientFactory;
 import cn.foxtech.common.utils.reflect.JarLoaderUtils;
 import cn.foxtech.device.protocol.RootLocation;
 import cn.foxtech.device.protocol.v1.utils.MethodUtils;
-import cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler;
-import cn.foxtech.device.protocol.v1.utils.netty.SplitMessageHandler;
 import io.netty.channel.ChannelFuture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -120,7 +118,7 @@ public class ServerInitializer {
 
     private void execute() {
         for (String key : this.channelService.getChannelName2Entity().keySet()) {
-            TcpListenerEntity entity = this.channelService.getChannelName2Entity().get(key);
+            TcpClientEntity entity = this.channelService.getChannelName2Entity().get(key);
 
             // 检查：南向通道是否建立，如果没有建立，那么重新发起连接
             if (this.channelManager.getContext(entity.getSocketAddress()) == null) {

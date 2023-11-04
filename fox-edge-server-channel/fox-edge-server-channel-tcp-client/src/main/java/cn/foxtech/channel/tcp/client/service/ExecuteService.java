@@ -1,4 +1,4 @@
-package cn.foxtech.channel.tcp.listener.service;
+package cn.foxtech.channel.tcp.client.service;
 
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
@@ -14,12 +14,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class ExecuteService {
     /**
-     * 查询串口数据:增加同步锁，避免并发访问带来的多线程异常。
+     * 主动半双工下的执行操作
      *
-     * @return
+     * @param ctx       netty的socket连接后形成的ctx
+     * @param requestVO 发送请求
+     * @return 响应请求
+     * @throws ServiceException 异常信息
      */
     public synchronized ChannelRespondVO execute(ChannelHandlerContext ctx, ChannelRequestVO requestVO) throws ServiceException {
-        String name = requestVO.getName();
         String sendData = (String) requestVO.getSend();
         int timeout = requestVO.getTimeout();
 
