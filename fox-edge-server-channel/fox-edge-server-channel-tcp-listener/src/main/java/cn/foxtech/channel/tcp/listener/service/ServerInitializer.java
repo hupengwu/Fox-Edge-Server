@@ -119,8 +119,8 @@ public class ServerInitializer {
     }
 
     private void execute() {
-        for (String key : this.channelService.getChannelName2ListenerEntity().keySet()) {
-            TcpListenerEntity listenerEntity = this.channelService.getChannelName2ListenerEntity().get(key);
+        for (String key : this.channelService.getChannelName2Entity().keySet()) {
+            TcpListenerEntity listenerEntity = this.channelService.getChannelName2Entity().get(key);
 
             // 取出处理数据的java类
             SplitMessageHandler splitMessageHandler = listenerEntity.getSplitMessageHandler();
