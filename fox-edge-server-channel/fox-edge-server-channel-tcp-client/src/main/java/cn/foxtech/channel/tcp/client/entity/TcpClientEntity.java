@@ -1,7 +1,6 @@
 package cn.foxtech.channel.tcp.client.entity;
 
 import cn.foxtech.channel.tcp.client.handler.ChannelHandler;
-import cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler;
 import cn.foxtech.device.protocol.v1.utils.netty.SplitMessageHandler;
 import io.netty.channel.ChannelFuture;
 import lombok.Getter;
@@ -29,13 +28,13 @@ public class TcpClientEntity {
      */
     private SplitMessageHandler splitMessageHandler;
     /**
-     * java的身份识别类
-     */
-    private ServiceKeyHandler serviceKeyHandler;
-    /**
      * 设备在报文中夹带的身份特征
      */
     private String serviceKey;
+    /**
+     * 双工模式：全双工/半双工
+     */
+    private boolean fullDuplex = false;
     /**
      * 通道连接的Handler
      */

@@ -2,7 +2,7 @@ package cn.foxtech.channel.tcp.client.initialize;
 
 import cn.foxtech.channel.common.initialize.ChannelInitialize;
 import cn.foxtech.channel.tcp.client.service.ServerInitializer;
-import org.apache.log4j.Logger;
+import cn.foxtech.common.entity.manager.RedisConsoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class Initialize implements CommandLineRunner {
-    private static final Logger logger = Logger.getLogger(Initialize.class);
-
+    @Autowired
+    private RedisConsoleService logger;
 
     @Autowired
     private ChannelInitialize channelInitialize;

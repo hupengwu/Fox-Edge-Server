@@ -33,7 +33,8 @@ public class BeforeBytesDecoder extends ByteToMessageDecoder {
         // 标记当前缓存位置：因为下面试读取一部分数据后，要重新回退到这个位置
         in.markReaderIndex();
         // 试试读包头的数据
-        for (int index = 0; index < this.handler.getHeaderLength(); index++) {
+        int headerLength = this.handler.getHeaderLength();
+        for (int index = 0; index < headerLength; index++) {
             this.handler.setHeaderValue(index, in.readByte() & 0xff);
         }
         // 恢复位置
