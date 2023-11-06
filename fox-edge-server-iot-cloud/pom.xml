@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>fox-edge-server-iot-cloud</artifactId>
+    <name>${project.artifactId}</name>
     <packaging>pom</packaging>
     <description>${project.artifactId}</description>
 
