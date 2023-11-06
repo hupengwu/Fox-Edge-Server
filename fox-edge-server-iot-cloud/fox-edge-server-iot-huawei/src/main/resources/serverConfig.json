@@ -3,7 +3,7 @@
     "remote": {
       "mode": "mqtt",
       "http": {
-        "host": "http://demo.thingsboard.io/api"
+        "host": ""
       },
       "mqtt": {
         "host": "1cd5baf642.st1.iotda-device.cn-north-4.myhuaweicloud.com",
