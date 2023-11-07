@@ -48,4 +48,14 @@ public class ChannelManager {
         this.skt2key.remove(ctx.channel().remoteAddress());
     }
 
+    public void remove(String serviceKey) {
+        ChannelHandlerContext ctx = this.key2ctx.get(serviceKey);
+        if (ctx != null) {
+            this.key2ctx.remove(serviceKey);
+        }
+
+        this.skt2ctx.remove(ctx.channel().remoteAddress());
+        this.skt2key.remove(ctx.channel().remoteAddress());
+    }
+
 }
