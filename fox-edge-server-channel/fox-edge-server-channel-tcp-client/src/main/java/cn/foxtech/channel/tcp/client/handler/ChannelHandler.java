@@ -57,6 +57,7 @@ public class ChannelHandler extends SocketChannelHandler {
         this.consoleService.info(message);
 
         this.channelManager.insert(ctx);
+        this.channelManager.setServiceKey(ctx, ctx.channel().remoteAddress().toString());
     }
 
     /**
@@ -101,6 +102,7 @@ public class ChannelHandler extends SocketChannelHandler {
         this.consoleService.info(message);
 
         this.channelManager.remove(ctx);
+        this.channelManager.remove(ctx.channel().remoteAddress().toString());
     }
 
     /**
