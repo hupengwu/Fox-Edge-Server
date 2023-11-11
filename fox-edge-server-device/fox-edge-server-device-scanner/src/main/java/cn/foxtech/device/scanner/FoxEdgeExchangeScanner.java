@@ -1,6 +1,7 @@
 package cn.foxtech.device.scanner;
 
 
+import cn.foxtech.common.utils.Maps;
 import cn.foxtech.common.utils.reflect.JarLoaderUtils;
 import cn.foxtech.device.protocol.RootLocation;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
@@ -23,8 +24,8 @@ public class FoxEdgeExchangeScanner {
      * @param pack 包名称
      * @return 函数映射表结构：device-operater-methodpair
      */
-    public static Map<String, Map<String, FoxEdgeExchangeMethod>> scanMethodPair(String pack) {
-        Map<String, Map<String, FoxEdgeExchangeMethod>> deviceType2operater = new HashMap<>();
+    public static Map<String, Object> scanMethodPair(String pack) {
+        Map<String, Object> manufacturerMap = new HashMap<>();
         try {
             Set<Class<?>> classSet = JarLoaderUtils.getClasses(pack);
             for (Class<?> aClass : classSet) {
@@ -43,28 +44,19 @@ public class FoxEdgeExchangeScanner {
                 String manufacturer = typeAnnotation.manufacturer();
 
 
-                Map<String, FoxEdgeExchangeMethod> operater2methodpair = deviceType2operater.get(deviceType);
-                if (operater2methodpair == null) {
-                    operater2methodpair = new HashMap<String, FoxEdgeExchangeMethod>();
-                    deviceType2operater.put(deviceType, operater2methodpair);
+                Map<String, FoxEdgeExchangeMethod> methodMap = scanMethodPair(manufacturer, deviceType, aClass);
+                for (String method : methodMap.keySet()) {
+                    Maps.setValue(manufacturerMap, manufacturer, deviceType, method, methodMap.get(method));
                 }
 
-                Map<String, FoxEdgeExchangeMethod> methodpairs = scanMethodPair(manufacturer, deviceType, aClass);
-                operater2methodpair.putAll(methodpairs);
             }
         } catch (Throwable e) {
             e.getCause();
             e.printStackTrace();
         }
 
-        Map<String, Map<String, FoxEdgeExchangeMethod>> result = new HashMap<>();
-        for (String key : deviceType2operater.keySet()) {
-            if (deviceType2operater.get(key).size() > 0) {
-                result.put(key, deviceType2operater.get(key));
-            }
-        }
 
-        return deviceType2operater;
+        return manufacturerMap;
     }
 
     public static Map<String, FoxEdgeExchangeMethod> scanMethodPair(String manufacturer, String deviceType, Class<?> aClass) {
@@ -141,7 +133,7 @@ public class FoxEdgeExchangeScanner {
      *
      * @return
      */
-    public static Map<String, Map<String, FoxEdgeExchangeMethod>> scanMethodPair() {
+    public static Map<String, Object> scanMethodPair() {
         return scanMethodPair(RootLocation.class.getPackage().getName());
     }
 

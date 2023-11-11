@@ -21,6 +21,10 @@ public class DeviceObjectEntity extends BaseEntity {
      */
     private String deviceType;
     /**
+     * 设备类型
+     */
+    private String manufacturer;
+    /**
      * 对象名称
      */
     private String objectName;
@@ -60,11 +64,13 @@ public class DeviceObjectEntity extends BaseEntity {
      */
     public List<Object> makeServiceValueList() {
         List<Object> list = new ArrayList<>();
+        list.add(this.manufacturer);
         list.add(this.deviceType);
         return list;
     }
 
     public void bind(DeviceObjectEntity other) {
+        this.manufacturer = other.manufacturer;
         this.deviceType = other.deviceType;
         this.deviceName = other.deviceName;
         this.objectName = other.objectName;

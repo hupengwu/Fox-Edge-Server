@@ -44,12 +44,20 @@ public class PeriodTasksScheduler extends PeriodTaskScheduler {
     @Autowired
     private RouteUpdateTask routeUpdateTask;
 
+    @Autowired
+    private CleanTimeOutTask cleanTimeOutTask;
+
+    @Autowired
+    private JarMethodTask jarMethodTask;
+
     public void initialize() {
         this.insertPeriodTask(this.gcProcessTask);
         this.insertPeriodTask(this.cleanCacheTask);
         this.insertPeriodTask(this.cleanLogFileTask);
         this.insertPeriodTask(this.routeUpdateTask);
         this.insertPeriodTask(this.configEntityTask);
+        this.insertPeriodTask(this.cleanTimeOutTask);
+        this.insertPeriodTask(this.jarMethodTask);
 
         // 一次性任务
         this.insertPeriodTask(this.processStartTask);

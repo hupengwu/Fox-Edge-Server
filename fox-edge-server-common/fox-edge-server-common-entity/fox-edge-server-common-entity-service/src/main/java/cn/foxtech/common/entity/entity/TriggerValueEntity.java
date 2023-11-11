@@ -58,6 +58,7 @@ public class TriggerValueEntity extends DeviceValueEntity {
         this.setDeviceName(deviceValueEntity.getDeviceName());
         this.setParams(deviceValueEntity.getParams());
         this.setDeviceType(deviceValueEntity.getDeviceType());
+        this.setManufacturer(deviceValueEntity.getManufacturer());
         this.setCreateTime(deviceValueEntity.getCreateTime());
         this.setId(deviceValueEntity.getId());
         this.setUpdateTime(deviceValueEntity.getUpdateTime());

@@ -1,10 +1,9 @@
 package cn.foxtech.manager.system.controller;
 
 
+import cn.foxtech.common.entity.constant.DeviceVOFieldConstant;
 import cn.foxtech.common.entity.constant.ExtendVOFieldConstant;
-import cn.foxtech.common.entity.entity.BaseEntity;
-import cn.foxtech.common.entity.entity.ExtendConfigEntity;
-import cn.foxtech.common.entity.entity.ExtendParam;
+import cn.foxtech.common.entity.entity.*;
 import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.common.utils.json.JsonUtils;
@@ -122,6 +121,20 @@ public class ExtendConfigManageController {
             ExtendParam extendParamEntity = JsonUtils.buildObjectWithoutException(extendParam, ExtendParam.class);
             if (extendParamEntity == null) {
                 throw new ServiceException("extendParam的格式非法!");
+            }
+
+
+            if (extendType.equals(DeviceMapperEntity.class.getSimpleName() + "Type") // DeviceMapperEntity
+                    || extendType.equals(DeviceEntity.class.getSimpleName() + "Type") // DeviceEntity
+            ) {
+                for (Object bind : extendParamEntity.getBinds()) {
+                    if (!(bind instanceof Map) // Map
+                            || !((Map<String, Object>) bind).containsKey(DeviceVOFieldConstant.field_manufacturer) //manufacturer
+                            || !((Map<String, Object>) bind).containsKey(DeviceVOFieldConstant.field_device_type) //deviceType
+                    ) {
+                        throw new ServiceException("binds必须必须是一个包含manufacturer和deviceType的对象列表!");
+                    }
+                }
             }
 
 

@@ -1,14 +1,14 @@
 package cn.foxtech.period.service.controller;
 
 
-import cn.foxtech.common.entity.entity.BaseEntity;
-import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.entity.constant.PeriodTaskVOFieldConstant;
+import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.DeviceEntity;
-import cn.foxtech.period.service.entity.PeriodTaskEntity;
+import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
+import cn.foxtech.period.service.entity.PeriodTaskEntity;
 import cn.foxtech.period.service.service.EntityManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +39,9 @@ public class PeriodTaskController {
             // 三个参数简单判定该记录是否包含需要的objectName
             if (body.containsKey(PeriodTaskVOFieldConstant.field_device_type)) {
                 result &= entity.getDeviceType().equals(body.get(PeriodTaskVOFieldConstant.field_device_type));
+            }
+            if (body.containsKey(PeriodTaskVOFieldConstant.field_manufacturer)) {
+                result &= entity.getManufacturer().equals(body.get(PeriodTaskVOFieldConstant.field_manufacturer));
             }
             if (body.containsKey(PeriodTaskVOFieldConstant.field_task_name)) {
                 result &= entity.getTaskName().equals(body.get(PeriodTaskVOFieldConstant.field_task_name));
@@ -83,6 +86,11 @@ public class PeriodTaskController {
 
     private void extendDeviceCount(List<Map<String, Object>> list) {
         for (Map<String, Object> map : list) {
+            String manufacturer = (String) map.get(PeriodTaskVOFieldConstant.field_manufacturer);
+            if (manufacturer == null) {
+                continue;
+            }
+
             String deviceType = (String) map.get(PeriodTaskVOFieldConstant.field_device_type);
             if (deviceType == null) {
                 continue;
@@ -90,7 +98,7 @@ public class PeriodTaskController {
 
             int countDeviceType = this.entityManageService.getEntityCount(DeviceEntity.class, (Object value) -> {
                 DeviceEntity entity = (DeviceEntity) value;
-                return entity.getDeviceType().equals(deviceType);
+                return manufacturer.equals(entity.getManufacturer()) && deviceType.equals(entity.getDeviceType());
             });
 
             List deviceIds = (List) map.get(PeriodTaskVOFieldConstant.field_device_ids);
@@ -138,6 +146,9 @@ public class PeriodTaskController {
                 }
                 if (body.containsKey(PeriodTaskVOFieldConstant.field_device_type)) {
                     result &= entity.getDeviceType().equals(body.get(PeriodTaskVOFieldConstant.field_device_type));
+                }
+                if (body.containsKey(PeriodTaskVOFieldConstant.field_manufacturer)) {
+                    result &= entity.getManufacturer().equals(body.get(PeriodTaskVOFieldConstant.field_manufacturer));
                 }
 
 
@@ -190,14 +201,15 @@ public class PeriodTaskController {
             // 提取业务参数
             String taskName = (String) params.get(PeriodTaskVOFieldConstant.field_task_name);
             String deviceType = (String) params.get(PeriodTaskVOFieldConstant.field_device_type);
+            String manufacturer = (String) params.get(PeriodTaskVOFieldConstant.field_manufacturer);
             Boolean selectDevice = (Boolean) params.get(PeriodTaskVOFieldConstant.field_select_device);
             Map<String, Object> taskParam = (Map<String, Object>) params.get(PeriodTaskVOFieldConstant.field_task_param);
             List<Object> deviceIds = (List<Object>) params.get(PeriodTaskVOFieldConstant.field_device_ids);
             List<String> objectIds = (List<String>) params.get(PeriodTaskVOFieldConstant.field_object_ids);
 
             // 简单校验参数
-            if (MethodUtils.hasNull(taskName, deviceType, taskParam, selectDevice)) {
-                return AjaxResult.error("参数不能为空:taskName, deviceType, taskParam, selectDevice");
+            if (MethodUtils.hasNull(taskName, manufacturer, deviceType, taskParam, selectDevice)) {
+                return AjaxResult.error("参数不能为空:taskName, manufacturer, deviceType, taskParam, selectDevice");
             }
 
             // 检查：deviceIds, objectName至少填写一个
@@ -209,6 +221,7 @@ public class PeriodTaskController {
             PeriodTaskEntity entity = new PeriodTaskEntity();
             entity.setTaskName(taskName);
             entity.setDeviceType(deviceType);
+            entity.setManufacturer(manufacturer);
             entity.setSelectDevice(selectDevice);
             entity.setTaskParam(taskParam);
 

@@ -7,7 +7,7 @@ import cn.foxtech.device.protocol.v1.utils.HexUtils;
 
 import java.util.Map;
 
-@FoxEdgeDeviceType(value = "LRW解码器")
+@FoxEdgeDeviceType(value = "LRW解码器", manufacturer = "Fox-Edge")
 public class LRWProtocolBrocast extends LRWProtocolFrame {
     /**
      * 查询传感器状态

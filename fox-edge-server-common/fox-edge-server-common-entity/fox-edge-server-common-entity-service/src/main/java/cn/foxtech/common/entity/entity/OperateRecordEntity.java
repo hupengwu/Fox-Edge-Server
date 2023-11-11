@@ -1,8 +1,9 @@
 package cn.foxtech.common.entity.entity;
 
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +11,6 @@ import java.util.Map;
 
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
-@TableName("tb_operate_record")
 public class OperateRecordEntity extends OperateRecordBase {
     /**
      * JSON参数

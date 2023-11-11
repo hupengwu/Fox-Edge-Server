@@ -83,7 +83,7 @@ public class DeviceReportController extends PeriodTaskService {
                 }
 
                 // 尝试解码操作：解码不成功的，抛出异常
-                OperateRespondVO operateRespondVO = operateService.decodeReport(entity, recv, param);
+                OperateRespondVO operateRespondVO = this.operateService.decodeReport(entity, recv, param);
                 operateRespondVO.setOperateMode(DeviceMethodVOFieldConstant.value_operate_report);
 
                 // 打包成为单操作的包格式

@@ -14,8 +14,8 @@
 
     <properties>
         <!-- fox-edge-server version -->
-        <revision>1.0.6</revision>
-        <fox-edge-server.version>1.0.6</fox-edge-server.version>
+        <revision>1.0.7</revision>
+        <fox-edge-server.version>1.0.7</fox-edge-server.version>
         <!-- java version -->
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

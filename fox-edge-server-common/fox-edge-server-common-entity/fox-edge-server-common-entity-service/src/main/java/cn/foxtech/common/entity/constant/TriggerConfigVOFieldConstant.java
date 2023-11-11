@@ -8,6 +8,7 @@ public class TriggerConfigVOFieldConstant extends BaseVOFieldConstant {
     public static final String field_object_range = "objectRange";
     public static final String field_device_name = "deviceName";
     public static final String field_device_type = "deviceType";
+    public static final String field_manufacturer = "manufacturer";
     public static final String field_objects_name = "objectList";
     public static final String field_trigger_model_name = "triggerModelName";
     public static final String field_trigger_method_name = "triggerMethodName";

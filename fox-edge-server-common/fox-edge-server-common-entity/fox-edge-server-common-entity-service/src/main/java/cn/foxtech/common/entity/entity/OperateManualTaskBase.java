@@ -22,6 +22,10 @@ public class OperateManualTaskBase extends BaseEntity {
      * 设备类型名
      */
     private String deviceType;
+    /**
+     * 设备厂商
+     */
+    private String manufacturer;
 
     /**
      * 业务Key：这个可能不是唯一的，不要用它查找唯一性数据，可以用它来筛选数据
@@ -55,6 +59,7 @@ public class OperateManualTaskBase extends BaseEntity {
         List<Object> list = new ArrayList<>();
         list.add(this.deviceName);
         list.add(this.deviceType);
+        list.add(this.manufacturer);
         return list;
     }
 
@@ -62,6 +67,7 @@ public class OperateManualTaskBase extends BaseEntity {
         this.taskName = other.taskName;
         this.deviceName = other.deviceName;
         this.deviceType = other.deviceType;
+        this.manufacturer = other.manufacturer;
 
 
         this.setId(other.getId());

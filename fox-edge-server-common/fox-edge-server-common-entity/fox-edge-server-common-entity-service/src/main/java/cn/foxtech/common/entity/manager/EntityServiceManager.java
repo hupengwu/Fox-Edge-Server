@@ -134,14 +134,6 @@ public abstract class EntityServiceManager extends EntityObjectManager {
         return super.getEntity(id, ProbeEntity.class);
     }
 
-    public ProbeEntity getProbeEntity(String deviceName, String deviceType, String operateName, Map<String, Object> params) {
-        ProbeEntity entity = new ProbeEntity();
-        entity.setDeviceType(deviceType);
-        entity.setDeviceName(deviceName);
-        entity.setOperateName(operateName);
-        entity.setParams(params);
-        return super.getEntity(entity.makeServiceKey(), ProbeEntity.class);
-    }
 
     public List<BaseEntity> getProbeEntityList() {
         return super.getEntityList(ProbeEntity.class);
@@ -180,7 +172,7 @@ public abstract class EntityServiceManager extends EntityObjectManager {
 
     public <T> T getEntity(Class<T> clazz, IBaseFinder finder) {
         BaseRedisService entityRedisService = super.getBaseRedisService(clazz);
-        return (T)entityRedisService.getEntity(finder);
+        return (T) entityRedisService.getEntity(finder);
     }
 
     public <T> int getEntityCount(Class<T> clazz, IBaseFinder finder) {

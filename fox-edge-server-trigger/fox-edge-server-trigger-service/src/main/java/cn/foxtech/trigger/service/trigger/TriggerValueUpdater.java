@@ -11,7 +11,6 @@ import cn.foxtech.trigger.logic.common.FoxEdgeTriggerTemplate;
 import cn.foxtech.trigger.logic.common.ObjectValue;
 import cn.foxtech.trigger.service.service.EntityManageService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import cn.foxtech.common.entity.entity.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -169,7 +168,7 @@ public class TriggerValueUpdater {
                 if (existEntity == null) {
                     // 将新增的数据，作为对象保存到数据库
                     for (String key : valueEntity.getParams().keySet()) {
-                        this.saveObjectEntity(valueEntity.getDeviceName(), valueEntity.getDeviceType(), valueEntity.getTriggerConfigName(), key);
+                        this.saveObjectEntity(valueEntity.getDeviceName(), valueEntity.getManufacturer(), valueEntity.getDeviceType(), valueEntity.getTriggerConfigName(), key);
                     }
 
                     valueEntity.setCreateTime(time);
@@ -179,7 +178,7 @@ public class TriggerValueUpdater {
                     // 将新增的数据，作为对象保存到数据库
                     for (String key : valueEntity.getParams().keySet()) {
                         if (!existEntity.getParams().containsKey(key)) {
-                            this.saveObjectEntity(valueEntity.getDeviceName(), valueEntity.getDeviceType(), valueEntity.getTriggerConfigName(), key);
+                            this.saveObjectEntity(valueEntity.getDeviceName(), valueEntity.getManufacturer(), valueEntity.getDeviceType(), valueEntity.getTriggerConfigName(), key);
                         }
                     }
 
@@ -192,11 +191,12 @@ public class TriggerValueUpdater {
         }
     }
 
-    private void saveObjectEntity(String deviceName, String deviceType, String triggerConfigName, String objectName) {
+    private void saveObjectEntity(String deviceName, String manufacturer, String deviceType, String triggerConfigName, String objectName) {
         TriggerObjectEntity triggerObjectEntity = new TriggerObjectEntity();
         triggerObjectEntity.setTriggerConfigName(triggerConfigName);
         triggerObjectEntity.setDeviceName(deviceName);
         triggerObjectEntity.setDeviceType(deviceType);
+        triggerObjectEntity.setManufacturer(manufacturer);
         triggerObjectEntity.setObjectName(objectName);
 
         TriggerObjectEntity existEntity = (TriggerObjectEntity) this.entityManageService.getTriggerObjectEntityService().selectEntity((QueryWrapper) triggerObjectEntity.makeWrapperKey());
@@ -255,7 +255,8 @@ public class TriggerValueUpdater {
 
     /**
      * 对对设备数据进行触发器处理
-     * @param deviceValueEntity 设备数值
+     *
+     * @param deviceValueEntity       设备数值
      * @param triggerConfigEntityList 触发器配置列表
      * @return 触发器加工值
      */
@@ -293,6 +294,7 @@ public class TriggerValueUpdater {
                 TriggerStatusEntity triggerStatusEntity = new TriggerStatusEntity();
                 triggerStatusEntity.setId(deviceValueEntity.getId());
                 triggerStatusEntity.setDeviceName(deviceValueEntity.getDeviceName());
+                triggerStatusEntity.setManufacturer(deviceValueEntity.getManufacturer());
                 triggerStatusEntity.setDeviceType(deviceValueEntity.getDeviceType());
                 triggerStatusEntity.setTriggerConfigId(triggerConfigEntity.getId());
                 triggerStatusEntity.setObjectRange(triggerConfigEntity.getObjectRange());
@@ -353,6 +355,7 @@ public class TriggerValueUpdater {
                 triggerValueEntity.setId(entity.getId());
                 triggerValueEntity.setDeviceName(entity.getDeviceName());
                 triggerValueEntity.setTriggerConfigName(entity.getTriggerConfigName());
+                triggerValueEntity.setManufacturer(entity.getManufacturer());
                 triggerValueEntity.setDeviceType(entity.getDeviceType());
                 mergeValue.put(triggerValueEntity.makeServiceKey(), triggerValueEntity);
             }

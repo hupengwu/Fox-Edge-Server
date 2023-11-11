@@ -37,6 +37,7 @@ public class TriggerConfigMaker {
         result.setObjectRange(entity.getObjectRange());
         result.setDeviceName(entity.getDeviceName());
         result.setDeviceType(entity.getDeviceType());
+        result.setManufacturer(entity.getManufacturer());
         result.setQueueDeep(entity.getQueueDeep());
         result.setTriggerConfigName(entity.getTriggerConfigName());
         result.setTriggerMethodName(entity.getTriggerMethodName());
@@ -56,6 +57,7 @@ public class TriggerConfigMaker {
         result.setObjectRange(entity.getObjectRange());
         result.setDeviceName(entity.getDeviceName());
         result.setDeviceType(entity.getDeviceType());
+        result.setManufacturer(entity.getManufacturer());
         result.setQueueDeep(entity.getQueueDeep());
         result.setTriggerConfigName(entity.getTriggerConfigName());
         result.setTriggerMethodName(entity.getTriggerMethodName());

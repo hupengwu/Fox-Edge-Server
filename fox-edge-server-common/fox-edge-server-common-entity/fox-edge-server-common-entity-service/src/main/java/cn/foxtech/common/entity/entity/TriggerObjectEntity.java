@@ -21,6 +21,10 @@ public class TriggerObjectEntity extends BaseEntity {
      */
     private String deviceType;
     /**
+     * 设备类型
+     */
+    private String manufacturer;
+    /**
      * 触发器配置名称
      */
     private String triggerConfigName;
@@ -66,11 +70,13 @@ public class TriggerObjectEntity extends BaseEntity {
     public List<Object> makeServiceValueList() {
         List<Object> list = new ArrayList<>();
         list.add(this.deviceType);
+        list.add(this.manufacturer);
         return list;
     }
 
     public void bind(TriggerObjectEntity other) {
         this.deviceType = other.deviceType;
+        this.manufacturer = other.manufacturer;
         this.deviceName = other.deviceName;
         this.objectName = other.objectName;
         this.triggerConfigName = other.triggerConfigName;

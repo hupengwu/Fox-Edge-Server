@@ -1,10 +1,10 @@
 package cn.foxtech.device.protocol.v1.core.worker;
 
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
-import cn.foxtech.device.protocol.v1.core.method.FoxEdgeMethodTemplate;
-import cn.foxtech.device.protocol.v1.core.method.FoxEdgeReportMethod;
 import cn.foxtech.device.protocol.v1.core.constants.FoxEdgeConstant;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
+import cn.foxtech.device.protocol.v1.core.method.FoxEdgeMethodTemplate;
+import cn.foxtech.device.protocol.v1.core.method.FoxEdgeReportMethod;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,12 +20,12 @@ public class FoxEdgeReportWorker {
      * @return 数据
      * @throws ProtocolException 解码失败
      */
-    public static Map<String, Object> decode(String deviceType, Object recv, Map<String, Object> params) throws ProtocolException {
+    public static Map<String, Object> decode(String manufacturer, String deviceType, Object recv, Map<String, Object> params) throws ProtocolException {
         // 根据设备类型查找解码器集合
         FoxEdgeMethodTemplate template = FoxEdgeMethodTemplate.inst();
-        Map<String, FoxEdgeReportMethod> methodPairs = template.getReportMethod().get(deviceType);
+        Map<String, FoxEdgeReportMethod> methodPairs = template.getReportMethod(manufacturer, deviceType);
         if (methodPairs == null) {
-            throw new ProtocolException("找不到对应设备类型的解码器：" + deviceType);
+            throw new ProtocolException("找不到对应设备类型的解码器：" + manufacturer + ":" + deviceType);
         }
 
         for (Map.Entry<String, FoxEdgeReportMethod> entry : methodPairs.entrySet()) {
@@ -62,6 +62,6 @@ public class FoxEdgeReportWorker {
             }
         }
 
-        throw new ProtocolException("找不到对应设备类型的解码器：" + deviceType);
+        throw new ProtocolException("找不到对应设备类型的解码器：" + manufacturer + ":" + deviceType);
     }
 }

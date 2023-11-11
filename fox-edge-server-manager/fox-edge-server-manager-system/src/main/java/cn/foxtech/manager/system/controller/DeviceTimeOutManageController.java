@@ -75,6 +75,9 @@ public class DeviceTimeOutManageController {
                 if (body.containsKey(DeviceStatusVOFieldConstant.field_device_type)) {
                     result &= deviceEntity.getDeviceType().equals(body.get(DeviceStatusVOFieldConstant.field_device_type));
                 }
+                if (body.containsKey(DeviceStatusVOFieldConstant.field_manufacturer)) {
+                    result &= deviceEntity.getManufacturer().equals(body.get(DeviceStatusVOFieldConstant.field_manufacturer));
+                }
                 if (body.containsKey(DeviceStatusVOFieldConstant.field_failed_count)) {
                     result &= entity.getCommFailedCount() >= ((Integer) body.get(DeviceStatusVOFieldConstant.field_failed_count));
                 }
@@ -91,6 +94,7 @@ public class DeviceTimeOutManageController {
             Set<String> extend = new HashSet<>();
             extend.add(DeviceVOFieldConstant.field_device_name);
             extend.add(DeviceVOFieldConstant.field_device_type);
+            extend.add(DeviceVOFieldConstant.field_manufacturer);
             extend.add(DeviceVOFieldConstant.field_channel_name);
             extend.add(DeviceVOFieldConstant.field_channel_type);
 

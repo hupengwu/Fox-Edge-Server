@@ -1,12 +1,12 @@
 package cn.foxtech.channel.tcp.client.handler;
 
+import cn.foxtech.channel.tcp.client.entity.TcpClientEntity;
 import cn.foxtech.channel.tcp.client.service.ChannelManager;
 import cn.foxtech.channel.tcp.client.service.ReportService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.netty.handler.SocketChannelHandler;
 import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
-import cn.foxtech.device.protocol.v1.utils.netty.SplitMessageHandler;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,16 +28,9 @@ public class ChannelHandler extends SocketChannelHandler {
     /**
      * 双工模式：全双工/半双工
      */
-    @Setter
-    private boolean fullDuplex = false;
-
-    /**
-     * java的拆包类
-     */
     @Getter
     @Setter
-    private SplitMessageHandler splitMessageHandler;
-
+    private TcpClientEntity entity;
 
     @Setter
     private boolean logger = false;
@@ -52,12 +45,12 @@ public class ChannelHandler extends SocketChannelHandler {
      * @throws Exception 异常
      */
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        String message = "建立连接:" + ctx.channel().remoteAddress();
+        String message = "建立连接:" + this.entity.getChannelName();
         LOGGER.info(message);
         this.consoleService.info(message);
 
         this.channelManager.insert(ctx);
-        this.channelManager.setServiceKey(ctx, ctx.channel().remoteAddress().toString());
+        this.channelManager.setServiceKey(ctx, this.entity.getChannelName());
     }
 
     /**
@@ -71,22 +64,16 @@ public class ChannelHandler extends SocketChannelHandler {
 
         // 记录接收到的报文
         if (this.logger) {
-            LOGGER.info("channelRead: " + ctx.channel().remoteAddress() + ": " + HexUtils.byteArrayToHexString(data));
+            LOGGER.info("channelRead: " + this.entity.getChannelName() + ": " + HexUtils.byteArrayToHexString(data));
         }
 
 
-        if (this.fullDuplex) {
-            // 全双工模式：用host:port作为业务特征
-            String serviceKey = ctx.channel().remoteAddress().toString();
-
+        if (this.entity.isFullDuplex()) {
             // 保存PDU到接收缓存，由reportService主动上报
-            this.reportService.push(serviceKey, (byte[]) msg);
+            this.reportService.push(this.entity.getChannelName(), data);
         } else {
-            // 半双工模式：用host:port作为业务特征
-            String serviceKey = ctx.channel().remoteAddress().toString();
-
             // 通知数据到达
-            SyncFlagObjectMap.inst().notifyConstant(serviceKey, data);
+            SyncFlagObjectMap.inst().notifyConstant(this.entity.getChannelName(), data);
         }
 
     }

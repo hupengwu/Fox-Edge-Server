@@ -1,14 +1,14 @@
 package cn.foxtech.manager.system.controller;
 
 
+import cn.foxtech.common.entity.constant.TriggerConfigVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.TriggerConfigEntity;
 import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
-import cn.foxtech.manager.system.service.EntityManageService;
-import cn.foxtech.common.entity.constant.TriggerConfigVOFieldConstant;
 import cn.foxtech.core.domain.AjaxResult;
+import cn.foxtech.manager.system.service.EntityManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,6 +64,12 @@ public class TriggerConfigManageController {
                 }
                 if (body.containsKey(TriggerConfigVOFieldConstant.field_device_type)) {
                     result &= entity.getDeviceType().equals(body.get(TriggerConfigVOFieldConstant.field_device_type));
+                }
+                if (body.containsKey(TriggerConfigVOFieldConstant.field_manufacturer)) {
+                    result &= entity.getManufacturer().equals(body.get(TriggerConfigVOFieldConstant.field_manufacturer));
+                }
+                if (body.containsKey(TriggerConfigVOFieldConstant.field_manufacturer)) {
+                    result &= entity.getManufacturer().equals(body.get(TriggerConfigVOFieldConstant.field_manufacturer));
                 }
                 if (body.containsKey(TriggerConfigVOFieldConstant.field_trigger_model_name)) {
                     result &= entity.getTriggerModelName().equals(body.get(TriggerConfigVOFieldConstant.field_trigger_model_name));
@@ -122,14 +128,15 @@ public class TriggerConfigManageController {
             String objectRange = (String) params.get(TriggerConfigVOFieldConstant.field_object_range);
             String deviceName = (String) params.get(TriggerConfigVOFieldConstant.field_device_name);
             String deviceType = (String) params.get(TriggerConfigVOFieldConstant.field_device_type);
+            String manufacturer = (String) params.get(TriggerConfigVOFieldConstant.field_manufacturer);
             List<String> objectList = (List<String>) params.get(TriggerConfigVOFieldConstant.field_objects_name);
             String triggerModelName = (String) params.get(TriggerConfigVOFieldConstant.field_trigger_model_name);
             String triggerMethodName = (String) params.get(TriggerConfigVOFieldConstant.field_trigger_method_name);
             Integer queueDeep = (Integer) params.get(TriggerConfigVOFieldConstant.field_queue_deep);
             Map<String, Object> triggerParam = (Map<String, Object>) params.get(TriggerConfigVOFieldConstant.field_trigger_param);
             // 简单校验参数
-            if (MethodUtils.hasNull(triggerConfigName, objectRange, deviceName, deviceType, objectList, triggerModelName, triggerMethodName, queueDeep, triggerParam)) {
-                return AjaxResult.error("参数不能为空:triggerConfigName, objectRange, deviceName, deviceType, objectList, triggerModelName, triggerMethodName, queueDeep, params");
+            if (MethodUtils.hasNull(triggerConfigName, objectRange, deviceName, manufacturer, deviceType, objectList, triggerModelName, triggerMethodName, queueDeep, triggerParam)) {
+                return AjaxResult.error("参数不能为空:triggerConfigName, objectRange, deviceName, manufacturer, deviceType, objectList, triggerModelName, triggerMethodName, queueDeep, params");
             }
 
             // 构造作为参数的实体
@@ -138,6 +145,7 @@ public class TriggerConfigManageController {
             entity.setObjectRange(objectRange);
             entity.setDeviceName(deviceName);
             entity.setDeviceType(deviceType);
+            entity.setManufacturer(manufacturer);
             entity.setTriggerModelName(triggerModelName);
             entity.setTriggerMethodName(triggerMethodName);
             entity.setQueueDeep(queueDeep);

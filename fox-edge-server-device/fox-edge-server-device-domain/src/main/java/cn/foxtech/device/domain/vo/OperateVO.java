@@ -31,6 +31,10 @@ public class OperateVO {
      */
     private String deviceType = "";
     /**
+     * 设备厂商
+     */
+    private String manufacturer = "";
+    /**
      * 操作名称
      */
     private String operateName = "";
@@ -55,6 +59,7 @@ public class OperateVO {
     public void bindBaseVO(OperateVO vo) {
         this.uuid = vo.uuid;
         this.deviceName = vo.deviceName;
+        this.manufacturer = vo.manufacturer;
         this.deviceType = vo.deviceType;
         this.timeout = vo.timeout;
         this.operateMode = vo.operateMode;

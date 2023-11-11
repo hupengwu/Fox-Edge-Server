@@ -24,8 +24,6 @@ public class ChannelService extends ChannelServerAPI {
     @Getter
     private final Map<String, TcpClientEntity> channelName2Entity = new ConcurrentHashMap<>();
 
-    private final Map<String, String> serviceKey2ChanelName = new ConcurrentHashMap<>();
-
     @Autowired
     private ChannelManager channelManager;
 
@@ -65,14 +63,13 @@ public class ChannelService extends ChannelServerAPI {
 
         TcpClientEntity entity;
         if ("full-duplex".equals(mode)) {
-            entity = this.buildFullDuplexEntity(host, port, handler);
+            entity = this.buildFullDuplexEntity(channelName, host, port, handler);
         } else {
-            entity = this.buildHalfDuplexEntity(host, port);
+            entity = this.buildHalfDuplexEntity(channelName, host, port);
         }
 
         // 记录信息
         this.channelName2Entity.put(channelName, entity);
-        this.serviceKey2ChanelName.put(entity.getServiceKey(), channelName);
     }
 
     /**
@@ -83,7 +80,7 @@ public class ChannelService extends ChannelServerAPI {
      * @param handler handler
      * @return 实体
      */
-    private TcpClientEntity buildFullDuplexEntity(String host, Integer port, Map<String, Object> handler) {
+    private TcpClientEntity buildFullDuplexEntity(String channelName, String host, Integer port, Map<String, Object> handler) {
         if (handler == null) {
             throw new ServiceException("全双工模式下，参数不能为空: handler ");
         }
@@ -112,13 +109,13 @@ public class ChannelService extends ChannelServerAPI {
         entity.setFullDuplex(true);
         entity.setSocketAddress(new InetSocketAddress(host, port));
         entity.setSplitMessageHandler(splitMessageHandlerInstance);
-        entity.setServiceKey(new InetSocketAddress(host, port).toString());
+        entity.setChannelName(channelName);
+
         entity.setChannelHandler(new ChannelHandler());
         entity.getChannelHandler().setReportService(this.reportService);
         entity.getChannelHandler().setChannelManager(this.channelManager);
         entity.getChannelHandler().setConsoleService(this.consoleService);
-        entity.getChannelHandler().setFullDuplex(true);
-        entity.getChannelHandler().setSplitMessageHandler(splitMessageHandlerInstance);
+        entity.getChannelHandler().setEntity(entity);
         return entity;
     }
 
@@ -129,7 +126,7 @@ public class ChannelService extends ChannelServerAPI {
      * @param port port
      * @return 实体
      */
-    private TcpClientEntity buildHalfDuplexEntity(String host, Integer port) {
+    private TcpClientEntity buildHalfDuplexEntity(String channelName, String host, Integer port) {
         // 建立实体对象
         TcpClientEntity entity = new TcpClientEntity();
         entity.setRemoteHost(host);
@@ -137,13 +134,13 @@ public class ChannelService extends ChannelServerAPI {
         entity.setFullDuplex(false);
         entity.setSocketAddress(new InetSocketAddress(host, port));
         entity.setSplitMessageHandler(null);
-        entity.setServiceKey(new InetSocketAddress(host, port).toString());
+        entity.setChannelName(channelName);
+
         entity.setChannelHandler(new ChannelHandler());
         entity.getChannelHandler().setReportService(this.reportService);
         entity.getChannelHandler().setChannelManager(this.channelManager);
         entity.getChannelHandler().setConsoleService(this.consoleService);
-        entity.getChannelHandler().setFullDuplex(false);
-        entity.getChannelHandler().setSplitMessageHandler(null);
+        entity.getChannelHandler().setEntity(entity);
         return entity;
     }
 
@@ -158,15 +155,14 @@ public class ChannelService extends ChannelServerAPI {
         TcpClientEntity entity = this.channelName2Entity.get(channelName);
 
         // 关闭socket
-        ChannelHandlerContext ctx = this.channelManager.getContext(entity.getServiceKey());
+        ChannelHandlerContext ctx = this.channelManager.getContext(channelName);
         if (ctx != null) {
             ctx.channel().disconnect();
             ctx.channel().closeFuture();
         }
 
         // 删除记录
-        this.channelName2Entity.remove(channelName);
-        this.serviceKey2ChanelName.remove(entity.getServiceKey());
+        this.channelName2Entity.remove(entity.getChannelName());
     }
 
     /**
@@ -182,7 +178,7 @@ public class ChannelService extends ChannelServerAPI {
             throw new ServiceException("该通道尚未打开: " + requestVO.getName());
         }
 
-        ChannelHandlerContext ctx = this.channelManager.getContext(entity.getServiceKey());
+        ChannelHandlerContext ctx = this.channelManager.getContext(entity.getChannelName());
         if (ctx == null) {
             throw new ServiceException("该通道尚未与对端设备建立连接，或者对端设备尚未主动发起身份认证:" + requestVO.getName());
         }
@@ -198,7 +194,7 @@ public class ChannelService extends ChannelServerAPI {
      */
     @Override
     public synchronized List<ChannelRespondVO> report() throws ServiceException {
-        return this.reportService.popAll(this.serviceKey2ChanelName);
+        return this.reportService.popAll();
     }
 
     @Override
@@ -213,7 +209,7 @@ public class ChannelService extends ChannelServerAPI {
             throw new ServiceException("当前是全双工方式，只支持publish和report两种操作:" + requestVO.getName());
         }
 
-        ChannelHandlerContext ctx = this.channelManager.getContext(entity.getServiceKey());
+        ChannelHandlerContext ctx = this.channelManager.getContext(entity.getChannelName());
         if (ctx == null) {
             throw new ServiceException("与远端尚未建立连接:" + requestVO.getName());
         }

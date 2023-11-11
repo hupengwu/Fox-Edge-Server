@@ -1,14 +1,14 @@
 package cn.foxtech.manager.system.controller;
 
 
+import cn.foxtech.common.entity.constant.OperateManualTaskVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.OperateManualTaskEntity;
 import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
-import cn.foxtech.manager.system.service.EntityManageService;
-import cn.foxtech.common.entity.constant.OperateManualTaskVOFieldConstant;
 import cn.foxtech.core.domain.AjaxResult;
+import cn.foxtech.manager.system.service.EntityManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -78,6 +78,9 @@ public class OperateManualTaskManageController {
                 if (body.containsKey(OperateManualTaskVOFieldConstant.field_device_type)) {
                     result &= entity.getDeviceType().equals(body.get(OperateManualTaskVOFieldConstant.field_device_type));
                 }
+                if (body.containsKey(OperateManualTaskVOFieldConstant.field_manufacturer)) {
+                    result &= entity.getManufacturer().equals(body.get(OperateManualTaskVOFieldConstant.field_manufacturer));
+                }
 
                 return result;
             });
@@ -125,11 +128,12 @@ public class OperateManualTaskManageController {
             String taskName = (String) params.get(OperateManualTaskVOFieldConstant.field_task_name);
             String deviceName = (String) params.get(OperateManualTaskVOFieldConstant.field_device_name);
             String deviceType = (String) params.get(OperateManualTaskVOFieldConstant.field_device_type);
+            String manufacturer = (String) params.get(OperateManualTaskVOFieldConstant.field_manufacturer);
             List<Map<String, Object>> taskParam = (List<Map<String, Object>>) params.get(OperateManualTaskVOFieldConstant.field_task_param);
 
             // 简单校验参数
-            if (MethodUtils.hasNull(taskName, deviceName, deviceType, taskParam)) {
-                return AjaxResult.error("参数不能为空:taskName, deviceName, deviceType, taskParam");
+            if (MethodUtils.hasNull(taskName, deviceName, deviceType, manufacturer, taskParam)) {
+                return AjaxResult.error("参数不能为空: taskName, deviceName, deviceType, manufacturer, taskParam");
             }
 
             // 构造作为参数的实体
@@ -137,6 +141,7 @@ public class OperateManualTaskManageController {
             entity.setTaskName(taskName);
             entity.setDeviceName(deviceName);
             entity.setDeviceType(deviceType);
+            entity.setManufacturer(manufacturer);
             entity.setTaskParam(taskParam);
 
             // 简单验证实体的合法性

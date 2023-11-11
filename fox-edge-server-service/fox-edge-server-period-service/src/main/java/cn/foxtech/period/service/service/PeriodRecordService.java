@@ -116,7 +116,13 @@ public class PeriodRecordService extends PeriodTaskService {
             List<BaseEntity> entityList = this.entityManageService.getEntityList(DeviceEntity.class);
             for (BaseEntity entity : entityList) {
                 DeviceEntity deviceEntity = (DeviceEntity) entity;
-                if (deviceEntity.getDeviceType().equals(taskEntity.getDeviceType())) {
+                String manufacturer = deviceEntity.getManufacturer();
+                String deviceType = deviceEntity.getDeviceType();
+                if (manufacturer == null || deviceType == null) {
+                    continue;
+                }
+
+                if (manufacturer.equals(taskEntity.getManufacturer()) && deviceType.equals(taskEntity.getDeviceType())) {
                     deviceIds.add(deviceEntity.getId());
                 }
             }

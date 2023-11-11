@@ -1,12 +1,13 @@
 package cn.foxtech.device.scanner;
 
 
+import cn.foxtech.common.utils.Maps;
+import cn.foxtech.common.utils.reflect.JarLoaderUtils;
 import cn.foxtech.device.protocol.RootLocation;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperateParam;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgePublish;
-import cn.foxtech.common.utils.reflect.JarLoaderUtils;
 import cn.foxtech.device.protocol.v1.core.method.FoxEdgePublishMethod;
 
 import java.lang.reflect.Method;
@@ -21,7 +22,8 @@ public class FoxEdgePublishScanner {
      * @param pack 包名称
      * @return 函数映射表结构：device-operater-methodpair
      */
-    public static Map<String, Map<String, FoxEdgePublishMethod>> scanMethodPair(String pack) {
+    public static Map<String, Object> scanMethodPair(String pack) {
+        Map<String, Object> manufacturerMap = new HashMap<>();
         Map<String, Map<String, FoxEdgePublishMethod>> deviceType2operater = new HashMap<>();
         try {
             Set<Class<?>> classSet = JarLoaderUtils.getClasses(pack);
@@ -38,27 +40,17 @@ public class FoxEdgePublishScanner {
 
 
                 // 扫描：是否包含了发布注解的编码器函数
-                Map<String, FoxEdgePublishMethod> methodpairs = scanMethodPair(manufacturer, deviceType, aClass);
-                if (methodpairs.isEmpty()) {
-                    continue;
+                Map<String, FoxEdgePublishMethod> methodMap = scanMethodPair(manufacturer, deviceType, aClass);
+                for (String method : methodMap.keySet()) {
+                    Maps.setValue(manufacturerMap, manufacturer, deviceType, method, methodMap.get(method));
                 }
-
-                Map<String, FoxEdgePublishMethod> operater2methodpair = deviceType2operater.computeIfAbsent(deviceType, k -> new HashMap<String, FoxEdgePublishMethod>());
-                operater2methodpair.putAll(methodpairs);
             }
         } catch (Throwable e) {
             e.getCause();
             e.printStackTrace();
         }
 
-        Map<String, Map<String, FoxEdgePublishMethod>> result = new HashMap<>();
-        for (String key : deviceType2operater.keySet()) {
-            if (deviceType2operater.get(key).size() > 0) {
-                result.put(key, deviceType2operater.get(key));
-            }
-        }
-
-        return result;
+        return manufacturerMap;
     }
 
     public static Map<String, FoxEdgePublishMethod> scanMethodPair(String manufacturer, String deviceType, Class<?> aClass) {
@@ -123,7 +115,7 @@ public class FoxEdgePublishScanner {
      *
      * @return
      */
-    public static Map<String, Map<String, FoxEdgePublishMethod>> scanMethodPair() {
+    public static Map<String, Object> scanMethodPair() {
         return scanMethodPair(RootLocation.class.getPackage().getName());
     }
 

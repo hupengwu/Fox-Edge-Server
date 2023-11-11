@@ -38,11 +38,10 @@ public class ExecuteService {
             ctx.channel().writeAndFlush(send);
 
             // 以serviceKey为半双工的问答识别标记
-            String serviceKey = ctx.channel().remoteAddress().toString();
-            SyncFlagObjectMap.inst().reset(serviceKey);
+            SyncFlagObjectMap.inst().reset(requestVO.getName());
 
             // 等待数据返回
-            byte[] data = (byte[]) SyncFlagObjectMap.inst().waitDynamic(serviceKey, timeout);
+            byte[] data = (byte[]) SyncFlagObjectMap.inst().waitDynamic(requestVO.getName(), timeout);
             if (data == null) {
                 throw new ServiceException("接收socket数据返回失败:设备响应超时!");
             }

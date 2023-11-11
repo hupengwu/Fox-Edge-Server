@@ -30,6 +30,7 @@ public class EntityManageService extends EntityServiceManager {
         consumer.add(ChannelEntity.class.getSimpleName());
         consumer.add(OperateEntity.class.getSimpleName());
         consumer.add(ConfigEntity.class.getSimpleName());
+        consumer.add(OperateEntity.class.getSimpleName());
 
         // 数据的发布模式
         this.entityPublishManager.setPublishEntityUpdateTime(OperateMethodEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, OperateMethodEntity.class.getSimpleName());

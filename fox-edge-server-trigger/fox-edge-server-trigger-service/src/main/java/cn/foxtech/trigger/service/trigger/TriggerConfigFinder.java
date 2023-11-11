@@ -35,7 +35,7 @@ public class TriggerConfigFinder implements IBaseFinder {
     public boolean compareValue(Object value) {
         TriggerConfigEntity triggerConfigEntity = (TriggerConfigEntity) value;
 
-        // 全局级别
+        // 全局级别:需要测试
         if (TriggerConfigEntity.GlobalLevel.equals(triggerConfigEntity.getObjectRange())) {
             // 场景1：全体设备
             if (triggerConfigEntity.getDeviceType() == null || triggerConfigEntity.getDeviceType().isEmpty()) {

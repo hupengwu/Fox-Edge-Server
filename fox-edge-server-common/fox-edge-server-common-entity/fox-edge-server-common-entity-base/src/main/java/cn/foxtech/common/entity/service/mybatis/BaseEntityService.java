@@ -82,7 +82,7 @@ public abstract class BaseEntityService {
     public List selectListBatchIds(List idList) {
         this.bindMapper();
 
-        if (idList.isEmpty()){
+        if (idList.isEmpty()) {
             return new ArrayList<>();
         }
 
@@ -91,6 +91,7 @@ public abstract class BaseEntityService {
 
     /**
      * 分組数量
+     *
      * @param field 需要分组的字段
      * @return 数量默认输出在id字段
      */
@@ -99,6 +100,14 @@ public abstract class BaseEntityService {
 
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.select(field + " ,COUNT(1) AS id").groupBy(field);
+        return mapper.selectList(queryWrapper);
+    }
+
+    public List selectListGroupBy(String field1, String field2) {
+        this.bindMapper();
+
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.select(field1 + "," + field2 + " ,COUNT(1) AS id").groupBy(field1, field2);
         return mapper.selectList(queryWrapper);
     }
 

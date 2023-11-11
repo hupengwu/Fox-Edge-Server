@@ -76,21 +76,27 @@ public class OperateMonitorTaskManageController {
     }
 
     private void addDeviceCount(List<Map<String, Object>> list) {
+        String field1 = StringUtils.underscoreName(DeviceVOFieldConstant.field_manufacturer);
+        String field2 = StringUtils.underscoreName(DeviceVOFieldConstant.field_device_type);
+
         // 查询各种类型的数量
-        List<DevicePo> groups = this.deviceEntityService.selectListGroupBy(StringUtils.underscoreName(DeviceVOFieldConstant.field_device_type));
+        List<DevicePo> groups = this.deviceEntityService.selectListGroupBy(field1, field2);
         Map<String, Long> type2count = new HashMap<>();
         for (DevicePo group : groups) {
-            type2count.put(group.getDeviceType(), group.getId());
+            String key = group.getManufacturer() + ":" + group.getDeviceType();
+            type2count.put(key, group.getId());
         }
 
         // 将设备数量信息,添加进去
         for (Map<String, Object> map : list) {
+            String manufacturer = (String) map.get(OperateMonitorTaskVOFieldConstant.field_manufacturer);
             String deviceType = (String) map.get(OperateMonitorTaskVOFieldConstant.field_device_type);
-            if (deviceType == null) {
+            if (manufacturer == null || deviceType == null) {
                 continue;
             }
 
-            Long countDeviceType = type2count.get(deviceType);
+            String key = manufacturer + ":" + deviceType;
+            Long countDeviceType = type2count.get(key);
 
             List deviceIds = (List) map.get(OperateMonitorTaskVOFieldConstant.field_device_ids);
 
@@ -118,6 +124,12 @@ public class OperateMonitorTaskManageController {
                 }
                 if (body.containsKey(OperateMonitorTaskVOFieldConstant.field_device_type)) {
                     result &= entity.getDeviceType().equals(body.get(OperateMonitorTaskVOFieldConstant.field_device_type));
+                }
+                if (body.containsKey(OperateMonitorTaskVOFieldConstant.field_manufacturer)) {
+                    result &= entity.getManufacturer().equals(body.get(OperateMonitorTaskVOFieldConstant.field_manufacturer));
+                }
+                if (body.containsKey(OperateMonitorTaskVOFieldConstant.field_manufacturer)) {
+                    result &= entity.getManufacturer().equals(body.get(OperateMonitorTaskVOFieldConstant.field_manufacturer));
                 }
 
                 return result;
@@ -164,20 +176,22 @@ public class OperateMonitorTaskManageController {
         try {
             // 提取业务参数
             String templateName = (String) params.get(OperateMonitorTaskVOFieldConstant.field_template_name);
+            String manufacturer = (String) params.get(OperateMonitorTaskVOFieldConstant.field_manufacturer);
             String deviceType = (String) params.get(OperateMonitorTaskVOFieldConstant.field_device_type);
             List<Map<String, Object>> operateParam = (List<Map<String, Object>>) params.get(OperateMonitorTaskVOFieldConstant.field_template_param);
             List<Object> deviceIds = (List<Object>) params.get(OperateMonitorTaskVOFieldConstant.field_device_ids);
             // 简单校验参数
-            if (MethodUtils.hasNull(templateName, deviceType, deviceIds, operateParam)) {
-                return AjaxResult.error("参数不能为空:templateName, deviceType,deviceIds, operateParam");
+            if (MethodUtils.hasNull(templateName, manufacturer, deviceType, deviceIds, operateParam)) {
+                return AjaxResult.error("参数不能为空: templateName, manufacturer, deviceType, deviceIds, operateParam ");
             }
 
             // 构造作为参数的实体
             OperateMonitorTaskEntity entity = new OperateMonitorTaskEntity();
             entity.setTemplateName(templateName);
+            entity.setManufacturer(manufacturer);
             entity.setDeviceType(deviceType);
             entity.setTemplateParam(operateParam);
-            entity.getDeviceIds().addAll(this.makeLongList(deviceType, deviceIds));
+            entity.getDeviceIds().addAll(this.makeLongList(manufacturer, deviceType, deviceIds));
 
             // 简单验证实体的合法性
             if (entity.hasNullServiceKey()) {
@@ -211,8 +225,8 @@ public class OperateMonitorTaskManageController {
         }
     }
 
-    private Set<Long> makeLongList(String deviceType, List<Object> deviceIds) {
-        if (deviceIds.isEmpty()){
+    private Set<Long> makeLongList(String manufacturer, String deviceType, List<Object> deviceIds) {
+        if (deviceIds.isEmpty()) {
             return new HashSet<>();
         }
 
@@ -232,6 +246,9 @@ public class OperateMonitorTaskManageController {
             }
 
             if (!entity.getDeviceType().equals(deviceType)) {
+                continue;
+            }
+            if (!entity.getManufacturer().equals(manufacturer)) {
                 continue;
             }
 

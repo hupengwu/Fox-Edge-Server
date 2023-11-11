@@ -129,9 +129,10 @@ public class ServerInitializer {
     }
 
     private ChannelFuture connectRemote(String remoteHost, int remotePort, ChannelHandler channelHandler) {
-        NettyTcpClientFactory factory = NettyTcpClientFactory.getInstance();
+        // 为每一个通道，创建一个独立的factory，建立每个通道拥有一个handler的模型
+        NettyTcpClientFactory factory = NettyTcpClientFactory.newInstance();
         factory.getChannelInitializer().setChannelHandler(channelHandler);
-        factory.getChannelInitializer().setSplitMessageHandler(channelHandler.getSplitMessageHandler());
+        factory.getChannelInitializer().setSplitMessageHandler(channelHandler.getEntity().getSplitMessageHandler());
 
         return factory.createClient(remoteHost, remotePort);
     }

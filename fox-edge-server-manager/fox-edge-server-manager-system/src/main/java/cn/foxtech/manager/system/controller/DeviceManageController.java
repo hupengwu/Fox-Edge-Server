@@ -3,6 +3,7 @@ package cn.foxtech.manager.system.controller;
 
 import cn.foxtech.common.entity.constant.DeviceStatusVOFieldConstant;
 import cn.foxtech.common.entity.constant.DeviceVOFieldConstant;
+import cn.foxtech.common.entity.constant.OperateVOFieldConstant;
 import cn.foxtech.common.entity.entity.*;
 import cn.foxtech.common.entity.service.device.DeviceEntityMaker;
 import cn.foxtech.common.entity.service.device.DeviceEntityService;
@@ -16,6 +17,7 @@ import cn.foxtech.common.utils.file.FileTextUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.core.domain.AjaxResult;
+import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.manager.system.service.EntityManageService;
 import com.fasterxml.jackson.core.JsonParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +62,7 @@ public class DeviceManageController {
         Object id = body.get(DeviceVOFieldConstant.field_id);
         String deviceName = (String) body.get(DeviceVOFieldConstant.field_device_name);
         String deviceType = (String) body.get(DeviceVOFieldConstant.field_device_type);
+        String manufacturer = (String) body.get(DeviceVOFieldConstant.field_manufacturer);
         String channelName = (String) body.get(DeviceVOFieldConstant.field_channel_name);
         String channelType = (String) body.get(DeviceVOFieldConstant.field_channel_type);
         Integer pageNum = (Integer) body.get(DeviceVOFieldConstant.field_page_num);
@@ -80,6 +83,9 @@ public class DeviceManageController {
         }
         if (deviceType != null) {
             sb.append(" (device_type = '").append(deviceType).append("') AND");
+        }
+        if (manufacturer != null) {
+            sb.append(" (manufacturer = '").append(manufacturer).append("') AND");
         }
         if (channelName != null) {
             sb.append(" (channel_name = '").append(channelName).append("') AND");
@@ -122,6 +128,37 @@ public class DeviceManageController {
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
         }
+    }
+
+    @PostMapping("option")
+    public AjaxResult selectOptionList(@RequestBody Map<String, Object> body) {
+        String deviceType = (String) body.get(OperateVOFieldConstant.field_device_type);
+        String manufacturer = (String) body.get(OperateVOFieldConstant.field_manufacturer);
+        String field = (String) body.get("field");
+        if (MethodUtils.hasEmpty(deviceType, manufacturer, field)) {
+            throw new ServiceException("参数缺失：deviceType, manufacturer, field");
+        }
+
+        StringBuilder sb = new StringBuilder();
+        if (field.equals("deviceName")) {
+            sb.append("SELECT DISTINCT t.device_name FROM tb_device t WHERE t.manufacturer = '");
+            sb.append(manufacturer);
+            sb.append("' AND t.device_type = '");
+            sb.append(deviceType);
+            sb.append("'");
+        }
+        List<DevicePo> data = this.entityService.getMapper().executeSelectData(sb.toString());
+
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        for (DevicePo entity : data) {
+            Map<String, Object> result = new HashMap<>();
+            result.put("value", entity.getDeviceName());
+            result.put("label", entity.getDeviceName());
+            resultList.add(result);
+        }
+
+
+        return AjaxResult.success(resultList);
     }
 
     /**
@@ -194,20 +231,22 @@ public class DeviceManageController {
             // 提取业务参数
             String deviceName = (String) params.get(DeviceVOFieldConstant.field_device_name);
             String deviceType = (String) params.get(DeviceVOFieldConstant.field_device_type);
+            String manufacturer = (String) params.get(DeviceVOFieldConstant.field_manufacturer);
             String channelType = (String) params.get(DeviceVOFieldConstant.field_channel_type);
             String channelName = (String) params.get(DeviceVOFieldConstant.field_channel_name);
             Map<String, Object> deviceParam = (Map<String, Object>) params.get(DeviceVOFieldConstant.field_device_param);
             Map<String, Object> extendParam = (Map<String, Object>) params.get(DeviceVOFieldConstant.field_extend_param);
 
             // 简单校验参数
-            if (MethodUtils.hasNull(deviceName, deviceType, channelType, channelName, deviceParam, extendParam)) {
-                return AjaxResult.error("参数不能为空:deviceName, deviceType, channelType, channelName, deviceParam, extendParam");
+            if (MethodUtils.hasNull(deviceName, deviceType, manufacturer, channelType, channelName, deviceParam, extendParam)) {
+                return AjaxResult.error("参数不能为空:deviceName, deviceType, manufacturer, channelType, channelName, deviceParam, extendParam");
             }
 
             // 构造作为参数的实体
             DeviceEntity entity = new DeviceEntity();
             entity.setDeviceName(deviceName);
             entity.setDeviceType(deviceType);
+            entity.setManufacturer(manufacturer);
             entity.setChannelType(channelType);
             entity.setChannelName(channelName);
             entity.setDeviceParam(deviceParam);
@@ -340,6 +379,7 @@ public class DeviceManageController {
         headerLine.add(DeviceVOFieldConstant.field_id);
         headerLine.add(DeviceVOFieldConstant.field_device_name);
         headerLine.add(DeviceVOFieldConstant.field_device_type);
+        headerLine.add(DeviceVOFieldConstant.field_manufacturer);
         headerLine.add(DeviceVOFieldConstant.field_channel_name);
         headerLine.add(DeviceVOFieldConstant.field_channel_type);
         headerLine.add(DeviceVOFieldConstant.field_create_time);

@@ -73,6 +73,9 @@ public class DeviceMapperManageController {
                 if (body.containsKey(DeviceMapperVOFieldConstant.field_device_type)) {
                     result &= entity.getDeviceType().equals(body.get(DeviceMapperVOFieldConstant.field_device_type));
                 }
+                if (body.containsKey(DeviceMapperVOFieldConstant.field_manufacturer)) {
+                    result &= entity.getManufacturer().equals(body.get(DeviceMapperVOFieldConstant.field_manufacturer));
+                }
                 if (body.containsKey(DeviceMapperVOFieldConstant.field_object_name)) {
                     result &= entity.getObjectName().equals(body.get(DeviceMapperVOFieldConstant.field_object_name));
                 }
@@ -258,6 +261,7 @@ public class DeviceMapperManageController {
 
         List<String> headerLine = new ArrayList<>();
         headerLine.add(DeviceMapperVOFieldConstant.field_id);
+        headerLine.add(DeviceMapperVOFieldConstant.field_manufacturer);
         headerLine.add(DeviceMapperVOFieldConstant.field_device_type);
         headerLine.add(DeviceMapperVOFieldConstant.field_object_name);
         headerLine.add(DeviceMapperVOFieldConstant.field_mapper_name);

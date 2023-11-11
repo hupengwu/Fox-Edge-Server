@@ -35,6 +35,7 @@ public class ProbeEntityMaker {
         ProbePo result = new ProbePo();
         result.setDeviceName(entity.getDeviceName());
         result.setDeviceType(entity.getDeviceType());
+        result.setManufacturer(entity.getManufacturer());
         result.setOperateName(entity.getOperateName());
 
         result.setId(entity.getId());
@@ -50,6 +51,7 @@ public class ProbeEntityMaker {
         ProbeEntity result = new ProbeEntity();
         result.setDeviceName(entity.getDeviceName());
         result.setDeviceType(entity.getDeviceType());
+        result.setManufacturer(entity.getManufacturer());
         result.setOperateName(entity.getOperateName());
 
         result.setId(entity.getId());

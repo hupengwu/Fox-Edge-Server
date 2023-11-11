@@ -108,20 +108,35 @@ public class ExtendConfigUtils {
         // 设备类型级别
         if (extendConfigEntity.getExtendType().equals("DeviceEntityType")) {
             String deviceType = null;
+            String manufacturer = null;
             if (entity instanceof Map) {
+                manufacturer = (String) ((Map<String, Object>) entity).get(DeviceVOFieldConstant.field_manufacturer);
                 deviceType = (String) ((Map<String, Object>) entity).get(DeviceVOFieldConstant.field_device_type);
             }
             if (entity instanceof DeviceEntity) {
+                manufacturer = ((DeviceEntity) entity).getManufacturer();
                 deviceType = ((DeviceEntity) entity).getDeviceType();
             }
-            if (deviceType == null) {
+            if (deviceType == null || manufacturer == null) {
                 return;
             }
 
 
-            if (extendConfigEntity.getExtendParam().getBinds().contains(deviceType)) {
+            for (Object bind : extendConfigEntity.getExtendParam().getBinds()) {
+                if (!(bind instanceof Map)) {
+                    continue;
+                }
+                if (!manufacturer.equals(((Map<String, Object>) bind).get(DeviceVOFieldConstant.field_manufacturer))) {
+                    continue;
+                }
+                if (!deviceType.equals(((Map<String, Object>) bind).get(DeviceVOFieldConstant.field_device_type))) {
+                    continue;
+                }
+
                 extendField(extendParam, extendConfigEntity.getExtendParam().getFields());
+                break;
             }
+
             return;
         }
 
@@ -134,19 +149,34 @@ public class ExtendConfigUtils {
         // 设备类型级别
         if (extendConfigEntity.getExtendType().equals("DeviceMapperEntityType")) {
             String deviceType = null;
+            String manufacturer = null;
             if (entity instanceof Map) {
+                manufacturer = (String) ((Map<String, Object>) entity).get(DeviceMapperVOFieldConstant.field_manufacturer);
                 deviceType = (String) ((Map<String, Object>) entity).get(DeviceMapperVOFieldConstant.field_device_type);
             }
             if (entity instanceof DeviceMapperEntity) {
+                manufacturer = ((DeviceMapperEntity) entity).getManufacturer();
                 deviceType = ((DeviceMapperEntity) entity).getDeviceType();
             }
-            if (deviceType == null) {
+            if (deviceType == null || manufacturer == null) {
                 return;
             }
 
-            if (extendConfigEntity.getExtendParam().getBinds().contains(deviceType)) {
+            for (Object bind : extendConfigEntity.getExtendParam().getBinds()) {
+                if (!(bind instanceof Map)) {
+                    continue;
+                }
+                if (!manufacturer.equals(((Map<String, Object>) bind).get(DeviceMapperVOFieldConstant.field_manufacturer))) {
+                    continue;
+                }
+                if (!deviceType.equals(((Map<String, Object>) bind).get(DeviceMapperVOFieldConstant.field_device_type))) {
+                    continue;
+                }
+
                 extendField(extendParam, extendConfigEntity.getExtendParam().getFields());
+                break;
             }
+
             return;
         }
 

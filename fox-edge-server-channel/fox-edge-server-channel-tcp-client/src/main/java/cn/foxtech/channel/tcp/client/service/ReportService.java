@@ -24,8 +24,8 @@ public class ReportService {
     @Autowired
     private EntityManageService entityManageService;
 
-    public synchronized void push(String serviceKey, byte[] pdu) {
-        List<byte[]> list = this.channelMap.computeIfAbsent(serviceKey, k -> new CopyOnWriteArrayList<>());
+    public synchronized void push(String channelName, byte[] pdu) {
+        List<byte[]> list = this.channelMap.computeIfAbsent(channelName, k -> new CopyOnWriteArrayList<>());
         if (list.size() > 128) {
             return;
         }
@@ -34,13 +34,13 @@ public class ReportService {
     }
 
 
-    public List<ChannelRespondVO> popAll(Map<String, String> serviceKey2ChanelName) {
+    public List<ChannelRespondVO> popAll() {
         List<ChannelRespondVO> respondVOList = new ArrayList<>();
-        for (String serviceKey : this.channelMap.keySet()) {
-            List<byte[]> list = this.channelMap.get(serviceKey);
+        for (String channelName : this.channelMap.keySet()) {
+            List<byte[]> list = this.channelMap.get(channelName);
 
             // 获得该serviceKey相对应的通道
-            ChannelEntity channelEntity = this.getChannelEntity(serviceKey, serviceKey2ChanelName);
+            ChannelEntity channelEntity = this.getChannelEntity(channelName);
             if (channelEntity != null) {
                 // 把收到的数据提交给该通道
                 for (byte[] pdu : list) {
@@ -54,15 +54,14 @@ public class ReportService {
                 }
             }
 
-            this.channelMap.remove(serviceKey);
+            this.channelMap.remove(channelName);
         }
 
         return respondVOList;
 
     }
 
-    private ChannelEntity getChannelEntity(String serviceKey, Map<String, String> serviceKey2ChanelName) {
-        String channelName = serviceKey2ChanelName.get(serviceKey);
+    private ChannelEntity getChannelEntity(String channelName) {
         if (channelName == null) {
             return null;
         }

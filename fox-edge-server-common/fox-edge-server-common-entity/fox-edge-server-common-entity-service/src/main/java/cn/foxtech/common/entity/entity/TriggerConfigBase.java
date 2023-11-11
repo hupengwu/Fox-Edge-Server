@@ -25,6 +25,11 @@ public class TriggerConfigBase extends BaseEntity {
     private String deviceType = "";
 
     /**
+     * 设备厂商
+     */
+    private String manufacturer = "";
+
+    /**
      * 触发器信息
      */
     private String triggerConfigName = "";
@@ -71,6 +76,7 @@ public class TriggerConfigBase extends BaseEntity {
         list.add(this.objectRange);
         list.add(this.deviceName);
         list.add(this.deviceType);
+        list.add(this.manufacturer);
         list.add(this.triggerConfigName);
         list.add(this.triggerModelName);
         list.add(this.triggerMethodName);

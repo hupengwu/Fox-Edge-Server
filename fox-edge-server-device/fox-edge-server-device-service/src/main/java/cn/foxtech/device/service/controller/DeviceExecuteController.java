@@ -1,11 +1,13 @@
 package cn.foxtech.device.service.controller;
 
-import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.domain.constant.RedisStatusConstant;
 import cn.foxtech.common.domain.constant.RedisTopicConstant;
+import cn.foxtech.common.domain.constant.RestFulManagerVOConstant;
 import cn.foxtech.common.domain.vo.RestFulRequestVO;
 import cn.foxtech.common.entity.entity.DeviceEntity;
 import cn.foxtech.common.entity.entity.DeviceTimeOutEntity;
+import cn.foxtech.common.entity.entity.OperateEntity;
+import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.status.ServiceStatus;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import cn.foxtech.common.utils.syncobject.SyncQueueObjectMap;
@@ -18,7 +20,6 @@ import cn.foxtech.device.domain.vo.TaskRespondVO;
 import cn.foxtech.device.service.redistopic.RedisTopicPuberService;
 import cn.foxtech.device.service.service.EntityManageService;
 import cn.foxtech.device.service.service.OperateService;
-import cn.foxtech.common.domain.constant.RestFulManagerVOConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -114,6 +115,16 @@ public class DeviceExecuteController extends PeriodTaskService {
                 throw new ServiceException("指定名称的设备不存在：" + deviceName);
             }
 
+            // 获得操作实体
+            OperateEntity find = new OperateEntity();
+            find.setManufacturer(deviceEntity.getManufacturer());
+            find.setDeviceType(deviceEntity.getDeviceType());
+            find.setOperateName(operateName);
+            OperateEntity operateEntity = this.entityManageService.getEntity(find.makeServiceKey(), OperateEntity.class);
+            if (operateEntity == null) {
+                throw new ServiceException("指定的操作，不存在!：" + deviceName);
+            }
+
             // 通过时间戳，判断通道服务是否正在运行
             if (!this.serviceStatus.isActive(RedisStatusConstant.value_model_type_channel, deviceEntity.getChannelType(), 60 * 1000)) {
                 throw new ServiceException("指定的Channel服务尚未运行：" + deviceEntity.getChannelType());
@@ -129,12 +140,13 @@ public class DeviceExecuteController extends PeriodTaskService {
             // 交换类操作
             if (DeviceMethodVOFieldConstant.value_operate_exchange.equals(requestVO.getOperateMode())) {
                 // 执行请求操作
-                Map<String, Object> value = this.operateService.smplExchange(deviceName, operateName, param, timeout);
+                Map<String, Object> value = this.operateService.smplExchange(deviceName, operateEntity, param, timeout);
                 Map<String, Object> status = OperateRespondVO.buildCommonStatus(System.currentTimeMillis(), 0, 0);
 
                 OperateRespondVO respondVO = new OperateRespondVO();
                 respondVO.bindBaseVO(requestVO);
                 respondVO.setDeviceType(deviceEntity.getDeviceType());
+                respondVO.setManufacturer(deviceEntity.getManufacturer());
                 respondVO.setData(value, status);
                 return respondVO;
             }
@@ -142,7 +154,7 @@ public class DeviceExecuteController extends PeriodTaskService {
             // 发布类操作
             if (DeviceMethodVOFieldConstant.value_operate_publish.equals(requestVO.getOperateMode())) {
                 // 执行请求操作
-                this.operateService.smplPublish(deviceName, operateName, param, timeout);
+                this.operateService.smplPublish(deviceName, operateEntity, param, timeout);
 
                 OperateRespondVO respondVO = new OperateRespondVO();
                 respondVO.bindBaseVO(requestVO);
@@ -153,7 +165,7 @@ public class DeviceExecuteController extends PeriodTaskService {
             throw new ServiceException("不支持的操作类型");
         } catch (CommunicationException e) {
             // 通信失败的时候，发送一个通信失败的通知给管理服务
-            this.notifyDeviceTimeOut(deviceEntity,requestVO);
+            this.notifyDeviceTimeOut(deviceEntity, requestVO);
 
             // 返回失败信息给请求的来源
             return this.makeExceptionRespondVO(requestVO, e.getMessage());
@@ -163,7 +175,7 @@ public class DeviceExecuteController extends PeriodTaskService {
         }
     }
 
-    private void notifyDeviceTimeOut(DeviceEntity deviceEntity,OperateRequestVO requestVO) {
+    private void notifyDeviceTimeOut(DeviceEntity deviceEntity, OperateRequestVO requestVO) {
         if (deviceEntity == null) {
             return;
         }

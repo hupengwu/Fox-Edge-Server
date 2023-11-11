@@ -59,7 +59,7 @@ public class ServerInitializer {
     }
 
     private ChannelFuture connectSouth(String remoteHost, int remotePort, SouthChannelHandler southChannelHandler) {
-        NettyTcpClientFactory factory = NettyTcpClientFactory.getInstance();
+        NettyTcpClientFactory factory = NettyTcpClientFactory.newInstance();
         factory.getChannelInitializer().setChannelHandler(southChannelHandler);
 
         return factory.createClient(remoteHost, remotePort);

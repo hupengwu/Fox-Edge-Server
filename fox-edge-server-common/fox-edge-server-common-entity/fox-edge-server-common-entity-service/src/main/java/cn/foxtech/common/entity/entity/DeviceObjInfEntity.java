@@ -24,6 +24,10 @@ public class DeviceObjInfEntity extends BaseEntity {
      */
     private String deviceType;
     /**
+     * 设备参数
+     */
+    private String manufacturer;
+    /**
      * 对象名称
      */
     private String objectName;
@@ -39,6 +43,7 @@ public class DeviceObjInfEntity extends BaseEntity {
      */
     public List<Object> makeServiceKeyList() {
         List<Object> list = new ArrayList<>();
+        list.add(this.manufacturer);
         list.add(this.deviceType);
         list.add(this.objectName);
 
@@ -53,6 +58,7 @@ public class DeviceObjInfEntity extends BaseEntity {
     public Object makeWrapperKey() {
         QueryWrapper queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("device_type", this.deviceType);
+        queryWrapper.eq("manufacturer", this.manufacturer);
         queryWrapper.eq("object_name", this.objectName);
 
         return queryWrapper;
@@ -72,6 +78,7 @@ public class DeviceObjInfEntity extends BaseEntity {
 
     public void bind(DeviceObjInfEntity other) {
         this.deviceType = other.deviceType;
+        this.manufacturer = other.manufacturer;
         this.objectName = other.objectName;
         this.valueType = other.valueType;
 

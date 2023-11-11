@@ -1,6 +1,7 @@
 package cn.foxtech.device.service.service;
 
 import cn.foxtech.common.entity.constant.Constants;
+import cn.foxtech.common.entity.constant.OperateVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.ConfigEntity;
 import cn.foxtech.common.entity.entity.OperateMethodEntity;
@@ -98,9 +99,9 @@ public class MethodEntityService {
     }
 
     private List<BaseEntity> buildMethodEntityList() {
-        Map<String, Map<String, FoxEdgeExchangeMethod>> operateMethod = FoxEdgeMethodTemplate.inst().getExchangeMethod();
-        Map<String, Map<String, FoxEdgePublishMethod>> publishMethod = FoxEdgeMethodTemplate.inst().getPublishMethod();
-        Map<String, Map<String, FoxEdgeReportMethod>> reportMethod = FoxEdgeMethodTemplate.inst().getReportMethod();
+        Map<String, Object> operateMethod = FoxEdgeMethodTemplate.inst().getExchangeMethod();
+        Map<String, Object> publishMethod = FoxEdgeMethodTemplate.inst().getPublishMethod();
+        Map<String, Object> reportMethod = FoxEdgeMethodTemplate.inst().getReportMethod();
 
         List<BaseEntity> methodEntityList = new ArrayList<>();
         methodEntityList.addAll(this.buildExchangeMethod(operateMethod));
@@ -113,28 +114,32 @@ public class MethodEntityService {
     /**
      * 保存OperateEntity信息
      */
-    private List<OperateMethodEntity> buildExchangeMethod(Map<String, Map<String, FoxEdgeExchangeMethod>> methodPairs) {
+    private List<OperateMethodEntity> buildExchangeMethod(Map<String, Object> manufacturerMap) {
         Long time = System.currentTimeMillis();
 
         List<OperateMethodEntity> resultList = new ArrayList<>();
-        for (Map.Entry<String, Map<String, FoxEdgeExchangeMethod>> deviceEntity : methodPairs.entrySet()) {
-            Map<String, FoxEdgeExchangeMethod> methodpairs = deviceEntity.getValue();
-            for (Map.Entry<String, FoxEdgeExchangeMethod> entity : methodpairs.entrySet()) {
-                FoxEdgeExchangeMethod methodPair = entity.getValue();
+        for (String manufacturer : manufacturerMap.keySet()) {
+            Map<String, Object> deviceTypeMap = (Map<String, Object>) manufacturerMap.get(manufacturer);
+            for (String deviceType : deviceTypeMap.keySet()) {
+                Map<String, FoxEdgeExchangeMethod> methodPairMap = (Map<String, FoxEdgeExchangeMethod>) deviceTypeMap.get(deviceType);
+                for (String method : methodPairMap.keySet()) {
+                    FoxEdgeExchangeMethod methodPair = methodPairMap.get(method);
 
-                OperateMethodEntity methodEntity = new OperateMethodEntity();
+                    OperateMethodEntity methodEntity = new OperateMethodEntity();
 
-                methodEntity.setManufacturer(methodPair.getManufacturer());
-                methodEntity.setDeviceType(methodPair.getDeviceType());
-                methodEntity.setOperateName(methodPair.getName());
-                methodEntity.setDataType(methodPair.getMode());
-                methodEntity.setOperateMode(Constants.OPERATE_MODE_EXCHANGE);
-                methodEntity.setTimeout(methodPair.getTimeout());
-                methodEntity.setPolling(methodPair.isPolling());
-                methodEntity.setCreateTime(time);
-                methodEntity.setUpdateTime(time);
+                    methodEntity.setEngineType(OperateVOFieldConstant.value_engine_java);
+                    methodEntity.setManufacturer(methodPair.getManufacturer());
+                    methodEntity.setDeviceType(methodPair.getDeviceType());
+                    methodEntity.setOperateName(methodPair.getName());
+                    methodEntity.setDataType(methodPair.getMode());
+                    methodEntity.setOperateMode(Constants.OPERATE_MODE_EXCHANGE);
+                    methodEntity.setTimeout(methodPair.getTimeout());
+                    methodEntity.setPolling(methodPair.isPolling());
+                    methodEntity.setCreateTime(time);
+                    methodEntity.setUpdateTime(time);
 
-                resultList.add(methodEntity);
+                    resultList.add(methodEntity);
+                }
             }
         }
 
@@ -144,58 +149,66 @@ public class MethodEntityService {
     /**
      * 保存OperateEntity信息
      */
-    private List<OperateMethodEntity> buildPublishMethod(Map<String, Map<String, FoxEdgePublishMethod>> methodPairs) {
+    private List<OperateMethodEntity> buildPublishMethod(Map<String, Object> manufacturerMap) {
 
         Long time = System.currentTimeMillis();
 
         List<OperateMethodEntity> resultList = new ArrayList<>();
 
-        for (Map.Entry<String, Map<String, FoxEdgePublishMethod>> deviceEntity : methodPairs.entrySet()) {
-            Map<String, FoxEdgePublishMethod> methodpairs = deviceEntity.getValue();
-            for (Map.Entry<String, FoxEdgePublishMethod> entity : methodpairs.entrySet()) {
-                FoxEdgePublishMethod methodPair = entity.getValue();
+        for (String manufacturer : manufacturerMap.keySet()) {
+            Map<String, Object> deviceTypeMap = (Map<String, Object>) manufacturerMap.get(manufacturer);
+            for (String deviceType : deviceTypeMap.keySet()) {
+                Map<String, FoxEdgePublishMethod> methodMap = (Map<String, FoxEdgePublishMethod>) deviceTypeMap.get(deviceType);
+                for (String method : methodMap.keySet()) {
+                    FoxEdgePublishMethod methodPair = methodMap.get(method);
 
-                OperateMethodEntity methodEntity = new OperateMethodEntity();
+                    OperateMethodEntity methodEntity = new OperateMethodEntity();
 
-                methodEntity.setManufacturer(methodPair.getManufacturer());
-                methodEntity.setDeviceType(methodPair.getDeviceType());
-                methodEntity.setOperateName(methodPair.getName());
-                methodEntity.setOperateMode(Constants.OPERATE_MODE_PUBLISH);
-                methodEntity.setTimeout(methodPair.getTimeout());
-                methodEntity.setPolling(methodPair.isPolling());
-                methodEntity.setCreateTime(time);
-                methodEntity.setUpdateTime(time);
+                    methodEntity.setEngineType(OperateVOFieldConstant.value_engine_java);
+                    methodEntity.setManufacturer(methodPair.getManufacturer());
+                    methodEntity.setDeviceType(methodPair.getDeviceType());
+                    methodEntity.setOperateName(methodPair.getName());
+                    methodEntity.setOperateMode(Constants.OPERATE_MODE_PUBLISH);
+                    methodEntity.setTimeout(methodPair.getTimeout());
+                    methodEntity.setPolling(methodPair.isPolling());
+                    methodEntity.setCreateTime(time);
+                    methodEntity.setUpdateTime(time);
 
-                resultList.add(methodEntity);
+                    resultList.add(methodEntity);
+                }
             }
         }
 
         return resultList;
     }
 
-    private List<OperateMethodEntity> buildReportMethod(Map<String, Map<String, FoxEdgeReportMethod>> methodPairs) {
+    private List<OperateMethodEntity> buildReportMethod(Map<String, Object> manufacturerMap) {
 
         Long time = System.currentTimeMillis();
 
         List<OperateMethodEntity> resultList = new ArrayList<>();
 
-        for (Map.Entry<String, Map<String, FoxEdgeReportMethod>> deviceEntity : methodPairs.entrySet()) {
-            Map<String, FoxEdgeReportMethod> methodpairs = deviceEntity.getValue();
-            for (Map.Entry<String, FoxEdgeReportMethod> entity : methodpairs.entrySet()) {
-                FoxEdgeReportMethod methodPair = entity.getValue();
+        for (String manufacturer : manufacturerMap.keySet()) {
+            Map<String, Object> deviceTypeMap = (Map<String, Object>) manufacturerMap.get(manufacturer);
+            for (String deviceType : deviceTypeMap.keySet()) {
+                Map<String, FoxEdgeReportMethod> methodMap = (Map<String, FoxEdgeReportMethod>) deviceTypeMap.get(deviceType);
+                for (String method : methodMap.keySet()) {
+                    FoxEdgeReportMethod methodPair = methodMap.get(method);
 
-                OperateMethodEntity methodEntity = new OperateMethodEntity();
+                    OperateMethodEntity methodEntity = new OperateMethodEntity();
 
-                methodEntity.setManufacturer(methodPair.getManufacturer());
-                methodEntity.setDeviceType(methodPair.getDeviceType());
-                methodEntity.setOperateName(methodPair.getName());
-                methodEntity.setOperateMode(Constants.OPERATE_MODE_REPORT);
-                methodEntity.setTimeout(0);
-                methodEntity.setPolling(false);
-                methodEntity.setCreateTime(time);
-                methodEntity.setUpdateTime(time);
+                    methodEntity.setEngineType(OperateVOFieldConstant.value_engine_java);
+                    methodEntity.setManufacturer(methodPair.getManufacturer());
+                    methodEntity.setDeviceType(methodPair.getDeviceType());
+                    methodEntity.setOperateName(methodPair.getName());
+                    methodEntity.setOperateMode(Constants.OPERATE_MODE_REPORT);
+                    methodEntity.setTimeout(0);
+                    methodEntity.setPolling(false);
+                    methodEntity.setCreateTime(time);
+                    methodEntity.setUpdateTime(time);
 
-                resultList.add(methodEntity);
+                    resultList.add(methodEntity);
+                }
             }
         }
 

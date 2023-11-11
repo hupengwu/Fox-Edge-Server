@@ -44,6 +44,9 @@ public class TriggerStatusManageController {
                 if (body.containsKey("deviceType")) {
                     result &= entity.getDeviceType().equals(body.get("deviceType"));
                 }
+                if (body.containsKey("manufacturer")) {
+                    result &= entity.getManufacturer().equals(body.get("manufacturer"));
+                }
                 if (body.containsKey("triggerModelName")) {
                     // 包含指定字符串
                     result &= entity.getTriggerModelName().indexOf((String) body.get("triggerModelName")) != -1;

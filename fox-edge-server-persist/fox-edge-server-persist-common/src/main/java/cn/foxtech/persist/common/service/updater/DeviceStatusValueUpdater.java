@@ -80,14 +80,14 @@ public class DeviceStatusValueUpdater {
      * @return 加工的数值
      */
     private Map<String, Object> mappingStatusValues(DeviceEntity deviceEntity, Map<String, Object> statusValues) {
-        if (this.deviceObjectMapper.getValue(deviceEntity.getDeviceType()) == null) {
+        if (this.deviceObjectMapper.getValue(deviceEntity.getManufacturer(), deviceEntity.getDeviceType()) == null) {
             return statusValues;
         }
 
 
         Map<String, Object> result = new HashMap<>();
         for (String key : statusValues.keySet()) {
-            Pair<String, Integer> mapper = this.deviceObjectMapper.getValue(deviceEntity.getDeviceType(), key);
+            Pair<String, Integer> mapper = this.deviceObjectMapper.getValue(deviceEntity.getManufacturer(), deviceEntity.getDeviceType(), key);
 
             // 如果没有该配置，那么沿用原来的数值
             if (mapper == null) {
@@ -138,6 +138,7 @@ public class DeviceStatusValueUpdater {
         valueEntity.setId(deviceEntity.getId());
         valueEntity.setDeviceName(deviceEntity.getDeviceName());
         valueEntity.setDeviceType(deviceEntity.getDeviceType());
+        valueEntity.setManufacturer(deviceEntity.getManufacturer());
         for (String key : statusValues.keySet()) {
             DeviceObjectValue deviceObjectValue = new DeviceObjectValue();
             deviceObjectValue.setValue(statusValues.get(key));
@@ -163,10 +164,11 @@ public class DeviceStatusValueUpdater {
         for (String key : statusValues.keySet()) {
             DeviceObjInfEntity entity = new DeviceObjInfEntity();
             entity.setDeviceType(deviceEntity.getDeviceType());
+            entity.setManufacturer(deviceEntity.getManufacturer());
             entity.setObjectName(key);
 
             Object value = statusValues.get(key);
-            if (value != null){
+            if (value != null) {
                 entity.setValueType(value.getClass().getSimpleName());
             }
 
@@ -185,7 +187,7 @@ public class DeviceStatusValueUpdater {
         if (existEntity == null) {
             // 将新增的数据，作为对象保存到数据库
             for (String key : valueEntity.getParams().keySet()) {
-                this.saveObjectEntity(valueEntity.getDeviceName(), valueEntity.getDeviceType(), key);
+                this.saveObjectEntity(valueEntity.getDeviceName(), valueEntity.getManufacturer(), valueEntity.getDeviceType(), key);
             }
 
             // 保存数据到redis
@@ -197,7 +199,7 @@ public class DeviceStatusValueUpdater {
             // 将新增的数据，作为对象保存到数据库
             for (String key : valueEntity.getParams().keySet()) {
                 if (!existEntity.getParams().containsKey(key)) {
-                    this.saveObjectEntity(valueEntity.getDeviceName(), valueEntity.getDeviceType(), key);
+                    this.saveObjectEntity(valueEntity.getDeviceName(), valueEntity.getManufacturer(), valueEntity.getDeviceType(), key);
                 }
             }
 
@@ -215,9 +217,10 @@ public class DeviceStatusValueUpdater {
         }
     }
 
-    private void saveObjectEntity(String deviceName, String deviceType, String objectName) {
+    private void saveObjectEntity(String deviceName, String manufacturer, String deviceType, String objectName) {
         DeviceObjectEntity deviceObjectEntity = new DeviceObjectEntity();
         deviceObjectEntity.setDeviceName(deviceName);
+        deviceObjectEntity.setManufacturer(manufacturer);
         deviceObjectEntity.setDeviceType(deviceType);
         deviceObjectEntity.setObjectName(objectName);
 

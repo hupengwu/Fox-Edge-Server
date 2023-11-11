@@ -8,7 +8,7 @@ import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-@FoxEdgeDeviceType(value = "LRW解码器")
+@FoxEdgeDeviceType(value = "LRW解码器", manufacturer = "Fox-Edge")
 public class LRWProtocolGetVersion extends LRWProtocolFrame {
     @FoxEdgeOperate(name = "检查版本号", polling = true, type = FoxEdgeOperate.encoder)
     public static String encodePackVersion(Map<String, Object> param) {

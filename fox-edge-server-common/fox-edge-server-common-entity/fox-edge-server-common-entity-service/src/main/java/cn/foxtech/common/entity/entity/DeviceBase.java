@@ -20,6 +20,11 @@ public class DeviceBase extends BaseEntity {
      */
     private String deviceType;
 
+    /**
+     * 设备厂商名称
+     */
+    private String manufacturer;
+
 
     /**
      * 通道名称：连接设备的服务名，比如"serialport"
@@ -63,6 +68,7 @@ public class DeviceBase extends BaseEntity {
     public List<Object> makeServiceValueList() {
         List<Object> list = new ArrayList<>();
         list.add(this.deviceType);
+        list.add(this.manufacturer);
         list.add(this.channelName);
         list.add(this.channelType);
         return list;
@@ -75,6 +81,7 @@ public class DeviceBase extends BaseEntity {
 
         this.deviceName = other.deviceName;
         this.deviceType = other.deviceType;
+        this.manufacturer = other.manufacturer;
         this.channelType = other.channelType;
         this.channelName = other.channelName;
     }

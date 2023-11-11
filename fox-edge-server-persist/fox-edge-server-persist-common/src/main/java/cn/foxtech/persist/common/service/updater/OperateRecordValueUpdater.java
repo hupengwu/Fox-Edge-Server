@@ -22,6 +22,7 @@ public class OperateRecordValueUpdater {
         OperateRecordEntity recordEntity = new OperateRecordEntity();
         recordEntity.setDeviceName(operateRespondVO.getDeviceName());
         recordEntity.setDeviceType(operateRespondVO.getDeviceType());
+        recordEntity.setManufacturer(operateRespondVO.getManufacturer());
         recordEntity.setRecordName(operateRespondVO.getOperateName());
         recordEntity.setClientModel(clientName);
         recordEntity.setOperateUuid(operateRespondVO.getUuid());

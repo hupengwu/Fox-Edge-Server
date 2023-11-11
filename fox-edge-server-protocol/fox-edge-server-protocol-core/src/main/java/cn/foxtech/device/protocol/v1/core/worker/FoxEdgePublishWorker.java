@@ -1,9 +1,9 @@
 package cn.foxtech.device.protocol.v1.core.worker;
 
-import cn.foxtech.device.protocol.v1.core.method.FoxEdgeMethodTemplate;
-import cn.foxtech.device.protocol.v1.core.method.FoxEdgePublishMethod;
 import cn.foxtech.device.protocol.v1.core.channel.FoxEdgeChannelService;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
+import cn.foxtech.device.protocol.v1.core.method.FoxEdgeMethodTemplate;
+import cn.foxtech.device.protocol.v1.core.method.FoxEdgePublishMethod;
 
 import javax.naming.CommunicationException;
 import java.lang.reflect.InvocationTargetException;
@@ -14,6 +14,7 @@ public class FoxEdgePublishWorker {
      * 对设备进行操作
      *
      * @param deviceName     设备名称
+     * @param manufacturer   设备厂商
      * @param deviceType     设备类型
      * @param operateName    操作名称
      * @param params         参数表
@@ -22,12 +23,12 @@ public class FoxEdgePublishWorker {
      * @throws ProtocolException      业务异常，比如找不到解码器
      * @throws CommunicationException 通信异常
      */
-    public static void publish(String deviceName, String deviceType, String operateName, Map<String, Object> params, int timeout, FoxEdgeChannelService channelService) throws ProtocolException, CommunicationException {
+    public static void publish(String deviceName, String manufacturer, String deviceType, String operateName, Map<String, Object> params, int timeout, FoxEdgeChannelService channelService) throws ProtocolException, CommunicationException {
         try {
             // 根据设备类型查找编码器集合
-            Map<String, FoxEdgePublishMethod> methodPairs = FoxEdgeMethodTemplate.inst().getPublishMethod().get(deviceType);
+            Map<String, FoxEdgePublishMethod> methodPairs = FoxEdgeMethodTemplate.inst().getPublishMethod(manufacturer, deviceType);
             if (methodPairs == null) {
-                throw new ProtocolException("找不到对应设备类型的编码器：" + deviceType);
+                throw new ProtocolException("找不到对应设备类型的编码器：" + manufacturer + ":" + deviceType);
             }
 
             // 根据操作名称，获得对应的编码/解码函数

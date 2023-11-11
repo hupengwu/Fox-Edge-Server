@@ -2,7 +2,9 @@ package cn.foxtech.common.entity.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,10 @@ public class ProbePo extends BaseEntity {
      * 设备类型
      */
     private String deviceType;
+    /**
+     * 设备厂商
+     */
+    private String manufacturer;
 
     /**
      * 操作命令
@@ -45,10 +51,7 @@ public class ProbePo extends BaseEntity {
      */
     public List<Object> makeServiceKeyList() {
         List<Object> list = new ArrayList<>();
-        list.add(this.deviceName);
-        list.add(this.deviceType);
-        list.add(this.operateName);
-        list.add(this.operateParam);
+        list.add(this.getId());
 
 
         return list;
@@ -61,10 +64,7 @@ public class ProbePo extends BaseEntity {
      */
     public Object makeWrapperKey() {
         QueryWrapper queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("device_name", this.deviceName);
-        queryWrapper.eq("device_type", this.deviceType);
-        queryWrapper.eq("operate_name", this.operateName);
-        queryWrapper.eq("operate_param", this.operateParam);
+        queryWrapper.eq("id", this.getId());
 
         return queryWrapper;
     }
@@ -76,6 +76,11 @@ public class ProbePo extends BaseEntity {
      */
     public List<Object> makeServiceValueList() {
         List<Object> list = new ArrayList<>();
+        list.add(this.deviceName);
+        list.add(this.deviceType);
+        list.add(this.manufacturer);
+        list.add(this.operateName);
+        list.add(this.operateParam);
         list.add(this.operatePeriod);
         return list;
     }

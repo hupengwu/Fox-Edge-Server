@@ -158,6 +158,7 @@ public class CollectorExchangeService extends PeriodTaskService {
                 // 单个设备的操作
                 OperateRequestVO operateRequestVO = JsonUtils.buildObject(param, OperateRequestVO.class);
                 operateRequestVO.setDeviceType(deviceEntity.getDeviceType());
+                operateRequestVO.setManufacturer(deviceEntity.getManufacturer());
                 operateRequestVO.setDeviceName(deviceEntity.getDeviceName());
                 operateRequestVO.setUuid(UUID.randomUUID().toString().replace("-", ""));
 

@@ -78,6 +78,11 @@ public class LinkerMethodScanner {
         }
     }
 
+    /**
+     * 需要测试的代码
+     * @param pack 包名称
+     * @return 返回值
+     */
     public Map<String, LinkerMethodEntity> scanMethod(String pack) {
         Map<String, LinkerMethodEntity> result = new HashMap<>();
 

@@ -1,8 +1,9 @@
 package cn.foxtech.common.entity.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +12,6 @@ import java.util.Map;
 
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
-@TableName("tb_trigger_value")
 public class TriggerStatusEntity extends BaseEntity {
     /**
      * 设备名称
@@ -22,6 +22,10 @@ public class TriggerStatusEntity extends BaseEntity {
      * 设备类型名
      */
     private String deviceType;
+    /**
+     * 设备厂商
+     */
+    private String manufacturer;
 
     /**
      * 加工出它的触发器ID
@@ -95,6 +99,7 @@ public class TriggerStatusEntity extends BaseEntity {
         list.add(this.params);
         list.add(this.values);
         list.add(this.deviceType);
+        list.add(this.manufacturer);
         return list;
     }
 }

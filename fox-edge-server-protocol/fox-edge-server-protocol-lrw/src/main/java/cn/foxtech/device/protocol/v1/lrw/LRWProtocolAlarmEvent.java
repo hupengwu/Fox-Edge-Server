@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 告警通知的范例
  */
-@FoxEdgeDeviceType(value = "LRW解码器")
+@FoxEdgeDeviceType(value = "LRW解码器", manufacturer = "Fox-Edge")
 public class LRWProtocolAlarmEvent extends LRWProtocolFrame {
 
     /**

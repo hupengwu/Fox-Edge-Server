@@ -27,6 +27,11 @@ public class DeviceValueEntity extends BaseEntity {
     private String deviceType;
 
     /**
+     * 设备参数
+     */
+    private String manufacturer;
+
+    /**
      * 配置集合
      */
     private Map<String, DeviceObjectValue> params = new HashMap<>();
@@ -42,6 +47,7 @@ public class DeviceValueEntity extends BaseEntity {
 
         String deviceName = (String) deviceValueMap.get(DeviceValueVOFieldConstant.field_device_name);
         String deviceType = (String) deviceValueMap.get(DeviceValueVOFieldConstant.field_device_type);
+        String manufacturer = (String) deviceValueMap.get(DeviceValueVOFieldConstant.field_manufacturer);
 
         Map<String, DeviceObjectValue> params = new HashMap<>();
         Map<String, Map<String, Object>> values = (Map<String, Map<String, Object>>) deviceValueMap.getOrDefault(DeviceValueVOFieldConstant.field_params, new HashMap<>());
@@ -65,6 +71,7 @@ public class DeviceValueEntity extends BaseEntity {
         valueEntity.setUpdateTime(updateTime);
         valueEntity.setDeviceName(deviceName);
         valueEntity.setDeviceType(deviceType);
+        valueEntity.setManufacturer(manufacturer);
         valueEntity.setParams(params);
 
 
@@ -120,6 +127,7 @@ public class DeviceValueEntity extends BaseEntity {
         List<Object> list = new ArrayList<>();
         list.add(this.params);
         list.add(this.deviceType);
+        list.add(this.manufacturer);
         return list;
     }
 
@@ -130,6 +138,7 @@ public class DeviceValueEntity extends BaseEntity {
 
         this.deviceName = other.deviceName;
         this.deviceType = other.deviceType;
+        this.manufacturer = other.manufacturer;
         this.params = other.params;
     }
 }

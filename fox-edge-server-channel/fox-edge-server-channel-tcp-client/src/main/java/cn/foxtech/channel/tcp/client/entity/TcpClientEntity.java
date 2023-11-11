@@ -28,9 +28,9 @@ public class TcpClientEntity {
      */
     private SplitMessageHandler splitMessageHandler;
     /**
-     * 设备在报文中夹带的身份特征
+     * 通道名称
      */
-    private String serviceKey;
+    private String channelName;
     /**
      * 双工模式：全双工/半双工
      */

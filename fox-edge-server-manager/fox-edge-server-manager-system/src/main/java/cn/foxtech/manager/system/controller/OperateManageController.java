@@ -46,8 +46,10 @@ public class OperateManageController {
     @PostMapping("option")
     public AjaxResult selectOptionList(@RequestBody Map<String, Object> body) {
         String deviceType = (String) body.get(OperateVOFieldConstant.field_device_type);
-        if (MethodUtils.hasEmpty(deviceType)) {
-            throw new ServiceException("参数缺失：deviceType");
+        String manufacturer = (String) body.get(OperateVOFieldConstant.field_manufacturer);
+        String operateName = (String) body.get(OperateVOFieldConstant.field_operate_name);
+        if (MethodUtils.hasEmpty(manufacturer)) {
+            throw new ServiceException("参数缺失：deviceType, manufacturer");
         }
 
         Set<String> operateModes = new HashSet<>();
@@ -55,23 +57,37 @@ public class OperateManageController {
         operateModes.add(Constants.OPERATE_MODE_EXCHANGE);
 
         Map<String, Object> param = new HashMap<>();
-        param.put(OperateVOFieldConstant.field_device_type, deviceType);
+        param.put(OperateVOFieldConstant.field_manufacturer, manufacturer);
         param.put(OperateVOFieldConstant.field_operate_modes, operateModes);
+        if (!MethodUtils.hasEmpty(deviceType)) {
+            param.put(OperateVOFieldConstant.field_device_type, deviceType);
+        }
+        if (!MethodUtils.hasEmpty(operateName)) {
+            param.put(OperateVOFieldConstant.field_operate_name, operateName);
+        }
 
         // 转换为option格式
         AjaxResult ajxResult = this.selectEntityList(param, false);
         List<Map<String, Object>> data = (List<Map<String, Object>>) ajxResult.get("data");
-        if (!MethodUtils.hasEmpty(data)){
+        if (!MethodUtils.hasEmpty(data)) {
 
             List<Map<String, Object>> resultList = new ArrayList<>();
-            for (Map<String, Object> map:data){
+            for (Map<String, Object> map : data) {
                 Map<String, Object> result = new HashMap<>();
-                result.put("value",map.get(OperateVOFieldConstant.field_operate_name));
-                result.put("label",map.get(OperateVOFieldConstant.field_operate_name));
+
+                if (deviceType != null && operateName == null) {
+                    result.put("value", map.get(OperateVOFieldConstant.field_operate_name));
+                    result.put("label", map.get(OperateVOFieldConstant.field_operate_name));
+                }
+                if (deviceType != null && operateName != null) {
+                    result.put("value", map.get(OperateVOFieldConstant.field_operate_mode));
+                    result.put("label", map.get(OperateVOFieldConstant.field_operate_mode));
+                }
+
                 resultList.add(result);
             }
 
-            ajxResult.put("data",resultList);
+            ajxResult.put("data", resultList);
         }
 
         return ajxResult;
@@ -94,6 +110,9 @@ public class OperateManageController {
                 if (body.containsKey(OperateVOFieldConstant.field_device_type)) {
                     result = entity.getDeviceType().contains((String) body.get(OperateVOFieldConstant.field_device_type));
                 }
+                if (body.containsKey(OperateVOFieldConstant.field_manufacturer)) {
+                    result &= entity.getManufacturer().equals(body.get(OperateVOFieldConstant.field_manufacturer));
+                }
                 if (body.containsKey(OperateVOFieldConstant.field_operate_name)) {
                     result &= entity.getOperateName().equals(body.get(OperateVOFieldConstant.field_operate_name));
                 }
@@ -104,11 +123,11 @@ public class OperateManageController {
                     Set<String> operateModes = (Set<String>) body.get(OperateVOFieldConstant.field_operate_modes);
                     result &= operateModes.contains(entity.getOperateMode());
                 }
-                if (body.containsKey(OperateVOFieldConstant.field_manufacturer)) {
-                    result &= entity.getManufacturer().equals(body.get(OperateVOFieldConstant.field_manufacturer));
-                }
                 if (body.containsKey(OperateVOFieldConstant.field_data_type)) {
                     result &= entity.getDataType().equals(body.get(OperateVOFieldConstant.field_data_type));
+                }
+                if (body.containsKey(OperateVOFieldConstant.field_engine_type)) {
+                    result &= entity.getEngineType().equals(body.get(OperateVOFieldConstant.field_engine_type));
                 }
                 if (body.containsKey(OperateVOFieldConstant.field_polling)) {
                     result &= entity.getPolling().equals(body.get(OperateVOFieldConstant.field_polling));
@@ -159,24 +178,32 @@ public class OperateManageController {
         try {
             // 提取业务参数
             String deviceType = (String) params.get(OperateVOFieldConstant.field_device_type);
+            String manufacturer = (String) params.get(OperateVOFieldConstant.field_manufacturer);
             String operateName = (String) params.get(OperateVOFieldConstant.field_operate_name);
             String operateMode = (String) params.get(OperateVOFieldConstant.field_operate_mode);
-            String manufacturer = (String) params.get(OperateVOFieldConstant.field_manufacturer);
             String dataType = (String) params.get(OperateVOFieldConstant.field_data_type);
+            String engineType = (String) params.get(OperateVOFieldConstant.field_engine_type);
             Boolean polling = (Boolean) params.get(OperateVOFieldConstant.field_polling);
             Integer timeout = (Integer) params.get(OperateVOFieldConstant.field_timeout);
+            Map<String, Object> engineParam = (Map<String, Object>) params.get(OperateVOFieldConstant.field_engine_param);
+
 
             // 简单校验参数
-            if (MethodUtils.hasNull(deviceType, operateName, operateMode, manufacturer, dataType, polling, timeout)) {
-                return AjaxResult.error("参数不能为空:deviceType, operateName, operateMode, manufacturer, dataType, polling, timeout");
+            if (MethodUtils.hasEmpty(deviceType, operateName, operateMode, manufacturer, dataType, engineType, polling, timeout)) {
+                return AjaxResult.error("参数不能为空: deviceType, operateName, operateMode, manufacturer, dataType, engineType, polling, timeout");
+            }
+            if (MethodUtils.hasNull(engineParam)) {
+                return AjaxResult.error("参数不能为空: engineParam");
             }
 
             // 构造作为参数的实体
             OperateEntity entity = new OperateEntity();
             entity.setDeviceType(deviceType);
+            entity.setManufacturer(manufacturer);
+            entity.setEngineType(engineType);
+            entity.setEngineParam(engineParam);
             entity.setOperateName(operateName);
             entity.setOperateMode(operateMode);
-            entity.setManufacturer(manufacturer);
             entity.setDataType(dataType);
             entity.setPolling(polling);
             entity.setTimeout(timeout);

@@ -54,10 +54,12 @@ public class EntityUpdateService {
         try {
             String deviceName = operateRespondVO.getDeviceName();
             String deviceType = operateRespondVO.getDeviceType();
+            String manufacturer = operateRespondVO.getManufacturer();
 
             DeviceEntity deviceEntity = new DeviceEntity();
             deviceEntity.setDeviceName(deviceName);
             deviceEntity.setDeviceType(deviceType);
+            deviceEntity.setManufacturer(manufacturer);
 
             // 从redis直接读取设备实体：使用readHashMap是避免JSON转换，JSON的开销太大了，这里是高并发操作，难以忍受
             Map<String, Object> deviceMap = this.entityManageService.readHashMap(deviceEntity.makeServiceKey(), DeviceEntity.class);
@@ -84,7 +86,7 @@ public class EntityUpdateService {
 
             // 数据3: 设备的记录类数据
             List<Map<String, Object>> recordList = (List<Map<String, Object>>) deviceValues.get(FoxEdgeOperate.record);
-            this.deviceRecordValueUpdater.updateDeviceRecordValue(deviceName, deviceType, recordList);
+            this.deviceRecordValueUpdater.updateDeviceRecordValue(deviceName, manufacturer, deviceType, recordList);
 
             // 数据4: 用户的操作记录类数据
             this.operateRecordValueUpdater.updateOperateRecordValue(clientName, operateRespondVO);

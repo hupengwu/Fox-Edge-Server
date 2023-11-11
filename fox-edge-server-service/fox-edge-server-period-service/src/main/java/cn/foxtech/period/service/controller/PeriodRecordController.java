@@ -101,6 +101,7 @@ public class PeriodRecordController {
         List<Pair<String, String>> keypairs = new ArrayList<>();
         keypairs.add(new Pair<>(PeriodRecordVOFieldConstant.field_device_id, DeviceVOFieldConstant.field_id));
         extend.add(DeviceVOFieldConstant.field_device_name);
+        extend.add(DeviceVOFieldConstant.field_manufacturer);
         extend.add(DeviceVOFieldConstant.field_device_type);
         extend.add(DeviceVOFieldConstant.field_channel_name);
         extend.add(DeviceVOFieldConstant.field_channel_type);

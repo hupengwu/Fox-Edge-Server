@@ -19,6 +19,10 @@ public class OperateRecordBase extends BaseEntity {
      * 设备类型名
      */
     private String deviceType;
+    /**
+     * 设备厂商
+     */
+    private String manufacturer;
 
     /**
      * 事件名称
@@ -42,12 +46,7 @@ public class OperateRecordBase extends BaseEntity {
      */
     public List<Object> makeServiceKeyList() {
         List<Object> list = new ArrayList<>();
-        list.add(this.deviceName);
-        list.add(this.deviceType);
-        list.add(this.recordName);
-        list.add(this.clientModel);
-        list.add(this.operateUuid);
-
+        list.add(this.getId());
 
         return list;
     }
@@ -59,11 +58,7 @@ public class OperateRecordBase extends BaseEntity {
      */
     public Object makeWrapperKey() {
         QueryWrapper queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("device_name", this.deviceName);
-        queryWrapper.eq("device_type", this.deviceType);
-        queryWrapper.eq("record_name", this.recordName);
-        queryWrapper.eq("client_model", this.clientModel);
-        queryWrapper.eq("operate_uuid", this.operateUuid);
+        queryWrapper.eq("id", this.getId());
 
         return queryWrapper;
     }
@@ -80,6 +75,7 @@ public class OperateRecordBase extends BaseEntity {
 
     public void bind(OperateRecordBase other) {
         this.deviceName = other.deviceName;
+        this.manufacturer = other.manufacturer;
         this.deviceType = other.deviceType;
         this.recordName = other.recordName;
         this.clientModel = other.clientModel;

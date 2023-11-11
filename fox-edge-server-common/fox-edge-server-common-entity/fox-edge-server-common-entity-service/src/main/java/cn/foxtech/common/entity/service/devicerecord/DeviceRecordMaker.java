@@ -35,6 +35,7 @@ public class DeviceRecordMaker {
         DeviceRecordPo result = new DeviceRecordPo();
         result.setDeviceName(entity.getDeviceName());
         result.setDeviceType(entity.getDeviceType());
+        result.setManufacturer(entity.getManufacturer());
         result.setRecordName(entity.getRecordName());
 
 
@@ -50,6 +51,7 @@ public class DeviceRecordMaker {
         DeviceRecordEntity result = new DeviceRecordEntity();
         result.setDeviceName(entity.getDeviceName());
         result.setDeviceType(entity.getDeviceType());
+        result.setManufacturer(entity.getManufacturer());
         result.setRecordName(entity.getRecordName());
 
         result.setId(entity.getId());

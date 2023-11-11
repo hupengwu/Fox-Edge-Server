@@ -1,10 +1,10 @@
 package cn.foxtech.device.protocol.v1.core.worker;
 
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
-import cn.foxtech.device.protocol.v1.core.method.FoxEdgeExchangeMethod;
-import cn.foxtech.device.protocol.v1.core.method.FoxEdgeMethodTemplate;
 import cn.foxtech.device.protocol.v1.core.channel.FoxEdgeChannelService;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
+import cn.foxtech.device.protocol.v1.core.method.FoxEdgeExchangeMethod;
+import cn.foxtech.device.protocol.v1.core.method.FoxEdgeMethodTemplate;
 
 import javax.naming.CommunicationException;
 import java.lang.reflect.InvocationTargetException;
@@ -17,21 +17,22 @@ public class FoxEdgeExchangeWorker {
      * 对设备进行操作
      *
      * @param deviceName     设备名称
+     * @param manufacturer   生产厂商
      * @param deviceType     设备类型
      * @param operateName    操作名称
      * @param params         参数表
      * @param timeout        通信超时
      * @param channelService 通道服务
      * @return 结果集合
-     * @throws ProtocolException 业务异常，比如找不到解码器
+     * @throws ProtocolException      业务异常，比如找不到解码器
      * @throws CommunicationException 通信失败产生的异常
      */
-    public static Map<String, Object> exchange(String deviceName, String deviceType, String operateName, Map<String, Object> params, int timeout, FoxEdgeChannelService channelService) throws ProtocolException, CommunicationException {
+    public static Map<String, Object> exchange(String deviceName, String manufacturer, String deviceType, String operateName, Map<String, Object> params, int timeout, FoxEdgeChannelService channelService) throws ProtocolException, CommunicationException {
         try {
             // 根据设备类型查找解码器集合
-            Map<String, FoxEdgeExchangeMethod> methodPairs = FoxEdgeMethodTemplate.inst().getExchangeMethod().get(deviceType);
+            Map<String, FoxEdgeExchangeMethod> methodPairs = FoxEdgeMethodTemplate.inst().getExchangeMethod(manufacturer, deviceType);
             if (methodPairs == null) {
-                throw new ProtocolException("找不到对应设备类型的解码器：" + deviceType);
+                throw new ProtocolException("找不到对应设备类型的解码器：" + manufacturer + ":" + deviceType);
             }
 
             // 根据操作名称，获得对应的编码/解码函数

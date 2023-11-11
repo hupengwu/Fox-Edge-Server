@@ -12,6 +12,7 @@ import cn.foxtech.common.entity.service.devicemapping.DeviceMapperEntityService;
 import cn.foxtech.common.entity.service.devicemodel.DeviceModelEntityService;
 import cn.foxtech.common.entity.service.deviceobject.DeviceObjectEntityService;
 import cn.foxtech.common.entity.service.devicerecord.DeviceRecordEntityService;
+import cn.foxtech.common.entity.service.extendconfig.ExtendConfigEntityService;
 import cn.foxtech.common.entity.service.link.LinkEntityService;
 import cn.foxtech.common.entity.service.mybatis.BaseEntityService;
 import cn.foxtech.common.entity.service.operate.OperateEntityService;
@@ -19,7 +20,6 @@ import cn.foxtech.common.entity.service.operaterecord.OperateRecordEntityService
 import cn.foxtech.common.entity.service.operatetask.channel.OperateChannelTaskEntityService;
 import cn.foxtech.common.entity.service.operatetask.manual.OperateManualTaskEntityService;
 import cn.foxtech.common.entity.service.operatetask.monitor.OperateMonitorTaskEntityService;
-import cn.foxtech.common.entity.service.extendconfig.ExtendConfigEntityService;
 import cn.foxtech.common.entity.service.probe.ProbeEntityService;
 import cn.foxtech.common.entity.service.trigger.TriggerEntityService;
 import cn.foxtech.common.entity.service.triggerconfig.TriggerConfigService;
@@ -235,7 +235,7 @@ public class EntityManageService extends EntityServiceManager {
     private void instanceOption() {
         this.entityOptionManager.setOptionEntity(ChannelEntity.class.getSimpleName(), "tb_channel", new String[]{"channel_name", "channel_type"});
         this.entityOptionManager.setOptionEntity(LinkEntity.class.getSimpleName(), "tb_link", new String[]{"link_name", "link_type"});
-        this.entityOptionManager.setOptionEntity(OperateEntity.class.getSimpleName(), "tb_operate", new String[]{"device_type", "operate_name"});
+        this.entityOptionManager.setOptionEntity(OperateEntity.class.getSimpleName(), "tb_operate", new String[]{"manufacturer", "device_type", "operate_name", "engine_type"});
         this.entityOptionManager.setOptionEntity(DeviceEntity.class.getSimpleName(), "tb_device", new String[]{"device_type", "device_name", "channel_type", "channel_name"});
         this.entityOptionManager.setOptionEntity(TriggerEntity.class.getSimpleName(), "tb_trigger", new String[]{"model_name", "method_name"});
         this.entityOptionManager.setOptionEntity(TriggerConfigEntity.class.getSimpleName(), "tb_trigger_config", new String[]{"trigger_config_name", "object_range"});

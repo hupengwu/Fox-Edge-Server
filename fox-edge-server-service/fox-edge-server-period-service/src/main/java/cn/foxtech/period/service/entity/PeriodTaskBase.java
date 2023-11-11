@@ -22,6 +22,10 @@ public class PeriodTaskBase extends BaseEntity {
      * 设备类型
      */
     private String deviceType;
+    /**
+     * 设备厂商
+     */
+    private String manufacturer;
 
     /**
      * 是否指定设备
@@ -63,6 +67,7 @@ public class PeriodTaskBase extends BaseEntity {
      */
     public List<Object> makeServiceValueList() {
         List<Object> list = new ArrayList<>();
+        list.add(this.manufacturer);
         list.add(this.deviceType);
 
         return list;
@@ -70,6 +75,7 @@ public class PeriodTaskBase extends BaseEntity {
 
     public void bind(PeriodTaskBase other) {
         this.taskName = other.taskName;
+        this.manufacturer = other.manufacturer;
         this.deviceType = other.deviceType;
         this.selectDevice = other.selectDevice;
 

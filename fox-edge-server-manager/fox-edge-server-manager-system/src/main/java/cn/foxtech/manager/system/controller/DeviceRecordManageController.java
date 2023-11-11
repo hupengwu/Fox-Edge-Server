@@ -32,6 +32,7 @@ public class DeviceRecordManageController {
         // 提取业务参数
         String deviceName = (String) body.get(DeviceRecordVOFieldConstant.field_device_name);
         String deviceType = (String) body.get(DeviceRecordVOFieldConstant.field_device_type);
+        String manufacturer = (String) body.get(DeviceRecordVOFieldConstant.field_manufacturer);
         String recordName = (String) body.get(DeviceRecordVOFieldConstant.field_record_name);
         Integer pageNum = (Integer) body.get(DeviceRecordVOFieldConstant.field_page_num);
         Integer pageSize = (Integer) body.get(DeviceRecordVOFieldConstant.field_page_size);
@@ -47,6 +48,9 @@ public class DeviceRecordManageController {
         }
         if (deviceType != null) {
             sb.append(" (device_type = '").append(deviceType).append("') AND");
+        }
+        if (manufacturer != null) {
+            sb.append(" (manufacturer = '").append(manufacturer).append("') AND");
         }
         if (recordName != null) {
             sb.append(" (record_name = '").append(recordName).append("') AND");

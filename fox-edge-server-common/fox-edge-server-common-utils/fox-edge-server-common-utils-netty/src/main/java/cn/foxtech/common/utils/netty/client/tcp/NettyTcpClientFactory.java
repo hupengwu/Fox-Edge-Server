@@ -35,12 +35,17 @@ public class NettyTcpClientFactory {
                 .handler(this.channelInitializer);
     }
 
-    public static NettyTcpClientFactory getInstance() {
-        return instance;
+    /**
+     * 每一个端socket连接，独立使用一个handler
+     *
+     * @return
+     */
+    public static NettyTcpClientFactory newInstance() {
+        return new NettyTcpClientFactory();
     }
 
     public static void main(String[] args) {
-        NettyTcpClientFactory inst = NettyTcpClientFactory.getInstance();
+        NettyTcpClientFactory inst = NettyTcpClientFactory.newInstance();
         inst.getChannelInitializer().setChannelHandler(new SocketChannelHandler());
         inst.createClient("127.0.0.1", 8080);
         inst.createClient("127.0.0.1", 8081);
@@ -51,7 +56,7 @@ public class NettyTcpClientFactory {
         this.bootstrap.remoteAddress(remoteAddress);
         ChannelFuture channelFuture = this.bootstrap.connect().addListener(future -> {
             if (future.cause() != null) {
-              //  System.out.println(future.cause().getMessage());
+                //  System.out.println(future.cause().getMessage());
             }
         });
 

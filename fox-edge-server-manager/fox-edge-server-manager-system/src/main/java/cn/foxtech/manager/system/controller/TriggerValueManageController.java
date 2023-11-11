@@ -38,6 +38,7 @@ public class TriggerValueManageController {
         // 提取业务参数
         String deviceName = (String) body.get(TriggerValueVOFieldConstant.field_device_name);
         String deviceType = (String) body.get(TriggerValueVOFieldConstant.field_device_type);
+        String manufacturer = (String) body.get(TriggerValueVOFieldConstant.field_manufacturer);
         String objectName = (String) body.get(TriggerValueVOFieldConstant.field_object_name);
         String triggerConfigName = (String) body.get(TriggerValueVOFieldConstant.field_trigger_config_name);
         Integer pageNum = (Integer) body.get(TriggerValueVOFieldConstant.field_page_num);
@@ -54,6 +55,9 @@ public class TriggerValueManageController {
         }
         if (deviceType != null) {
             sb.append(" (device_type = '").append(deviceType).append("') AND");
+        }
+        if (manufacturer != null) {
+            sb.append(" (manufacturer = '").append(manufacturer).append("') AND");
         }
         if (objectName != null) {
             sb.append(" (object_name = '").append(objectName).append("') AND");

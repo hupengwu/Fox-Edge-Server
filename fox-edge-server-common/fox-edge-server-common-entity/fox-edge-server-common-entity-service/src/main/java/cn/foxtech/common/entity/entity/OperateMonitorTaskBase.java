@@ -20,6 +20,11 @@ public class OperateMonitorTaskBase extends BaseEntity {
     private String deviceType;
 
     /**
+     * 设备厂商
+     */
+    private String manufacturer;
+
+    /**
      * 业务Key：这个可能不是唯一的，不要用它查找唯一性数据，可以用它来筛选数据
      *
      * @return 业务Key
@@ -50,12 +55,14 @@ public class OperateMonitorTaskBase extends BaseEntity {
     public List<Object> makeServiceValueList() {
         List<Object> list = new ArrayList<>();
         list.add(this.deviceType);
+        list.add(this.manufacturer);
         return list;
     }
 
     public void bind(OperateMonitorTaskBase other) {
         this.templateName = other.templateName;
         this.deviceType = other.deviceType;
+        this.manufacturer = other.manufacturer;
 
 
         this.setId(other.getId());

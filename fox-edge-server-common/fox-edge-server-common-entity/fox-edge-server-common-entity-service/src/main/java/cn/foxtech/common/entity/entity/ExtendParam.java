@@ -15,7 +15,7 @@ public class ExtendParam {
     /**
      * 绑定的对象列表
      */
-    private Set<String> binds = new HashSet<>();
+    private Set<Object> binds = new HashSet<>();
     /**
      * 扩展的字段列表
      */

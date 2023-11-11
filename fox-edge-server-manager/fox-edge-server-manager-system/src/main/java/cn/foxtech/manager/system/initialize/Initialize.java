@@ -2,10 +2,8 @@ package cn.foxtech.manager.system.initialize;
 
 
 import cn.foxtech.common.entity.manager.RedisConsoleService;
-import cn.foxtech.common.process.ProcessUtils;
 import cn.foxtech.manager.common.initialize.CommonInitialize;
 import cn.foxtech.manager.system.scheduler.EntityManageScheduler;
-import cn.foxtech.manager.system.scheduler.Method2EntityScheduler;
 import cn.foxtech.manager.system.scheduler.PeriodTasksScheduler;
 import cn.foxtech.manager.system.scheduler.TopicManagerScheduler;
 import cn.foxtech.manager.system.service.EntityManageService;
@@ -28,10 +26,6 @@ public class Initialize implements CommandLineRunner {
     private CommonInitialize commonInitialize;
 
     @Autowired
-    private Method2EntityScheduler method2EntityScheduler;
-
-
-    @Autowired
     private TopicManagerScheduler topicManagerScheduler;
 
     @Autowired
@@ -48,9 +42,6 @@ public class Initialize implements CommandLineRunner {
 
         this.commonInitialize.initialize();
 
-        // 启动同步线程
-        this.method2EntityScheduler.schedule();
-
         // 装载数据实体
         this.entityManageService.instance();
         this.entityManageService.initLoadEntity();
@@ -58,10 +49,10 @@ public class Initialize implements CommandLineRunner {
         // 启动同步线程
         this.entityManageScheduler.schedule();
 
-
         // topic响应
         this.topicManagerScheduler.schedule();
 
+        // 启动周期性任务
         this.periodTasksScheduler.initialize();
         this.periodTasksScheduler.schedule();
 

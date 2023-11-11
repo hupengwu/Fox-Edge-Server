@@ -1,10 +1,10 @@
 package cn.foxtech.persist.common.service.updater;
 
 import cn.foxtech.common.entity.entity.BaseEntity;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import cn.foxtech.common.entity.entity.DeviceRecordEntity;
 import cn.foxtech.common.entity.service.devicerecord.DeviceRecordEntityService;
 import cn.foxtech.device.protocol.v1.core.constants.FoxEdgeConstant;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +33,7 @@ public class DeviceRecordValueUpdater {
      * @param deviceType 设备类型
      * @param recordList 记录信息
      */
-    public void updateDeviceRecordValue(String deviceName, String deviceType, List<Map<String, Object>> recordList) {
+    public void updateDeviceRecordValue(String deviceName, String manufacturer, String deviceType, List<Map<String, Object>> recordList) {
         if (recordList == null) {
             return;
         }
@@ -48,6 +48,7 @@ public class DeviceRecordValueUpdater {
             DeviceRecordEntity recordEntity = new DeviceRecordEntity();
             recordEntity.setDeviceName(deviceName);
             recordEntity.setDeviceType(deviceType);
+            recordEntity.setManufacturer(manufacturer);
             recordEntity.setRecordName(recordType);
 
             // MD5签名
