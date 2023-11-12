@@ -1,4 +1,4 @@
-package cn.foxtech.channel.tcp.server.service;
+package cn.foxtech.channel.udp.server.service;
 
 import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.common.service.EntityManageService;

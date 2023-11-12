@@ -19,9 +19,16 @@ public class DeviceMapperVOFieldConstant extends BaseVOFieldConstant {
      * replace    1  替换，例如将"对象1"重命名成“object 1”，只保留
      * duplicate  2  副本，例如为“对象1”新增一个"object 1"的副本，同时保留"对象1"
      * filter     3  过滤，例如将“对象1”剔除掉
+     * expend     4  展开，例如将“JSON格式的 obj1 JSON对象，展开为两个对象
+     *                  {"k":
+     *                      {"sk1":"sv1"},
+     *                      {"sk2":"sv2"}
+     *                  }
+     *                  展开为obj1_k_sk1和obj1_k_sk2两个对象，格式是以下划线分开
      */
     public static final int mapper_mode_original = 0;
     public static final int mapper_mode_replace = 1;
     public static final int mapper_mode_duplicate = 2;
     public static final int mapper_mode_filter = 3;
+    public static final int mapper_mode_expend = 4;
 }

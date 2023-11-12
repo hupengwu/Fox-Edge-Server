@@ -1,4 +1,4 @@
-package cn.foxtech.channel.tcp.server.service;
+package cn.foxtech.channel.udp.server.service;
 
 import io.netty.channel.ChannelHandlerContext;
 import org.springframework.stereotype.Component;

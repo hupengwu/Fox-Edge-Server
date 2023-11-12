@@ -1,4 +1,4 @@
-package cn.foxtech.channel.tcp.server.entity;
+package cn.foxtech.channel.udp.server.entity;
 
 import lombok.AccessLevel;
 import lombok.Getter;

@@ -49,7 +49,7 @@ public class HexUtils {
      * @return 16进制表示格式的字符串
      **/
     public static String byteArrayToHexString(byte[] byteArray) {
-        return byteArrayToHexString(byteArray, true);
+        return byteArrayToHexString(byteArray, false);
     }
 
     public static String byteArrayToHexString(byte[] byteArray, boolean blankz) {

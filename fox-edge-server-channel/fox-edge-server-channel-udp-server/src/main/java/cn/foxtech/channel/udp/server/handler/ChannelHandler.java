@@ -1,7 +1,7 @@
-package cn.foxtech.channel.tcp.server.handler;
+package cn.foxtech.channel.udp.server.handler;
 
-import cn.foxtech.channel.tcp.server.service.ChannelManager;
-import cn.foxtech.channel.tcp.server.service.ReportService;
+import cn.foxtech.channel.udp.server.service.ChannelManager;
+import cn.foxtech.channel.udp.server.service.ReportService;
 import cn.foxtech.common.utils.netty.handler.SocketChannelHandler;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler;

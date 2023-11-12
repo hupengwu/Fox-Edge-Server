@@ -1,4 +1,4 @@
-package cn.foxtech.channel.tcp.server.config;
+package cn.foxtech.channel.udp.server.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

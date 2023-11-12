@@ -1,7 +1,7 @@
-package cn.foxtech.channel.tcp.server.service;
+package cn.foxtech.channel.udp.server.service;
 
 import cn.foxtech.channel.common.properties.ChannelProperties;
-import cn.foxtech.channel.tcp.server.handler.ChannelHandler;
+import cn.foxtech.channel.udp.server.handler.ChannelHandler;
 import cn.foxtech.common.entity.manager.ConfigManageService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.netty.server.udp.NettyUdpServer;
@@ -10,6 +10,7 @@ import cn.foxtech.device.protocol.RootLocation;
 import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 import cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler;
 import cn.foxtech.device.protocol.v1.utils.netty.SplitMessageHandler;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,11 +24,13 @@ import java.util.Set;
  */
 @Component
 public class ServerInitializer {
+    private static final Logger logger = Logger.getLogger(ServerInitializer.class);
+
     /**
      * 日志
      */
     @Autowired
-    private RedisConsoleService logger;
+    private RedisConsoleService console;
 
     @Autowired
     private ChannelManager channelManager;
@@ -61,15 +64,17 @@ public class ServerInitializer {
      */
     public void startServers(Map<String, Object> configs) {
         try {
-            // 启动多个TCP 服务器
+            // 启动多个UDP 服务器
             List<Map<String, Object>> decoderList = (List<Map<String, Object>>) configs.get("decoderList");
             for (Map<String, Object> decoder : decoderList) {
-                // 启动一个TCP Server
-                this.startTcpServer(decoder);
+                // 启动一个UDP Server
+                this.startUdpServer(decoder);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            this.logger.error("scanJarFile出现异常:" + e.getMessage());
+            String message = "scanJarFile出现异常:" + e.getMessage();
+            logger.error(message);
+            this.console.error(message);
         }
     }
 
@@ -78,7 +83,7 @@ public class ServerInitializer {
      *
      * @param config 配置参数项目
      */
-    private void startTcpServer(Map<String, Object> config) {
+    private void startUdpServer(Map<String, Object> config) {
         try {
             List<Map<String, Object>> configList = (List<Map<String, Object>>) config.get("decoder");
             String splitHandler = (String) config.get("splitHandler");
@@ -107,7 +112,9 @@ public class ServerInitializer {
             // 取出keyHandler的java类
             Class keyHandlerClass = this.getKeyHandler(classSet, keyHandler);
             if (keyHandlerClass == null) {
-                this.logger.error("找不到keyHandler对应的JAVA类：" + splitHandler);
+                 String message = "找不到keyHandler对应的JAVA类：" + splitHandler;
+                logger.error(message);
+                this.console.error(message);
                 return;
             }
 
@@ -125,7 +132,9 @@ public class ServerInitializer {
             NettyUdpServer.createServer(serverPort, channelHandler);
         } catch (Exception e) {
             e.printStackTrace();
-            this.logger.error("startTcpServer 出现异常:" + e.getMessage());
+            String message = "startUdpServer 出现异常:" + e.getMessage();
+            logger.error(message);
+            this.console.error(message);
         }
     }
 

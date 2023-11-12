@@ -1,7 +1,7 @@
-package cn.foxtech.channel.tcp.server.initialize;
+package cn.foxtech.channel.udp.server.initialize;
 
 import cn.foxtech.channel.common.initialize.ChannelInitialize;
-import cn.foxtech.channel.tcp.server.service.ServerInitializer;
+import cn.foxtech.channel.udp.server.service.ServerInitializer;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

@@ -11,9 +11,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class DeviceStatusValueUpdater {
@@ -33,7 +31,6 @@ public class DeviceStatusValueUpdater {
     @Autowired
     private DeviceObjectMapper deviceObjectMapper;
 
-
     /**
      * 更新值状态数据
      *
@@ -47,11 +44,11 @@ public class DeviceStatusValueUpdater {
 
 
         try {
-            // 保存设备类型的结构化息
-            this.saveObjInfEntity(deviceEntity, statusValues);
-
-            // 对数值进行映射处理
+            // 预处理：对数值进行映射的处理
             Map<String, Object> mapperStatusValues = this.mappingStatusValues(deviceEntity, statusValues);
+
+            // 保存设备类型的结构化息
+            this.saveObjInfEntity(deviceEntity, mapperStatusValues);
 
             // 构建数值实体
             DeviceValueEntity valueEntity = this.buildValueEntity(deviceEntity, mapperStatusValues);
@@ -70,7 +67,6 @@ public class DeviceStatusValueUpdater {
             logger.error(e);
         }
     }
-
 
     /**
      * 对数据进行映射处理
@@ -118,9 +114,36 @@ public class DeviceStatusValueUpdater {
             if (mapper.getValue().equals(DeviceMapperVOFieldConstant.mapper_mode_filter)) {
                 continue;
             }
+
+            // 场景5：展开
+            if (mapper.getValue().equals(DeviceMapperVOFieldConstant.mapper_mode_expend)) {
+                Object value = statusValues.get(key);
+                if (value instanceof Map) {
+                    // 对Map的递归展开
+                    this.expendMapper((Map<String, Object>) statusValues.get(key), key, result);
+                } else {
+                    result.put(key, statusValues.get(key));
+                }
+                continue;
+            }
         }
 
         return result;
+    }
+
+    public void expendMapper(Map<String, Object> map, String path, Map<String, Object> expendMap) {
+        for (String key : map.keySet()) {
+            Object value = map.get(key);
+
+            String subKey = path + "_" + key;
+
+            if (value instanceof Map) {
+                expendMapper((Map<String, Object>) value, subKey, expendMap);
+            } else {
+                expendMap.put(subKey,value);
+            }
+
+        }
     }
 
     /**
