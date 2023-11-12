@@ -108,7 +108,7 @@ public class OperateManageController {
                 boolean result = true;
 
                 if (body.containsKey(OperateVOFieldConstant.field_device_type)) {
-                    result = entity.getDeviceType().contains((String) body.get(OperateVOFieldConstant.field_device_type));
+                    result &= entity.getDeviceType().contains((String) body.get(OperateVOFieldConstant.field_device_type));
                 }
                 if (body.containsKey(OperateVOFieldConstant.field_manufacturer)) {
                     result &= entity.getManufacturer().equals(body.get(OperateVOFieldConstant.field_manufacturer));
@@ -126,12 +126,16 @@ public class OperateManageController {
                 if (body.containsKey(OperateVOFieldConstant.field_data_type)) {
                     result &= entity.getDataType().equals(body.get(OperateVOFieldConstant.field_data_type));
                 }
+                if (body.containsKey(OperateVOFieldConstant.field_service_type)) {
+                    result &= entity.getServiceType().equals(body.get(OperateVOFieldConstant.field_service_type));
+                }
                 if (body.containsKey(OperateVOFieldConstant.field_engine_type)) {
                     result &= entity.getEngineType().equals(body.get(OperateVOFieldConstant.field_engine_type));
                 }
                 if (body.containsKey(OperateVOFieldConstant.field_polling)) {
                     result &= entity.getPolling().equals(body.get(OperateVOFieldConstant.field_polling));
                 }
+
 
                 return result;
             });
@@ -182,6 +186,7 @@ public class OperateManageController {
             String operateName = (String) params.get(OperateVOFieldConstant.field_operate_name);
             String operateMode = (String) params.get(OperateVOFieldConstant.field_operate_mode);
             String dataType = (String) params.get(OperateVOFieldConstant.field_data_type);
+            String serviceType = (String) params.get(OperateVOFieldConstant.field_service_type);
             String engineType = (String) params.get(OperateVOFieldConstant.field_engine_type);
             Boolean polling = (Boolean) params.get(OperateVOFieldConstant.field_polling);
             Integer timeout = (Integer) params.get(OperateVOFieldConstant.field_timeout);
@@ -189,8 +194,8 @@ public class OperateManageController {
 
 
             // 简单校验参数
-            if (MethodUtils.hasEmpty(deviceType, operateName, operateMode, manufacturer, dataType, engineType, polling, timeout)) {
-                return AjaxResult.error("参数不能为空: deviceType, operateName, operateMode, manufacturer, dataType, engineType, polling, timeout");
+            if (MethodUtils.hasEmpty(deviceType, operateName, operateMode, manufacturer, dataType, serviceType, engineType, polling, timeout)) {
+                return AjaxResult.error("参数不能为空: deviceType, operateName, operateMode, manufacturer, dataType, serviceType, engineType, polling, timeout");
             }
             if (MethodUtils.hasNull(engineParam)) {
                 return AjaxResult.error("参数不能为空: engineParam");
@@ -205,6 +210,7 @@ public class OperateManageController {
             entity.setOperateName(operateName);
             entity.setOperateMode(operateMode);
             entity.setDataType(dataType);
+            entity.setServiceType(serviceType);
             entity.setPolling(polling);
             entity.setTimeout(timeout);
 

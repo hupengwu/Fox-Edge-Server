@@ -45,13 +45,15 @@ public class DeviceStatusValueUpdater {
 
         try {
             // 预处理：对数值进行映射的处理
-            Map<String, Object> mapperStatusValues = this.mappingStatusValues(deviceEntity, statusValues);
+            statusValues = this.mappingStatusValues(deviceEntity, statusValues);
+            // 预处理：对预处理的结果，再进行一次预处理，达到二次映射的效果。
+            statusValues = this.mappingStatusValues(deviceEntity, statusValues);
 
             // 保存设备类型的结构化息
-            this.saveObjInfEntity(deviceEntity, mapperStatusValues);
+            this.saveObjInfEntity(deviceEntity, statusValues);
 
             // 构建数值实体
-            DeviceValueEntity valueEntity = this.buildValueEntity(deviceEntity, mapperStatusValues);
+            DeviceValueEntity valueEntity = this.buildValueEntity(deviceEntity, statusValues);
 
             // 从redis读取原有的数值实体
             Map<String, Object> existMap = this.entityManageService.readHashMap(valueEntity.makeServiceKey(), DeviceValueEntity.class);
@@ -61,7 +63,7 @@ public class DeviceStatusValueUpdater {
             this.saveValueEntity(existEntity, valueEntity);
 
             // 步骤2：将数值保存到历史记录
-            this.deviceHistoryEntityUpdater.saveHistoryEntity(existEntity, mapperStatusValues);
+            this.deviceHistoryEntityUpdater.saveHistoryEntity(existEntity, statusValues);
 
         } catch (Exception e) {
             logger.error(e);

@@ -40,6 +40,10 @@ public class OperateMethodBase extends BaseEntity {
      */
     private String engineType;
     /**
+     * 业务类型：device、channel
+     */
+    private String serviceType;
+    /**
      * 通信超时
      */
     private Integer timeout;
@@ -89,6 +93,7 @@ public class OperateMethodBase extends BaseEntity {
         list.add(this.operateMode);
         list.add(this.timeout);
         list.add(this.dataType);
+        list.add(this.serviceType);
         list.add(this.timeout);
         list.add(this.polling);
         return list;
@@ -100,6 +105,7 @@ public class OperateMethodBase extends BaseEntity {
         this.operateName = other.operateName;
         this.engineType = other.engineType;
         this.operateMode = other.operateMode;
+        this.serviceType = other.serviceType;
         this.dataType = other.dataType;
         this.timeout = other.timeout;
         this.polling = other.polling;
