@@ -1,5 +1,5 @@
 -- --------------------------------------------------------
--- 主机:                           192.168.1.6
+-- 主机:                           192.168.1.3
 -- 服务器版本:                        8.0.35-0ubuntu0.20.04.1 - (Ubuntu)
 -- 服务器操作系统:                      Linux
 -- HeidiSQL 版本:                  12.2.0.6576
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `tb_channel` (
   UNIQUE KEY `channel_name_channel_type` (`channel_name`,`channel_type`),
   KEY `channel_name` (`channel_name`),
   KEY `channel_type` (`channel_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `tb_config` (
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `service_name_service_type_config_name` (`service_name`,`service_type`,`config_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=210 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='该参数是由manage服务来配置，再给各个服务消费';
+) ENGINE=InnoDB AUTO_INCREMENT=211 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='该参数是由manage服务来配置，再给各个服务消费';
 
 -- 数据导出被取消选择。
 
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `tb_device` (
   UNIQUE KEY `device_name` (`device_name`),
   KEY `device_type` (`device_type`),
   KEY `manufacturer` (`manufacturer`)
-) ENGINE=InnoDB AUTO_INCREMENT=2227 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2229 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_history` (
   PRIMARY KEY (`id`),
   KEY `device_id` (`device_id`),
   KEY `object_name` (`object_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=106462902 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=107118302 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_mapper` (
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `device_type_manufacturer_object_name` (`device_type`,`manufacturer`,`object_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=450 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='对象重命名';
+) ENGINE=InnoDB AUTO_INCREMENT=485 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='对象重命名';
 
 -- 数据导出被取消选择。
 
@@ -146,7 +146,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_object` (
   KEY `device_name` (`device_name`),
   KEY `object_name` (`object_name`),
   KEY `manufacturer` (`manufacturer`)
-) ENGINE=InnoDB AUTO_INCREMENT=1327983 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='设备的一个个数据对象信息';
+) ENGINE=InnoDB AUTO_INCREMENT=1423632 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='设备的一个个数据对象信息';
 
 -- 数据导出被取消选择。
 
@@ -166,7 +166,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_record` (
   KEY `device_type` (`device_type`) USING BTREE,
   KEY `event_name` (`record_name`) USING BTREE,
   KEY `manufacturer` (`manufacturer`)
-) ENGINE=InnoDB AUTO_INCREMENT=236 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=239 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -224,6 +224,7 @@ CREATE TABLE IF NOT EXISTS `tb_operate` (
   `device_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '设备类型',
   `manufacturer` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '制造商',
   `engine_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '引擎类型',
+  `service_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '业务类型(Channel/Device)',
   `engine_param` json NOT NULL COMMENT '引擎参数（JSP脚本）',
   `operate_mode` varchar(16) NOT NULL COMMENT '操作模式',
   `data_type` varchar(8) NOT NULL COMMENT '数据类型（状态/记录）',
@@ -236,8 +237,9 @@ CREATE TABLE IF NOT EXISTS `tb_operate` (
   KEY `device_type` (`device_type`),
   KEY `operate_name` (`operate_name`),
   KEY `manufacturer` (`manufacturer`),
-  KEY `engine_type` (`engine_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=1024 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `engine_type` (`engine_type`),
+  KEY `service_type` (`service_type`)
+) ENGINE=InnoDB AUTO_INCREMENT=1042 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
