@@ -36,8 +36,18 @@ public class NettyTcpClientFactory {
     }
 
     /**
-     * 每一个端socket连接，独立使用一个handler
+     * 复用一个公共实例
+     * 注意，绑定到该工厂的SocketChannelHandler，也只能是一个。
      *
+     * @return
+     */
+    public static NettyTcpClientFactory getInstance() {
+        return instance;
+    }
+
+    /**
+     * 建立多个工厂，使用者自己来管理实例
+     * 此时每个客户端连接，各自绑定独立的handler
      * @return
      */
     public static NettyTcpClientFactory newInstance() {
@@ -45,7 +55,7 @@ public class NettyTcpClientFactory {
     }
 
     public static void main(String[] args) {
-        NettyTcpClientFactory inst = NettyTcpClientFactory.newInstance();
+        NettyTcpClientFactory inst = NettyTcpClientFactory.getInstance();
         inst.getChannelInitializer().setChannelHandler(new SocketChannelHandler());
         inst.createClient("127.0.0.1", 8080);
         inst.createClient("127.0.0.1", 8081);

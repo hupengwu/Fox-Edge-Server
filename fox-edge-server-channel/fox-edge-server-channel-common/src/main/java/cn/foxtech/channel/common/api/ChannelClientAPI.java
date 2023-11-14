@@ -166,11 +166,7 @@ public class ChannelClientAPI {
      * @throws ServiceException 异常信息
      */
     public List<ChannelRespondVO> receive() throws ServiceException {
-        try {
-            Thread.sleep(5 * 1000);
-        } catch (Exception e) {
-        }
-        return this.channelServerAPI.report();
+         return this.channelServerAPI.report();
     }
 
     /**

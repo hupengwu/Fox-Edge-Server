@@ -78,7 +78,7 @@ public class ChannelHandler extends SocketChannelHandler {
      * @param ctx 上下文
      */
     public void channelInactive(final ChannelHandlerContext ctx) {
-        this.channelManager.remove(ctx);
+        this.channelManager.remove(ctx.channel().remoteAddress());
 
         LOGGER.info("连接断开:" + ctx.channel().remoteAddress());
     }

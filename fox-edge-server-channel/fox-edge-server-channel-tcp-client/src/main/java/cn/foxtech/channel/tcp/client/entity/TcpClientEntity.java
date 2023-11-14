@@ -1,6 +1,7 @@
 package cn.foxtech.channel.tcp.client.entity;
 
 import cn.foxtech.channel.tcp.client.handler.ChannelHandler;
+import cn.foxtech.common.utils.netty.client.tcp.NettyTcpClientFactory;
 import cn.foxtech.device.protocol.v1.utils.netty.SplitMessageHandler;
 import io.netty.channel.ChannelFuture;
 import lombok.Getter;
@@ -39,6 +40,10 @@ public class TcpClientEntity {
      * 通道连接的Handler
      */
     private ChannelHandler channelHandler;
+    /**
+     * 独立的tcp客户端工厂
+     */
+    private NettyTcpClientFactory factory;
     /**
      * 南向TCP连接
      */

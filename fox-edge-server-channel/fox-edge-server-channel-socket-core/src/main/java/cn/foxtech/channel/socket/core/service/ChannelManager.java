@@ -38,14 +38,14 @@ public class ChannelManager {
         return this.skt2ctx.get(sktAddr);
     }
 
-    public void remove(ChannelHandlerContext ctx) {
-        String key = this.skt2key.get(ctx.channel().remoteAddress());
+    public void remove(SocketAddress sktAddr) {
+        String key = this.skt2key.get(sktAddr);
         if (key != null) {
             this.key2ctx.remove(key);
         }
 
-        this.skt2ctx.remove(ctx.channel().remoteAddress());
-        this.skt2key.remove(ctx.channel().remoteAddress());
+        this.skt2ctx.remove(sktAddr);
+        this.skt2key.remove(sktAddr);
     }
 
     public void remove(String serviceKey) {

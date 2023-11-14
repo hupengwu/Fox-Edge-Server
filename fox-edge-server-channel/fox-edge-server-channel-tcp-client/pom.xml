@@ -30,6 +30,13 @@
         <!-- 工具模块-->
         <dependency>
             <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-channel-socket-core</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
+        <!-- 工具模块-->
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-utils-hex</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
@@ -46,19 +53,19 @@
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-channel-domain</artifactId>
             <version>${fox-edge-server.version}</version>
-        </dependency>
+         </dependency>
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-utils-redis-topic</artifactId>
             <version>${fox-edge-server.version}</version>
-        </dependency>
+         </dependency>
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-utils-json</artifactId>
             <version>${fox-edge-server.version}</version>
-        </dependency>
+         </dependency>
 
         <dependency>
             <groupId>cn.fox-tech</groupId>

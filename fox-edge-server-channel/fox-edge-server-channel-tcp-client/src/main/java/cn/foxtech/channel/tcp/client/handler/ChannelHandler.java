@@ -1,7 +1,7 @@
 package cn.foxtech.channel.tcp.client.handler;
 
+import cn.foxtech.channel.socket.core.service.ChannelManager;
 import cn.foxtech.channel.tcp.client.entity.TcpClientEntity;
-import cn.foxtech.channel.tcp.client.service.ChannelManager;
 import cn.foxtech.channel.tcp.client.service.ReportService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.netty.handler.SocketChannelHandler;
@@ -88,8 +88,7 @@ public class ChannelHandler extends SocketChannelHandler {
         LOGGER.info(message);
         this.consoleService.info(message);
 
-        this.channelManager.remove(ctx);
-        this.channelManager.remove(ctx.channel().remoteAddress().toString());
+        this.channelManager.remove(ctx.channel().remoteAddress());
     }
 
     /**

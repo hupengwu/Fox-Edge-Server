@@ -3,10 +3,12 @@ package cn.foxtech.channel.tcp.client.service;
 import cn.foxtech.channel.common.api.ChannelServerAPI;
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
+import cn.foxtech.channel.socket.core.service.ChannelManager;
 import cn.foxtech.channel.tcp.client.entity.TcpClientEntity;
 import cn.foxtech.channel.tcp.client.handler.ChannelHandler;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.method.MethodUtils;
+import cn.foxtech.common.utils.netty.client.tcp.NettyTcpClientFactory;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.device.protocol.v1.utils.netty.SplitMessageHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -111,11 +113,22 @@ public class ChannelService extends ChannelServerAPI {
         entity.setSplitMessageHandler(splitMessageHandlerInstance);
         entity.setChannelName(channelName);
 
-        entity.setChannelHandler(new ChannelHandler());
-        entity.getChannelHandler().setReportService(this.reportService);
-        entity.getChannelHandler().setChannelManager(this.channelManager);
-        entity.getChannelHandler().setConsoleService(this.consoleService);
-        entity.getChannelHandler().setEntity(entity);
+        // 分配一个ChannelHandler
+        ChannelHandler channelHandler = new ChannelHandler();
+        channelHandler.setReportService(this.reportService);
+        channelHandler.setChannelManager(this.channelManager);
+        channelHandler.setConsoleService(this.consoleService);
+        channelHandler.setEntity(entity);
+
+        // 分配一个NettyTcpClientFactory
+        NettyTcpClientFactory factory = NettyTcpClientFactory.newInstance();
+        factory.getChannelInitializer().setChannelHandler(channelHandler);
+        factory.getChannelInitializer().setSplitMessageHandler(entity.getSplitMessageHandler());
+
+        // 记录信息
+        entity.setChannelHandler(channelHandler);
+        entity.setFactory(factory);
+
         return entity;
     }
 
@@ -136,11 +149,22 @@ public class ChannelService extends ChannelServerAPI {
         entity.setSplitMessageHandler(null);
         entity.setChannelName(channelName);
 
-        entity.setChannelHandler(new ChannelHandler());
-        entity.getChannelHandler().setReportService(this.reportService);
-        entity.getChannelHandler().setChannelManager(this.channelManager);
-        entity.getChannelHandler().setConsoleService(this.consoleService);
-        entity.getChannelHandler().setEntity(entity);
+        // 分配一个ChannelHandler
+        ChannelHandler channelHandler = new ChannelHandler();
+        channelHandler.setReportService(this.reportService);
+        channelHandler.setChannelManager(this.channelManager);
+        channelHandler.setConsoleService(this.consoleService);
+        channelHandler.setEntity(entity);
+
+        // 分配一个NettyTcpClientFactory
+        NettyTcpClientFactory factory = NettyTcpClientFactory.newInstance();
+        factory.getChannelInitializer().setChannelHandler(channelHandler);
+        factory.getChannelInitializer().setSplitMessageHandler(entity.getSplitMessageHandler());
+
+        // 记录信息
+        entity.setChannelHandler(channelHandler);
+        entity.setFactory(factory);
+
         return entity;
     }
 

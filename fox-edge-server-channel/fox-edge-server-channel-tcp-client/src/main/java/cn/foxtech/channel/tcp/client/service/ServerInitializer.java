@@ -1,12 +1,11 @@
 package cn.foxtech.channel.tcp.client.service;
 
 import cn.foxtech.channel.common.properties.ChannelProperties;
+import cn.foxtech.channel.socket.core.service.ChannelManager;
 import cn.foxtech.channel.tcp.client.entity.TcpClientEntity;
-import cn.foxtech.channel.tcp.client.handler.ChannelHandler;
 import cn.foxtech.common.entity.manager.LocalConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.file.FileNameUtils;
-import cn.foxtech.common.utils.netty.client.tcp.NettyTcpClientFactory;
 import cn.foxtech.common.utils.reflect.JarLoaderUtils;
 import cn.foxtech.device.protocol.RootLocation;
 import cn.foxtech.device.protocol.v1.utils.MethodUtils;
@@ -122,19 +121,9 @@ public class ServerInitializer {
 
             // 检查：南向通道是否建立，如果没有建立，那么重新发起连接
             if (this.channelManager.getContext(entity.getSocketAddress()) == null) {
-                ChannelFuture channelFuture = this.connectRemote(entity.getRemoteHost(), entity.getRemotePort(), entity.getChannelHandler());
+                ChannelFuture channelFuture = entity.getFactory().createClient(entity.getSocketAddress());
                 entity.setChannelFuture(channelFuture);
             }
         }
     }
-
-    private ChannelFuture connectRemote(String remoteHost, int remotePort, ChannelHandler channelHandler) {
-        // 为每一个通道，创建一个独立的factory，建立每个通道拥有一个handler的模型
-        NettyTcpClientFactory factory = NettyTcpClientFactory.newInstance();
-        factory.getChannelInitializer().setChannelHandler(channelHandler);
-        factory.getChannelInitializer().setSplitMessageHandler(channelHandler.getEntity().getSplitMessageHandler());
-
-        return factory.createClient(remoteHost, remotePort);
-    }
-
 }
