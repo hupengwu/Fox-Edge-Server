@@ -7,9 +7,14 @@ import cn.foxtech.channel.common.scheduler.ChannelRedisScheduler;
 import cn.foxtech.channel.common.service.EntityManageService;
 import cn.foxtech.channel.common.service.RedisTopicRespondDeviceService;
 import cn.foxtech.channel.common.service.RedisTopicRespondManagerService;
+import cn.foxtech.common.entity.entity.ChannelEntity;
+import cn.foxtech.common.entity.entity.ConfigEntity;
 import cn.foxtech.common.status.ServiceStatusScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 初始化
@@ -59,6 +64,11 @@ public class ChannelInitialize {
 
 
     public void initialize() {
+        Set<String> others = new HashSet<>();
+        initialize(others);
+    }
+
+    public void initialize(Set<String> others) {
         // 启动进程状态通知
         this.serviceStatusScheduler.initialize();
         this.serviceStatusScheduler.schedule();
@@ -67,7 +77,12 @@ public class ChannelInitialize {
         this.channelProperties.initialize();
 
         // 装载实体
-        this.entityManageService.instance();
+        Set<String> consumer = new HashSet<>();
+        consumer.add(ConfigEntity.class.getSimpleName());
+        consumer.add(ChannelEntity.class.getSimpleName());
+        consumer.addAll(others);
+
+        this.entityManageService.instance(consumer);
         this.entityManageService.initLoadEntity();
 
         // 启动独立的Topic发布线程：该线程不能阻塞

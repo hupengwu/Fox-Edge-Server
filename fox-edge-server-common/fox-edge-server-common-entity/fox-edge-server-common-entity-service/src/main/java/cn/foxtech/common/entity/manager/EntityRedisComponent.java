@@ -119,6 +119,15 @@ public class EntityRedisComponent {
         return null;
     }
 
+    protected <T> List<BaseConsumerEntityNotify> getEntityNotify(Class<T> clazz) {
+        if (this.consumer.contains(clazz.getSimpleName())) {
+            ConsumerRedisService consumerRedisService = ConsumerRedisService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService);
+            return consumerRedisService.getEntityNotify();
+        }
+
+        return null;
+    }
+
     protected <T> BaseRedisService getBaseRedisService(String simpleName) {
         if (this.producer.contains(simpleName)) {
             ProducerRedisService producerRedisService = ProducerRedisService.getInstanceBySimpleName(simpleName, this.redisService);

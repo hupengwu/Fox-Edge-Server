@@ -3,6 +3,7 @@ package cn.foxtech.channel.tcp.server.service;
 import cn.foxtech.channel.common.api.ChannelServerAPI;
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
+import cn.foxtech.channel.socket.core.service.ChannelManager;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.exception.ServiceException;
 import io.netty.channel.ChannelHandlerContext;

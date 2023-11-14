@@ -1,6 +1,6 @@
 package cn.foxtech.channel.tcp.server.handler;
 
-import cn.foxtech.channel.tcp.server.service.ChannelManager;
+import cn.foxtech.channel.socket.core.service.ChannelManager;
 import cn.foxtech.channel.tcp.server.service.ReportService;
 import cn.foxtech.common.utils.netty.handler.SocketChannelHandler;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
@@ -59,7 +59,7 @@ public class ChannelHandler extends SocketChannelHandler {
 
 
         // 检查：channel是否已经标识上了信息
-        String serviceKey = this.channelManager.getServiceKey(ctx);
+        String serviceKey = this.channelManager.getServiceKey(ctx.channel().remoteAddress());
         if (serviceKey == null) {
             // 从报文总获得业务特征信息
             serviceKey = this.serviceKeyHandler.getServiceKey(data);

@@ -1,7 +1,7 @@
 package cn.foxtech.trigger.service.service;
 
 import cn.foxtech.common.entity.entity.BaseEntity;
-import cn.foxtech.common.entity.service.redis.BaseConsumerNotify;
+import cn.foxtech.common.entity.service.redis.BaseConsumerTypeNotify;
 import cn.foxtech.trigger.service.trigger.TriggerValueUpdater;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Set;
 
 @Component
-public class DeviceValueNotify implements BaseConsumerNotify {
-    private static final Logger logger = Logger.getLogger(DeviceValueNotify.class);
+public class DeviceValueTypeNotify implements BaseConsumerTypeNotify {
+    private static final Logger logger = Logger.getLogger(DeviceValueTypeNotify.class);
 
     @Autowired
     private TriggerValueUpdater triggerValueUpdater;

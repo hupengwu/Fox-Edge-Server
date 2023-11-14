@@ -1,4 +1,4 @@
-package cn.foxtech.channel.tcp.server.service;
+package cn.foxtech.channel.socket.core.service;
 
 import io.netty.channel.ChannelHandlerContext;
 import org.springframework.stereotype.Component;
@@ -30,10 +30,13 @@ public class ChannelManager {
         return this.key2ctx.get(serviceKey);
     }
 
-    public String getServiceKey(ChannelHandlerContext ctx) {
-        return this.skt2key.get(ctx.channel().remoteAddress());
+    public String getServiceKey(SocketAddress sktAddr) {
+        return this.skt2key.get(sktAddr);
     }
 
+    public ChannelHandlerContext getContext(SocketAddress sktAddr) {
+        return this.skt2ctx.get(sktAddr);
+    }
 
     public void remove(ChannelHandlerContext ctx) {
         String key = this.skt2key.get(ctx.channel().remoteAddress());
@@ -43,6 +46,17 @@ public class ChannelManager {
 
         this.skt2ctx.remove(ctx.channel().remoteAddress());
         this.skt2key.remove(ctx.channel().remoteAddress());
+    }
+
+    public void remove(String serviceKey) {
+        ChannelHandlerContext ctx = this.key2ctx.get(serviceKey);
+        if (ctx != null) {
+            this.skt2ctx.remove(ctx.channel().remoteAddress());
+            this.skt2key.remove(ctx.channel().remoteAddress());
+        }
+
+        this.key2ctx.remove(serviceKey);
+
     }
 
 }

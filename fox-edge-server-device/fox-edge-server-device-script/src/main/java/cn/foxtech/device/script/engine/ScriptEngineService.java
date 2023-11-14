@@ -17,7 +17,7 @@ public class ScriptEngineService {
     public ScriptEngine getScriptEngine(String manufacturer, String deviceType) {
         ScriptEngine engine = (ScriptEngine) Maps.getValue(this.engineMap, manufacturer, deviceType);
         if (engine == null) {
-            engine = manager.getEngineByName("JavaScript");
+            engine = this.manager.getEngineByName("JavaScript");
             Maps.setValue(this.engineMap, manufacturer, deviceType, engine);
         }
 

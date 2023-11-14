@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * 通知
+ * 类型级别的通知
  */
-public interface BaseConsumerNotify {
+public interface BaseConsumerTypeNotify {
     /**
      * 通知变更
      *

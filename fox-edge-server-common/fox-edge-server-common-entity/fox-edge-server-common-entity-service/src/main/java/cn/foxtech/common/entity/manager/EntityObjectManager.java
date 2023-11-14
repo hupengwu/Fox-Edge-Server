@@ -4,9 +4,8 @@ import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.service.mybatis.BaseEntityService;
 import cn.foxtech.common.entity.service.redis.*;
 import cn.foxtech.common.entity.utils.EntityServiceUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import cn.foxtech.common.entity.service.redis.*;
 import cn.foxtech.core.exception.ServiceException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -47,8 +46,8 @@ public class EntityObjectManager extends EntityBaseManager {
      *
      * @param entityKey 业务key
      * @param clazz     对象类型
+     * @param <T>       类型
      * @return 对象
-     * @param <T> 类型
      * @throws IOException 异常信息
      */
     public <T> T readEntity(String entityKey, Class<T> clazz) throws IOException {
@@ -93,6 +92,10 @@ public class EntityObjectManager extends EntityBaseManager {
 
     public Long removeReloadedFlag(String entityType) {
         return this.entityChangeComponent.getReloadMap().remove(entityType);
+    }
+
+    public <T> List<BaseConsumerEntityNotify> getEntityNotify(Class<T> clazz) {
+        return this.entityRedisComponent.getEntityNotify(clazz);
     }
 
     public Set<String> getDBServiceList() {
@@ -188,9 +191,9 @@ public class EntityObjectManager extends EntityBaseManager {
     /**
      * 删除DB和RD上的实体
      *
-     * @param id ID
+     * @param id    ID
      * @param clazz 类型
-     * @param <T> 类型
+     * @param <T>   类型
      */
     public <T> void deleteEntity(Long id, Class<T> clazz) {
         if (!this.entityRedisComponent.getProducer().contains(clazz.getSimpleName())) {

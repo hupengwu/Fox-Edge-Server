@@ -19,6 +19,7 @@ public class BeforeBytesDecoder extends ByteToMessageDecoder {
     /**
      * 对原始流进行完整帧的检查
      * 这是一个同步函数，避免并发的时候，产生多线程的问题。
+     *
      * @param ctx 上下文
      * @param in  輸入
      * @param out 输出

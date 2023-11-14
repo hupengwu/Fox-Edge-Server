@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * redis生产者/消费者的实现类，生产者/消费者分别把这些函数暴露给业务代码使用<br>
@@ -28,33 +29,30 @@ public abstract class BaseRedisService {
      * 数据表的记录数据：重量级数据
      */
     private Map<String, BaseEntity> dataMap = new ConcurrentHashMap<>();
-
     /**
      * 数据表的敏捷状态：轻量级数据
      */
     private Map<String, Long> agileMap = new ConcurrentHashMap<>();
-
     /**
      * redis的最近刷新时间
      */
     private Long updateTime = 0L;
-
-
     /**
      * 生产者：是否需要更新缓存到redis
      */
     private boolean needSave = false;
-
     /**
      * 是否已经完成初始化
      */
     private boolean inited = false;
-
     /**
      * 更新通知
      */
-    private BaseConsumerNotify notify = null;
-
+    private BaseConsumerTypeNotify typeNotify = null;
+    /**
+     * 更新通知
+     */
+    private final List<BaseConsumerEntityNotify> entityNotify = new CopyOnWriteArrayList<>();
 
     /**
      * 从派生类中，获得redisService
@@ -98,8 +96,12 @@ public abstract class BaseRedisService {
      *
      * @param notify
      */
-    protected void bind(BaseConsumerNotify notify) {
-        this.notify = notify;
+    protected void bind(BaseConsumerTypeNotify notify) {
+        this.typeNotify = notify;
+    }
+
+    protected List<BaseConsumerEntityNotify> getEntityNotify(){
+        return this.entityNotify;
     }
 
     protected String getHead() {
@@ -187,28 +189,60 @@ public abstract class BaseRedisService {
                 }
             }
 
-            if (this.notify == null) {
-                return;
-            }
+            // 类型级别的通知
+            this.notifyType(addList, delList, diff);
 
-            // 保存具体数据：删除部分的数据，在从redis读取之前，存在于缓存中，此时要提前取出
-            Map<String, BaseEntity> addMap = new HashMap<>();
-            Map<String, BaseEntity> mdyMap = new HashMap<>();
-            for (String key : addList) {
-                addMap.put(key, this.dataMap.get(key));
-            }
-            for (String key : diff.keySet()) {
-                mdyMap.put(key, this.dataMap.get(key));
-            }
-
-            // 检查：是否有变更的数据
-            if (addMap.isEmpty() && delList.isEmpty() && mdyMap.isEmpty()) {
-                return;
-            }
-
-            // 通知变更
-            this.notify.notify(this.getEntityType(), this.updateTime, addMap, delList, mdyMap);
+            // 实体级别的通知
+            this.notifyEntity(addList, delList, diff);
         }
+    }
+
+    private void notifyEntity(Set<String> addList, Set<String> delList, Map<String, Long> diff) {
+        if (this.entityNotify.isEmpty()) {
+            return;
+        }
+
+        for (BaseConsumerEntityNotify notify : this.entityNotify) {
+            String key = notify.getServiceKey();
+            BaseEntity entity = this.dataMap.get(key);
+
+            if (addList.contains(key)) {
+                notify.notifyInsert(entity);
+                continue;
+            }
+            if (diff.containsKey(key)) {
+                notify.notifyUpdate(entity);
+                continue;
+            }
+            if (delList.contains(key)) {
+                notify.notifyDelete(key);
+                continue;
+            }
+        }
+
+    }
+
+    private void notifyType(Set<String> addList, Set<String> delList, Map<String, Long> diff) {
+        if (this.typeNotify == null) {
+            return;
+        }
+        // 保存具体数据：删除部分的数据，在从redis读取之前，存在于缓存中，此时要提前取出
+        Map<String, BaseEntity> addMap = new HashMap<>();
+        Map<String, BaseEntity> mdyMap = new HashMap<>();
+        for (String key : addList) {
+            addMap.put(key, this.dataMap.get(key));
+        }
+        for (String key : diff.keySet()) {
+            mdyMap.put(key, this.dataMap.get(key));
+        }
+
+        // 检查：是否有变更的数据
+        if (addMap.isEmpty() && delList.isEmpty() && mdyMap.isEmpty()) {
+            return;
+        }
+
+        // 通知变更
+        this.typeNotify.notify(this.getEntityType(), this.updateTime, addMap, delList, mdyMap);
     }
 
     /**

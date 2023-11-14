@@ -1,19 +1,30 @@
 {
   "configValue": {
-    "decoderList": [{
-      "decoder": [{
-        "jarFile": "\\jar\\decoder\\fox-edge-server-protocol-zktl-air6in1-1.0.3.jar"
-      }],
-      "keyHandler": "cn.foxtech.device.protocol.v1.zktl.air6in1.handler.ZktlServiceKeyHandler",
+    "jarFiles": [{
+      "jarFile": "/jar/decoder/fox-edge-server-protocol-zktl-air6in1.v1.jar"
+    }],
+    "servers": [{
       "serverPort": 9301,
-      "splitHandler": "cn.foxtech.device.protocol.v1.zktl.air6in1.handler.ZktlSplitMessageHandler"
+      "engine": {
+        "engineType": "Java",
+        "keyHandler": "cn.foxtech.device.protocol.v1.zktl.air6in1.handler.ZktlServiceKeyHandler",
+        "splitHandler": "cn.foxtech.device.protocol.v1.zktl.air6in1.handler.ZktlSplitMessageHandler"
+      }
     }, {
-      "decoder": [{
-        "jarFile": "\\jar\\decoder\\fox-edge-server-protocol-zktl-air5in1-1.0.3.jar"
-      }],
-      "keyHandler": "cn.foxtech.device.protocol.v1.zktl.air5in1.handler.ZktlServiceKeyHandler",
       "serverPort": 9302,
-      "splitHandler": "cn.foxtech.device.protocol.v1.zktl.air5in1.handler.ZktlSplitMessageHandler"
+      "engine": {
+        "engineType": "JavaScript",
+        "splitHandler": {
+          "manufacturer": "武汉中科图灵",
+          "deviceType": "消防用水五合一（LoRaWan）",
+          "format": "TXT"
+        },
+        "keyHandler": {
+          "manufacturer": "武汉中科图灵",
+          "deviceType": "消防用水五合一（LoRaWan）",
+          "format": "TXT"
+        }
+      }
     }],
     "logger": false
   },

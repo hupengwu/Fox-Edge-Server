@@ -4,6 +4,7 @@ import cn.foxtech.common.entity.entity.BaseEntity;
 import com.fasterxml.jackson.core.JsonParseException;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,8 +37,17 @@ public abstract class BaseConsumerRedisService extends BaseRedisService {
      * @param notify
      */
     @Override
-    public void bind(BaseConsumerNotify notify) {
+    public void bind(BaseConsumerTypeNotify notify) {
         super.bind(notify);
+    }
+
+    @Override
+    public List<BaseConsumerEntityNotify> getEntityNotify() {
+        return super.getEntityNotify();
+    }
+
+    public void bindEntityNotify(BaseConsumerEntityNotify entityNotify) {
+        this.getEntityNotify().add(entityNotify);
     }
 
     /**
