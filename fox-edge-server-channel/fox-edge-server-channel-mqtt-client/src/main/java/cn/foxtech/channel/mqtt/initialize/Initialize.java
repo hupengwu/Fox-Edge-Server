@@ -1,7 +1,7 @@
 package cn.foxtech.channel.mqtt.initialize;
 
 import cn.foxtech.channel.common.initialize.ChannelInitialize;
-import cn.foxtech.channel.mqtt.service.MqttClientService;
+import cn.foxtech.channel.mqtt.service.ChannelService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -18,7 +18,8 @@ public class Initialize implements CommandLineRunner {
     private ChannelInitialize channelInitialize;
 
     @Autowired
-    private MqttClientService mqttClientService;
+    private ChannelService channelService;
+
 
     @Override
     public void run(String... args) {
@@ -27,8 +28,7 @@ public class Initialize implements CommandLineRunner {
         // 通道服务的基础初始化：此时会从redis中装载自己需要的配置信息
         this.channelInitialize.initialize();
 
-        // 初始化mqtt链接
-        this.mqttClientService.Initialize();
+        this.channelService.initialize();
 
         logger.info("------------------------初始化结束！------------------------");
     }

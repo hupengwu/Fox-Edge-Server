@@ -1,0 +1,93 @@
+package cn.foxtech.channel.mqtt.service;
+
+import cn.foxtech.channel.common.api.ChannelServerAPI;
+import cn.foxtech.channel.domain.ChannelRespondVO;
+import cn.foxtech.channel.mqtt.handler.MqttHandler;
+import cn.foxtech.common.entity.manager.LocalConfigService;
+import cn.foxtech.common.mqtt.MqttClientService;
+import cn.foxtech.common.utils.method.MethodUtils;
+import cn.foxtech.core.exception.ServiceException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+@Component
+public class ChannelService extends ChannelServerAPI {
+    private final Map<String, String> channelName2ServiceKey = new ConcurrentHashMap<>();
+
+    @Autowired
+    private MqttClientService mqttClientService;
+
+    @Autowired
+    private LocalConfigService localConfigService;
+
+
+    @Autowired
+    private ReportService reportService;
+
+    public void initialize() {
+        // 装载全局配置参数
+        this.localConfigService.initialize();
+        Map<String, Object> configs = this.localConfigService.getConfigs();
+        Map<String, Object> mqttConfig = (Map<String, Object>) configs.getOrDefault("mqtt", new HashMap<>());
+        Map<String, Object> topic = (Map<String, Object>) configs.getOrDefault("topic", new HashMap<>());
+        String subscribe = (String) topic.getOrDefault("subscribe", "/v1/device/response/#");
+
+        MqttHandler handler = new MqttHandler();
+        handler.setTopic(subscribe);
+
+
+        // 绑定当前的handler
+        this.mqttClientService.getMqttClientListener().setClientHandler(handler);
+
+        this.mqttClientService.Initialize(mqttConfig);
+    }
+
+    /**
+     * 打开通道：tcp-server是服务端，连接是自动触发的，不存在真正的打开和关闭操作
+     *
+     * @param channelName  通道名称
+     * @param channelParam 通道参数
+     */
+    @Override
+    public void openChannel(String channelName, Map<String, Object> channelParam) {
+        String topic = (String) channelParam.get("topic");
+        if (MethodUtils.hasEmpty(topic)) {
+            throw new ServiceException("通道上，设备级别的topic参数不能为空: topic");
+        }
+
+        this.channelName2ServiceKey.put(channelName, topic);
+    }
+
+    /**
+     * 关闭通道：tcp-server是服务端，连接是自动触发的，不存在真正的打开和关闭操作
+     *
+     * @param channelName  通道名称
+     * @param channelParam 通道参数
+     */
+    @Override
+    public void closeChannel(String channelName, Map<String, Object> channelParam) {
+        String topic = (String) channelParam.get("topic");
+        if (MethodUtils.hasEmpty(topic)) {
+            throw new ServiceException("通道上，设备级别的topic参数不能为空: topic");
+        }
+
+        this.channelName2ServiceKey.remove(channelName);
+    }
+
+
+    /**
+     * 设备的主动上报消息
+     *
+     * @return 上报消息
+     * @throws ServiceException 异常信息
+     */
+    @Override
+    public List<ChannelRespondVO> report() throws ServiceException {
+        return this.reportService.popAll();
+    }
+}

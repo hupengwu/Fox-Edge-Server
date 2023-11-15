@@ -21,4 +21,6 @@ public class OperateVOFieldConstant extends BaseVOFieldConstant {
     public static final String value_engine_java = "Java";
 
     public static final String value_engine_javascript = "JavaScript";
+
+    public static final String value_service_device = "device";
 }

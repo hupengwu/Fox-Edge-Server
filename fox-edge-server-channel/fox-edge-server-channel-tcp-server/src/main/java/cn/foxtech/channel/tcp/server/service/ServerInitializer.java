@@ -1,12 +1,10 @@
 package cn.foxtech.channel.tcp.server.service;
 
 import cn.foxtech.channel.common.properties.ChannelProperties;
-import cn.foxtech.channel.common.service.EntityManageService;
-import cn.foxtech.channel.socket.core.script.ScriptEngineService;
-import cn.foxtech.channel.socket.core.service.ChannelManager;
 import cn.foxtech.channel.tcp.server.engine.JarEngine;
 import cn.foxtech.channel.tcp.server.engine.JspEngine;
 import cn.foxtech.common.entity.manager.ConfigManageService;
+import cn.foxtech.common.entity.manager.LocalConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.device.protocol.v1.utils.MethodUtils;
@@ -29,22 +27,7 @@ public class ServerInitializer {
     private RedisConsoleService consoleService;
 
     @Autowired
-    private ChannelManager channelManager;
-
-    @Autowired
-    private ReportService reportService;
-
-    @Autowired
     private ChannelProperties channelProperties;
-
-    @Autowired
-    private ConfigManageService configManageService;
-
-    @Autowired
-    private EntityManageService entityManageService;
-
-    @Autowired
-    private ScriptEngineService scriptEngineService;
 
     @Autowired
     private JarEngine jarEngine;
@@ -52,12 +35,14 @@ public class ServerInitializer {
     @Autowired
     private JspEngine jspEngine;
 
+    @Autowired
+    private LocalConfigService localConfigService;
+
 
     public void initialize() {
         // 读取配置参数
-        this.configManageService.initialize("serverConfig", "serverConfig.json");
-        Map<String, Object> configs = this.configManageService.getConfigParam("serverConfig");
-
+        this.localConfigService.initialize();
+        Map<String, Object> configs = this.localConfigService.getConfigs();
 
         // 记录启动参数，方便后面全局使用
         this.channelProperties.setLogger((Boolean) configs.getOrDefault("logger", false));

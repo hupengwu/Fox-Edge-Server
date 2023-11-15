@@ -1,0 +1,38 @@
+{
+  "configValue": {
+    "mqtt": {
+      "host": "1cd5baf642.st1.iotda-device.cn-north-4.myhuaweicloud.com",
+      "name": "Mica-Mqtt-Client",
+      "port": 1883,
+      "enabled": true,
+      "timeout": 5,
+      "use-ssl": false,
+      "version": "mqtt_3_1_1",
+      "clientId": "653d1b13585c81787ad06a33_Fox-Edge-54060500FFFB8B0F_0_0_2023102814",
+      "password": "6009eee886f53891b39bbd5802a87ff03024bf2d00a7a3db2c3d6026034c031f",
+      "reconnect": true,
+      "user-name": "653d1b13585c81787ad06a33_Fox-Edge-54060500FFFB8B0F",
+      "re-interval": 5000,
+      "clean-session": true,
+      "keep-alive-secs": 60,
+      "buffer-allocator": "heap",
+      "read-buffer-size": "8KB",
+      "max-bytes-in-message": "10MB"
+    },
+    "topic": {
+      "publish": "/v1/device/request/#",
+      "subscribe": "/v1/device/response/#"
+    }
+  },
+
+  "configParam": {
+    "list": [{
+      "saveMode": "Raw",
+      "showMode": "Security",
+      "fieldName": "mqtt.password",
+      "valueType": "string",
+      "defaultValue": ""
+    }]
+  },
+  "remark": ""
+}

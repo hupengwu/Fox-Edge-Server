@@ -29,5 +29,5 @@
     "logger": false
   },
   "configParam": {},
-  "remark": "tcp-server通道的配置信息：\n\njarFile：解码器所在的文件位置\nsplitHandler：拆包类的完整名称\nkeyHandler：提取设备身份信息的完整名称"
+  "remark": "tcp-server通道的配置信息：\n\n\n支持Java和JavaScript两种拆包和身份识别引擎引擎\n\njarFile：解码器所在的文件位置\nsplitHandler：拆包类的完整名称\nkeyHandler：提取设备身份信息的完整名称\n\nJava引擎时，要配置jar文件，并且以字符串的方式，指出类名称。\nJavaScript引擎时候，要配置JSP通道操作方法，并以对象的方式指明厂商和设备类型\nformat，指明的是收到的报文，以TXT格式还是以HEX格式的方式，传递给JavaScript脚本\nTXT，指的是TCP上传输的是一段文本流报文\nHEX，指的是TCP上传输的是一段二进制报文\n"
 }

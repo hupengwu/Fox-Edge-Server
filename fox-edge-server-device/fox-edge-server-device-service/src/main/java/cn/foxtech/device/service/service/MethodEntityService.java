@@ -132,6 +132,7 @@ public class MethodEntityService {
                     methodEntity.setDeviceType(methodPair.getDeviceType());
                     methodEntity.setOperateName(methodPair.getName());
                     methodEntity.setDataType(methodPair.getMode());
+                    methodEntity.setServiceType(OperateVOFieldConstant.value_service_device);
                     methodEntity.setOperateMode(Constants.OPERATE_MODE_EXCHANGE);
                     methodEntity.setTimeout(methodPair.getTimeout());
                     methodEntity.setPolling(methodPair.isPolling());
@@ -168,6 +169,7 @@ public class MethodEntityService {
                     methodEntity.setManufacturer(methodPair.getManufacturer());
                     methodEntity.setDeviceType(methodPair.getDeviceType());
                     methodEntity.setOperateName(methodPair.getName());
+                    methodEntity.setServiceType(OperateVOFieldConstant.value_service_device);
                     methodEntity.setOperateMode(Constants.OPERATE_MODE_PUBLISH);
                     methodEntity.setTimeout(methodPair.getTimeout());
                     methodEntity.setPolling(methodPair.isPolling());
@@ -201,6 +203,8 @@ public class MethodEntityService {
                     methodEntity.setManufacturer(methodPair.getManufacturer());
                     methodEntity.setDeviceType(methodPair.getDeviceType());
                     methodEntity.setOperateName(methodPair.getName());
+                    methodEntity.setDataType(methodPair.getMode());
+                    methodEntity.setServiceType(OperateVOFieldConstant.value_service_device);
                     methodEntity.setOperateMode(Constants.OPERATE_MODE_REPORT);
                     methodEntity.setTimeout(0);
                     methodEntity.setPolling(false);
