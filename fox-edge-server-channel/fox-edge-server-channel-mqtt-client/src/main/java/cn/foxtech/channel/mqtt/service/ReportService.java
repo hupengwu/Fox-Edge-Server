@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,8 +24,8 @@ public class ReportService {
     @Autowired
     private EntityManageService entityManageService;
 
-    public synchronized void push(String serviceKey, String message) {
-        List<String> list = this.channelMap.computeIfAbsent(serviceKey, k -> new CopyOnWriteArrayList<>());
+    public synchronized void push(String topic, String message) {
+        List<String> list = this.channelMap.computeIfAbsent(topic, k -> new CopyOnWriteArrayList<>());
         if (list.size() > 128) {
             return;
         }
@@ -35,8 +36,8 @@ public class ReportService {
 
     public List<ChannelRespondVO> popAll() {
         List<ChannelRespondVO> respondVOList = new ArrayList<>();
-        for (String serviceKey : this.channelMap.keySet()) {
-            List<String> list = this.channelMap.get(serviceKey);
+        for (String topic : this.channelMap.keySet()) {
+            List<String> list = this.channelMap.get(topic);
 
             ChannelEntity channelEntity = this.entityManageService.getEntity(ChannelEntity.class, (Object value) -> {
                 ChannelEntity entity = (ChannelEntity) value;
@@ -46,27 +47,34 @@ public class ReportService {
                     return false;
                 }
 
+                List<String> topics = (List<String>)entity.getChannelParam().get("topics");
+
                 // 检查：是否为相同的serviceKey
-                return serviceKey.equals(entity.getChannelParam().get("serviceKey"));
+                return topics.contains(topic);
             });
 
             if (channelEntity == null) {
-                this.channelMap.remove(serviceKey);
+                this.channelMap.remove(topic);
                 continue;
             }
 
 
-            for (String pdu : list) {
+            for (String body : list) {
                 ChannelRespondVO respondVO = new ChannelRespondVO();
                 respondVO.setUuid(null);
                 respondVO.setType(this.channelProperties.getChannelType());
                 respondVO.setName(channelEntity.getChannelName());
-                respondVO.setRecv(pdu);
+
+                Map<String, Object> map = new HashMap<>();
+                map.put("topic", topic);
+                map.put("body", body);
+
+                respondVO.setRecv(map);
 
                 respondVOList.add(respondVO);
             }
 
-            this.channelMap.remove(serviceKey);
+            this.channelMap.remove(topic);
         }
 
         return respondVOList;

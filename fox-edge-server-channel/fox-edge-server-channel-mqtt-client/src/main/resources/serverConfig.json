@@ -1,17 +1,17 @@
 {
   "configValue": {
     "mqtt": {
-      "host": "1cd5baf642.st1.iotda-device.cn-north-4.myhuaweicloud.com",
+      "host": "39.108.137.38",
       "name": "Mica-Mqtt-Client",
       "port": 1883,
       "enabled": true,
       "timeout": 5,
       "use-ssl": false,
       "version": "mqtt_3_1_1",
-      "clientId": "653d1b13585c81787ad06a33_Fox-Edge-54060500FFFB8B0F_0_0_2023102814",
-      "password": "6009eee886f53891b39bbd5802a87ff03024bf2d00a7a3db2c3d6026034c031f",
+      "clientId": "mqttx_580d1e95",
+      "password": "12345678",
       "reconnect": true,
-      "user-name": "653d1b13585c81787ad06a33_Fox-Edge-54060500FFFB8B0F",
+      "user-name": "mica",
       "re-interval": 5000,
       "clean-session": true,
       "keep-alive-secs": 60,
@@ -19,10 +19,7 @@
       "read-buffer-size": "8KB",
       "max-bytes-in-message": "10MB"
     },
-    "topic": {
-      "publish": "/v1/device/request/#",
-      "subscribe": "/v1/device/response/#"
-    }
+    "topic":  "/v1/device/response/#"
   },
 
   "configParam": {
@@ -34,5 +31,5 @@
       "defaultValue": ""
     }]
   },
-  "remark": ""
+  "remark": "channel-mqtt-client通道的配置信息：\n\ntopic：指的是订阅topic，这边要通过通配符来指明，接收一批设备\n接收到一批设备消息后，具体对应哪个设备，通过通道服务定义哪个设备对应哪个t具体的opic，即可区分收到的数据，是哪个设备的。\n\nmqtt：这是mqtt的连接厂商，主要是host、port、clientId、账号、密码这几个参数\nclientId：如果没有填写唯一性ID，那么就会随机生成一个ID"
 }

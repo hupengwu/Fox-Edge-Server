@@ -1,7 +1,6 @@
 package cn.foxtech.device.script.engine;
 
 import cn.foxtech.common.entity.entity.OperateEntity;
-import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.device.protocol.v1.core.channel.FoxEdgeChannelService;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
@@ -11,13 +10,15 @@ import org.springframework.stereotype.Component;
 import javax.naming.CommunicationException;
 import javax.script.ScriptEngine;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Component
 public class PublishService {
     @Autowired
     private ScriptEngineService engineService;
+
+    @Autowired
+    private ScriptEngineOperator engineOperator;
 
     public void publish(String deviceName, String manufacturer, String deviceType, OperateEntity operateEntity, Map<String, Object> params, int timeout, FoxEdgeChannelService channelService) throws ProtocolException, CommunicationException {
         try {
@@ -42,26 +43,11 @@ public class PublishService {
 
 
             try {
-                // 先将Map转成JSP能够处理的JSON字符串
-                String jsonParams = JsonUtils.buildJson(params);
+                // 为ScriptEngine填入全局变量
+                this.engineOperator.setSendEnvValue(engine, params);
 
-                // 装载JSP脚本
-                engine.eval(encodeScript);
-                // 执行JSP脚本中的函数
-                String out = (String) engine.eval(encodeMain + "('" + jsonParams + "');");
-                if (out == null) {
-                    throw new ProtocolException("编码错误：输出为null");
-                }
-
-                // 根据文本格式，转为Map/List，或者是原始的字符串
-                if (out.startsWith("{") && out.endsWith("}")) {
-                    send = JsonUtils.buildObject(out, Map.class);
-                } else if (out.startsWith("[") && out.endsWith("[}]")) {
-                    send = JsonUtils.buildObject(out, List.class);
-                } else {
-                    send = out;
-                }
-
+                // 数据编码
+                send = this.engineOperator.encode(engine, encodeMain, encodeScript);
             } catch (Exception e) {
                 throw new ProtocolException("编码错误：" + e.getMessage());
             }
