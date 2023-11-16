@@ -68,7 +68,7 @@ public class ChannelService extends ChannelServerAPI {
         configEntity.setDatabits(databits);
         configEntity.setParity(parity);
         configEntity.setStopbits(stopbits);
-        configEntity.setMinPackInterval((Integer) channelParam.getOrDefault("packInterval", 10));
+        configEntity.setMinPackInterval((Integer) channelParam.getOrDefault("packInterval", 0));
         configEntity.setFullDuplex(Boolean.TRUE.equals(channelParam.get("fullDuplex")));
 
         // 保存配置

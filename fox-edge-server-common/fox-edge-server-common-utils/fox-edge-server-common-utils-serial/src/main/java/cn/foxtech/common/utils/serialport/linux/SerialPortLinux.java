@@ -83,10 +83,10 @@ public class SerialPortLinux implements ISerialPort {
     /**
      * 设置串口参数
      *
-     * @param baudRate     速率
-     * @param databits     数据位
-     * @param stopbits     停止位
-     * @param parity       校验位
+     * @param baudRate 速率
+     * @param databits 数据位
+     * @param stopbits 停止位
+     * @param parity   校验位
      * @return 是否成功
      */
     @Override
@@ -279,9 +279,19 @@ public class SerialPortLinux implements ISerialPort {
             throw new RuntimeException("串口尚未打开：" + this.name);
         }
 
+        if (minPackInterval == 0) {
+            // 直接操作API模式：这是标准的设备通信方式
+            return this.readApiData(recvBuffer, maxPackInterval);
+        } else {
+            // 拼接模式：这是默写设备，断断续续，需要拼接的方式
+            return this.readAppendData(recvBuffer, minPackInterval, maxPackInterval);
+        }
+    }
+
+    private int readAppendData(byte[] recvBuffer, long minPackInterval, long maxPackInterval) {
         // 限制为有效范围
-        if (minPackInterval < 10) {
-            minPackInterval = 10;
+        if (minPackInterval < 100) {
+            minPackInterval = 100;
         }
         if (minPackInterval > 1000) {
             minPackInterval = 1000;
@@ -292,8 +302,8 @@ public class SerialPortLinux implements ISerialPort {
         int position = 0;
 
         while (true) {
-            // 以200毫秒为间隔，尝试读取一次数据
-            int count = this.readData(dataBuff, minPackInterval);
+            // 以N毫秒为间隔，尝试读取一次数据
+            int count = this.readApiData(dataBuff, minPackInterval);
 
             // 如果读到了数据，那么复制到总缓存之中
             if (count > 0) {
@@ -325,13 +335,13 @@ public class SerialPortLinux implements ISerialPort {
             }
 
             // 检测：此前有收到数据，但是最近一个读取时间间隔不再有数据到达，说明设备全部返回完成了
-            if (position > 0){
+            if (position > 0) {
                 return position;
             }
         }
     }
 
-    private int readData(byte[] dataBuff, long timeSpan) {
+    private int readApiData(byte[] dataBuff, long timeSpan) {
         // 指明select的最大等待时间100微秒
         TIMEVAL tv = new TIMEVAL();
         tv.tv_sec = timeSpan / 1000;
