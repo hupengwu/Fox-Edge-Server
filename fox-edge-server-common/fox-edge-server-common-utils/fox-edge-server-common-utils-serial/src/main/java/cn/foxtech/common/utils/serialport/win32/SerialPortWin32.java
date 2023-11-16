@@ -32,7 +32,7 @@ public class SerialPortWin32 implements ISerialPort {
     private String name = "COM1";
 
     @Override
-    public String getName(){
+    public String getName() {
         return this.name;
     }
 
@@ -67,22 +67,18 @@ public class SerialPortWin32 implements ISerialPort {
         this.handle = null;
     }
 
-    public boolean setParam(Integer baudRate, String parity, Integer databits, Integer stopbits) {
-        return setParam(baudRate, parity, databits, stopbits, 0);
-    }
 
     /**
      * 设置串口参数
      *
-     * @param baudRate     速率
-     * @param databits     数据位
-     * @param stopbits     停止位
-     * @param parity       校验位
-     * @param commTimeOuts commTimeOuts的字节时间间隔，默认值0
+     * @param baudRate 速率
+     * @param databits 数据位
+     * @param stopbits 停止位
+     * @param parity   校验位
      * @return 是否成功
      */
     @Override
-    public boolean setParam(Integer baudRate, String parity, Integer databits, Integer stopbits, Integer commTimeOuts) {
+    public boolean setParam(Integer baudRate, String parity, Integer databits, Integer stopbits) {
         // 检查：串口是否打开
         if (!this.isOpen()) {
             return false;
@@ -101,17 +97,13 @@ public class SerialPortWin32 implements ISerialPort {
             return false;
         }
 
-        // 检查：字节时间的配置是否超过合理范围，填写了这个参数，是要付出卡顿的代价的，非遇到断句不正确的时候，不要配置它。
-        if (commTimeOuts < 0 || commTimeOuts > 5) {
-            commTimeOuts = 0;
-        }
 
         //读写超时设置：ReadIntervalTimeout必须为-1，ReadTotalTimeoutMultiplier/ReadTotalTimeoutConstant为0
         WinBase.COMMTIMEOUTS CommTimeOuts = new WinBase.COMMTIMEOUTS();
         CommTimeOuts.ReadIntervalTimeout = new WinBase.DWORD(-1); //字符允许间隔ms 该参数如果为最大值，会使readfile命令立即返回
-        CommTimeOuts.ReadTotalTimeoutMultiplier = new WinBase.DWORD(commTimeOuts); //总的超时时间(对单个字节)
-        CommTimeOuts.ReadTotalTimeoutConstant = new WinBase.DWORD(commTimeOuts); //多余的超时时间ms
-        CommTimeOuts.WriteTotalTimeoutMultiplier = new WinBase.DWORD(commTimeOuts); //总的超时时间(对单个字节)
+        CommTimeOuts.ReadTotalTimeoutMultiplier = new WinBase.DWORD(0); //总的超时时间(对单个字节)
+        CommTimeOuts.ReadTotalTimeoutConstant = new WinBase.DWORD(0); //多余的超时时间ms
+        CommTimeOuts.WriteTotalTimeoutMultiplier = new WinBase.DWORD(0); //总的超时时间(对单个字节)
         CommTimeOuts.WriteTotalTimeoutConstant = new WinBase.DWORD(2500); //多余的超时时间
 
         if (!KERNEL.SetCommTimeouts(handle, CommTimeOuts)) {
@@ -237,6 +229,14 @@ public class SerialPortWin32 implements ISerialPort {
     public int recvData(byte[] recvBuffer, long minPackInterval, long maxPackInterval) {
         if (!this.isOpen()) {
             throw new RuntimeException("串口尚未打开：" + this.name);
+        }
+
+        // 限制为有效范围
+        if (minPackInterval < 10) {
+            minPackInterval = 10;
+        }
+        if (minPackInterval > 1000) {
+            minPackInterval = 1000;
         }
 
 

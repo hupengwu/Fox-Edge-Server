@@ -94,7 +94,6 @@ public class OperateMethodBase extends BaseEntity {
         list.add(this.timeout);
         list.add(this.dataType);
         list.add(this.serviceType);
-        list.add(this.timeout);
         list.add(this.polling);
         return list;
     }

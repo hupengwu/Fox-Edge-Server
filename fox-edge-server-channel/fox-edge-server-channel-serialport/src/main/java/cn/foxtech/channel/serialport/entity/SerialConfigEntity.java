@@ -31,10 +31,9 @@ public class SerialConfigEntity {
      */
     private Integer stopbits;
     /**
-     * 每个字节之间的时间间隔：Win32下的CommTimeOuts参数，该参数默认为0，其他参数，是要付出响应时间缓慢的代价的
+     * 每个字节之间的时间间隔：解决某些设备，发送断断续续的情况，此时直接使用操作系统的状态感知，会导致接收不全的状况
      */
-    private Integer commTimeOuts;
-
+    private Integer minPackInterval;
     /**
      * 是否为全双工模式
      */

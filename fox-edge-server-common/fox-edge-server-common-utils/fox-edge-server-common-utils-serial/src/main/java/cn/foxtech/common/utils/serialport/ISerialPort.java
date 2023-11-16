@@ -43,10 +43,9 @@ public interface ISerialPort {
      * @param databits 数据位
      * @param stopbits 停止位
      * @param parity   校验位
-     * @param commTimeOuts   commTimeOuts的字节时间间隔
      * @return 是否成功
      */
-    boolean setParam(Integer baudRate, String parity, Integer databits, Integer stopbits, Integer commTimeOuts);
+    boolean setParam(Integer baudRate, String parity, Integer databits, Integer stopbits);
 
     /**
      * 发送数据

@@ -61,12 +61,6 @@ public class ChannelService extends ChannelServerAPI {
             throw new ServiceException("配置参数不能为空:serialName, baudRate, databits, parity, stopbits, stopbits");
         }
 
-        // 这个参数默认是不填写的，使用的是默认值0。除非遇到设备的通信传输比较不稳定，此时可能需要设置1~5的数据
-        Integer commTimeOuts = (Integer) channelParam.get("commTimeOuts");
-        if (commTimeOuts == null) {
-            commTimeOuts = 0;
-        }
-
         // 生成配置实体
         SerialConfigEntity configEntity = new SerialConfigEntity();
         configEntity.setSerialName(serialName);
@@ -74,7 +68,7 @@ public class ChannelService extends ChannelServerAPI {
         configEntity.setDatabits(databits);
         configEntity.setParity(parity);
         configEntity.setStopbits(stopbits);
-        configEntity.setCommTimeOuts(commTimeOuts);
+        configEntity.setMinPackInterval((Integer) channelParam.getOrDefault("packInterval", 10));
         configEntity.setFullDuplex(Boolean.TRUE.equals(channelParam.get("fullDuplex")));
 
         // 保存配置
@@ -111,7 +105,7 @@ public class ChannelService extends ChannelServerAPI {
             }
 
             // 设置串口参数
-            serialPort.setParam(config.getBaudRate(), config.getParity(), config.getDatabits(), config.getStopbits(), config.getCommTimeOuts());
+            serialPort.setParam(config.getBaudRate(), config.getParity(), config.getDatabits(), config.getStopbits());
 
             // 记录打开的串口对象
             channelEntity.setSerialPort(serialPort);
@@ -226,7 +220,7 @@ public class ChannelService extends ChannelServerAPI {
             throw new ServiceException("异步全双工模式，不允许进行半双工操作:" + requestVO.getName());
         }
 
-        return this.executeService.execute(channelEntity.getSerialPort(), requestVO);
+        return this.executeService.execute(channelEntity.getSerialPort(), channelEntity.getConfig().getMinPackInterval(), requestVO);
     }
 
     /**

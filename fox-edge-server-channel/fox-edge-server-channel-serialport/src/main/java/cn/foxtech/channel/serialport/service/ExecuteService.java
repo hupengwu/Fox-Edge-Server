@@ -38,7 +38,7 @@ public class ExecuteService {
      *
      * @return
      */
-    public synchronized ChannelRespondVO execute(ISerialPort serialPort, ChannelRequestVO requestVO) throws ServiceException {
+    public synchronized ChannelRespondVO execute(ISerialPort serialPort, Integer minPackInterval, ChannelRequestVO requestVO) throws ServiceException {
         String sendData = (String) requestVO.getSend();
         Integer timeout = requestVO.getTimeout();
 
@@ -74,7 +74,7 @@ public class ExecuteService {
 
         // 接收数据
         byte[] data = new byte[4096];
-        int recvLen = serialPort.recvData(data, timeout);
+        int recvLen = serialPort.recvData(data, minPackInterval, timeout);
         if (recvLen <= 0) {
             throw new ServiceException("串口在超时范围内，未接收到返回数据！");
         }

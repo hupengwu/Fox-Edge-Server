@@ -28,9 +28,10 @@ public class SerialPortLinux implements ISerialPort {
     private int fd = -1;
 
     @Override
-    public String getName(){
+    public String getName() {
         return this.name;
     }
+
     /**
      * 串口是否已经打开
      *
@@ -86,11 +87,10 @@ public class SerialPortLinux implements ISerialPort {
      * @param databits     数据位
      * @param stopbits     停止位
      * @param parity       校验位
-     * @param commTimeOuts commTimeOuts的字节时间间隔
      * @return 是否成功
      */
     @Override
-    public boolean setParam(Integer baudRate, String parity, Integer databits, Integer stopbits, Integer commTimeOuts) {
+    public boolean setParam(Integer baudRate, String parity, Integer databits, Integer stopbits) {
         // 参数转换为大写
         if (parity == null) {
             return false;
@@ -264,6 +264,9 @@ public class SerialPortLinux implements ISerialPort {
 
     /**
      * 读取串口数据
+     * 说明：原来是直接通过Linux的select来等待读取数据的，这种操作效率非常高
+     * 但是，有些厂家的设备返回的数据，断断续续，比如空调红外转串口通信，传过来的数据，变成断断续续的
+     * 此时，使用保守方案，100毫秒的循环读取数据
      *
      * @param recvBuffer      缓存
      * @param minPackInterval 两组数据报文之间，最小的时间间隔
@@ -276,17 +279,68 @@ public class SerialPortLinux implements ISerialPort {
             throw new RuntimeException("串口尚未打开：" + this.name);
         }
 
+        // 限制为有效范围
+        if (minPackInterval < 10) {
+            minPackInterval = 10;
+        }
+        if (minPackInterval > 1000) {
+            minPackInterval = 1000;
+        }
+
+        byte[] dataBuff = new byte[4096];
+        long startTimeMillis = System.currentTimeMillis();
+        int position = 0;
+
+        while (true) {
+            // 以200毫秒为间隔，尝试读取一次数据
+            int count = this.readData(dataBuff, minPackInterval);
+
+            // 如果读到了数据，那么复制到总缓存之中
+            if (count > 0) {
+                // 检测：读取的数据，是不是快溢出了
+                int remain = recvBuffer.length - position;
+                if (remain < count) {
+                    count = remain;
+                    System.arraycopy(dataBuff, 0, recvBuffer, position, count);
+                    position += count;
+
+                    return position;
+                } else {
+                    System.arraycopy(dataBuff, 0, recvBuffer, position, count);
+                    position += count;
+                }
+
+                // 检测：如果时间达到了最大超时，那就不要继续往下读了
+                if (System.currentTimeMillis() - startTimeMillis > maxPackInterval) {
+                    return position;
+                }
+
+                // 能读取到数据，后面还可能有剩余数据，接着继续读取
+                continue;
+            }
+
+            // 检测：是否达到最大超时范围，都没有任何数据达到
+            if ((position == 0) && (System.currentTimeMillis() - startTimeMillis > maxPackInterval)) {
+                return position;
+            }
+
+            // 检测：此前有收到数据，但是最近一个读取时间间隔不再有数据到达，说明设备全部返回完成了
+            if (position > 0){
+                return position;
+            }
+        }
+    }
+
+    private int readData(byte[] dataBuff, long timeSpan) {
+        // 指明select的最大等待时间100微秒
+        TIMEVAL tv = new TIMEVAL();
+        tv.tv_sec = timeSpan / 1000;
+        tv.tv_usec = timeSpan % 1000;
 
         // 设置select串口需要的fd_set
         FD_SET readset = new FD_SET();
         LinuxMacro.FD_ZERO(readset);
         LinuxMacro.FD_SET(this.fd, readset);
-
-
-        // 指明select的最大等待时间1000微秒
-        TIMEVAL tv = new TIMEVAL();
-        tv.tv_sec = maxPackInterval / 1000;
-        tv.tv_usec = maxPackInterval % 1000;
 
         // select：readset中是否有描述符被改变
         int maxfd = this.fd + 1;
@@ -294,16 +348,13 @@ public class SerialPortLinux implements ISerialPort {
             throw new RuntimeException("串口select异常：" + this.name);
         }
 
-        // 等待一些时间，确保数据完全抵达
-        this.sleep(minPackInterval);
-
-        // 检查返回结果
+        // 尝试读取数据
+        int count = 0;
         if (LinuxMacro.FD_ISSET(this.fd, readset)) {
-            int recv = API.read(this.fd, recvBuffer, recvBuffer.length);
-            return recv;
+            count = API.read(this.fd, dataBuff, dataBuff.length);
         }
 
-        return 0;
+        return count;
     }
 
     /**
