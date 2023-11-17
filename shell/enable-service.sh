@@ -20,8 +20,6 @@ systemctl daemon-reload
 #4.新增执行权限
 chmod +x $app_home/shell/startup.sh
 chmod +x $app_home/shell/shutdown.sh
-chmod +x $app_home/bin/kernel/gateway-service/fox-edge-server-gateway-service-1.0.0.loader
-chmod +x $app_home/bin/kernel/manager-service/fox-edge-server-manager-system-service-1.0.0.loader
 
 #5.停止服务脚本
 systemctl stop fox-edge.service

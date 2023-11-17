@@ -257,7 +257,7 @@ public class SerialPortLinux implements ISerialPort {
      */
     private void sleep(long ms) {
         try {
-            Thread.sleep(5);
+            Thread.sleep(ms);
         } catch (Exception e) {
         }
     }
@@ -279,75 +279,10 @@ public class SerialPortLinux implements ISerialPort {
             throw new RuntimeException("串口尚未打开：" + this.name);
         }
 
-        if (minPackInterval == 0) {
-            // 直接操作API模式：这是标准的设备通信方式
-            return this.readSelectData(recvBuffer, maxPackInterval);
-        } else {
-            // 拼接模式：这是默写设备，断断续续，需要拼接的方式
-            return this.readAppendData(recvBuffer, minPackInterval, maxPackInterval);
-        }
-    }
-
-    private int readAppendData(byte[] recvBuffer, long minPackInterval, long maxPackInterval) {
-        // 限制为有效范围
-        if (minPackInterval < 10) {
-            minPackInterval = 10;
-        }
-        if (minPackInterval > 1000) {
-            minPackInterval = 1000;
-        }
-
-        byte[] dataBuff = new byte[4096];
-        long startTimeMillis = System.currentTimeMillis();
-        int position = 0;
-
-        // 首次读取数据：借助select模式的高效率，感知第一个包的到达
-        int count = this.readSelectData(dataBuff, maxPackInterval);
-
-        while (true) {
-            // 如果读到了数据，那么复制到总缓存之中
-            if (count > 0) {
-                // 检测：读取的数据，是不是快溢出了
-                int remain = recvBuffer.length - position;
-                if (remain < count) {
-                    count = remain;
-                    System.arraycopy(dataBuff, 0, recvBuffer, position, count);
-                    position += count;
-
-                    return position;
-                } else {
-                    System.arraycopy(dataBuff, 0, recvBuffer, position, count);
-                    position += count;
-                }
-
-                // 检测：如果时间达到了最大超时，那就不要继续往下读了
-                if (System.currentTimeMillis() - startTimeMillis > maxPackInterval) {
-                    return position;
-                }
-
-                // 能读取到数据，后面还可能有剩余数据，接着继续读取，此时不再需要select，而是直接读取操作系统中的串口缓存数据
-                this.sleep(minPackInterval);
-                count = API.read(this.fd, dataBuff, dataBuff.length);
-                continue;
-            }
-
-            // 检测：是否达到最大超时范围，都没有任何数据到达
-            if ((position == 0) && (System.currentTimeMillis() - startTimeMillis > maxPackInterval)) {
-                return position;
-            }
-
-            // 检测：此前有收到数据，但是最近一个读取时间间隔不再有数据到达，说明设备全部返回完成了
-            if (position > 0) {
-                return position;
-            }
-        }
-    }
-
-    private int readSelectData(byte[] dataBuff, long timeSpan) {
         // 指明select的最大等待时间100微秒
         TIMEVAL tv = new TIMEVAL();
-        tv.tv_sec = timeSpan / 1000;
-        tv.tv_usec = timeSpan % 1000;
+        tv.tv_sec = maxPackInterval / 1000;
+        tv.tv_usec = maxPackInterval % 1000;
 
         // 设置select串口需要的fd_set
         FD_SET readset = new FD_SET();
@@ -363,7 +298,11 @@ public class SerialPortLinux implements ISerialPort {
         // 尝试读取数据
         int count = 0;
         if (LinuxMacro.FD_ISSET(this.fd, readset)) {
-            count = API.read(this.fd, dataBuff, dataBuff.length);
+            // 休眠一段时间，等待数据完全到达
+            this.sleep(minPackInterval);
+
+            // 然后，再读取数据
+            count = API.read(this.fd, recvBuffer, recvBuffer.length);
         }
 
         return count;
