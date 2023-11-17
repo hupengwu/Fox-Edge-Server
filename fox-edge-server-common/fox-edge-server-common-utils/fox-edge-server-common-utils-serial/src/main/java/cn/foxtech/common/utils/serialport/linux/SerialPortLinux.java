@@ -281,7 +281,7 @@ public class SerialPortLinux implements ISerialPort {
 
         if (minPackInterval == 0) {
             // 直接操作API模式：这是标准的设备通信方式
-            return this.readApiData(recvBuffer, maxPackInterval);
+            return this.readSelectData(recvBuffer, maxPackInterval);
         } else {
             // 拼接模式：这是默写设备，断断续续，需要拼接的方式
             return this.readAppendData(recvBuffer, minPackInterval, maxPackInterval);
@@ -290,8 +290,8 @@ public class SerialPortLinux implements ISerialPort {
 
     private int readAppendData(byte[] recvBuffer, long minPackInterval, long maxPackInterval) {
         // 限制为有效范围
-        if (minPackInterval < 100) {
-            minPackInterval = 100;
+        if (minPackInterval < 10) {
+            minPackInterval = 10;
         }
         if (minPackInterval > 1000) {
             minPackInterval = 1000;
@@ -301,10 +301,10 @@ public class SerialPortLinux implements ISerialPort {
         long startTimeMillis = System.currentTimeMillis();
         int position = 0;
 
-        while (true) {
-            // 以N毫秒为间隔，尝试读取一次数据
-            int count = this.readApiData(dataBuff, minPackInterval);
+        // 首次读取数据：借助select模式的高效率，感知第一个包的到达
+        int count = this.readSelectData(dataBuff, maxPackInterval);
 
+        while (true) {
             // 如果读到了数据，那么复制到总缓存之中
             if (count > 0) {
                 // 检测：读取的数据，是不是快溢出了
@@ -325,11 +325,13 @@ public class SerialPortLinux implements ISerialPort {
                     return position;
                 }
 
-                // 能读取到数据，后面还可能有剩余数据，接着继续读取
+                // 能读取到数据，后面还可能有剩余数据，接着继续读取，此时不再需要select，而是直接读取操作系统中的串口缓存数据
+                this.sleep(minPackInterval);
+                count = API.read(this.fd, dataBuff, dataBuff.length);
                 continue;
             }
 
-            // 检测：是否达到最大超时范围，都没有任何数据达到
+            // 检测：是否达到最大超时范围，都没有任何数据到达
             if ((position == 0) && (System.currentTimeMillis() - startTimeMillis > maxPackInterval)) {
                 return position;
             }
@@ -341,7 +343,7 @@ public class SerialPortLinux implements ISerialPort {
         }
     }
 
-    private int readApiData(byte[] dataBuff, long timeSpan) {
+    private int readSelectData(byte[] dataBuff, long timeSpan) {
         // 指明select的最大等待时间100微秒
         TIMEVAL tv = new TIMEVAL();
         tv.tv_sec = timeSpan / 1000;
