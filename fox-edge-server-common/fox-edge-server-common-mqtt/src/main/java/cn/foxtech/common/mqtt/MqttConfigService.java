@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.UUID;
 
 @Component
 @Getter(value = AccessLevel.PUBLIC)
@@ -47,5 +48,9 @@ public class MqttConfigService {
         this.version = Maps.getOrDefault(configs, String.class, "version", this.version);
         this.keepAliveSecs = Maps.getOrDefault(configs, Integer.class, "keep-alive-secs", this.keepAliveSecs);
         this.reInterval = Maps.getOrDefault(configs, Integer.class, "re-interval", this.reInterval);
+
+        if (this.clientId == null || this.clientId.isEmpty()) {
+            this.clientId = "clientId:" + UUID.randomUUID();
+        }
     }
 }

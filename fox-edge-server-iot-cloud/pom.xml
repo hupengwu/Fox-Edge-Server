@@ -19,6 +19,7 @@
         <module>fox-edge-server-iot-thingsboard</module>
         <module>fox-edge-server-iot-thingspanel</module>
         <module>fox-edge-server-iot-huawei</module>
+        <module>fox-edge-server-iot-whzktl</module>
         <module>fox-edge-server-fox-cloud</module>
         <module>fox-edge-server-proxy-coap-service</module>
     </modules>

@@ -162,13 +162,14 @@ public abstract class BaseRedisService {
         Set<String> eqlList = new HashSet<>();
         DifferUtils.differByValue(this.agileMap.keySet(), newUpdateTimes.keySet(), addList, delList, eqlList);
 
+        Map<String, Long> diff = this.compare(this.agileMap, newUpdateTimes);
+
         // 检查：记录结构是否不同（发生了增加和删除）
         if (!addList.isEmpty() || !delList.isEmpty()) {
             // 结构不同，全量刷新数据
             this.loadAllEntities();
         } else {
             // 数据变化程度：
-            Map<String, Long> diff = this.compare(this.agileMap, newUpdateTimes);
             if (diff.size() * 10 > this.agileMap.size() || diff.size() > 64) {
                 // 变化幅度很大：1/10的数据发生变化，或者变化的数据超过10条，一刷新10次，还不如全部更新
                 this.loadAllEntities();
@@ -188,13 +189,14 @@ public abstract class BaseRedisService {
                     this.agileMap.put(entry.getKey(), agile);
                 }
             }
-
-            // 类型级别的通知
-            this.notifyType(addList, delList, diff);
-
-            // 实体级别的通知
-            this.notifyEntity(addList, delList, diff);
         }
+
+
+        // 类型级别的通知
+        this.notifyType(addList, delList, diff);
+
+        // 实体级别的通知
+        this.notifyEntity(addList, delList, diff);
     }
 
     private void notifyEntity(Set<String> addList, Set<String> delList, Map<String, Long> diff) {
