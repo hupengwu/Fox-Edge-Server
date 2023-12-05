@@ -69,7 +69,7 @@ public class ReportService {
                 map.put("topic", topic);
                 map.put("body", body);
 
-                respondVO.setRecv(map);
+                respondVO.setRecv(body);
 
                 respondVOList.add(respondVO);
             }
