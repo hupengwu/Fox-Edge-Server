@@ -2,6 +2,7 @@ package cn.foxtech.device.scanner;
 
 import cn.foxtech.common.utils.Maps;
 import cn.foxtech.common.utils.reflect.JarLoaderUtils;
+import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
 import cn.foxtech.device.protocol.RootLocation;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
@@ -10,6 +11,7 @@ import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeReport;
 import cn.foxtech.device.protocol.v1.core.method.FoxEdgeReportMethod;
 
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -31,6 +33,10 @@ public class FoxEdgeReportScanner {
                     continue;
                 }
 
+                // class所属的文件
+                URL url = aClass.getProtectionDomain().getCodeSource().getLocation();
+                String filePath = url.getPath();
+
                 FoxEdgeDeviceType typeAnnotation = aClass.getAnnotation(FoxEdgeDeviceType.class);
                 String deviceType = typeAnnotation.value();
                 String manufacturer = typeAnnotation.manufacturer();
@@ -38,7 +44,9 @@ public class FoxEdgeReportScanner {
 
                 Map<String, FoxEdgeReportMethod> methodMap = scanMethodPair(manufacturer, deviceType, aClass);
                 for (String method : methodMap.keySet()) {
-                    Maps.setValue(manufacturerMap, manufacturer, deviceType, method, methodMap.get(method));
+                    Maps.setValue(manufacturerMap, manufacturer, deviceType, method, DeviceMethodVOFieldConstant.field_method, methodMap.get(method));
+                    Maps.setValue(manufacturerMap, manufacturer, deviceType, method, DeviceMethodVOFieldConstant.field_file, filePath);
+
                 }
 
             }

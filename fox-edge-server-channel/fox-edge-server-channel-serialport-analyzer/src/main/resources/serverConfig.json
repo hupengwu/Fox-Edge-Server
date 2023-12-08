@@ -1,0 +1,14 @@
+{
+  "configValue": {
+    "serialPort": {
+      "serialName": "COM1",
+      "baudRate": 9600,
+      "parity": "N",
+      "databits": 8,
+      "stopbits": 1
+    },
+    "logger": false
+  },
+  "configParam": {},
+  "remark": "串口分析通道服务"
+}

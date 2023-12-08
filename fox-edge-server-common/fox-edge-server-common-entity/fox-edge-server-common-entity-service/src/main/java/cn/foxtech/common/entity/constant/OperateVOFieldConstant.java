@@ -6,6 +6,7 @@ public class OperateVOFieldConstant extends BaseVOFieldConstant {
      */
     public static final String field_device_type = "deviceType";
     public static final String field_manufacturer = "manufacturer";
+    public static final String field_comp_id = "compId";
     public static final String field_operate_name = "operateName";
 
     public static final String field_engine_type = "engineType";
@@ -17,6 +18,7 @@ public class OperateVOFieldConstant extends BaseVOFieldConstant {
     public static final String field_service_type = "serviceType";
     public static final String field_polling = "polling";
     public static final String field_timeout = "timeout";
+    public static final String field_file = "file";
 
     public static final String value_engine_java = "Java";
 

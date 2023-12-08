@@ -7,6 +7,7 @@ import cn.foxtech.common.entity.entity.ConfigEntity;
 import cn.foxtech.common.entity.entity.OperateMethodEntity;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.ContainerUtils;
+import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
 import cn.foxtech.device.protocol.v1.core.method.FoxEdgeExchangeMethod;
 import cn.foxtech.device.protocol.v1.core.method.FoxEdgeMethodTemplate;
 import cn.foxtech.device.protocol.v1.core.method.FoxEdgePublishMethod;
@@ -121,9 +122,9 @@ public class MethodEntityService {
         for (String manufacturer : manufacturerMap.keySet()) {
             Map<String, Object> deviceTypeMap = (Map<String, Object>) manufacturerMap.get(manufacturer);
             for (String deviceType : deviceTypeMap.keySet()) {
-                Map<String, FoxEdgeExchangeMethod> methodPairMap = (Map<String, FoxEdgeExchangeMethod>) deviceTypeMap.get(deviceType);
-                for (String method : methodPairMap.keySet()) {
-                    FoxEdgeExchangeMethod methodPair = methodPairMap.get(method);
+                Map<String, Map<String, Object>> methodMap = (Map<String, Map<String, Object>>) deviceTypeMap.get(deviceType);
+                for (String method : methodMap.keySet()) {
+                    FoxEdgeExchangeMethod methodPair = (FoxEdgeExchangeMethod) methodMap.get(method).get(DeviceMethodVOFieldConstant.field_method);
 
                     OperateMethodEntity methodEntity = new OperateMethodEntity();
 
@@ -138,6 +139,10 @@ public class MethodEntityService {
                     methodEntity.setPolling(methodPair.isPolling());
                     methodEntity.setCreateTime(time);
                     methodEntity.setUpdateTime(time);
+
+                    // Jar文件名
+                    String fileName = splitJarFileName((String) methodMap.get(method).get(DeviceMethodVOFieldConstant.field_file));
+                    methodEntity.getEngineParam().put(DeviceMethodVOFieldConstant.field_file, fileName);
 
                     resultList.add(methodEntity);
                 }
@@ -159,9 +164,10 @@ public class MethodEntityService {
         for (String manufacturer : manufacturerMap.keySet()) {
             Map<String, Object> deviceTypeMap = (Map<String, Object>) manufacturerMap.get(manufacturer);
             for (String deviceType : deviceTypeMap.keySet()) {
-                Map<String, FoxEdgePublishMethod> methodMap = (Map<String, FoxEdgePublishMethod>) deviceTypeMap.get(deviceType);
+                Map<String, Map<String, Object>> methodMap = (Map<String, Map<String, Object>>) deviceTypeMap.get(deviceType);
                 for (String method : methodMap.keySet()) {
-                    FoxEdgePublishMethod methodPair = methodMap.get(method);
+                    FoxEdgePublishMethod methodPair = (FoxEdgePublishMethod) methodMap.get(method).get(DeviceMethodVOFieldConstant.field_method);
+
 
                     OperateMethodEntity methodEntity = new OperateMethodEntity();
 
@@ -175,6 +181,10 @@ public class MethodEntityService {
                     methodEntity.setPolling(methodPair.isPolling());
                     methodEntity.setCreateTime(time);
                     methodEntity.setUpdateTime(time);
+
+                    // Jar文件名
+                    String fileName = splitJarFileName((String) methodMap.get(method).get(DeviceMethodVOFieldConstant.field_file));
+                    methodEntity.getEngineParam().put(DeviceMethodVOFieldConstant.field_file, fileName);
 
                     resultList.add(methodEntity);
                 }
@@ -193,9 +203,9 @@ public class MethodEntityService {
         for (String manufacturer : manufacturerMap.keySet()) {
             Map<String, Object> deviceTypeMap = (Map<String, Object>) manufacturerMap.get(manufacturer);
             for (String deviceType : deviceTypeMap.keySet()) {
-                Map<String, FoxEdgeReportMethod> methodMap = (Map<String, FoxEdgeReportMethod>) deviceTypeMap.get(deviceType);
+                Map<String, Map<String, Object>> methodMap = (Map<String, Map<String, Object>>) deviceTypeMap.get(deviceType);
                 for (String method : methodMap.keySet()) {
-                    FoxEdgeReportMethod methodPair = methodMap.get(method);
+                    FoxEdgeReportMethod methodPair = (FoxEdgeReportMethod) methodMap.get(method).get(DeviceMethodVOFieldConstant.field_method);
 
                     OperateMethodEntity methodEntity = new OperateMethodEntity();
 
@@ -211,11 +221,29 @@ public class MethodEntityService {
                     methodEntity.setCreateTime(time);
                     methodEntity.setUpdateTime(time);
 
+                    // Jar文件名
+                    String fileName = splitJarFileName((String) methodMap.get(method).get(DeviceMethodVOFieldConstant.field_file));
+                    methodEntity.getEngineParam().put(DeviceMethodVOFieldConstant.field_file, fileName);
+
                     resultList.add(methodEntity);
                 }
             }
         }
 
         return resultList;
+    }
+
+    private String splitJarFileName(String path) {
+        if (MethodUtils.hasEmpty(path)) {
+            return "";
+        }
+
+        path = path.replace("\\", "/");
+        String[] items = path.split("/");
+        if (items.length == 0) {
+            return "";
+        }
+
+        return items[items.length - 1];
     }
 }

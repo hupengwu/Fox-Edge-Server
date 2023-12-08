@@ -262,18 +262,22 @@ public class SerialPortLinux implements ISerialPort {
         }
     }
 
+
     /**
-     * 读取串口数据
-     * 说明：原来是直接通过Linux的select来等待读取数据的，这种操作效率非常高
-     * 但是，有些厂家的设备返回的数据，断断续续，比如空调红外转串口通信，传过来的数据，变成断断续续的
-     * 此时，使用保守方案，100毫秒的循环读取数据
+     * 异步模式需要的单纯读数据
      *
-     * @param recvBuffer      缓存
-     * @param minPackInterval 两组数据报文之间，最小的时间间隔
-     * @param maxPackInterval 两组数据报文之间，最大的时间间隔
-     * @return 报文长度
+     * @param readBuffer 缓存
+     * @return 返回的数据
      */
     @Override
+    public int readData(byte[] readBuffer) {
+        if (this.fd < 0) {
+            throw new RuntimeException("串口尚未打开：" + this.name);
+        }
+
+        return API.read(this.fd, readBuffer, readBuffer.length);
+    }
+
     public int recvData(byte[] recvBuffer, long minPackInterval, long maxPackInterval) {
         if (this.fd < 0) {
             throw new RuntimeException("串口尚未打开：" + this.name);

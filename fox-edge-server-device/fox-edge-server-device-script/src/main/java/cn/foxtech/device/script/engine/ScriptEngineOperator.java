@@ -35,10 +35,10 @@ public class ScriptEngineOperator {
             engine.put("fox_edge_param", JsonUtils.buildJson(params));
 
             // 接收数据，转成字符串
-            if ((recv instanceof Map)) {
+            if (recv instanceof Map) {
                 engine.put("fox_edge_data", JsonUtils.buildJson(recv));
                 return;
-            } else if ((recv instanceof Map)) {
+            } else if (recv instanceof List) {
                 engine.put("fox_edge_data", JsonUtils.buildJson(recv));
                 return;
             } else if (recv instanceof String) {

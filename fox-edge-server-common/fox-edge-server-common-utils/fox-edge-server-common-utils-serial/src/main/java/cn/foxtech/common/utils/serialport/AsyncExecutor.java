@@ -166,8 +166,10 @@ public class AsyncExecutor {
                             return;
                         }
 
+                        Thread.sleep(100);
+
                         // 读取串口数据
-                        int count = serialPort.recvData(recv, 10, 3 * 1000);
+                        int count = serialPort.readData(recv);
                         if (count == 0) {
                             continue;
                         }

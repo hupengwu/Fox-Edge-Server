@@ -65,6 +65,13 @@ public interface ISerialPort {
     int recvData(byte[] data, long mTimeout);
 
     /**
+     * 异步模式需要的单纯读数据
+     * @param readBuffer 缓存
+     * @return 返回的数据
+     */
+    public int readData(byte[] readBuffer);
+
+    /**
      * 读取串口数据
      *
      * @param recvBuffer      缓存

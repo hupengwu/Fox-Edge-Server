@@ -8,6 +8,8 @@ public class DeviceMethodVOFieldConstant {
     // 接收的topic名称
     public static final String field_route = "route";
 
+    public static final String field_method = "method";
+    public static final String field_file = "file";
 
     /**
      * 字段值定义：field_operate

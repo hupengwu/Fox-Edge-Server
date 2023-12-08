@@ -15,7 +15,7 @@ import java.util.Map;
 @Setter(value = AccessLevel.PUBLIC)
 public class OperateMethodEntity extends OperateMethodBase {
     /**
-     * 脚本引擎
+     * JSP引擎的配置
      */
     private Map<String, Object> engineParam = new HashMap<>();
 

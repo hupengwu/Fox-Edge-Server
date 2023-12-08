@@ -7,11 +7,14 @@ public class ServiceVOFieldConstant {
     public static final String field_loader_name = "loaderName";
 
     public static final String field_spring_param = "springParam";
+    public static final String field_conf_files = "confFiles";
 
     public static final String field_app_load = "appLoad";
     public static final String field_app_port = "appPort";
 
     public static final String field_file_name = "fileName";
+
+    public static final String field_jar_name = "jarName";
 
     public static final String field_path_name = "pathName";
 

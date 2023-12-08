@@ -55,12 +55,12 @@ public class DeviceRecordValueUpdater {
             recordEntity.setRecordData(record);
 
             // 保存到数据库
-            this.saveDeviceRecordEntity(recordEntity);
+            this.deviceRecordEntityService.insertEntity(recordEntity);
         }
     }
 
     /**
-     * 保存记录实体到数据库
+     * 保存记录实体到数据库：该版本不一定合理，先注释掉
      *
      * @param recordEntity 记录实体
      */

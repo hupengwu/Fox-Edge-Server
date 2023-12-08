@@ -218,6 +218,23 @@ public class SerialPortWin32 implements ISerialPort {
     }
 
     /**
+     * 异步模式需要的单纯读数据
+     *
+     * @param readBuffer 缓存
+     * @return 返回的数据
+     */
+    @Override
+    public int readData(byte[] readBuffer) {
+        if (!this.isOpen()) {
+            throw new RuntimeException("串口尚未打开：" + this.name);
+        }
+
+        IntByReference lngBytesRead = new IntByReference();
+        KERNEL.ReadFile(handle, readBuffer, readBuffer.length, lngBytesRead, null);
+        return lngBytesRead.getValue();
+    }
+
+    /**
      * 读取串口数据
      *
      * @param recvBuffer      缓存

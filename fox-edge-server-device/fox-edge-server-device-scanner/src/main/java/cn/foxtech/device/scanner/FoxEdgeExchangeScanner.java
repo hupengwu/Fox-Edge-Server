@@ -3,6 +3,7 @@ package cn.foxtech.device.scanner;
 
 import cn.foxtech.common.utils.Maps;
 import cn.foxtech.common.utils.reflect.JarLoaderUtils;
+import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
 import cn.foxtech.device.protocol.RootLocation;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
@@ -11,6 +12,7 @@ import cn.foxtech.device.protocol.v1.core.method.FoxEdgeExchangeMethod;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -38,6 +40,10 @@ public class FoxEdgeExchangeScanner {
                     continue;
                 }
 
+                // class所属的文件
+                URL url = aClass.getProtectionDomain().getCodeSource().getLocation();
+                String filePath = url.getPath();
+
                 // 设备级别的处理：
                 FoxEdgeDeviceType typeAnnotation = aClass.getAnnotation(FoxEdgeDeviceType.class);
                 String deviceType = typeAnnotation.value();
@@ -46,9 +52,9 @@ public class FoxEdgeExchangeScanner {
 
                 Map<String, FoxEdgeExchangeMethod> methodMap = scanMethodPair(manufacturer, deviceType, aClass);
                 for (String method : methodMap.keySet()) {
-                    Maps.setValue(manufacturerMap, manufacturer, deviceType, method, methodMap.get(method));
+                    Maps.setValue(manufacturerMap, manufacturer, deviceType, method, DeviceMethodVOFieldConstant.field_method, methodMap.get(method));
+                    Maps.setValue(manufacturerMap, manufacturer, deviceType, method, DeviceMethodVOFieldConstant.field_file, filePath);
                 }
-
             }
         } catch (Throwable e) {
             e.getCause();
