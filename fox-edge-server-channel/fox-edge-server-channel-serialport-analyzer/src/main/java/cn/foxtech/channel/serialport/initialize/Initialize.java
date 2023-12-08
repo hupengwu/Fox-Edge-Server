@@ -1,8 +1,11 @@
 package cn.foxtech.channel.serialport.initialize;
 
 import cn.foxtech.channel.common.initialize.ChannelInitialize;
+import cn.foxtech.channel.common.service.EntityManageService;
+import cn.foxtech.channel.serialport.notify.OperateEntityTypeNotify;
 import cn.foxtech.channel.serialport.service.ServerInitializer;
 import cn.foxtech.common.entity.entity.OperateEntity;
+import cn.foxtech.common.entity.service.redis.ConsumerRedisService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -24,6 +27,12 @@ public class Initialize implements CommandLineRunner {
     @Autowired
     private ServerInitializer serverInitializer;
 
+    @Autowired
+    private OperateEntityTypeNotify operateEntityTypeNotify;
+
+    @Autowired
+    private EntityManageService entityManageService;
+
 
     @Override
     public void run(String... args) {
@@ -34,6 +43,11 @@ public class Initialize implements CommandLineRunner {
         consumer.add(OperateEntity.class.getSimpleName());
         this.channelInitialize.initialize(consumer);
 
+        // 绑定一个类型级别的数据变更通知
+        ConsumerRedisService consumerRedisService = (ConsumerRedisService) this.entityManageService.getBaseRedisService(OperateEntity.class);
+        consumerRedisService.bind(this.operateEntityTypeNotify);
+
+        // 初始化服务
         this.serverInitializer.initialize();
 
         logger.info("------------------------初始化结束！------------------------");

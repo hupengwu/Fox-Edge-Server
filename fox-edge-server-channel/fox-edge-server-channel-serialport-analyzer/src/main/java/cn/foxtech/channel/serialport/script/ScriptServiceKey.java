@@ -37,7 +37,6 @@ public class ScriptServiceKey {
                 message = HexUtils.byteArrayToHexString(buff);
             }
 
-            this.scriptEngine.eval(script);
             Invocable invoke = (Invocable) scriptEngine;
             return (String) invoke.invokeFunction("decode", message);
         } catch (Exception e) {

@@ -36,7 +36,6 @@ public class ScriptSplitMessage {
                 message = HexUtils.byteArrayToHexString(buff, 0, end, false);
             }
 
-            this.scriptEngine.eval(script);
             Invocable invoke = (Invocable) scriptEngine;
             return (String) invoke.invokeFunction("decode", message);
         } catch (Exception e) {

@@ -42,28 +42,39 @@ public class ChannelService extends ChannelServerAPI {
         String manufacturer = (String) channelParam.get("manufacturer");
         String deviceType = (String) channelParam.get("deviceType");
         String splitHandler = (String) channelParam.get("splitHandler");
-        String keyHandler = (String) channelParam.get("keyHandler");
-        String serviceKey = (String) channelParam.get("serviceKey");
-        if (MethodUtils.hasEmpty(manufacturer, deviceType, splitHandler, keyHandler, serviceKey)) {
-            throw new ServiceException("参数不能为空: manufacturer, deviceType, splitHandler, keyHandler, serviceKey");
+
+        // 必选项
+        if (MethodUtils.hasEmpty(manufacturer, deviceType, splitHandler)) {
+            throw new ServiceException("参数不能为空: manufacturer, deviceType, splitHandler");
         }
 
-        // 获得操作实体
-        OperateEntity splitOperate = this.scriptEngineService.getSplitOperate(channelParam);
-        OperateEntity keyOperate = this.scriptEngineService.getKeyOperate(channelParam);
 
-        // 构造脚本引擎
-        ScriptSplitMessage splitScript = this.scriptEngineService.buildSplitOperate(splitOperate);
-        ScriptServiceKey keyScript = this.scriptEngineService.buildServiceKeyOperate(keyOperate);
-
+        // 构造脚本引擎的绑定关系
         SerialChannelEntity channelEntity = new SerialChannelEntity();
+        this.rebindScriptEngine(channelEntity, channelParam);
+
+        this.channelEntityMap.put(channelName, channelEntity);
+
+
+    }
+
+    public void rebindScriptEngine(SerialChannelEntity channelEntity, Map<String, Object> channelParam) throws ScriptException, NoSuchMethodException {
         channelEntity.getChannelParam().putAll(channelParam);
-        channelEntity.setKeyScript(keyScript);
-        channelEntity.setKeyOperate(keyOperate);
+
+        // 获得操作实体:splitOperate，必选项目
+        OperateEntity splitOperate = this.scriptEngineService.getSplitOperate(channelParam);
+        ScriptSplitMessage splitScript = this.scriptEngineService.buildSplitOperate(splitOperate);
         channelEntity.setSplitScript(splitScript);
         channelEntity.setSplitOperate(splitOperate);
 
-        this.channelEntityMap.put(channelName, channelEntity);
+        // 获得操作实体:keyHandler，可选项目
+        String keyHandler = (String) channelParam.get("keyHandler");
+        if (!MethodUtils.hasEmpty(keyHandler)) {
+            OperateEntity keyOperate = this.scriptEngineService.getKeyOperate(channelParam);
+            ScriptServiceKey keyScript = this.scriptEngineService.buildServiceKeyOperate(keyOperate);
+            channelEntity.setKeyScript(keyScript);
+            channelEntity.setKeyOperate(keyOperate);
+        }
     }
 
 

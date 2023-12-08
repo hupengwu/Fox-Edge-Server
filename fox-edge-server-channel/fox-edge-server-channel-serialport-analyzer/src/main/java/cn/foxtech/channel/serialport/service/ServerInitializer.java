@@ -6,6 +6,7 @@ import cn.foxtech.channel.serialport.entity.SerialStreamEntity;
 import cn.foxtech.channel.serialport.script.ScriptServiceKey;
 import cn.foxtech.channel.serialport.script.ScriptSplitMessage;
 import cn.foxtech.common.entity.manager.LocalConfigService;
+import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.hex.HexUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.serialport.AsyncExecutor;
@@ -14,7 +15,6 @@ import cn.foxtech.core.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,11 +36,23 @@ public class ServerInitializer {
     @Autowired
     private ReportService reportService;
 
+
+    @Autowired
+    private RedisConsoleService logger;
+
+
+    /**
+     * 是否记录日志
+     */
+    private boolean openLogger;
+
     public void initialize() {
         // 读取配置参数
         this.localConfigService.initialize();
         Map<String, Object> configs = this.localConfigService.getConfigs();
         Map<String, Object> params = (Map<String, Object>) configs.getOrDefault("serialPort", new HashMap<>());
+        this.openLogger = (Boolean) configs.getOrDefault("logger", false);
+
 
         // 打开串口
         this.openSerial(params);
@@ -64,7 +76,9 @@ public class ServerInitializer {
                         appendData();
 
                     } catch (Exception e) {
-                        e.getMessage();
+                        if (openLogger) {
+                            logger.error("接收数据异常：" + e.getMessage());
+                        }
                     }
                 }
             }
@@ -82,7 +96,9 @@ public class ServerInitializer {
                         analyseData();
 
                     } catch (Exception e) {
-                        e.getMessage();
+                        if (openLogger) {
+                            logger.error("分析数据异常：" + e.getMessage());
+                        }
                     }
                 }
             }
@@ -142,7 +158,7 @@ public class ServerInitializer {
             SerialStreamEntity streamEntity = this.serialPortEntity.getStreamEntity();
             synchronized (streamEntity) {
                 // 等待消息别的线程的notify
-                streamEntity.wait(10 * 1000);
+                streamEntity.wait(1000);
 
                 if (streamEntity.getEnd() == 0) {
                     return;
@@ -154,8 +170,7 @@ public class ServerInitializer {
 
                     // 取出脚本引擎
                     ScriptSplitMessage splitScript = channelEntity.getSplitScript();
-                    ScriptServiceKey keyScript = channelEntity.getKeyScript();
-                    if (splitScript == null || keyScript == null) {
+                    if (splitScript == null) {
                         continue;
                     }
 
@@ -163,20 +178,14 @@ public class ServerInitializer {
                     // 粘包的情况
                     while (true) {
                         try {
-                            // 分拆报文
+                            // 必选条件：分拆报文
                             byte[] data = this.decode(splitScript, streamEntity);
                             if (data == null) {
                                 break;
                             }
 
-                            // 提取业务特征
-                            String key = this.decode(keyScript, data);
-                            if (key.isEmpty()) {
-                                continue;
-                            }
-
-                            // 比较业务特征
-                            if (!key.equals(channelEntity.getChannelParam().get("serviceKey"))) {
+                            // 可选条件：如果用户要求按业务特征进行细分，那么就再进行业务特征的识别
+                            if (!this.checkKey(channelEntity, data)) {
                                 continue;
                             }
 
@@ -200,6 +209,23 @@ public class ServerInitializer {
         }
     }
 
+    private boolean checkKey(SerialChannelEntity channelEntity, byte[] data) {
+        // 可选条件：如果用户没有配置，那么不进行检查，直接返回成功
+        ScriptServiceKey keyScript = channelEntity.getKeyScript();
+        if (keyScript == null) {
+            return true;
+        }
+
+        // 提取业务特征
+        String key = keyScript.decode(data);
+        if (key.isEmpty()) {
+            return false;
+        }
+
+        // 比较业务特征
+        return key.equals(channelEntity.getChannelParam().get("serviceKey"));
+    }
+
     private byte[] decode(ScriptSplitMessage splitMessage, SerialStreamEntity streamEntity) {
         String res = splitMessage.decode(streamEntity.getBuff(), streamEntity.getEnd());
         if (res.isEmpty()) {
@@ -213,14 +239,6 @@ public class ServerInitializer {
         streamEntity.movHead(data);
 
         return data;
-    }
-
-    private String decode(ScriptServiceKey scriptServiceKey, byte[] data) throws UnsupportedEncodingException {
-        String res = scriptServiceKey.decode(data);
-        if (res.isEmpty()) {
-            return "";
-        }
-        return res;
     }
 
     public void openSerial(Map<String, Object> channelParam) {

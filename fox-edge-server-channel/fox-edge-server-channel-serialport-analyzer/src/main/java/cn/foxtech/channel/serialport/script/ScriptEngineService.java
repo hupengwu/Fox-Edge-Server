@@ -25,6 +25,7 @@ public class ScriptEngineService {
     @Autowired
     private EntityManageService entityManageService;
 
+
     public ScriptEngine getScriptEngine(String manufacturer, String deviceType, String operateName) {
         ScriptEngine engine = (ScriptEngine) Maps.getValue(this.engineMap, manufacturer, deviceType, operateName);
         if (engine == null) {
@@ -125,63 +126,46 @@ public class ScriptEngineService {
     }
 
     public OperateEntity getSplitOperate(Map<String, Object> channelParam) {
-        try {
-            String manufacturer = (String) channelParam.get("manufacturer");
-            String deviceType = (String) channelParam.get("deviceType");
-            String splitHandler = (String) channelParam.get("splitHandler");
-            String keyHandler = (String) channelParam.get("keyHandler");
-            String serviceKey = (String) channelParam.get("serviceKey");
-            if (MethodUtils.hasEmpty(manufacturer, deviceType, splitHandler, keyHandler, serviceKey)) {
-                throw new ServiceException("参数不能为空: manufacturer, deviceType, splitHandler, keyHandler, serviceKey");
-            }
-
-            OperateEntity operateEntity = new OperateEntity();
-            operateEntity.setManufacturer(manufacturer);
-            operateEntity.setDeviceType(deviceType);
-            operateEntity.setOperateName(splitHandler);
-            operateEntity.setEngineType("JavaScript");
-            operateEntity = this.entityManageService.getEntity(operateEntity.makeServiceKey(), OperateEntity.class);
-            if (operateEntity == null) {
-                throw new ServiceException("参数不能为空: 找不到对应的操作实体");
-            }
-
-            return operateEntity;
-
-        } catch (Exception e) {
-            e.getMessage();
+        String manufacturer = (String) channelParam.get("manufacturer");
+        String deviceType = (String) channelParam.get("deviceType");
+        String splitHandler = (String) channelParam.get("splitHandler");
+        if (MethodUtils.hasEmpty(manufacturer, deviceType, splitHandler)) {
+            throw new ServiceException("参数不能为空: manufacturer, deviceType, splitHandler");
         }
 
-        return null;
+        OperateEntity operateEntity = new OperateEntity();
+        operateEntity.setManufacturer(manufacturer);
+        operateEntity.setDeviceType(deviceType);
+        operateEntity.setOperateName(splitHandler);
+        operateEntity.setEngineType("JavaScript");
+        operateEntity = this.entityManageService.getEntity(operateEntity.makeServiceKey(), OperateEntity.class);
+        if (operateEntity == null) {
+            throw new ServiceException("参数不能为空: 找不到对应的操作实体");
+        }
+
+        return operateEntity;
     }
 
     public OperateEntity getKeyOperate(Map<String, Object> channelParam) {
-        try {
-            String manufacturer = (String) channelParam.get("manufacturer");
-            String deviceType = (String) channelParam.get("deviceType");
-            String splitHandler = (String) channelParam.get("splitHandler");
-            String keyHandler = (String) channelParam.get("keyHandler");
-            String serviceKey = (String) channelParam.get("serviceKey");
-            if (MethodUtils.hasEmpty(manufacturer, deviceType, splitHandler, keyHandler, serviceKey)) {
-                throw new ServiceException("参数不能为空: manufacturer, deviceType, splitHandler, keyHandler, serviceKey");
-            }
-
-            OperateEntity operateEntity = new OperateEntity();
-            operateEntity.setManufacturer(manufacturer);
-            operateEntity.setDeviceType(deviceType);
-            operateEntity.setOperateName(keyHandler);
-            operateEntity.setEngineType("JavaScript");
-            operateEntity = this.entityManageService.getEntity(operateEntity.makeServiceKey(), OperateEntity.class);
-            if (operateEntity == null) {
-                throw new ServiceException("参数不能为空: 找不到对应的操作实体");
-            }
-
-            return operateEntity;
-
-        } catch (Exception e) {
-            e.getMessage();
+        String manufacturer = (String) channelParam.get("manufacturer");
+        String deviceType = (String) channelParam.get("deviceType");
+        String keyHandler = (String) channelParam.get("keyHandler");
+        String serviceKey = (String) channelParam.get("serviceKey");
+        if (MethodUtils.hasEmpty(manufacturer, deviceType, keyHandler, serviceKey)) {
+            throw new ServiceException("参数不能为空: manufacturer, deviceType, keyHandler, serviceKey");
         }
 
-        return null;
+        OperateEntity operateEntity = new OperateEntity();
+        operateEntity.setManufacturer(manufacturer);
+        operateEntity.setDeviceType(deviceType);
+        operateEntity.setOperateName(keyHandler);
+        operateEntity.setEngineType("JavaScript");
+        operateEntity = this.entityManageService.getEntity(operateEntity.makeServiceKey(), OperateEntity.class);
+        if (operateEntity == null) {
+            throw new ServiceException("参数不能为空: 找不到对应的操作实体");
+        }
+
+        return operateEntity;
     }
 }
 
