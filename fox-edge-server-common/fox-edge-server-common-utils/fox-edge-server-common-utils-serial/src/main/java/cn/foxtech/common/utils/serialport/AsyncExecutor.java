@@ -170,7 +170,7 @@ public class AsyncExecutor {
 
                         // 读取串口数据
                         int count = serialPort.readData(recv);
-                        if (count == 0) {
+                        if (count <= 0) {
                             continue;
                         }
 
