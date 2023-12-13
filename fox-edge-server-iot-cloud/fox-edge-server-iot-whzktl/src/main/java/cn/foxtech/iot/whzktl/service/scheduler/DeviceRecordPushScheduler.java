@@ -24,6 +24,7 @@ public class DeviceRecordPushScheduler extends PeriodTaskService {
     public void execute(long threadId) {
         try {
             Thread.sleep(10 * 1000);
+
             // 分批处理
             int pageSize = 100;
             int count;
@@ -54,7 +55,7 @@ public class DeviceRecordPushScheduler extends PeriodTaskService {
         // 查询云端的时间戳
         Object timestamp = this.remoteCloud.queryTimestamp();
         if (timestamp == null) {
-            timestamp = 0;
+            return 0;
         }
 
         // 进行比对，确认差额的数据
