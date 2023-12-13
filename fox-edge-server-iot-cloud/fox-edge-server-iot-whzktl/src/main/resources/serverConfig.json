@@ -27,7 +27,7 @@
     },
     "whzktl": {
       "publish": "/zktl/gateway/{edgeId}/up",
-      "subscribe": "/zktl/gateway/{edgeId}/down"
+      "subscribe": "/zktl/gateway/{edgeId}/down/#"
     },
     "extend": {
       "extendField": "whzktl"

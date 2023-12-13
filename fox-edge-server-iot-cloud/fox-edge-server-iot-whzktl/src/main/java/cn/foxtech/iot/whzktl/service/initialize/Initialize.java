@@ -3,8 +3,9 @@ package cn.foxtech.iot.whzktl.service.initialize;
 
 import cn.foxtech.common.entity.entity.*;
 import cn.foxtech.iot.common.initialize.InitializeCommon;
-import cn.foxtech.iot.whzktl.service.service.DevicePushScheduler;
-import cn.foxtech.iot.whzktl.service.whzktl.WhZktlIotService;
+import cn.foxtech.iot.whzktl.service.scheduler.DeviceRecordPushScheduler;
+import cn.foxtech.iot.whzktl.service.scheduler.DeviceValuePushScheduler;
+import cn.foxtech.iot.whzktl.service.service.WhZktlIotService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -25,7 +26,10 @@ public class Initialize implements CommandLineRunner {
     private InitializeCommon initializeCommon;
 
     @Autowired
-    private DevicePushScheduler devicePushScheduler;
+    private DeviceValuePushScheduler deviceValuePushScheduler;
+
+    @Autowired
+    private DeviceRecordPushScheduler deviceRecordPushScheduler;
 
     @Autowired
     private WhZktlIotService whZktlIotService;
@@ -51,7 +55,9 @@ public class Initialize implements CommandLineRunner {
         this.whZktlIotService.initialize();
 
         // 设备信息的推送
-        this.devicePushScheduler.schedule();
+        this.deviceValuePushScheduler.schedule();
+
+        this.deviceRecordPushScheduler.schedule();
 
 
         logger.info("------------------------初始化结束！------------------------");

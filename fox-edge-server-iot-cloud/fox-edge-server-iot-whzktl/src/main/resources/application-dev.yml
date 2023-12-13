@@ -2,9 +2,11 @@ spring:
   application:
     name: fox-edge-server-iot-whzktl-service
 
-  channel:
-    init-mode: "redis"                   # 可选参数：初始化数据来源:redis或者local
-    link-mode: false                     # 可选参数：开启链路模式
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.1.7:3306/fox_edge?useUnicode=true&characterEncoding=utf8
+    username: fox-edge
+    password: 12345678
 
   fox-service:                            # 配置信息
     service:                              # 服务信息，指明这个服务的模块信息，用于识别进程，它跟shell和restful路由强相关

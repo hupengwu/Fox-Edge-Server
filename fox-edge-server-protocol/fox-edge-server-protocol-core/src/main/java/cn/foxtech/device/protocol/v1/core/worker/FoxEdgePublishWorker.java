@@ -1,5 +1,6 @@
 package cn.foxtech.device.protocol.v1.core.worker;
 
+import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
 import cn.foxtech.device.protocol.v1.core.channel.FoxEdgeChannelService;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.core.method.FoxEdgeMethodTemplate;
@@ -26,13 +27,22 @@ public class FoxEdgePublishWorker {
     public static void publish(String deviceName, String manufacturer, String deviceType, String operateName, Map<String, Object> params, int timeout, FoxEdgeChannelService channelService) throws ProtocolException, CommunicationException {
         try {
             // 根据设备类型查找编码器集合
-            Map<String, FoxEdgePublishMethod> methodPairs = FoxEdgeMethodTemplate.inst().getPublishMethod(manufacturer, deviceType);
+            Map<String, Object> methodPairs = FoxEdgeMethodTemplate.inst().getPublishMethod(manufacturer, deviceType);
             if (methodPairs == null) {
                 throw new ProtocolException("找不到对应设备类型的编码器：" + manufacturer + ":" + deviceType);
             }
 
+            Map<String, FoxEdgePublishMethod> methodMap = (Map<String, FoxEdgePublishMethod>) methodPairs.get(operateName);
+            if (methodMap == null) {
+                throw new ProtocolException("找不到对应操作名称的编码/解码函数：" + operateName);
+            }
+
             // 根据操作名称，获得对应的编码/解码函数
-            FoxEdgePublishMethod methodPair = methodPairs.get(operateName);
+            FoxEdgePublishMethod methodPair = methodMap.get(DeviceMethodVOFieldConstant.field_method);
+            if (methodPair == null) {
+                throw new ProtocolException("数据结构异常!");
+            }
+
             if (methodPair == null) {
                 throw new ProtocolException("找不到对应操作名称的编码函数：" + operateName);
             }

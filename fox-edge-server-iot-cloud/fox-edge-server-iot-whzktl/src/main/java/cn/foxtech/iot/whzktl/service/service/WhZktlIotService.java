@@ -1,4 +1,4 @@
-package cn.foxtech.iot.whzktl.service.whzktl;
+package cn.foxtech.iot.whzktl.service.service;
 
 import cn.foxtech.common.entity.entity.DeviceValueEntity;
 import cn.foxtech.common.entity.manager.LocalConfigService;
@@ -7,6 +7,7 @@ import cn.foxtech.common.utils.osinfo.OSInfoUtils;
 import cn.foxtech.iot.common.remote.RemoteMqttService;
 import cn.foxtech.iot.common.service.EntityManageService;
 import cn.foxtech.iot.whzktl.service.notify.DeviceValueTypeNotify;
+import cn.foxtech.iot.whzktl.service.remote.MqttHandler;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -58,7 +59,7 @@ public class WhZktlIotService {
         consumerRedisService.bind(this.deviceValueTypeNotify);
 
         // 初始化MQTT组件
-        WhZktlMqttHandler mqttHandler = new WhZktlMqttHandler();
+        MqttHandler mqttHandler = new MqttHandler();
         mqttHandler.setTopic(this.subscribe);
         this.remoteMqttService.initialize(mqttHandler);
     }
