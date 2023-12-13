@@ -23,9 +23,9 @@ public class DeviceRecordPushScheduler extends PeriodTaskService {
     @Override
     public void execute(long threadId) {
         try {
-            Thread.sleep(1 * 1000);
+            Thread.sleep(10 * 1000);
             // 分批处理
-            int pageSize = 10;
+            int pageSize = 100;
             int count;
             do {
                 count = this.syncEntity("tb_device_record", pageSize);
