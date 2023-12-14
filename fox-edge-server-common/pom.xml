@@ -24,6 +24,7 @@
         <module>fox-edge-server-common-process</module>
         <module>fox-edge-server-common-utils</module>
         <module>fox-edge-server-common-status</module>
+        <module>fox-edge-server-common-tags</module>
     </modules>
 
 

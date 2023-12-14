@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 包操作：批量操作
@@ -55,4 +56,22 @@ public class TaskRespondVO extends TaskVO {
         taskRespondVO.getRespondVOS().add(operateRespondVO);
         return taskRespondVO;
     }
+
+    public static TaskRespondVO buildRespondVO(Map<String, Object> operateRespondMap) {
+        TaskRespondVO taskRespondVO = new TaskRespondVO();
+        taskRespondVO.bindBaseVO(operateRespondMap);
+
+        taskRespondVO.setMsg((String) operateRespondMap.get("msg"));
+        taskRespondVO.setCode((Integer) operateRespondMap.get("code"));
+
+        List<Map<String, Object>> respondVOS = (List<Map<String, Object>>) operateRespondMap.get("respondVOS");
+        for (Map<String, Object> respondMap : respondVOS) {
+            OperateRespondVO respondVO = OperateRespondVO.buildOperateRespondVO(respondMap);
+
+            taskRespondVO.getRespondVOS().add(respondVO);
+        }
+
+        return taskRespondVO;
+    }
+
 }

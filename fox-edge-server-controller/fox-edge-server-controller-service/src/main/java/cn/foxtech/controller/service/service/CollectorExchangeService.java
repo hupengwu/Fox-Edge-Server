@@ -1,21 +1,21 @@
 package cn.foxtech.controller.service.service;
 
+import cn.foxtech.common.domain.constant.RedisStatusConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.ConfigEntity;
+import cn.foxtech.common.entity.entity.DeviceEntity;
+import cn.foxtech.common.entity.entity.OperateMonitorTaskEntity;
+import cn.foxtech.common.status.ServiceStatus;
 import cn.foxtech.common.utils.json.JsonUtils;
-import cn.foxtech.controller.common.redistopic.RedisTopicPuberService;
+import cn.foxtech.common.utils.number.NumberUtils;
+import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
+import cn.foxtech.controller.common.redislist.PersistValueService;
 import cn.foxtech.controller.common.service.DeviceOperateService;
 import cn.foxtech.controller.common.service.EntityManageService;
 import cn.foxtech.device.domain.vo.OperateRequestVO;
 import cn.foxtech.device.domain.vo.OperateRespondVO;
 import cn.foxtech.device.domain.vo.TaskRequestVO;
 import cn.foxtech.device.domain.vo.TaskRespondVO;
-import cn.foxtech.common.domain.constant.RedisStatusConstant;
-import cn.foxtech.common.entity.entity.DeviceEntity;
-import cn.foxtech.common.entity.entity.OperateMonitorTaskEntity;
-import cn.foxtech.common.status.ServiceStatus;
-import cn.foxtech.common.utils.number.NumberUtils;
-import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +27,8 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * 主从问答方式设备的数据采集<br>
+ * 主从问答方式设备的数据采集
+ * <p>
  * 背景知识：主从半双工设备，这类设备只会被动响应上位机的命令请求。现实中大多数简单的工控设备都是这种设备<br>
  */
 @Component
@@ -38,7 +39,7 @@ public class CollectorExchangeService extends PeriodTaskService {
     private EntityManageService entityManageService;
 
     @Autowired
-    private RedisTopicPuberService puberService;
+    private PersistValueService valueService;
 
     @Autowired
     private DeviceOperateService deviceOperateService;
@@ -131,7 +132,7 @@ public class CollectorExchangeService extends PeriodTaskService {
             }
 
             // 更新设备消息到数据库和redis
-            this.puberService.sendRespondVO(taskRespondVO);
+            this.valueService.push(taskRespondVO);
         } catch (Exception e) {
             logger.info(e);
         }

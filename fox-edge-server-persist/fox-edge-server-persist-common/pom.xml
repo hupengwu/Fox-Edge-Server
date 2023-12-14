@@ -24,12 +24,6 @@
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-redis-topic</artifactId>
-            <version>${fox-edge-server.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-entity-service</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
@@ -43,6 +37,12 @@
         <dependency>
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-utils-bean</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-common-tags</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
 
@@ -81,11 +81,7 @@
             <artifactId>fox-edge-server-common-utils-scheduler</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
-        <dependency>
-            <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-scheduler</artifactId>
-            <version>${fox-edge-server.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-domain</artifactId>

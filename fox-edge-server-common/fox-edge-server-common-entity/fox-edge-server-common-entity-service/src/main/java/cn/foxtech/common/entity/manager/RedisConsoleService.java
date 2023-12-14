@@ -45,7 +45,7 @@ public class RedisConsoleService extends RedisLoggerService {
         saveList.add(this.build(level, value, System.currentTimeMillis()));
 
         // 保存到redis
-        super.out(saveList);
+        super.pushAll(saveList);
     }
 
     private Map<String, Object> build(String level, Object value, Long time) {

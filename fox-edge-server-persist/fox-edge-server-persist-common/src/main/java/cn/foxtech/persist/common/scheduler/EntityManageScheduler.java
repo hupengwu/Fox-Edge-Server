@@ -2,6 +2,8 @@ package cn.foxtech.persist.common.scheduler;
 
 
 import cn.foxtech.common.entity.manager.ConfigManageService;
+import cn.foxtech.common.tags.RedisTagReader;
+import cn.foxtech.common.tags.RedisTagService;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import cn.foxtech.persist.common.service.DeviceObjectMapper;
 import cn.foxtech.persist.common.service.EntityManageService;
@@ -29,6 +31,9 @@ public class EntityManageScheduler extends PeriodTaskService {
     @Autowired
     private ConfigManageService configManageService;
 
+    @Autowired
+    private RedisTagService redisTagService;
+
     /**
      * 上次处理时间
      */
@@ -42,6 +47,9 @@ public class EntityManageScheduler extends PeriodTaskService {
 
         // 同步映射数据
         this.deviceObjectMapper.syncEntity();
+
+        // 保存标记
+        this.redisTagService.save();;
 
         // 删除设备历史记录
         this.clearDeviceHistoryEntity();

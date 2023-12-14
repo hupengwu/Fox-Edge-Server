@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Map;
+
 /**
  * 包操作：批量操作
  */
@@ -29,5 +31,11 @@ public class TaskVO {
         this.uuid = vo.uuid;
         this.clientName = vo.clientName;
         this.timeout = vo.timeout;
+    }
+
+    public void bindBaseVO(Map<String, Object> map) {
+        this.uuid = (String) map.get("uuid");
+        this.clientName = (String) map.get("clientName");
+        this.timeout = (Integer) map.get("timeout");
     }
 }

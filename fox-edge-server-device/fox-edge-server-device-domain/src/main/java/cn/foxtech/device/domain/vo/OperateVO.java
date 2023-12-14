@@ -67,4 +67,16 @@ public class OperateVO {
         this.param = vo.param;
         this.record = vo.record;
     }
+
+    public void bindBaseVO(Map<String,Object> map) {
+        this.uuid = (String)map.get("uuid");
+        this.deviceName = (String)map.get("deviceName");
+        this.manufacturer = (String)map.get("manufacturer");
+        this.deviceType = (String)map.get("deviceType");
+        this.timeout = (Integer)map.get("timeout");
+        this.operateMode = (String)map.get("operateMode");
+        this.operateName = (String)map.get("operateName");
+        this.param = (Map<String, Object>)map.get("param");
+        this.record = (Boolean)map.get("record");
+    }
 }

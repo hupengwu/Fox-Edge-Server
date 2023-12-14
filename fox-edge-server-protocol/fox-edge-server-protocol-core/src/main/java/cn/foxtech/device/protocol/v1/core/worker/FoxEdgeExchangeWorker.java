@@ -1,6 +1,5 @@
 package cn.foxtech.device.protocol.v1.core.worker;
 
-import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.channel.FoxEdgeChannelService;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
@@ -42,7 +41,7 @@ public class FoxEdgeExchangeWorker {
             }
 
             // 根据操作名称，获得对应的编码/解码函数
-            FoxEdgeExchangeMethod methodPair = methodMap.get(DeviceMethodVOFieldConstant.field_method);
+            FoxEdgeExchangeMethod methodPair = methodMap.get("method");
             if (methodPair == null) {
                 throw new ProtocolException("数据结构异常!");
             }

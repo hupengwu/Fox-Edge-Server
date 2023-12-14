@@ -4,8 +4,7 @@ package cn.foxtech.persist.service.initialize;
 import cn.foxtech.common.entity.manager.ConfigManageService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.persist.common.initialize.PersistInitialize;
-import cn.foxtech.persist.service.controller.ManagerController;
-import cn.foxtech.persist.service.controller.PersistController;
+import cn.foxtech.persist.service.scheduler.PeriodTaskScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -23,10 +22,7 @@ public class Initialize implements CommandLineRunner {
 
 
     @Autowired
-    private PersistController persistController;
-
-    @Autowired
-    private ManagerController managerController;
+    private PeriodTaskScheduler periodTaskScheduler;
 
 
     @Autowired
@@ -46,11 +42,9 @@ public class Initialize implements CommandLineRunner {
         // 初始化全局配置参数
         this.configManageService.initialize("serverConfig", "serverConfig.json");
 
-        // 调度设备上报收集任务
-        this.persistController.schedule();
+        // 设备记录的上报接收任务
+        this.periodTaskScheduler.schedule();
 
-        // 调度管理服务
-        this.managerController.schedule();
 
         // 在启动阶段，会产生很多临时数据，所以强制GC一次
         System.gc();

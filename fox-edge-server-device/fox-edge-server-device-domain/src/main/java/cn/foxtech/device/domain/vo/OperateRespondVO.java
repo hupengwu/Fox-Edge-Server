@@ -68,4 +68,15 @@ public class OperateRespondVO extends OperateRequestVO {
         this.setMsg(other.msg);
         this.setCode(other.code);
     }
+
+    public static OperateRespondVO buildOperateRespondVO(Map<String,Object> operateRespondMap){
+        OperateRespondVO operateRespondVO = new OperateRespondVO();
+        operateRespondVO.bindBaseVO(operateRespondMap);
+
+        operateRespondVO.setCode((Integer)operateRespondMap.get("code"));
+        operateRespondVO.setMsg((String)operateRespondMap.get("msg"));
+        operateRespondVO.setData((Map<String,Object>)operateRespondMap.get("data"));
+
+        return operateRespondVO;
+    }
 }

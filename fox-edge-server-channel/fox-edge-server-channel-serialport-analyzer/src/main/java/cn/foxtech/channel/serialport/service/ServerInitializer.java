@@ -12,6 +12,7 @@ import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.serialport.AsyncExecutor;
 import cn.foxtech.common.utils.serialport.ISerialPort;
 import cn.foxtech.core.exception.ServiceException;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +28,8 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class ServerInitializer {
+    private final Logger logger = Logger.getLogger(ServerInitializer.class);
+
     private final SerialPortEntity serialPortEntity = new SerialPortEntity();
     @Autowired
     private ChannelService channelService;
@@ -38,7 +41,7 @@ public class ServerInitializer {
 
 
     @Autowired
-    private RedisConsoleService logger;
+    private RedisConsoleService console;
 
 
     /**
@@ -77,7 +80,7 @@ public class ServerInitializer {
 
                     } catch (Exception e) {
                         if (openLogger) {
-                            logger.error("接收数据异常：" + e.getMessage());
+                            console.error("接收数据异常：" + e.getMessage());
                         }
                     }
                 }
@@ -97,7 +100,7 @@ public class ServerInitializer {
 
                     } catch (Exception e) {
                         if (openLogger) {
-                            logger.error("分析数据异常：" + e.getMessage());
+                            console.error("分析数据异常：" + e.getMessage());
                         }
                     }
                 }
@@ -242,36 +245,42 @@ public class ServerInitializer {
     }
 
     public void openSerial(Map<String, Object> channelParam) {
-        // 取出配置参数
-        String serialName = (String) channelParam.get("serialName");
-        Integer baudRate = (Integer) channelParam.get("baudRate");
-        Integer databits = (Integer) channelParam.get("databits");
-        String parity = (String) channelParam.get("parity");
-        Integer stopbits = (Integer) channelParam.get("stopbits");
-        if (MethodUtils.hasEmpty(serialName, baudRate, databits, parity, stopbits, stopbits)) {
-            throw new ServiceException("配置参数不能为空:serialName, baudRate, databits, parity, stopbits, stopbits");
+        try {
+            // 取出配置参数
+            String serialName = (String) channelParam.get("serialName");
+            Integer baudRate = (Integer) channelParam.get("baudRate");
+            Integer databits = (Integer) channelParam.get("databits");
+            String parity = (String) channelParam.get("parity");
+            Integer stopbits = (Integer) channelParam.get("stopbits");
+            if (MethodUtils.hasEmpty(serialName, baudRate, databits, parity, stopbits, stopbits)) {
+                throw new ServiceException("配置参数不能为空:serialName, baudRate, databits, parity, stopbits, stopbits");
+            }
+
+
+            ISerialPort serialPort = ISerialPort.newInstance();
+
+            // 打开串口
+            if (!serialPort.open(serialName)) {
+                throw new ServiceException("打开串口失败:" + serialName);
+            }
+
+            // 记录打开的串口对象
+            this.serialPortEntity.setSerialPort(serialPort);
+
+            // 设置串口参数
+            serialPort.setParam(baudRate, parity, databits, stopbits);
+
+
+            // 全双工模式：创建一个异步执行器
+            AsyncExecutor asyncExecutor = new AsyncExecutor();
+            asyncExecutor.createExecutor(serialPort);
+
+            this.serialPortEntity.setAsyncExecutor(asyncExecutor);
+        } catch (Exception e) {
+            String message  = "初始化串口出错:" + e.getMessage();
+            this.logger.error(message);
+            this.console.error(message);
         }
-
-
-        ISerialPort serialPort = ISerialPort.newInstance();
-
-        // 打开串口
-        if (!serialPort.open(serialName)) {
-            throw new ServiceException("打开串口失败:" + serialName);
-        }
-
-        // 记录打开的串口对象
-        this.serialPortEntity.setSerialPort(serialPort);
-
-        // 设置串口参数
-        serialPort.setParam(baudRate, parity, databits, stopbits);
-
-
-        // 全双工模式：创建一个异步执行器
-        AsyncExecutor asyncExecutor = new AsyncExecutor();
-        asyncExecutor.createExecutor(serialPort);
-
-        this.serialPortEntity.setAsyncExecutor(asyncExecutor);
 
     }
 }

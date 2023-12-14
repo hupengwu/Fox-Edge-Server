@@ -3,6 +3,7 @@ package cn.foxtech.persist.common.service.updater;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.DeviceRecordEntity;
 import cn.foxtech.common.entity.service.devicerecord.DeviceRecordEntityService;
+import cn.foxtech.common.tags.RedisTagService;
 import cn.foxtech.device.protocol.v1.core.constants.FoxEdgeConstant;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class DeviceRecordValueUpdater {
      */
     @Autowired
     private DeviceRecordEntityService deviceRecordEntityService;
+
+    @Autowired
+    private RedisTagService tagService;
 
     /**
      * 更新记录类型的数据
@@ -56,6 +60,9 @@ public class DeviceRecordValueUpdater {
 
             // 保存到数据库
             this.deviceRecordEntityService.insertEntity(recordEntity);
+
+            // 更新标记
+            this.tagService.setValue(DeviceRecordEntity.class.getSimpleName(),recordEntity);
         }
     }
 

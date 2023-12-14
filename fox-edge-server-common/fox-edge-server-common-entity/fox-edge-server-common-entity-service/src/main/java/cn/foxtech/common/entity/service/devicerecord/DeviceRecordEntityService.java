@@ -53,5 +53,9 @@ public class DeviceRecordEntityService extends BaseEntityService {
     public void insertEntity(BaseEntity entity) {
         DeviceRecordPo po = DeviceRecordMaker.makeEntity2Po((DeviceRecordEntity) entity);
         super.insertEntity(po);
+
+        entity.setId(po.getId());
+        entity.setCreateTime(po.getCreateTime());
+        entity.setUpdateTime(po.getUpdateTime());
     }
 }

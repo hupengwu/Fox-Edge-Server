@@ -11,6 +11,7 @@ import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
 import cn.foxtech.device.domain.vo.OperateRespondVO;
 import cn.foxtech.device.domain.vo.TaskRespondVO;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
+import cn.foxtech.device.service.redislist.PersistRecordService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,6 +37,9 @@ public class RedisTopicPuberService {
      */
     @Autowired
     private RedisTopicPublisher publisher;
+
+    @Autowired
+    private PersistRecordService persistService;
 
     /**
      * 将请求发送给对应的channel服务：topic_channel_request_XXXX
@@ -151,14 +155,8 @@ public class RedisTopicPuberService {
             // 把数据内容，填写为新的操作步骤
             taskRespondVO.setRespondVOS(respondVOS);
 
-            // 转换为Json字符串
-            String body = JsonUtils.buildJson(taskRespondVO);
 
-            // 统一发到public
-            String topic = RedisTopicConstant.topic_persist_request + RedisTopicConstant.model_public;
-
-            // 发送数据
-            this.publisher.sendMessage(topic, body);
+            this.persistService.push(taskRespondVO);
         } catch (Exception e) {
             logger.error(e);
         }

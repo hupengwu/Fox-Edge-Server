@@ -67,6 +67,7 @@ public class EntityUpdateService {
                 return;
             }
 
+
             // 取出ID，后面需要用到
             deviceEntity.setId(NumberUtils.makeLong(deviceMap.get(DeviceVOFieldConstant.field_id)));
 

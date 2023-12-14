@@ -1,6 +1,5 @@
 package cn.foxtech.device.protocol.v1.core.worker;
 
-import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.constants.FoxEdgeConstant;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
@@ -34,7 +33,7 @@ public class FoxEdgeReportWorker {
             Map<String, Object> methodMap = (Map<String, Object>) entry.getValue();
 
             // 根据操作名称，获得对应的编码/解码函数
-            FoxEdgeReportMethod methodPair = (FoxEdgeReportMethod) methodMap.get(DeviceMethodVOFieldConstant.field_method);
+            FoxEdgeReportMethod methodPair = (FoxEdgeReportMethod) methodMap.get("method");
 
 
             try {

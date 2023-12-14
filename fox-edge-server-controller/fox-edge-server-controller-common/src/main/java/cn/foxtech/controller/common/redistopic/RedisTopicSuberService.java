@@ -19,6 +19,7 @@ public class RedisTopicSuberService extends RedisTopicSubscriber {
     @Value("${spring.redis_topic.controller_model}")
     private String controller_model = "system_controller";
 
+
     @Override
     public String topic1st() {
         return RedisTopicConstant.topic_device_respond + this.controller_model;
@@ -29,6 +30,11 @@ public class RedisTopicSuberService extends RedisTopicSubscriber {
         return RedisTopicConstant.topic_device_respond + RedisTopicConstant.model_public;
     }
 
+    /**
+     * 交互操作：Exchange的返回
+     *
+     * @param message device服务，在topic_device_respond_system_controller，通知给本服务的响应数据
+     */
     @Override
     public void receiveTopic1st(String message) {
         //logger.debug("receive:" + message);
@@ -49,6 +55,11 @@ public class RedisTopicSuberService extends RedisTopicSubscriber {
 
     }
 
+    /**
+     * 设备服务的主动上报：在topic_device_respond_public上的主动通告
+     *
+     * @param message
+     */
     @Override
     public void receiveTopic2nd(String message) {
         //logger.debug("receive:" + message);
@@ -67,11 +78,14 @@ public class RedisTopicSuberService extends RedisTopicSubscriber {
                     SyncQueueObjectMap.inst().push(DeviceMethodVOFieldConstant.value_operate_report, operateRespondVO, 1000);
                     continue;
                 }
+
                 // 捕获的是操作记录
                 if (DeviceMethodVOFieldConstant.value_operate_exchange.equals(operateMode)) {
                     SyncQueueObjectMap.inst().push(DeviceMethodVOFieldConstant.value_operate_exchange, operateRespondVO, 1000);
                     continue;
                 }
+
+
             }
 
         } catch (Exception e) {

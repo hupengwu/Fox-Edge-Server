@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Map;
+
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
 public class RestFulVO {
@@ -32,5 +34,12 @@ public class RestFulVO {
         this.uuid = vo.uuid;
         this.uri = vo.uri;
         this.data = vo.data;
+    }
+
+    public void bindResVO(Map<String, Object> map) {
+        this.method = (String) map.get("method");
+        this.uuid = (String) map.get("uuid");
+        this.uri = (String) map.get("uri");
+        this.data = map.get("data");
     }
 }
