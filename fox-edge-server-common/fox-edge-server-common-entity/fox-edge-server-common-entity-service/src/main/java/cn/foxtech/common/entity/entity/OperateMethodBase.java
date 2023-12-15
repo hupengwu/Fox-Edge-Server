@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 设备的方法
@@ -111,5 +112,20 @@ public class OperateMethodBase extends BaseEntity {
         this.setId(other.getId());
         this.setCreateTime(other.getCreateTime());
         this.setUpdateTime(other.getUpdateTime());
+    }
+
+    public void bind(Map<String, Object> map){
+        this.manufacturer = (String)map.get("manufacturer");
+        this.deviceType = (String)map.get("deviceType");
+        this.operateName = (String)map.get("operateName");
+        this.engineType = (String)map.get("engineType");
+        this.operateMode = (String)map.get("operateMode");
+        this.serviceType = (String)map.get("serviceType");
+        this.dataType = (String)map.get("dataType");
+        this.timeout = (Integer)map.getOrDefault("timeout",2000);
+        this.polling = (Boolean)map.getOrDefault("polling",false);
+        this.setId(Long.parseLong(map.getOrDefault("id","0").toString()));
+        this.setCreateTime(Long.parseLong(map.getOrDefault("createTime","0").toString()));
+        this.setUpdateTime(Long.parseLong(map.getOrDefault("updateTime","0").toString()));
     }
 }

@@ -22,8 +22,12 @@ public class RepoCloudScriptService {
         return this.cloudRemoteService.executePost("/manager/repository/component/script/page", body);
     }
 
-    public Map<String, Object> queryCloudVersionList(Map<String, Object> body) throws IOException {
+    public Map<String, Object> queryCloudVersionPage(Map<String, Object> body) throws IOException {
         return this.cloudRemoteService.executePost("/manager/repository/component/script/version/page", body);
+    }
+
+    public Map<String, Object> queryCloudVersionList(Map<String, Object> body) throws IOException {
+        return this.cloudRemoteService.executePost("/manager/repository/component/script/version/entities", body);
     }
 
     public Map<String, Object> queryCloudOperateList(Map<String, Object> body) throws IOException {

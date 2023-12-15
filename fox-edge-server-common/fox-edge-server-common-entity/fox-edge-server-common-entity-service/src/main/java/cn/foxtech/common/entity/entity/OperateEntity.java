@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,5 +34,16 @@ public class OperateEntity extends OperateMethodBase {
 
     public void init(OperateMethodEntity other) {
         this.bind(other);
+    }
+
+    public List<Object> makeServiceValueList() {
+        List<Object> list = super.makeServiceValueList();
+        list.add(this.engineParam);
+        return list;
+    }
+
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+        this.engineParam = (Map<String, Object>) map.get("engineParam");
     }
 }

@@ -7,6 +7,8 @@ import cn.foxtech.common.entity.constant.RepoCompVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.OperateEntity;
 import cn.foxtech.common.entity.entity.RepoCompEntity;
+import cn.foxtech.common.utils.ContainerUtils;
+import cn.foxtech.common.utils.DifferUtils;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
@@ -18,9 +20,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * JAVA版本的JAR解码器服务
@@ -413,6 +413,97 @@ public class RepoLocalCompService {
         this.entityManageService.updateEntity(entity);
 
         return respond;
+    }
+
+    public Map<String, Object> installVersion(String compType, Map<String, Object> data) throws IOException, InterruptedException {
+
+        if (compType.equals(RepoCompVOFieldConstant.value_comp_type_jsp_decoder)) {
+            return this.installJspDecoderEntity(data);
+        }
+
+        throw new ServiceException("该组件类型，不支持本地上传");
+    }
+
+    private Map<String, Object> installJspDecoderEntity(Map<String, Object> data) throws IOException {
+        String deviceType = (String) data.get(OperateVOFieldConstant.field_device_type);
+        String manufacturer = (String) data.get(OperateVOFieldConstant.field_manufacturer);
+        String scriptId = (String) data.get(OperateVOFieldConstant.field_script_id);
+        String groupName = (String) data.get(OperateVOFieldConstant.field_group_name);
+        List<Map<String, Object>> operates = (List<Map<String, Object>>) data.get("operates");
+        if (MethodUtils.hasEmpty(deviceType, manufacturer, scriptId, groupName, operates)) {
+            throw new ServiceException("缺少参数： deviceType, manufacturer, scriptId, groupName, operates");
+        }
+
+        RepoCompEntity repoCompEntity = new RepoCompEntity();
+        repoCompEntity.setCompRepo(RepoCompVOFieldConstant.value_comp_repo_local);
+        repoCompEntity.setCompType(RepoCompVOFieldConstant.value_comp_type_jsp_decoder);
+        repoCompEntity.setCompName(manufacturer + ":" + deviceType);
+        repoCompEntity = this.entityManageService.getEntity(repoCompEntity.makeServiceKey(), RepoCompEntity.class);
+
+        // 如果组件对象不存在，那么就创建一个新的组件对象
+        if (repoCompEntity == null) {
+            Map<String, Object> compParam = repoCompEntity.getCompParam();
+            compParam.put(RepoCompVOFieldConstant.field_comp_id, scriptId);
+            compParam.put(RepoCompVOFieldConstant.field_group_name, groupName);
+            compParam.put(OperateVOFieldConstant.field_manufacturer, manufacturer);
+            compParam.put(OperateVOFieldConstant.field_device_type, deviceType);
+
+            this.entityManageService.insertEntity(repoCompEntity);
+        }
+
+
+        // 获得已经存在的操作列表
+        List<BaseEntity> operateList = this.entityManageService.getEntityList(OperateEntity.class, (Object value) -> {
+            OperateEntity entity = (OperateEntity) value;
+
+            if (!entity.getEngineType().equals(OperateVOFieldConstant.value_engine_javascript)) {
+                return false;
+            }
+            if (!entity.getManufacturer().equals(manufacturer)) {
+                return false;
+            }
+            return entity.getDeviceType().equals(deviceType);
+        });
+
+        // 组织成天MAP关系
+        Map<String, OperateEntity> dstOperateMap = new HashMap<>();
+        for (Map<String, Object> operate : operates) {
+            OperateEntity operateEntity = new OperateEntity();
+            operateEntity.bind(operate);
+            operateEntity.setManufacturer(manufacturer);
+            operateEntity.setDeviceType(deviceType);
+
+            dstOperateMap.put(operateEntity.getOperateName(), operateEntity);
+        }
+
+        Map<String, BaseEntity> srcOperateMap = ContainerUtils.buildMapByKey(operateList, OperateEntity::getOperateName);
+
+        Set<String> addList = new HashSet<>();
+        Set<String> delList = new HashSet<>();
+        Set<String> eqlList = new HashSet<>();
+        DifferUtils.differByValue(srcOperateMap.keySet(), dstOperateMap.keySet(), addList, delList, eqlList);
+
+        for (String key : addList) {
+            OperateEntity operateEntity = dstOperateMap.get(key);
+            operateEntity.setId(null);
+            this.entityManageService.insertEntity(operateEntity);
+        }
+        for (String key : delList) {
+            BaseEntity operateEntity = srcOperateMap.get(key);
+            this.entityManageService.deleteEntity(operateEntity);
+        }
+        for (String key : eqlList) {
+            BaseEntity dstEntity = dstOperateMap.get(key);
+            BaseEntity srcEntity = srcOperateMap.get(key);
+            if (dstEntity.makeServiceValue().equals(srcEntity.makeServiceValue())) {
+                continue;
+            }
+
+            dstEntity.setId(srcEntity.getId());
+            this.entityManageService.updateEntity(dstEntity);
+        }
+
+        return null;
     }
 
 

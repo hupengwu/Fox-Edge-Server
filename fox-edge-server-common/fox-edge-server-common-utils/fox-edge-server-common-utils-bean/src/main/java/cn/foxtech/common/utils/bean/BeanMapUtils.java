@@ -63,6 +63,17 @@ public class BeanMapUtils {
         return result;
     }
 
+    public static <T> void filterKeys(List<Map<String, Object>> objectList, List<String> filterKeys) {
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Map<String, Object> map : objectList) {
+            for (String filter : filterKeys) {
+                map.remove(filter);
+            }
+
+            result.add(map);
+        }
+    }
+
     public static <T> List<Map<String, Object>> objectToMap(Collection<T> objectList) {
         List<Map<String, Object>> result = new ArrayList<>();
         for (T entity : objectList) {
