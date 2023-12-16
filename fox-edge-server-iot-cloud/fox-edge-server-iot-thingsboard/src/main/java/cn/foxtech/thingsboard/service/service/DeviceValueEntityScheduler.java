@@ -26,7 +26,7 @@ public class DeviceValueEntityScheduler extends PeriodTaskService {
 
     public void initialize() {
         // 读取配置参数
-        Map<String, Object> configs = this.localConfigService.getConfigs();
+        Map<String, Object> configs = this.localConfigService.getConfig();
         this.mode = (String) configs.getOrDefault("mode", "period");
         Map<String, Object> period = (Map<String, Object>) configs.getOrDefault("period", new HashMap<>());
         String unit = (String) period.getOrDefault("unit", "minute");

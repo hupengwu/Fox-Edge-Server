@@ -1,0 +1,8 @@
+{
+  "configValue": {
+    "sleep": 1
+  },
+  "configParam": {
+  },
+  "remark": "控制器需要的设备轮询任务的周期，指明每隔多长时间轮询一个任务"
+}

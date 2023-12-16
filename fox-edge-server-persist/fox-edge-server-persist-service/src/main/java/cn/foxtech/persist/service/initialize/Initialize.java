@@ -1,7 +1,7 @@
 package cn.foxtech.persist.service.initialize;
 
 
-import cn.foxtech.common.entity.manager.ConfigManageService;
+import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.persist.common.initialize.PersistInitialize;
 import cn.foxtech.persist.service.scheduler.PeriodTaskScheduler;
@@ -29,7 +29,7 @@ public class Initialize implements CommandLineRunner {
     private PersistInitialize persistInitialize;
 
     @Autowired
-    private ConfigManageService configManageService;
+    private InitialConfigService configManageService;
 
 
     @Override

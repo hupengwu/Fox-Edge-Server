@@ -1,0 +1,9 @@
+{
+  "configValue": {
+    "period": 3600,
+    "lifetime": 3600
+  },
+  "configParam": {
+  },
+  "remark": "设备通信超时的判定配置"
+}

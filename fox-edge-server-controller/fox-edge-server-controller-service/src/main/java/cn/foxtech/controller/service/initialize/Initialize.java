@@ -1,8 +1,8 @@
 package cn.foxtech.controller.service.initialize;
 
 
+import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
-import cn.foxtech.common.process.ProcessUtils;
 import cn.foxtech.controller.common.initialize.ControllerInitialize;
 import cn.foxtech.controller.service.service.CollectorExchangeService;
 import cn.foxtech.controller.service.service.CollectorSubscribeService;
@@ -31,12 +31,20 @@ public class Initialize implements CommandLineRunner {
     @Autowired
     private ControllerInitialize controllerInitialize;
 
+    /**
+     * 初始化配置：需要感知运行期的用户动态输入的配置，所以直接使用这个组件
+     */
+    @Autowired
+    private InitialConfigService initialConfigService;
+
 
     @Override
     public void run(String... args) {
         logger.info("------------------------初始化开始！------------------------");
 
         this.controllerInitialize.initialize();
+
+        this.initialConfigService.initialize("serverConfig", "serverConfig.json");
 
         // 调度设备数据采集任务
         this.exchangeService.schedule();

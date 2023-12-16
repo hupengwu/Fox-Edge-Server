@@ -1,8 +1,7 @@
 package cn.foxtech.persist.common.scheduler;
 
 
-import cn.foxtech.common.entity.manager.ConfigManageService;
-import cn.foxtech.common.tags.RedisTagReader;
+import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.tags.RedisTagService;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import cn.foxtech.persist.common.service.DeviceObjectMapper;
@@ -29,7 +28,7 @@ public class EntityManageScheduler extends PeriodTaskService {
     private DeviceObjectMapper deviceObjectMapper;
 
     @Autowired
-    private ConfigManageService configManageService;
+    private InitialConfigService configManageService;
 
     @Autowired
     private RedisTagService redisTagService;

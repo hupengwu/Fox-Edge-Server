@@ -1,8 +1,8 @@
 package cn.foxtech.controller.common.initialize;
 
+import cn.foxtech.common.status.ServiceStatusScheduler;
 import cn.foxtech.controller.common.scheduler.EntityManageScheduler;
 import cn.foxtech.controller.common.service.EntityManageService;
-import cn.foxtech.common.status.ServiceStatusScheduler;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +29,7 @@ public class ControllerInitialize {
     @Value("${spring.redis_topic.controller_model}")
     private String controllerModel = "system_controller";
 
+
     /**
      * 进程状态
      */
@@ -45,5 +46,6 @@ public class ControllerInitialize {
         this.entityManageService.instance();
         this.entityManageService.initLoadEntity();
         this.entityManageScheduler.schedule();
+
     }
 }

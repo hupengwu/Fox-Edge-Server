@@ -31,7 +31,7 @@ public class DeviceValueSynchronizer {
     private LocalConfigService localConfigService;
 
     public void publish(Set<String> serviceKeys, Map<String, Object> redisHashMap) {
-        Map<String, Object> extendField = (Map<String, Object>) this.localConfigService.getConfigs().getOrDefault("extend", new HashMap<>());
+        Map<String, Object> extendField = (Map<String, Object>) this.localConfigService.getConfig().getOrDefault("extend", new HashMap<>());
         String accessToken = (String) extendField.getOrDefault("accessToken", "");
         if (MethodUtils.hasEmpty(accessToken)) {
             return;

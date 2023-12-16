@@ -43,7 +43,7 @@ public class WhZktlIotService {
 
     public void initialize() {
         // 取出全局配置参数
-        Map<String, Object> whzktl = (Map<String, Object>) this.localConfigService.getConfigs().getOrDefault("whzktl", new HashMap<>());
+        Map<String, Object> whzktl = (Map<String, Object>) this.localConfigService.getConfig().getOrDefault("whzktl", new HashMap<>());
 
         String publish = (String) whzktl.getOrDefault("publish", "");
         String subscribe = (String) whzktl.getOrDefault("subscribe", "");
@@ -51,7 +51,7 @@ public class WhZktlIotService {
         this.subscribe = subscribe.replace("{edgeId}", OSInfoUtils.getCPUID());
 
 
-        Map<String, Object> extend = (Map<String, Object>) this.localConfigService.getConfigs().getOrDefault("extend", new HashMap<>());
+        Map<String, Object> extend = (Map<String, Object>) this.localConfigService.getConfig().getOrDefault("extend", new HashMap<>());
         this.extendField = (String) extend.getOrDefault("extendField", "huaweiIotDA");
 
         // 绑定一个类型级别的数据变更通知

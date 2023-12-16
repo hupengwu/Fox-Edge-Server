@@ -50,6 +50,9 @@ public class RepoLocalApplicationController {
     @Autowired
     private RepoLocalPathNameService pathNameService;
 
+    @Autowired
+    private RepoLocalAppSysService repoLocalAppSysService;
+
 
     @GetMapping("/status/entities")
     public AjaxResult selectEntityList() {
@@ -72,7 +75,11 @@ public class RepoLocalApplicationController {
             // 扩展相关的进程状态信息
             ProcessUtils.extendAppStatus(confFileInfoList);
 
-            return AjaxResult.success(confFileInfoList);
+            List<Map<String, Object>> sysProcessList = this.repoLocalAppSysService.getSysProcessList();
+            sysProcessList.addAll(confFileInfoList);
+
+
+            return AjaxResult.success(sysProcessList);
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
         }

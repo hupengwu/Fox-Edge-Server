@@ -45,7 +45,7 @@ public class HuaweiIoTDAService {
         this.remoteMqttService.initialize(new HuaweiMqttHandler());
 
         // 取出全局配置参数
-        Map<String, Object> huaweiIoTDA = (Map<String, Object>) this.localConfigService.getConfigs().getOrDefault("huaweiIoTDA", new HashMap<>());
+        Map<String, Object> huaweiIoTDA = (Map<String, Object>) this.localConfigService.getConfig().getOrDefault("huaweiIoTDA", new HashMap<>());
 
         this.productId = (String) huaweiIoTDA.getOrDefault("productId", "");
         this.nodeId = (String) huaweiIoTDA.getOrDefault("nodeId", "");
@@ -53,7 +53,7 @@ public class HuaweiIoTDAService {
         this.provider = (String) huaweiIoTDA.getOrDefault("provider", "HuaWei-IoTDA");
         this.deviceOnlinePush = (Integer) huaweiIoTDA.getOrDefault("deviceOnlinePush", 30);
 
-        Map<String, Object> extend = (Map<String, Object>) this.localConfigService.getConfigs().getOrDefault("extend", new HashMap<>());
+        Map<String, Object> extend = (Map<String, Object>) this.localConfigService.getConfig().getOrDefault("extend", new HashMap<>());
         this.extendField = (String) extend.getOrDefault("extendField", "huaweiIotDA");
 
     }

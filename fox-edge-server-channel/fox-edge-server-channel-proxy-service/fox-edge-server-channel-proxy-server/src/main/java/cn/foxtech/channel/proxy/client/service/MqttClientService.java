@@ -2,7 +2,7 @@ package cn.foxtech.channel.proxy.client.service;
 
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
-import cn.foxtech.common.entity.manager.ConfigManageService;
+import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.core.exception.ServiceException;
 import lombok.AccessLevel;
@@ -34,7 +34,7 @@ public class MqttClientService {
      */
     private final MqttClientCreator creator = MqttClient.create();
     @Autowired
-    private ConfigManageService configManageService;
+    private InitialConfigService configManageService;
     /**
      * 配置服务：从redis中获得配置信息
      */

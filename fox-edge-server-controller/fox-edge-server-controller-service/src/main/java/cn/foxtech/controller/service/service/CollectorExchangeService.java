@@ -2,9 +2,9 @@ package cn.foxtech.controller.service.service;
 
 import cn.foxtech.common.domain.constant.RedisStatusConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
-import cn.foxtech.common.entity.entity.ConfigEntity;
 import cn.foxtech.common.entity.entity.DeviceEntity;
 import cn.foxtech.common.entity.entity.OperateMonitorTaskEntity;
+import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.status.ServiceStatus;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.number.NumberUtils;
@@ -50,11 +50,9 @@ public class CollectorExchangeService extends PeriodTaskService {
     @Autowired
     private ServiceStatus serviceStatus;
 
-    @Value("${spring.fox-service.service.type}")
-    private String foxServiceType = "undefinedServiceType";
 
-    @Value("${spring.fox-service.service.name}")
-    private String foxServiceName = "undefinedServiceName";
+    @Autowired
+    private InitialConfigService initialConfigService;
 
     /**
      * 执行任务
@@ -92,11 +90,8 @@ public class CollectorExchangeService extends PeriodTaskService {
                 }
 
                 // 获得时间间隔配置:如果没有配置，那么默认100毫秒
-                Integer sleep = 100;
-                ConfigEntity configEntity = this.entityManageService.getConfigEntity(this.foxServiceName, this.foxServiceType, "devicePollingConfig");
-                if (configEntity != null && configEntity.getConfigValue().containsKey("sleep")) {
-                    sleep = (Integer) configEntity.getConfigValue().get("sleep");
-                }
+                Map<String, Object> configValue = this.initialConfigService.getConfigParam("serverConfig");
+                Integer sleep = (Integer) configValue.getOrDefault("sleep", 100);
 
                 // 不能访问太快，否则CPU占用率都受不了
                 Thread.sleep(sleep);

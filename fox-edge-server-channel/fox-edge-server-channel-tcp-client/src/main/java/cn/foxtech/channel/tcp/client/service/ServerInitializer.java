@@ -51,7 +51,7 @@ public class ServerInitializer {
     public void initialize() {
         // 读取配置参数
         this.localConfigService.initialize("serverConfig", "serverConfig.json");
-        Map<String, Object> configs = this.localConfigService.getConfigs();
+        Map<String, Object> configs = this.localConfigService.getConfig();
 
         // 记录启动参数，方便后面全局使用
         this.channelProperties.setLogger((Boolean) configs.getOrDefault("logger", false));

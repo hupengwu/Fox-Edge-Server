@@ -9,10 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 获得进程的运行信息
@@ -51,7 +48,7 @@ public class ProcessUtils {
      * @throws IOException
      * @throws InterruptedException
      */
-    private static List<Map<String, Object>> getProcess(String appType) throws IOException, InterruptedException {
+    public static List<Map<String, Object>> getProcess(String appType) throws IOException, InterruptedException {
         List<Map<String, Object>> resultList = new ArrayList<>();
 
         File file = new File("");
@@ -63,21 +60,12 @@ public class ProcessUtils {
                 continue;
             }
 
+
             // 剔除掉DEBUG的干扰信息
             items = filterDebug(items);
 
-            // ps -aux返回的格式
-            // 0~10是linux的固定信息项目
-            Map<String, Object> map = new HashMap<>();
-            map.put("user", items[0]);
-            map.put(ServiceVOFieldConstant.field_pid, Long.parseLong(items[1]));
-            map.put("cpu", Double.parseDouble(items[2]));
-            map.put("men", Double.parseDouble(items[3]));
-            map.put("vsz", Long.parseLong(items[4]));
-            map.put(ServiceVOFieldConstant.field_rss, Long.parseLong(items[5]));
-            map.put("stime", items[8]);
-            map.put("time", items[9]);
-            map.put("command", items[10]);
+            // ps -aux返回的格式: 0~10是linux的固定信息项目
+            Map<String, Object> map = makeShellParam(items);
 
             // 检查：该命令是否为java命令
             if (!"java".equals(items[10])) {
@@ -97,6 +85,58 @@ public class ProcessUtils {
         }
 
         return resultList;
+    }
+
+    public static Map<String, Object> getSysProcess(String feature) throws IOException, InterruptedException {
+        List<String> shellLineList = ShellUtils.executeShell("ps -aux|grep " + feature);
+        for (String shellLine : shellLineList) {
+            String[] items = shellLine.split("\\s+");
+            if (items.length < 11) {
+                continue;
+            }
+
+            // 剔除掉DEBUG的干扰信息
+            items = filterDebug(items);
+
+            // ps -aux返回的格式: 0~10是linux的固定信息项目
+            Map<String, Object> map = makeShellParam(items);
+            return map;
+        }
+
+        return null;
+    }
+
+    public static Set<Long> getProcessPort(Long pid) throws IOException, InterruptedException {
+        List<String> shellLineList = ShellUtils.executeShell("ss -tnlp | grep pid=" + pid);
+
+        Set<Long> ports = new HashSet<>();
+        for (String shellLine : shellLineList) {
+            String[] items = shellLine.split("\\s+");
+            if (items.length < 6) {
+                continue;
+            }
+
+
+            ports.add(Long.parseLong(items[2]));
+        }
+
+        return ports;
+    }
+
+    private static Map<String, Object> makeShellParam(String[] items) {
+        // ps -aux返回的格式
+        // 0~10是linux的固定信息项目
+        Map<String, Object> map = new HashMap<>();
+        map.put("user", items[0]);
+        map.put(ServiceVOFieldConstant.field_pid, Long.parseLong(items[1]));
+        map.put("cpu", Double.parseDouble(items[2]));
+        map.put("men", Double.parseDouble(items[3]));
+        map.put("vsz", Long.parseLong(items[4]));
+        map.put(ServiceVOFieldConstant.field_rss, Long.parseLong(items[5]));
+        map.put("stime", items[8]);
+        map.put("time", items[9]);
+        map.put("command", items[10]);
+        return map;
     }
 
     /**

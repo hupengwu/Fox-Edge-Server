@@ -2,7 +2,7 @@ package cn.foxtech.channel.udp.server.service;
 
 import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.udp.server.handler.ChannelHandler;
-import cn.foxtech.common.entity.manager.ConfigManageService;
+import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.netty.server.udp.NettyUdpServer;
 import cn.foxtech.common.utils.reflect.JarLoaderUtils;
@@ -42,7 +42,7 @@ public class ServerInitializer {
     private ChannelProperties channelProperties;
 
     @Autowired
-    private ConfigManageService configManageService;
+    private InitialConfigService configManageService;
 
 
     public void initialize() {

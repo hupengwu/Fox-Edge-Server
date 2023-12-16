@@ -2,7 +2,7 @@ package cn.foxtech.channel.proxy.client.service;
 
 import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.domain.ChannelRespondVO;
-import cn.foxtech.common.entity.manager.ConfigManageService;
+import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
 import cn.foxtech.common.utils.syncobject.SyncQueueObjectMap;
@@ -49,7 +49,7 @@ public class MqttClientService {
     private ChannelProperties constants;
 
     @Autowired
-    private ConfigManageService configManageService;
+    private InitialConfigService configManageService;
 
     public boolean Initialize() {
         this.configManageService.initialize("serverConfig", "serverConfig.json");

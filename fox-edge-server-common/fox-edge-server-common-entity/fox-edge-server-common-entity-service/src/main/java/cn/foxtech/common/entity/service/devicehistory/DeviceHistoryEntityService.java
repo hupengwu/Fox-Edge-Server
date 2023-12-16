@@ -1,17 +1,14 @@
 package cn.foxtech.common.entity.service.devicehistory;
 
 
-import cn.foxtech.common.entity.service.mybatis.LogEntityService;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import cn.foxtech.common.entity.constant.BaseVOFieldConstant;
 import cn.foxtech.common.entity.constant.Constants;
 import cn.foxtech.common.entity.constant.DeviceHistoryVOFieldConstant;
-import cn.foxtech.common.entity.entity.DeviceHistoryEntity;
-import cn.foxtech.common.entity.entity.DeviceHistoryPo;
+import cn.foxtech.common.entity.service.mybatis.LogEntityService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 
 @Component

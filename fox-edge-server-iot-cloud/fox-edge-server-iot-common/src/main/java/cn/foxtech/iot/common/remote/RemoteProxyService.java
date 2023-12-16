@@ -25,7 +25,7 @@ public class RemoteProxyService {
 
     public void initialize() {
         // 读取配置参数
-        Map<String, Object> configs = this.localConfigService.getConfigs();
+        Map<String, Object> configs = this.localConfigService.getConfig();
 
         Map<String, Object> remote = (Map<String, Object>) configs.getOrDefault("remote", new HashMap<>());
         this.mode = (String) remote.getOrDefault("mode", "http");

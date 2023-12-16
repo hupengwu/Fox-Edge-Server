@@ -1,7 +1,7 @@
 package cn.foxtech.proxy.cloud.common.service.proxy;
 
 import cn.foxtech.common.constant.HttpStatus;
-import cn.foxtech.common.entity.manager.ConfigManageService;
+import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.Maps;
 import cn.foxtech.common.utils.http.HttpClientUtils;
@@ -51,7 +51,7 @@ public class LocalHttpProxyService {
     private Integer lockdown = 60;
 
     @Autowired
-    private ConfigManageService configManageService;
+    private InitialConfigService configManageService;
 
     @Autowired
     private RedisConsoleService consoleService;

@@ -3,7 +3,6 @@ package cn.foxtech.channel.tcp.server.service;
 import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.tcp.server.engine.JarEngine;
 import cn.foxtech.channel.tcp.server.engine.JspEngine;
-import cn.foxtech.common.entity.manager.ConfigManageService;
 import cn.foxtech.common.entity.manager.LocalConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.core.exception.ServiceException;
@@ -42,7 +41,7 @@ public class ServerInitializer {
     public void initialize() {
         // 读取配置参数
         this.localConfigService.initialize();
-        Map<String, Object> configs = this.localConfigService.getConfigs();
+        Map<String, Object> configs = this.localConfigService.getConfig();
 
         // 记录启动参数，方便后面全局使用
         this.channelProperties.setLogger((Boolean) configs.getOrDefault("logger", false));

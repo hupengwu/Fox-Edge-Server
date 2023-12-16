@@ -48,9 +48,21 @@ public class RepoInitialize {
     @Autowired
     private RepoLocalJarFileCompScanner compScanner;
 
+    /**
+     * 初始化配置：需要感知运行期的用户动态输入的配置，所以直接使用这个组件
+     */
+    @Autowired
+    private RepoCloudConfigService repositoryConfig;
+
+    @Autowired
+    private SysProcessConfigService sysProcessConfigService;
+
 
     public void initialize() {
         this.engineParamService.initialize();
+
+        this.repositoryConfig.initialize();
+        this.sysProcessConfigService.initialize();
 
         // 周期性任务
         this.periodTasksScheduler.insertPeriodTask(this.processGcTask);

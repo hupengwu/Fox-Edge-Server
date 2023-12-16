@@ -12,13 +12,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 系统配置管理
+ * 初始化配置的通知
+ *
  * 很多服务需要通知System-Manage服务，把自己的一些初始化配置发布到configEntity表中，作为自己的初始化配置，以及给用户示范配置
  * 通知到ProxyCloud服务。
  * 该模块会将数据写入指定的redis缓存中，System-Manage会到指定的redis缓冲去读取这些配置数据
  */
 @Component
-public class EntityConfigManager {
+public class InitialConfigNotifier {
 
     @Autowired
     private ServiceStatus serviceStatus;
@@ -44,7 +45,7 @@ public class EntityConfigManager {
         return result;
     }
 
-    public void setConfigEntity(String configName, Map<String, Object> config) {
+    public void notifyRegisterConfig(String configName, Map<String, Object> config) {
         Map<String, Object> configEntity = (Map<String, Object>) this.serviceStatus.getProducerData().computeIfAbsent(RedisStatusConstant.field_config_entity, k -> new HashMap<>());
         Map<String, Object> configItem = (Map<String, Object>) configEntity.computeIfAbsent(configName, k -> new HashMap<>());
         configItem.putAll(config);

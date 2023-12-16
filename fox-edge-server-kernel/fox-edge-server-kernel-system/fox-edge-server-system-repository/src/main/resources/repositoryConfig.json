@@ -1,0 +1,19 @@
+{
+  "configValue": {
+    "file": "http://repository.fox-tech.cn",
+    "host": "http://cloud.fox-tech.cn/prod-api",
+    "lockdown": 60,
+    "password": "12345678",
+    "username": "Fox-Edge-Public"
+  },
+  "configParam":  {
+    "list": [{
+      "saveMode": "Raw",
+      "showMode": "Security",
+      "fieldName": "password",
+      "valueType": "string",
+      "defaultValue": ""
+    }]
+  },
+  "remark": "仓库的配置信息，指明云端的服务器所在位置\n\nhost：云端仓库的API服务器\nusername：云端仓库上的账号\npassword：云端仓库上的密码\nlockdown：为了避免登录失败后，反复登录云端仓库，需要等待一段时间，避免被云端仓库认为是恶意攻击"
+}

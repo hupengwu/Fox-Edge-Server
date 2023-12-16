@@ -438,10 +438,9 @@ public class RepoLocalCompService {
         repoCompEntity.setCompRepo(RepoCompVOFieldConstant.value_comp_repo_local);
         repoCompEntity.setCompType(RepoCompVOFieldConstant.value_comp_type_jsp_decoder);
         repoCompEntity.setCompName(manufacturer + ":" + deviceType);
-        repoCompEntity = this.entityManageService.getEntity(repoCompEntity.makeServiceKey(), RepoCompEntity.class);
 
         // 如果组件对象不存在，那么就创建一个新的组件对象
-        if (repoCompEntity == null) {
+        if (!this.entityManageService.hasEntity(repoCompEntity.makeServiceKey(), RepoCompEntity.class)) {
             Map<String, Object> compParam = repoCompEntity.getCompParam();
             compParam.put(RepoCompVOFieldConstant.field_comp_id, scriptId);
             compParam.put(RepoCompVOFieldConstant.field_group_name, groupName);

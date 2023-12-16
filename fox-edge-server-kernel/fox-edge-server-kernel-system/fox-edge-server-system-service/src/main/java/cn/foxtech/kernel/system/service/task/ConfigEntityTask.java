@@ -2,7 +2,7 @@ package cn.foxtech.kernel.system.service.task;
 
 import cn.foxtech.common.domain.constant.RedisStatusConstant;
 import cn.foxtech.common.entity.entity.ConfigEntity;
-import cn.foxtech.common.entity.manager.EntityConfigManager;
+import cn.foxtech.common.entity.manager.InitialConfigNotifier;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTask;
@@ -20,7 +20,7 @@ public class ConfigEntityTask extends PeriodTask {
     private RedisConsoleService logger;
 
     @Autowired
-    private EntityConfigManager entityConfigManager;
+    private InitialConfigNotifier initialConfigNotifier;
 
     @Autowired
     private EntityManageService entityManageService;
@@ -45,7 +45,7 @@ public class ConfigEntityTask extends PeriodTask {
     @Override
     public void execute() {
         try {
-            List<Map<String, Object>> dataList = this.entityConfigManager.getConfigEntity();
+            List<Map<String, Object>> dataList = this.initialConfigNotifier.getConfigEntity();
             for (Map<String, Object> map : dataList) {
                 String serviceType = (String) map.get(RedisStatusConstant.field_service_type);
                 String serviceName = (String) map.get(RedisStatusConstant.field_service_name);

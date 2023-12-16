@@ -52,7 +52,7 @@ public class ServerInitializer {
     public void initialize() {
         // 读取配置参数
         this.localConfigService.initialize();
-        Map<String, Object> configs = this.localConfigService.getConfigs();
+        Map<String, Object> configs = this.localConfigService.getConfig();
         Map<String, Object> params = (Map<String, Object>) configs.getOrDefault("serialPort", new HashMap<>());
         this.openLogger = (Boolean) configs.getOrDefault("logger", false);
 

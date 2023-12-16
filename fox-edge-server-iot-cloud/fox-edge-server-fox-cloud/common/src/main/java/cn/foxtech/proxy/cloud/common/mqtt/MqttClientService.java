@@ -1,6 +1,6 @@
 package cn.foxtech.proxy.cloud.common.mqtt;
 
-import cn.foxtech.common.entity.manager.ConfigManageService;
+import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.osinfo.OSInfoUtils;
@@ -53,7 +53,7 @@ public class MqttClientService {
     private MqttClient mqttClient;
 
     @Autowired
-    private ConfigManageService configManageService;
+    private InitialConfigService configManageService;
 
     private String subTopic;
 

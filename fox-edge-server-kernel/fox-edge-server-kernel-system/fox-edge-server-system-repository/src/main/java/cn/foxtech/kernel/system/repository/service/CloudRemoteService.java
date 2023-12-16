@@ -7,7 +7,6 @@ import cn.foxtech.common.utils.http.HttpClientUtil;
 import cn.foxtech.common.utils.http.UploadUtil;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.kernel.system.common.service.EntityManageService;
-import cn.foxtech.kernel.system.common.service.ManageConfigService;
 import cn.foxtech.kernel.system.repository.constants.RepoConfigConstant;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
@@ -50,7 +49,7 @@ public class CloudRemoteService {
     private Integer lockdown = 60;
 
     @Autowired
-    private ManageConfigService configService;
+    private RepoCloudConfigService configService;
 
     @Autowired
     private EntityManageService manageService;
@@ -79,7 +78,7 @@ public class CloudRemoteService {
      */
     public synchronized void login() throws IOException {
         // 获得账号/密码
-        Map<String, Object> valueConfig = this.configService.getConfigValue(RepoConfigConstant.filed_config_name);
+        Map<String, Object> valueConfig = this.configService.getConfigValue();
         if (valueConfig.isEmpty()) {
             throw new RuntimeException("登录云端服务器：从Redis配置中获得账号/密码失败！");
         }

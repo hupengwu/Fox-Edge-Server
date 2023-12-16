@@ -1,0 +1,9 @@
+{
+  "configValue": {
+    "mysql-server": "/sbin/mysqld",
+    "redis-server": "/bin/redis-server"
+  },
+  "configParam": {
+  },
+  "remark": "指明启动mysql和redis的命令行特征特征，使fox-edge可以通过ps命令找到这两个进程的内存和CPU占用率"
+}

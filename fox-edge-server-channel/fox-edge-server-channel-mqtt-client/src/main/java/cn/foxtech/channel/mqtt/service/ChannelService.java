@@ -32,7 +32,7 @@ public class ChannelService extends ChannelServerAPI {
     public void initialize() {
         // 装载全局配置参数
         this.localConfigService.initialize();
-        Map<String, Object> configs = this.localConfigService.getConfigs();
+        Map<String, Object> configs = this.localConfigService.getConfig();
         Map<String, Object> mqttConfig = (Map<String, Object>) configs.getOrDefault("mqtt", new HashMap<>());
         String topic = (String) configs.getOrDefault("topic", "#");
         String clientId = (String) mqttConfig.getOrDefault("clientId", "");
