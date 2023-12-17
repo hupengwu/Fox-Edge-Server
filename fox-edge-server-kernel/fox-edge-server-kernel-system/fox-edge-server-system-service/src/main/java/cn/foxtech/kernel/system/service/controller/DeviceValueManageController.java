@@ -21,7 +21,7 @@ import cn.foxtech.common.utils.redis.topic.service.RedisTopicPublisher;
 import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
-import cn.foxtech.kernel.system.common.redislist.RedisListPersistRequest;
+import cn.foxtech.kernel.system.common.redislist.RedisListPersistManageRequest;
 import cn.foxtech.kernel.system.common.service.EntityManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,7 +45,7 @@ public class DeviceValueManageController {
     private RedisTopicPublisher publisher;
 
     @Autowired
-    private RedisListPersistRequest persistService;
+    private RedisListPersistManageRequest persistService;
 
 
     @PostMapping("page")

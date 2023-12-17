@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
  * 接收列表
  */
 @Component
-public class RedisListManageRespond extends RedisLoggerService {
-    public RedisListManageRespond() {
-        this.setKey("fox.edge.list.manage.persist");
+public class RedisListPersistManageRespond extends RedisLoggerService {
+    public RedisListPersistManageRespond() {
+        this.setKey("fox.edge.list.persist.manage.respond");
     }
 
     @Override

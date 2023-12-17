@@ -7,7 +7,7 @@ import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
 import cn.foxtech.core.exception.ServiceException;
-import cn.foxtech.kernel.system.common.redislist.RedisListPersistRespond;
+import cn.foxtech.kernel.system.common.redislist.RedisListPersistManageRespond;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ public class PersistRespondScheduler  extends PeriodTaskService {
     private static final Logger logger = Logger.getLogger(PersistRespondScheduler.class);
 
     @Autowired
-    private RedisListPersistRespond valueService;
+    private RedisListPersistManageRespond valueService;
 
     @Autowired
     private RedisConsoleService console;

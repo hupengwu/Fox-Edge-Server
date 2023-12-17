@@ -11,7 +11,9 @@ import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
 import cn.foxtech.device.domain.vo.OperateRespondVO;
 import cn.foxtech.device.domain.vo.TaskRespondVO;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
-import cn.foxtech.device.service.redislist.PersistRecordService;
+import cn.foxtech.device.service.redislist.RedisListDeviceModelRespond;
+import cn.foxtech.device.service.redislist.RedisListDevicePublicRespond;
+import cn.foxtech.device.service.redislist.RedisListPersistRecordRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,7 +41,12 @@ public class RedisTopicPuberService {
     private RedisTopicPublisher publisher;
 
     @Autowired
-    private PersistRecordService persistService;
+    private RedisListPersistRecordRequest redisListPersistRecordRequest;
+
+    @Autowired
+    private RedisListDeviceModelRespond redisListDeviceModelRespond;
+    @Autowired
+    private RedisListDevicePublicRespond redisListDevicePublicRespond;
 
     /**
      * 将请求发送给对应的channel服务：topic_channel_request_XXXX
@@ -78,32 +85,21 @@ public class RedisTopicPuberService {
      * 将设备主动上报的报文，发送给topic_device_respond_public
      */
     public void sendReportVO(TaskRespondVO taskRespondVO) {
-        // 重新打包
-        String body = JsonUtils.buildJsonWithoutException(taskRespondVO);
-
         // 统一发到public
-        String topic = RedisTopicConstant.topic_device_respond + RedisTopicConstant.model_public;
-
-        // 发送数据
-        this.publisher.sendMessage(topic, body);
+        this.redisListDevicePublicRespond.push(taskRespondVO);
     }
 
     /**
      * 将设备响应的报文，发送回客户端：topic_device_respond_XXXX
      */
     public void sendRespondVO(TaskRespondVO taskRespondVO) {
-        // 重新打包
-        String body = JsonUtils.buildJsonWithoutException(taskRespondVO);
-
         // 如果没填具体的model名称，那么统一发到public那边去
         String model = taskRespondVO.getClientName();
         if (model == null) {
-            model = RedisTopicConstant.model_public;
+            this.redisListDevicePublicRespond.push(taskRespondVO);
+        } else {
+            this.redisListDeviceModelRespond.push(model, taskRespondVO);
         }
-        String topic = RedisTopicConstant.topic_device_respond + model;
-
-        // 发送数据
-        this.publisher.sendMessage(topic, body);
     }
 
     public void sendRestFulRequestVO(RestFulRequestVO restFulRequestVO) {
@@ -156,7 +152,7 @@ public class RedisTopicPuberService {
             taskRespondVO.setRespondVOS(respondVOS);
 
 
-            this.persistService.push(taskRespondVO);
+            this.redisListPersistRecordRequest.push(taskRespondVO);
         } catch (Exception e) {
             logger.error(e);
         }

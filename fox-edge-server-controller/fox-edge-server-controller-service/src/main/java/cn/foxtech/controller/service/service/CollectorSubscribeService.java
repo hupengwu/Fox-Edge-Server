@@ -3,7 +3,7 @@ package cn.foxtech.controller.service.service;
 import cn.foxtech.common.entity.entity.DeviceEntity;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import cn.foxtech.common.utils.syncobject.SyncQueueObjectMap;
-import cn.foxtech.controller.common.redislist.PersistRecordService;
+import cn.foxtech.controller.common.redislist.RedisListPersistRecordRequest;
 import cn.foxtech.controller.common.service.EntityManageService;
 import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
 import cn.foxtech.device.domain.vo.OperateRespondVO;
@@ -26,7 +26,7 @@ public class CollectorSubscribeService extends PeriodTaskService {
     EntityManageService entityManageService;
 
     @Autowired
-    private PersistRecordService recordService;
+    private RedisListPersistRecordRequest recordService;
 
     public void execute(long threadId) throws Exception {
         // 检查：是否装载完毕

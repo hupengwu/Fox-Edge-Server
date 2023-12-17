@@ -7,10 +7,10 @@ import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import cn.foxtech.device.domain.vo.OperateRespondVO;
 import cn.foxtech.device.domain.vo.TaskRespondVO;
-import cn.foxtech.persist.common.redislist.RedisListManageRequest;
-import cn.foxtech.persist.common.redislist.RedisListManageRespond;
-import cn.foxtech.persist.common.redislist.RedisListRecordRequest;
-import cn.foxtech.persist.common.redislist.RedisListValueRequest;
+import cn.foxtech.persist.common.redislist.RedisListPersistManageRequest;
+import cn.foxtech.persist.common.redislist.RedisListPersistManageRespond;
+import cn.foxtech.persist.common.redislist.RedisListPersistRecordRequest;
+import cn.foxtech.persist.common.redislist.RedisListPersistValueRequest;
 import cn.foxtech.persist.common.service.EntityManageService;
 import cn.foxtech.persist.common.service.EntityUpdateService;
 import org.apache.log4j.Logger;
@@ -31,16 +31,16 @@ public class PeriodTaskScheduler extends PeriodTaskService {
     @Autowired
     EntityUpdateService entityUpdateService;
     @Autowired
-    private RedisListRecordRequest recordRequest;
+    private RedisListPersistRecordRequest recordRequest;
 
     @Autowired
-    private RedisListValueRequest valueRequest;
+    private RedisListPersistValueRequest valueRequest;
 
     @Autowired
-    private RedisListManageRequest manageRequest;
+    private RedisListPersistManageRequest manageRequest;
 
     @Autowired
-    private RedisListManageRespond manageRespond;
+    private RedisListPersistManageRespond manageRespond;
 
 
     @Autowired

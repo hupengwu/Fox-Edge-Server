@@ -1,6 +1,7 @@
 package cn.foxtech.common.status;
 
 import cn.foxtech.common.domain.constant.ServiceVOFieldConstant;
+import cn.foxtech.common.utils.DifferUtils;
 import cn.foxtech.common.utils.redis.status.RedisStatusConsumerService;
 import cn.foxtech.common.domain.constant.RedisStatusConstant;
 import cn.foxtech.common.utils.Maps;
@@ -100,7 +101,11 @@ public class ServiceStatusScheduler extends PeriodTaskService {
     public void loadConsumer() {
         this.consumerService.load();
 
+        // 更新服务状态
         this.serviceStatus.getConsumerData().clear();
         this.serviceStatus.getConsumerData().putAll(this.consumerService.getStatus());
+
+        // 更新模块状态
+        this.serviceStatus.updateModelStatus();
     }
 }
