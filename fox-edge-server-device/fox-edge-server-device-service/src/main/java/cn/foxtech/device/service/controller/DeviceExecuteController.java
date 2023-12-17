@@ -2,12 +2,8 @@ package cn.foxtech.device.service.controller;
 
 import cn.foxtech.common.domain.constant.RedisStatusConstant;
 import cn.foxtech.common.domain.constant.RedisTopicConstant;
-import cn.foxtech.common.domain.constant.RestFulManagerVOConstant;
-import cn.foxtech.common.domain.vo.RestFulRequestVO;
 import cn.foxtech.common.entity.entity.DeviceEntity;
-import cn.foxtech.common.entity.entity.DeviceTimeOutEntity;
 import cn.foxtech.common.entity.entity.OperateEntity;
-import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.status.ServiceStatus;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import cn.foxtech.common.utils.syncobject.SyncQueueObjectMap;
@@ -23,7 +19,6 @@ import cn.foxtech.device.service.service.OperateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.naming.CommunicationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,7 +102,7 @@ public class DeviceExecuteController extends PeriodTaskService {
         Integer timeout = requestVO.getTimeout();
 
 
-        DeviceEntity deviceEntity = null;
+        DeviceEntity deviceEntity;
         try {
             // 获得设备详细信息
             deviceEntity = this.entityManageService.getDeviceEntity(deviceName);
@@ -131,8 +126,7 @@ public class DeviceExecuteController extends PeriodTaskService {
             }
 
             // 组合参数：先组合设备上的参数，再组合操作上的参数，也就是操作参数的优先级高于设备上的参数
-            Map<String, Object> param = new HashMap<>();
-            param.putAll(deviceEntity.getDeviceParam());
+            Map<String, Object> param = new HashMap<>(deviceEntity.getDeviceParam());
             if (requestVO.getParam() != null) {
                 param.putAll(requestVO.getParam());
             }
@@ -163,35 +157,12 @@ public class DeviceExecuteController extends PeriodTaskService {
             }
 
             throw new ServiceException("不支持的操作类型");
-        } catch (CommunicationException e) {
-            // 通信失败的时候，发送一个通信失败的通知给管理服务
-            this.notifyDeviceTimeOut(deviceEntity, requestVO);
-
-            // 返回失败信息给请求的来源
-            return this.makeExceptionRespondVO(requestVO, e.getMessage());
         } catch (Exception e) {
             // 返回失败信息给请求的来源
             return this.makeExceptionRespondVO(requestVO, e.getMessage());
         }
     }
 
-    private void notifyDeviceTimeOut(DeviceEntity deviceEntity, OperateRequestVO requestVO) {
-        if (deviceEntity == null) {
-            return;
-        }
-
-        DeviceTimeOutEntity entity = new DeviceTimeOutEntity();
-        entity.setId(deviceEntity.getId());
-        entity.setRequest(requestVO);
-
-        RestFulRequestVO restFulRequestVO = new RestFulRequestVO();
-        restFulRequestVO.setUri(RestFulManagerVOConstant.uri_device_timeout);
-        restFulRequestVO.setMethod("post");
-        restFulRequestVO.setData(EntityVOBuilder.buildVO(entity));
-        restFulRequestVO.setUuid(requestVO.getUuid());
-
-        this.puberService.sendRestFulRequestVO(restFulRequestVO);
-    }
 
     /**
      * 生成返回的数据结构

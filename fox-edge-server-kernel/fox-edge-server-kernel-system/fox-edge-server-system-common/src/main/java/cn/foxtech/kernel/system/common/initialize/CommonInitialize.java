@@ -6,8 +6,6 @@ import cn.foxtech.kernel.common.initialize.KernelInitialize;
 import cn.foxtech.kernel.system.common.scheduler.EntityManageScheduler;
 import cn.foxtech.kernel.system.common.scheduler.PeriodTasksScheduler;
 import cn.foxtech.kernel.system.common.scheduler.PersistRespondScheduler;
-import cn.foxtech.kernel.system.common.scheduler.TopicManagerScheduler;
-import cn.foxtech.kernel.system.common.service.DeviceTimeOutService;
 import cn.foxtech.kernel.system.common.service.EntityManageService;
 import cn.foxtech.kernel.system.common.task.GateWayRouteUpdateTask;
 import org.slf4j.Logger;
@@ -30,9 +28,6 @@ public class CommonInitialize {
     @Autowired
     private KernelInitialize kernelInitialize;
 
-    @Autowired
-    private TopicManagerScheduler topicManagerScheduler;
-
 
     @Autowired
     private EntityManageService entityManageService;
@@ -49,8 +44,6 @@ public class CommonInitialize {
     @Autowired
     private PersistRespondScheduler persistRespondScheduler;
 
-    @Autowired
-    private DeviceTimeOutService deviceTimeOutService;
 
     public void initialize() {
         String message = "------------------------SystemInitialize初始化开始！------------------------";
@@ -66,12 +59,6 @@ public class CommonInitialize {
         // 启动同步线程
         this.entityManageScheduler.schedule();
 
-        // 初始化通信超时配置
-        this.deviceTimeOutService.initialize();
-
-        // topic响应
-        this.topicManagerScheduler.schedule();
-
         // 启动周期任务线程
         this.periodTasksScheduler.schedule();
 
@@ -86,7 +73,7 @@ public class CommonInitialize {
         logger.info(message);
     }
 
-    private void createPeriodTask(){
+    private void createPeriodTask() {
         this.periodTasksScheduler.insertPeriodTask(this.gateWayRouteUpdateTask);
     }
 }

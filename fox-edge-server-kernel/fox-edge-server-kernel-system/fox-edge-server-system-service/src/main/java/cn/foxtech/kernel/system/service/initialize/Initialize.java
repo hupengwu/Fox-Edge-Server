@@ -7,7 +7,6 @@ import cn.foxtech.kernel.system.common.scheduler.PeriodTasksScheduler;
 import cn.foxtech.kernel.system.repository.initialize.RepoInitialize;
 import cn.foxtech.kernel.system.service.task.CleanCacheTask;
 import cn.foxtech.kernel.system.service.task.CleanLogFileTask;
-import cn.foxtech.kernel.system.service.task.CleanTimeOutTask;
 import cn.foxtech.kernel.system.service.task.ConfigEntityTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,9 +53,6 @@ public class Initialize implements CommandLineRunner {
     private CleanLogFileTask cleanLogFileTask;
 
 
-    @Autowired
-    private CleanTimeOutTask cleanTimeOutTask;
-
     public void run(String... args) {
         String message = "------------------------Initialize初始化开始！------------------------";
         console.info(message);
@@ -77,7 +73,6 @@ public class Initialize implements CommandLineRunner {
         this.periodTasksScheduler.insertPeriodTask(this.cleanCacheTask);
         this.periodTasksScheduler.insertPeriodTask(this.cleanLogFileTask);
         this.periodTasksScheduler.insertPeriodTask(this.configEntityTask);
-        this.periodTasksScheduler.insertPeriodTask(this.cleanTimeOutTask);
     }
 
 }

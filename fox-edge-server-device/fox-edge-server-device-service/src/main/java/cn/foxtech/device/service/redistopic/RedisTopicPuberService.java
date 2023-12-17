@@ -3,7 +3,6 @@ package cn.foxtech.device.service.redistopic;
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.common.domain.constant.RedisTopicConstant;
-import cn.foxtech.common.domain.vo.RestFulRequestVO;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.redis.topic.service.RedisTopicPublisher;
 import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
@@ -101,17 +100,6 @@ public class RedisTopicPuberService {
             this.redisListDeviceModelRespond.push(model, taskRespondVO);
         }
     }
-
-    public void sendRestFulRequestVO(RestFulRequestVO restFulRequestVO) {
-        // 重新打包
-        String body = JsonUtils.buildJsonWithoutException(restFulRequestVO);
-
-        String topic = RedisTopicConstant.topic_manager_request + RedisTopicConstant.model_public;
-
-        // 发送数据
-        this.publisher.sendMessage(topic, body);
-    }
-
 
     public void sendOperateRespondVO(TaskRespondVO taskRespondVO) {
         try {
