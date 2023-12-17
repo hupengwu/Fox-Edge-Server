@@ -34,6 +34,7 @@ public class RepoLocalAppSysService {
             Map<String, Object> map = ProcessUtils.getSysProcess(mysqlServer);
             map.put(ServiceVOFieldConstant.field_app_type, ServiceVOFieldConstant.field_type_kernel);
             map.put(ServiceVOFieldConstant.field_app_name, "mysql-server");
+            map.put(ServiceVOFieldConstant.field_app_load, true);
 
             Long pid = Long.parseLong(map.get("pid").toString());
             Set<Long> ports = ProcessUtils.getProcessPort(pid);
@@ -50,6 +51,7 @@ public class RepoLocalAppSysService {
             Map<String, Object> map = ProcessUtils.getSysProcess(redisServer);
             map.put(ServiceVOFieldConstant.field_app_type, ServiceVOFieldConstant.field_type_kernel);
             map.put(ServiceVOFieldConstant.field_app_name, "redis-server");
+            map.put(ServiceVOFieldConstant.field_app_load, true);
 
             Long pid = Long.parseLong(map.get("pid").toString());
             Set<Long> ports = ProcessUtils.getProcessPort(pid);
