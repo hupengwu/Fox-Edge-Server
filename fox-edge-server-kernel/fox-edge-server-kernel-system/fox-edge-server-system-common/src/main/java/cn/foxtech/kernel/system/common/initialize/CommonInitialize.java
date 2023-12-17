@@ -5,7 +5,7 @@ import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.kernel.common.initialize.KernelInitialize;
 import cn.foxtech.kernel.system.common.scheduler.EntityManageScheduler;
 import cn.foxtech.kernel.system.common.scheduler.PeriodTasksScheduler;
-import cn.foxtech.kernel.system.common.scheduler.PersistRespondScheduler;
+import cn.foxtech.kernel.system.common.scheduler.RedisListRespondScheduler;
 import cn.foxtech.kernel.system.common.service.EntityManageService;
 import cn.foxtech.kernel.system.common.task.GateWayRouteUpdateTask;
 import org.slf4j.Logger;
@@ -42,7 +42,7 @@ public class CommonInitialize {
     private GateWayRouteUpdateTask gateWayRouteUpdateTask;
 
     @Autowired
-    private PersistRespondScheduler persistRespondScheduler;
+    private RedisListRespondScheduler redisListRespondScheduler;
 
 
     public void initialize() {
@@ -63,7 +63,7 @@ public class CommonInitialize {
         this.periodTasksScheduler.schedule();
 
         // 启动接收响应线程
-        this.persistRespondScheduler.schedule();
+        this.redisListRespondScheduler.schedule();
 
         // 添加周期任务
         this.createPeriodTask();

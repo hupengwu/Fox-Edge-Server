@@ -19,8 +19,8 @@ import java.util.Map;
  * 记录队列：从topic改为采用list方式，是为了让记录数据更可靠
  */
 @Component
-public class PeriodTaskScheduler extends PeriodTaskService {
-    private static final Logger logger = Logger.getLogger(PeriodTaskScheduler.class);
+public class RedisListRespondScheduler extends PeriodTaskService {
+    private static final Logger logger = Logger.getLogger(RedisListRespondScheduler.class);
     @Autowired
     private RedisListDeviceModelRespond redisListDeviceModelRespond;
     @Autowired
