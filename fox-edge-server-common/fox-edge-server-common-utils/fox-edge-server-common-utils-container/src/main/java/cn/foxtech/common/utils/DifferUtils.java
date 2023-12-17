@@ -10,24 +10,6 @@ import java.util.*;
  */
 public class DifferUtils {
     /**
-     * 比较两个列表是否一致
-     *
-     * @param srcList 源数据
-     * @param dstList 目标数据
-     * @return 是否一致
-     * @param <T> 数据类型
-     */
-    public static <T> boolean differByValue(Collection<T> srcList, Collection<T> dstList) {
-        List<T> addList = new ArrayList<T>();
-        List<T> delList = new ArrayList<T>();
-        List<T> eqlList = new ArrayList<T>();
-        differA2BByValue(srcList, dstList, addList, eqlList);
-        differA2BByValue(dstList, srcList, delList, eqlList);
-
-        return addList.isEmpty() && delList.isEmpty();
-    }
-
-    /**
      * 以A为基准进行比较：B即转换为A，需要进行的增删操作
      *
      * @param srcList 基准列表
@@ -86,7 +68,7 @@ public class DifferUtils {
         Set<T> eqlList = new HashSet<T>();
         differByValue(aList, bList, addList, delList, eqlList);
 
-        return (addList.isEmpty() && delList.isEmpty());
+        return !addList.isEmpty() || !delList.isEmpty();
     }
 
     /**

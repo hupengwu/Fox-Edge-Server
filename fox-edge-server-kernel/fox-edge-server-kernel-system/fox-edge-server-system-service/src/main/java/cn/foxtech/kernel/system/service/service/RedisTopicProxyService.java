@@ -10,8 +10,6 @@ import cn.foxtech.common.utils.redis.topic.service.RedisTopicPublisher;
 import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
-import cn.foxtech.device.domain.vo.TaskRespondVO;
-import cn.foxtech.kernel.system.common.redislist.RedisListDevicePublicRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,11 +31,6 @@ public class RedisTopicProxyService {
 
     @Autowired
     private RedisTopicPublisher publisher;
-
-
-
-    @Autowired
-    private RedisListDevicePublicRequest redisListDevicePublicRequest;
 
     @Autowired
     private ServiceStatus serviceStatus;
@@ -126,21 +119,24 @@ public class RedisTopicProxyService {
             request.put(DeviceMethodVOFieldConstant.field_uuid, key);
         }
 
+        // 重新打包数据
+        body = JsonUtils.buildJson(request);
+
 
         // 重置信号
         SyncFlagObjectMap.inst().reset(key);
 
-
-        this.redisListDevicePublicRequest.push(request);
+        // 发送数据
+        publisher.sendMessage(topicRequest, body);
 
         logger.info(topicRequest + ":" + body);
 
         // 等待消息的到达：根据动态key
-        TaskRespondVO respond =  (TaskRespondVO)SyncFlagObjectMap.inst().waitDynamic(key, timeout + extra_timeout_device);
+        String respond = (String) SyncFlagObjectMap.inst().waitDynamic(key, timeout + extra_timeout_device);
         if (respond == null) {
             throw new ServiceException("设备响应超时！");
         }
 
-        return JsonUtils.buildJsonWithoutException(respond);
+        return respond;
     }
 }

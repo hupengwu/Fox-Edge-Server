@@ -6,6 +6,7 @@ import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.redis.topic.service.RedisTopicSubscriber;
 import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
 import cn.foxtech.common.utils.syncobject.SyncQueueObjectMap;
+import cn.foxtech.device.domain.vo.TaskRequestVO;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,11 @@ public class RedisTopicSuberService extends RedisTopicSubscriber {
     @Override
     public String topic1st() {
         return RedisTopicConstant.topic_channel_respond + RedisTopicConstant.model_device;
+    }
+
+    @Override
+    public String topic2nd() {
+        return RedisTopicConstant.topic_device_request + RedisTopicConstant.model_public;
     }
 
     @Override
@@ -33,5 +39,15 @@ public class RedisTopicSuberService extends RedisTopicSubscriber {
             logger.info(e);
         }
 
+    }
+
+    @Override
+    public void receiveTopic2nd(String message) {
+        try {
+            TaskRequestVO taskRequestVO = JsonUtils.buildObject(message, TaskRequestVO.class);
+            SyncQueueObjectMap.inst().push(RedisTopicConstant.model_device, taskRequestVO, 1000);
+        } catch (Exception e) {
+            logger.info("接收到的报文格式不正确，它不是一个合法的包裹：" + e.getMessage());
+        }
     }
 }

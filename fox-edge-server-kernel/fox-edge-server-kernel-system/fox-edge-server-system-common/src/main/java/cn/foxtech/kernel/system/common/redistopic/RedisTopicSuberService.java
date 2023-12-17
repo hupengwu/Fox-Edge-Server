@@ -3,6 +3,7 @@ package cn.foxtech.kernel.system.common.redistopic;
 import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.common.domain.constant.RedisTopicConstant;
 import cn.foxtech.common.domain.vo.PublicRespondVO;
+import cn.foxtech.common.domain.vo.RestFulRequestVO;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.redis.topic.service.RedisTopicSubscriber;
@@ -19,6 +20,10 @@ public class RedisTopicSuberService extends RedisTopicSubscriber {
     @Autowired
     private IRedisTopicService redisTopicService;
 
+    @Override
+    public String topic1st() {
+        return RedisTopicConstant.topic_manager_request + RedisTopicConstant.model_public;
+    }
 
     @Override
     public String topic2nd() {
@@ -28,6 +33,22 @@ public class RedisTopicSuberService extends RedisTopicSubscriber {
     @Override
     public String topic3rd() {
         return RedisTopicConstant.topic_device_respond + RedisTopicConstant.model_manager;
+    }
+
+    /**
+     * 接收所有发给manage的单向请求
+     *
+     * @param message 消息
+     */
+    @Override
+    public void receiveTopic1st(String message) {
+        try {
+            RestFulRequestVO requestVO = JsonUtils.buildObject(message, RestFulRequestVO.class);
+            this.redisTopicService.requestManager(requestVO);
+        } catch (Exception e) {
+            // 不需要打印异常：这个接口会到达两种报文，所以解析异常是正常场景
+        }
+
     }
 
     @Override

@@ -1,7 +1,7 @@
 package cn.foxtech.common.status;
 
-import cn.foxtech.common.domain.constant.RedisStatusConstant;
 import cn.foxtech.common.utils.redis.status.RedisStatusConsumerService;
+import cn.foxtech.common.domain.constant.RedisStatusConstant;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,9 +24,6 @@ public class ServiceStatus {
 
     @Getter(value = AccessLevel.PUBLIC)
     private final Map<String, Object> consumerData = new ConcurrentHashMap<>();
-
-    @Getter(value = AccessLevel.PUBLIC)
-    private final Map<String, Object> modelStatus = new ConcurrentHashMap<>();
 
     @Value("${spring.fox-service.service.type}")
     private String foxServiceType = "undefinedServiceType";
@@ -52,35 +49,6 @@ public class ServiceStatus {
 
         Map<String, Object> map = (Map<String, Object>) status.getData();
         return map.get(hkey);
-    }
-
-    public void updateModelStatus() {
-        for (Map.Entry<String, Object> entry : this.getConsumerData().entrySet()) {
-            try {
-                RedisStatusConsumerService.Status status = (RedisStatusConsumerService.Status) entry.getValue();
-                if (status == null) {
-                    continue;
-                }
-
-                Map<String, Object> value = (Map<String, Object>) status.getData();
-                if (value == null) {
-                    continue;
-                }
-
-
-                String type = (String) value.get(RedisStatusConstant.field_model_type);
-                String name = (String) value.get(RedisStatusConstant.field_model_name);
-
-                // 获得该服务再缓存中的activeTime数据
-                Object activeTime = value.get(RedisStatusConstant.field_active_time);
-
-                Map<String, Object> typeMap = (Map<String, Object>) this.modelStatus.computeIfAbsent(type, k -> new ConcurrentHashMap());
-                typeMap.put(name, activeTime);
-
-            } catch (Exception e) {
-                continue;
-            }
-        }
     }
 
     /**

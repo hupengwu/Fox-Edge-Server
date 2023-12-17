@@ -31,14 +31,6 @@ public class RedisLoggerService {
         this.removeOverflow();
     }
 
-    protected void push(String key, Object value) {
-        // 左边插入数据
-        this.redisTemplate.opsForList().leftPush(key, value);
-
-        // 删除溢出
-        this.removeOverflow();
-    }
-
     protected void push(Object value) {
         // 左边插入数据
         this.redisTemplate.opsForList().leftPush(this.key, value);
@@ -74,7 +66,7 @@ public class RedisLoggerService {
     /**
      * 预览一个对象
      * 此时，这个对象依然在redis的列表中
-     * <p>
+     *
      * 说明：一般的做法，是想rang一下有没有数据，用完之后，在pop掉这个对象
      *
      * @return 列表中的对象

@@ -6,7 +6,6 @@ import cn.foxtech.common.status.ServiceStatusScheduler;
 import cn.foxtech.device.service.controller.DeviceExecuteController;
 import cn.foxtech.device.service.controller.DeviceReportController;
 import cn.foxtech.device.service.scheduler.EntityManageScheduler;
-import cn.foxtech.device.service.scheduler.PeriodTaskScheduler;
 import cn.foxtech.device.service.service.EntityManageService;
 import cn.foxtech.device.service.service.MethodEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +42,6 @@ public class Initialize implements CommandLineRunner {
     @Autowired
     private MethodEntityService methodEntityService;
 
-    @Autowired
-    private PeriodTaskScheduler periodTaskScheduler;
-
 
     @Override
     public void run(String... args) {
@@ -68,8 +64,6 @@ public class Initialize implements CommandLineRunner {
         this.deviceExecuteController.schedule(3);
 
         this.deviceReportController.schedule();
-
-        this.periodTaskScheduler.schedule();
 
 
         logger.info("------------------------初始化完成！------------------------");

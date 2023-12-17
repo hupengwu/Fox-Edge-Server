@@ -9,7 +9,7 @@ import cn.foxtech.common.status.ServiceStatus;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
-import cn.foxtech.controller.common.redislist.RedisListPersistValueRequest;
+import cn.foxtech.controller.common.redislist.PersistValueService;
 import cn.foxtech.controller.common.service.DeviceOperateService;
 import cn.foxtech.controller.common.service.EntityManageService;
 import cn.foxtech.device.domain.vo.OperateRequestVO;
@@ -39,7 +39,7 @@ public class CollectorExchangeService extends PeriodTaskService {
     private EntityManageService entityManageService;
 
     @Autowired
-    private RedisListPersistValueRequest valueService;
+    private PersistValueService valueService;
 
     @Autowired
     private DeviceOperateService deviceOperateService;

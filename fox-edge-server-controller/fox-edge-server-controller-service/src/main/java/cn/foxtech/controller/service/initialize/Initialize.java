@@ -4,7 +4,6 @@ package cn.foxtech.controller.service.initialize;
 import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.controller.common.initialize.ControllerInitialize;
-import cn.foxtech.controller.service.scheduler.RedisListRespondScheduler;
 import cn.foxtech.controller.service.service.CollectorExchangeService;
 import cn.foxtech.controller.service.service.CollectorSubscribeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +38,6 @@ public class Initialize implements CommandLineRunner {
     private InitialConfigService initialConfigService;
 
 
-    @Autowired
-    private RedisListRespondScheduler redisListRespondScheduler;
-
-
     @Override
     public void run(String... args) {
         logger.info("------------------------初始化开始！------------------------");
@@ -56,9 +51,6 @@ public class Initialize implements CommandLineRunner {
 
         // 调度设备上报收集任务
         this.subscribeService.schedule();
-
-        this.redisListRespondScheduler.initialize();
-        this.redisListRespondScheduler.schedule();
 
         logger.info("------------------------初始化结束！------------------------");
     }
