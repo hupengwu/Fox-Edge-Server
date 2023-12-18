@@ -100,7 +100,10 @@ public class ProcessUtils {
 
             // ps -aux返回的格式: 0~10是linux的固定信息项目
             Map<String, Object> map = makeShellParam(items);
-            return map;
+            String command = (String) map.get("command");
+            if (command.endsWith(feature)) {
+                return map;
+            }
         }
 
         return null;
