@@ -142,7 +142,7 @@ public class DeviceStatusValueUpdater {
             if (value instanceof Map) {
                 expendMapper((Map<String, Object>) value, subKey, expendMap);
             } else {
-                expendMap.put(subKey,value);
+                expendMap.put(subKey, value);
             }
 
         }
@@ -211,9 +211,8 @@ public class DeviceStatusValueUpdater {
         // 步骤2：将数据保存到redis，同时也生成设备对象，保存到mysql数据库中
         if (existEntity == null) {
             // 将新增的数据，作为对象保存到数据库
-            for (String key : valueEntity.getParams().keySet()) {
-                this.saveObjectEntity(valueEntity.getDeviceName(), valueEntity.getManufacturer(), valueEntity.getDeviceType(), key);
-            }
+            this.saveObjectEntities(valueEntity);
+
 
             // 保存数据到redis
             Long time = System.currentTimeMillis();
@@ -239,6 +238,44 @@ public class DeviceStatusValueUpdater {
             Long time = System.currentTimeMillis();
             valueEntity.setUpdateTime(time);
             this.entityManageService.writeEntity(valueEntity);
+        }
+    }
+
+    private void saveObjectEntities(DeviceValueEntity valueEntity) {
+        DeviceObjectEntity deviceObjectEntity = new DeviceObjectEntity();
+        deviceObjectEntity.setDeviceName(valueEntity.getDeviceName());
+
+        // 数据库侧的Keys:通过查询设备级别的数据，来构造一个整个设备的对象列表
+        Set<String> dbServiceKeys = new HashSet<>();
+        List<BaseEntity> entityList = this.entityManageService.getDeviceObjectEntityService().selectEntityList((QueryWrapper) deviceObjectEntity.makeDeviceWrapperKey());
+        for (BaseEntity entity : entityList) {
+            deviceObjectEntity = (DeviceObjectEntity) entity;
+            deviceObjectEntity.setDeviceName(valueEntity.getDeviceName());
+            deviceObjectEntity.setManufacturer(valueEntity.getManufacturer());
+            deviceObjectEntity.setDeviceType(valueEntity.getDeviceType());
+            deviceObjectEntity.setObjectName(deviceObjectEntity.getObjectName());
+            dbServiceKeys.add(deviceObjectEntity.makeServiceKey());
+        }
+
+        // 将新增的数据，作为对象保存到数据库
+        for (String key : valueEntity.getParams().keySet()) {
+            deviceObjectEntity = new DeviceObjectEntity();
+            deviceObjectEntity.setDeviceName(valueEntity.getDeviceName());
+            deviceObjectEntity.setManufacturer(valueEntity.getManufacturer());
+            deviceObjectEntity.setDeviceType(valueEntity.getDeviceType());
+            deviceObjectEntity.setObjectName(key);
+
+            String serviceKey = deviceObjectEntity.makeServiceKey();
+            if (dbServiceKeys.contains(serviceKey)) {
+                continue;
+            }
+
+
+            // 写入数据库
+            this.entityManageService.getDeviceObjectEntityService().insertEntity(deviceObjectEntity);
+
+            // 更新数据库变更的时间
+            this.entityPublishManager.setPublishEntityUpdateTime(DeviceObjectEntity.class.getSimpleName(), System.currentTimeMillis());
         }
     }
 

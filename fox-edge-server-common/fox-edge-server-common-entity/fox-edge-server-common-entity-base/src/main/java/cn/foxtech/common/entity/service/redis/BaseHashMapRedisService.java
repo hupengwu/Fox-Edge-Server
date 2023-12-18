@@ -298,7 +298,7 @@ public abstract class BaseHashMapRedisService {
         Map<String, Long> oldUpdateTimes = this.getRedisService().getCacheMap(this.getHead() + "agile");
 
         // 检查：记录结构是否不同（发生了增加和删除）
-        if (!DifferUtils.differByValue(oldUpdateTimes.keySet(), this.agileMap.keySet())) {
+        if (DifferUtils.differByValue(oldUpdateTimes.keySet(), this.agileMap.keySet())) {
             // 结构不同，全量刷新数据
             this.saveAllEntities();
         } else {

@@ -57,6 +57,13 @@ public class DeviceObjectEntity extends BaseEntity {
         return queryWrapper;
     }
 
+    public Object makeDeviceWrapperKey() {
+        QueryWrapper queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("device_name", this.deviceName);
+
+        return queryWrapper;
+    }
+
     /**
      * 获取业务值
      *
