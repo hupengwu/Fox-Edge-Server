@@ -201,15 +201,16 @@ public class RepoLocalCompService {
             throw new ServiceException("实体不存在");
         }
 
+        if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_file_template)) {
+            return this.uploadCsvTemplateEntity(entity.getCompParam(), commitKey);
+        }
         if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_jar_decoder)) {
             return this.uploadJarDecoderEntity(entity.getCompParam(), commitKey);
         }
         if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_jsp_decoder)) {
             return this.uploadJspDecoderEntity(entity.getCompParam(), commitKey, description);
         }
-        if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_file_template)) {
-            return this.uploadCsvTemplateEntity(entity.getCompParam());
-        }
+
 
         throw new ServiceException("该组件类型，不支持本地上传");
     }
@@ -276,13 +277,13 @@ public class RepoLocalCompService {
 
     }
 
-    private Map<String, Object> uploadCsvTemplateEntity(Map<String, Object> compParam) throws IOException, InterruptedException {
+    private Map<String, Object> uploadCsvTemplateEntity(Map<String, Object> compParam, String commitKey) throws IOException, InterruptedException {
         String modelName = (String) compParam.get(RepoCompConstant.filed_model_name);
         String modelVersion = (String) compParam.get(RepoCompConstant.filed_model_version);
         String deviceType = (String) compParam.get(OperateVOFieldConstant.field_device_type);
         String manufacturer = (String) compParam.get(OperateVOFieldConstant.field_manufacturer);
-        if (MethodUtils.hasEmpty(modelName, modelVersion, deviceType, manufacturer)) {
-            throw new ServiceException("缺少参数： modelName, modelVersion, deviceType, manufacturer");
+        if (MethodUtils.hasEmpty(modelName, modelVersion, deviceType, manufacturer, commitKey)) {
+            throw new ServiceException("缺少参数： modelName, modelVersion, deviceType, manufacturer, commitKey");
         }
 
         File file = null;
@@ -305,6 +306,7 @@ public class RepoLocalCompService {
             formData.put(RepoCompConstant.filed_model_version, modelVersion);
             formData.put(RepoCompConstant.filed_component, "service");
             formData.put("file", file);
+            formData.put(RepoCompConstant.filed_commit_key, commitKey);
 
 
             return this.remoteService.executeUpload("/manager/repository/component/upload", formData);
@@ -323,6 +325,9 @@ public class RepoLocalCompService {
         }
 
 
+        if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_file_template)) {
+            return this.syncCsvTemplateEntity(entity);
+        }
         if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_jar_decoder)) {
             return this.syncJarDecoderEntity(entity);
         }
@@ -331,6 +336,46 @@ public class RepoLocalCompService {
         }
 
         throw new ServiceException("该组件类型，不支持从云端同步！");
+    }
+
+    private Map<String, Object> syncCsvTemplateEntity(RepoCompEntity entity) throws IOException {
+        Map<String, Object> compParam = entity.getCompParam();
+
+        String modelName = (String) compParam.get(RepoCompConstant.filed_model_name);
+        String modelVersion = (String) compParam.get(RepoCompConstant.filed_model_version);
+        if (MethodUtils.hasEmpty(modelName, modelVersion)) {
+            throw new ServiceException("缺少参数： modelName, modelVersion");
+        }
+
+
+        Map<String, Object> body = new HashMap<>();
+        body.put(RepoCompConstant.filed_model_type, "template");
+        body.put(RepoCompConstant.filed_model_name, modelName);
+        body.put(RepoCompConstant.filed_model_version, modelVersion);
+
+        // 获得云端的信息
+        Map<String, Object> respond = this.remoteService.executePost("/manager/repository/component/groupName", body);
+        Object code = respond.get(AjaxResult.CODE_TAG);
+        Object data = respond.get(AjaxResult.DATA_TAG);
+        if (!HttpStatus.SUCCESS.equals(code)) {
+            throw new ServiceException("从云端查询信息失败！" + respond);
+        }
+        if (data == null) {
+            throw new ServiceException("云端没有这个组件，请先去云端仓库为本账号:" + this.remoteService.getUsername() + "归属的群组，注册这个组件:" + modelName);
+        }
+
+        // 找到了云端的组件信息
+        Map<String, Object> map = (Map<String, Object>) data;
+
+        // 克隆一个副本，防止修改影响到了原本
+        entity = JsonUtils.clone(entity);
+        entity.getCompParam().put(RepoCompVOFieldConstant.field_group_name, map.get("groupName"));
+        entity.getCompParam().put(RepoCompVOFieldConstant.field_comp_id, map.get("id"));
+
+        // 保存数据
+        this.entityManageService.updateEntity(entity);
+
+        return respond;
     }
 
     private Map<String, Object> syncJarDecoderEntity(RepoCompEntity entity) throws IOException {
