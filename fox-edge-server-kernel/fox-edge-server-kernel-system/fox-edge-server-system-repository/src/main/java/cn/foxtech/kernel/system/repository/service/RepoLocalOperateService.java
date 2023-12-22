@@ -99,7 +99,7 @@ public class RepoLocalOperateService {
         Boolean polling = (Boolean) params.get(OperateVOFieldConstant.field_polling);
         Integer timeout = (Integer) params.get(OperateVOFieldConstant.field_timeout);
         Map<String, Object> engineParam = (Map<String, Object>) params.get(OperateVOFieldConstant.field_engine_param);
-
+        String description = (String) params.get(OperateVOFieldConstant.field_description);
 
         // 简单校验参数
         if (MethodUtils.hasEmpty(compId, operateName, operateMode, dataType, serviceType, engineType, polling, timeout)) {
@@ -144,6 +144,9 @@ public class RepoLocalOperateService {
                 entity.setEngineParam(this.engineParamService.getDefault(operateMode));
             }
 
+            // 将描述信息，写在engineParam
+            entity.getEngineParam().put(OperateVOFieldConstant.field_description,description);
+
             OperateEntity exist = this.entityManageService.getEntity(entity.makeServiceKey(), OperateEntity.class);
             if (exist != null) {
                 throw new ServiceException("实体已存在");
@@ -161,6 +164,9 @@ public class RepoLocalOperateService {
             if (MethodUtils.hasEmpty(entity.getEngineParam())) {
                 entity.setEngineParam(exist.getEngineParam());
             }
+
+            // 将描述信息，写在engineParam
+            entity.getEngineParam().put(OperateVOFieldConstant.field_description,description);
 
             if (!exist.getManufacturer().equals(manufacturer) // 不允许修改
                     || !exist.getDeviceType().equals(deviceType) // 不允许修改

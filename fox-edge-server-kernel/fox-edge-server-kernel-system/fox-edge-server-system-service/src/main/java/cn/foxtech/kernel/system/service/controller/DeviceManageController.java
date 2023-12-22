@@ -130,33 +130,39 @@ public class DeviceManageController {
 
     @PostMapping("option")
     public AjaxResult selectOptionList(@RequestBody Map<String, Object> body) {
-        String deviceType = (String) body.get(OperateVOFieldConstant.field_device_type);
-        String manufacturer = (String) body.get(OperateVOFieldConstant.field_manufacturer);
-        String field = (String) body.get("field");
-        if (MethodUtils.hasEmpty(deviceType, manufacturer, field)) {
-            throw new ServiceException("参数缺失：deviceType, manufacturer, field");
+        try {
+            String deviceType = (String) body.get(OperateVOFieldConstant.field_device_type);
+            String manufacturer = (String) body.get(OperateVOFieldConstant.field_manufacturer);
+            String field = (String) body.get("field");
+            if (MethodUtils.hasEmpty(field)) {
+                throw new ServiceException("参数缺失：field");
+            }
+
+            StringBuilder sb = new StringBuilder();
+            if (field.equals("deviceName")) {
+                sb.append("SELECT DISTINCT t.device_name FROM tb_device t WHERE 1=1 ");
+                if (!MethodUtils.hasEmpty(manufacturer)) {
+                    sb.append("AND t.manufacturer = '" + manufacturer + "'");
+                }
+                if (!MethodUtils.hasEmpty(deviceType)) {
+                    sb.append("AND t.device_type = '" + deviceType + "'");
+                }
+            }
+            List<DevicePo> data = this.entityService.getMapper().executeSelectData(sb.toString());
+
+            List<Map<String, Object>> resultList = new ArrayList<>();
+            for (DevicePo entity : data) {
+                Map<String, Object> result = new HashMap<>();
+                result.put("value", entity.getDeviceName());
+                result.put("label", entity.getDeviceName());
+                resultList.add(result);
+            }
+
+
+            return AjaxResult.success(resultList);
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
         }
-
-        StringBuilder sb = new StringBuilder();
-        if (field.equals("deviceName")) {
-            sb.append("SELECT DISTINCT t.device_name FROM tb_device t WHERE t.manufacturer = '");
-            sb.append(manufacturer);
-            sb.append("' AND t.device_type = '");
-            sb.append(deviceType);
-            sb.append("'");
-        }
-        List<DevicePo> data = this.entityService.getMapper().executeSelectData(sb.toString());
-
-        List<Map<String, Object>> resultList = new ArrayList<>();
-        for (DevicePo entity : data) {
-            Map<String, Object> result = new HashMap<>();
-            result.put("value", entity.getDeviceName());
-            result.put("label", entity.getDeviceName());
-            resultList.add(result);
-        }
-
-
-        return AjaxResult.success(resultList);
     }
 
     /**

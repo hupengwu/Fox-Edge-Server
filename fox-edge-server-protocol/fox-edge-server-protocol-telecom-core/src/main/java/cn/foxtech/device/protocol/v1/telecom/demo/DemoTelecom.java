@@ -9,12 +9,12 @@ import java.util.Map;
 public class DemoTelecom {
 
     public static void main(String[] args) throws UnsupportedEncodingException {
-        byte[] arrCmd = HexUtils.hexStringToByteArray("1B 36 30 38 2F 31 32 2F 30 32 20 20 31 37 3A 32 34 0A 20 20 30 30 34  2D 30 30 34 0A1B 39 CAD7 B4 CE BB F0 BE AF  0AC8 B9 C2A5 D2 BB B2 E3 C9 CF BF D5 0AB8 D0D1CCCC BD B2 E2 C6 F7 0A0A");
+        byte[] arrCmd = HexUtils.hexStringToByteArray("1B 36 30 38 2F 31 32 2F 30 32 20 20 31 37 3A 32 34 0A 20 20 30 30 34  2D 30 30 34 0A1B 39 CAD7 B4 CE BB F0 BE AF  0AC8 B9 C2A5 D2 BB B2 E3 C9 CF BF D5 0A B8 D0 D1 CC CC BD B2 E2 C6 F7 0A0A");
         String txt1 = new String(arrCmd,"GB2312");
         System.out.println(txt1);
         boolean t = txt1.startsWith("\u001B");// 以utf8的1B字符开始
 
-        arrCmd = HexUtils.hexStringToByteArray("1B 36  30 38 2F 31 32 2F 30 32 20 20 31 37 3A 32 31 0A 20 20 30 30 36  2D 30 30 37  0A 1B 39 BB F0 BE AF  BAF3 D0 F8 AD6 D0D1 CC C1F9 B2E3 BC C6 BB AE B2 BF 0A B8 D0D1 CC CC BD B2E2 C6 F7 0A0A");
+        arrCmd = HexUtils.hexStringToByteArray("1B 36  30 38 2F 31 32 2F 30 32 20 20 31 37 3A 32 31 0A 20 20 30 30 36  2D 30 30 37  0A 1B 39 BB F0 BE AF  BA F3 D0 F8 0A D6 D0D1 CC C1F9 B2E3 BC C6 BB AE B2 BF 0A B8 D0D1 CC CC BD B2E2 C6 F7 0A0A");
         txt1 = new String(arrCmd,"GB2312");
         System.out.println(txt1);
 
