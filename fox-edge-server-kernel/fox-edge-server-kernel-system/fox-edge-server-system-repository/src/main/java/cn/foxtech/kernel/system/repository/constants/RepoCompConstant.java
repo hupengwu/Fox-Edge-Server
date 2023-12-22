@@ -31,5 +31,9 @@ public class RepoCompConstant {
 
     public static final String filed_commit_key = "commitKey";
 
+    public static final String filed_manufacturer = "manufacturer";
+    public static final String filed_device_type = "deviceType";
+
+
     public static final String filed_value_model_version_default = "v1";
 }

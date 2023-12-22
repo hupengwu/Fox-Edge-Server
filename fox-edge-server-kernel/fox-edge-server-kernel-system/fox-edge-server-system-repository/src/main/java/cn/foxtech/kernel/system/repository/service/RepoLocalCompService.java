@@ -73,22 +73,31 @@ public class RepoLocalCompService {
                 String manufacturer = (String) compEntity.getCompParam().getOrDefault(OperateVOFieldConstant.field_manufacturer, "");
                 String deviceType = (String) compEntity.getCompParam().getOrDefault(OperateVOFieldConstant.field_device_type, "");
 
-                if (!MethodUtils.hasEmpty(keyWord)) {
-                    return manufacturer.toLowerCase().contains(keyWord.toLowerCase()) || deviceType.toLowerCase().contains(keyWord.toLowerCase());
+                if (MethodUtils.hasEmpty(keyWord)) {
+                    return true;
                 }
 
-                return true;
+                if (manufacturer.toLowerCase().contains(keyWord.toLowerCase())) {
+                    return true;
+                }
+                if (deviceType.toLowerCase().contains(keyWord.toLowerCase())) {
+                    return true;
+                }
+                return compEntity.getCompName().toLowerCase().contains(keyWord.toLowerCase());
             }
 
             if (RepoCompVOFieldConstant.value_comp_type_app_service.equals(compType)) {
                 String appName = (String) compEntity.getCompParam().getOrDefault(ServiceVOFieldConstant.field_app_name, "");
                 String appType = (String) compEntity.getCompParam().getOrDefault(ServiceVOFieldConstant.field_app_type, "");
 
-                if (!MethodUtils.hasEmpty(keyWord)) {
-                    return appName.toLowerCase().contains(keyWord.toLowerCase()) || appType.toLowerCase().contains(keyWord.toLowerCase());
+                if (MethodUtils.hasEmpty(keyWord)) {
+                    return true;
                 }
 
-                return true;
+                if (appName.toLowerCase().contains(keyWord.toLowerCase())) {
+                    return true;
+                }
+                return appType.toLowerCase().contains(keyWord.toLowerCase());
             }
 
             return true;

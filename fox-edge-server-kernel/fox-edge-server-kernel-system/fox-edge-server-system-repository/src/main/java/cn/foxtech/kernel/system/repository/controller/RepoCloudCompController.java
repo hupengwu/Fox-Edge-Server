@@ -91,6 +91,8 @@ public class RepoCloudCompController {
                     fuzzy |= ((String) value.getOrDefault(RepoCompConstant.filed_model_name, "")).toLowerCase().contains(((String) body.get(fieldName)).toLowerCase());
                     fuzzy |= ((String) value.getOrDefault(RepoCompConstant.filed_model_type, "")).toLowerCase().contains(((String) body.get(fieldName)).toLowerCase());
                     fuzzy |= ((String) value.getOrDefault(RepoCompConstant.filed_description, "")).toLowerCase().contains(((String) body.get(fieldName)).toLowerCase());
+                    fuzzy |= ((String) value.getOrDefault(RepoCompConstant.filed_manufacturer, "")).toLowerCase().contains(((String) body.get(fieldName)).toLowerCase());
+                    fuzzy |= ((String) value.getOrDefault(RepoCompConstant.filed_device_type, "")).toLowerCase().contains(((String) body.get(fieldName)).toLowerCase());
 
                     result &= fuzzy;
                 }
@@ -179,7 +181,7 @@ public class RepoCloudCompController {
                 throw new ServiceException("参数不能为空: modelType");
             }
 
-            this.periodTasksScheduler.insertPeriodTask(new RepoScanStatusTask(this.installService, this.installStatus, this.pathNameService,this.logger, modelType));
+            this.periodTasksScheduler.insertPeriodTask(new RepoScanStatusTask(this.installService, this.installStatus, this.pathNameService, this.logger, modelType));
             return AjaxResult.success();
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());

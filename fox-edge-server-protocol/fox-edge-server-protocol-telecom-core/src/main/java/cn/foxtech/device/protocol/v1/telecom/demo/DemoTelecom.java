@@ -2,16 +2,30 @@ package cn.foxtech.device.protocol.v1.telecom.demo;
 
 import cn.foxtech.device.protocol.v1.telecom.core.TelecomProtocol;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
-import sun.nio.cs.ext.GBK;
 
-
-import java.nio.charset.StandardCharsets;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 public class DemoTelecom {
 
-    public static void main(String[] args) {
-        byte[] arrCmd = HexUtils.hexStringToByteArray("7E323030323431343430303030464441460D");
+    public static void main(String[] args) throws UnsupportedEncodingException {
+        byte[] arrCmd = HexUtils.hexStringToByteArray("1B 36 30 38 2F 31 32 2F 30 32 20 20 31 37 3A 32 34 0A 20 20 30 30 34  2D 30 30 34 0A1B 39 CAD7 B4 CE BB F0 BE AF  0AC8 B9 C2A5 D2 BB B2 E3 C9 CF BF D5 0AB8 D0D1CCCC BD B2 E2 C6 F7 0A0A");
+        String txt1 = new String(arrCmd,"GB2312");
+        System.out.println(txt1);
+        boolean t = txt1.startsWith("\u001B");// 以utf8的1B字符开始
+
+        arrCmd = HexUtils.hexStringToByteArray("1B 36  30 38 2F 31 32 2F 30 32 20 20 31 37 3A 32 31 0A 20 20 30 30 36  2D 30 30 37  0A 1B 39 BB F0 BE AF  BAF3 D0 F8 AD6 D0D1 CC C1F9 B2E3 BC C6 BB AE B2 BF 0A B8 D0D1 CC CC BD B2E2 C6 F7 0A0A");
+        txt1 = new String(arrCmd,"GB2312");
+        System.out.println(txt1);
+
+
+        arrCmd = HexUtils.hexStringToByteArray("1B 36 30 38 2F 31 32 2F 30 32 20 20 31 37 3A 32 35 0A 20 20 0A 1B 39 CF B5 CD B3 B8 B4 CE BB 0A 0A");
+        txt1 = new String(arrCmd,"GB2312");
+        System.out.println(txt1);
+
+
+
+        arrCmd = HexUtils.hexStringToByteArray("7E323030323431343430303030464441460D");
 
         Map<String, Object> value = TelecomProtocol.unPackCmd2Map(arrCmd);
         byte[] dat = (byte[]) value.get("INFO");
@@ -33,10 +47,10 @@ public class DemoTelecom {
         try {
             String txt = "";
 
-            txt = new String(HexUtils.hexStringToByteArray("2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 0D 0A 32 30 32 33 C4 EA 31 31 D4 C2 32 36 C8 D5 20 31 36 CA B1 34 36 B7 D6 0D "),"GB2312");
+            txt = new String(HexUtils.hexStringToByteArray("2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 0D 0A 32 30 32 33 C4 EA 31 31 D4 C2 32 36 C8 D5 20 31 36 CA B1 34 36 B7 D6 0D "), "GB2312");
             System.out.println(txt);
 
-            txt = new String(HexUtils.hexStringToByteArray("0D "),"GB2312");
+            txt = new String(HexUtils.hexStringToByteArray("0D "), "GB2312");
             System.out.println(txt);
 
             txt = new String(HexUtils.hexStringToByteArray("31 2F 35 20 0D"), "GB2312");
@@ -64,8 +78,7 @@ public class DemoTelecom {
             System.out.println(txt);
 
 
-
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

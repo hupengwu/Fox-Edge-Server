@@ -152,6 +152,10 @@ public class ServerInitializer {
 
                 // 发出notify
                 streamEntity.notify();
+
+                if (this.openLogger) {
+                    this.console.info("串口接收到数据:" + HexUtils.byteArrayToHexString(data));
+                }
             }
         }
     }
@@ -197,9 +201,20 @@ public class ServerInitializer {
                             if (!MethodUtils.hasEmpty(returnText)) {
                                 String message = new String(data, returnText);
                                 this.reportService.insert(channelName, message);
+
+                                if (this.openLogger) {
+                                    this.console.info("上报报文:" + message);
+                                }
+
                             } else {
                                 this.reportService.insert(channelName, data);
+
+                                if (this.openLogger) {
+                                    this.console.info("串口接收到数据:" + HexUtils.byteArrayToHexString(data));
+                                }
                             }
+
+
                         } catch (Exception e) {
                             break;
                         }
@@ -233,6 +248,10 @@ public class ServerInitializer {
         String res = splitMessage.decode(streamEntity.getBuff(), streamEntity.getEnd());
         if (res.isEmpty()) {
             return null;
+        }
+
+        if (this.openLogger) {
+            this.console.info("分拆出了报文:" + res);
         }
 
         // 转换数据格式
@@ -277,7 +296,7 @@ public class ServerInitializer {
 
             this.serialPortEntity.setAsyncExecutor(asyncExecutor);
         } catch (Exception e) {
-            String message  = "初始化串口出错:" + e.getMessage();
+            String message = "初始化串口出错:" + e.getMessage();
             this.logger.error(message);
             this.console.error(message);
         }
