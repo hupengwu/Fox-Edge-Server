@@ -2,6 +2,7 @@ package cn.foxtech.device.script.engine;
 
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.OperateEntity;
+import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
@@ -16,12 +17,19 @@ import java.util.Map;
 @Component
 public class ReportService {
     @Autowired
+    private InitialConfigService initialConfigService;
+
+    @Autowired
     private ScriptEngineService engineService;
 
     @Autowired
     private ScriptEngineOperator engineOperator;
 
+
     public Map<String, Object> decode(String manufacturer, String deviceType, List<BaseEntity> jspReportList, Object recv, Map<String, Object> params) throws ProtocolException {
+        // 打印日志
+        this.printLogger(recv);
+
         // 取出ScriptEngine
         ScriptEngine engine = this.engineService.getScriptEngine(manufacturer, deviceType);
 
@@ -54,6 +62,7 @@ public class ReportService {
                     return this.engineOperator.decodeStatus(engine, operateEntity.getOperateName(), decodeMain, decodeScript);
                 }
             } catch (Exception e) {
+                this.printLogger("解码失败:" + operateEntity.toString() + "\r\n" + e.getMessage());
                 continue;
             }
         }
@@ -61,5 +70,17 @@ public class ReportService {
         throw new ProtocolException("找不到对应设备类型的解码器：" + manufacturer + ":" + deviceType);
     }
 
+    private void printLogger(Object recv) {
+        if (recv == null) {
+            return;
+        }
+
+        if (!Boolean.TRUE.equals(this.initialConfigService.getConfigParam("serverConfig").get("logger"))) {
+            return;
+        }
+
+
+        this.initialConfigService.getLogger().info(recv.toString());
+    }
 
 }

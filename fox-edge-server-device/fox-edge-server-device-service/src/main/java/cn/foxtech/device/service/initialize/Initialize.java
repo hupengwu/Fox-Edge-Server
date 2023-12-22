@@ -1,6 +1,7 @@
 package cn.foxtech.device.service.initialize;
 
 
+import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.status.ServiceStatusScheduler;
 import cn.foxtech.device.service.controller.DeviceExecuteController;
@@ -42,6 +43,12 @@ public class Initialize implements CommandLineRunner {
     @Autowired
     private MethodEntityService methodEntityService;
 
+    /**
+     * 动态参数配置
+     */
+    @Autowired
+    private InitialConfigService initialConfigService;
+
 
     @Override
     public void run(String... args) {
@@ -54,6 +61,9 @@ public class Initialize implements CommandLineRunner {
         this.entityManageService.instance();
         this.entityManageService.initLoadEntity();
 
+        // 初始化配置参数
+        this.initialConfigService.initialize("serverConfig", "serverConfig.json");
+
         // 从第三方jar扫描解码器，并生成redis记录
         this.methodEntityService.scanJarFile();
         this.methodEntityService.updateEntityList();
@@ -63,6 +73,7 @@ public class Initialize implements CommandLineRunner {
         // 启动对客户端的响应线程
         this.deviceExecuteController.schedule(3);
 
+        // 上报控制
         this.deviceReportController.schedule();
 
 

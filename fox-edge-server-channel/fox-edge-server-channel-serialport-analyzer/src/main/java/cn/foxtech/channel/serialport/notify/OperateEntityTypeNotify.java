@@ -48,11 +48,11 @@ public class OperateEntityTypeNotify implements BaseConsumerTypeNotify {
             try {
                 SerialChannelEntity channelEntity = this.channelService.getChannelEntityMap().get(channelName);
 
-                if (channelEntity.getSplitOperate().makeServiceKey().equals(operateEntity.makeServiceKey())) {
+                if (channelEntity.getSplitOperate() != null && channelEntity.getSplitOperate().makeServiceKey().equals(operateEntity.makeServiceKey())) {
                     this.channelService.rebindScriptEngine(channelEntity, channelEntity.getChannelParam());
                 }
 
-                if (channelEntity.getKeyOperate().makeServiceKey().equals(operateEntity.makeServiceKey())) {
+                if (channelEntity.getKeyOperate() != null && channelEntity.getKeyOperate().makeServiceKey().equals(operateEntity.makeServiceKey())) {
                     this.channelService.rebindScriptEngine(channelEntity, channelEntity.getChannelParam());
                 }
 

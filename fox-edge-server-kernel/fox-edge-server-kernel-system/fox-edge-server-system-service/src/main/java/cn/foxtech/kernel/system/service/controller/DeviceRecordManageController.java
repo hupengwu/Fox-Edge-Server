@@ -60,7 +60,7 @@ public class DeviceRecordManageController {
             filter = filter.substring(0, filter.length() - "AND".length());
         }
 
-        return this.selectEntityListPage(filter, "ASC", pageNum, pageSize);
+        return this.selectEntityListPage(filter, "DESC", pageNum, pageSize);
     }
 
     public AjaxResult selectEntityListPage(String filter, String order, long pageNmu, long pageSize) {
