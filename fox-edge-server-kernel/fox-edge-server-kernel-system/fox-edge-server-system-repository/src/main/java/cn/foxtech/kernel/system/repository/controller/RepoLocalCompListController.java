@@ -155,11 +155,6 @@ public class RepoLocalCompListController {
                 throw new ServiceException("参数不能为空: id, commitKey, description");
             }
 
-            if (commitKey.equals(description)){
-                throw new ServiceException("commitKey和description相同，会导致泄密");
-            }
-
-
             // 上传组件
             Map<String, Object> result = this.compService.uploadEntity(Long.parseLong(id.toString()), commitKey, description);
 

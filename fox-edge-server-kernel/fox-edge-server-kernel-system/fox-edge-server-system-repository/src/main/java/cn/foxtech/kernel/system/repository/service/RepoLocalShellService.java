@@ -44,8 +44,8 @@ public class RepoLocalShellService {
     /**
      * 打包文件 \opt\fox-edge\template\dobot-mg400\v1\1.0.0\*.*
      */
-    public List<String> packCsvTemplate2TarFile(String tarFileName, String modelName, String modelVersion, String version) throws IOException, InterruptedException {
-        String pathName = this.pathNameService.getPathName4LocalTemplate2version(modelName, modelVersion, version);
+    public List<String> packCsvTemplate2TarFile(String tarFileName, String modelName, String modelVersion) throws IOException, InterruptedException {
+        String pathName = this.pathNameService.getPathName4LocalTemplate2version(modelName, modelVersion);
         File dir = new File(pathName);
         if (!dir.exists() || !dir.isDirectory()) {
             throw new ServiceException("目录不存在！");

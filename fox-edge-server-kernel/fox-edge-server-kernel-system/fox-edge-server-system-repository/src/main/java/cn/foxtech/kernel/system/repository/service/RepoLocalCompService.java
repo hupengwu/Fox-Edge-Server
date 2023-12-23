@@ -299,11 +299,11 @@ public class RepoLocalCompService {
         try {
             // 打包成tar文件
             String tarFileName = modelName + ".tar";
-            this.shellService.packCsvTemplate2TarFile(tarFileName, modelName, modelVersion, "1.0.0");
+            this.shellService.packCsvTemplate2TarFile(tarFileName, modelName, modelVersion);
 
 
             // 打开tar文件
-            String pathName = this.pathNameService.getPathName4LocalTemplate2version(modelName, modelVersion, "1.0.0");
+            String pathName = this.pathNameService.getPathName4LocalTemplate2version(modelName, modelVersion);
             file = new File(pathName + "\\" + tarFileName);
             if (!file.exists() || !file.isFile()) {
                 throw new ServiceException("文件不存在！");

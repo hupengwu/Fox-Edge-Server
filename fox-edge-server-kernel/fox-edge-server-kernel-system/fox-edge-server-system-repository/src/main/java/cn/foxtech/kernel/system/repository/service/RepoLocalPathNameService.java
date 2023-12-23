@@ -210,8 +210,8 @@ public class RepoLocalPathNameService {
      *
      * @return \opt\fox-edge\template\dobot-mg400\v1\1.0.0
      */
-    public String getPathName4LocalTemplate2version(String modelName, String modelVersion, String version) {
-        return FileNameUtils.getOsFilePath(this.absolutePath + "/template/" + modelName + "/" + modelVersion + "/" + version);
+    public String getPathName4LocalTemplate2version(String modelName, String modelVersion) {
+        return FileNameUtils.getOsFilePath(this.absolutePath + "/template/" + modelName + "/" + modelVersion);
     }
 
     /**

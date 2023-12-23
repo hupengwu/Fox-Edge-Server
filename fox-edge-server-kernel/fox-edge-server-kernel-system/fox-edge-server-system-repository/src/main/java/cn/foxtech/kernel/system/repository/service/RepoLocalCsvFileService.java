@@ -137,7 +137,7 @@ public class RepoLocalCsvFileService {
 
         File file = new File("");
 
-        File templateDir = new File(file.getAbsolutePath() + "/template/" + modelName + "/" + modelVersion + "/1.0.0");
+        File templateDir = new File(file.getAbsolutePath() + "/template/" + modelName + "/" + modelVersion);
         if (!templateDir.exists() || !templateDir.isDirectory()) {
             return result;
         }
