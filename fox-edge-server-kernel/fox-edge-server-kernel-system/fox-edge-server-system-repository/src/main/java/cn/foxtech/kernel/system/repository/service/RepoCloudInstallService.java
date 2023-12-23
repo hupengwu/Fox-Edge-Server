@@ -399,7 +399,7 @@ public class RepoCloudInstallService {
                 this.installDecoderFile(tarDir, file.getAbsolutePath() + "/jar/decoder", modelName, modelVersion);
             }
             if (modelType.equals(RepoCompConstant.repository_type_template)) {
-                this.installTemplateFile(tarDir, file.getAbsolutePath() + "/template/" + modelName + "/" + modelVersion + "/" + version);
+                this.installTemplateFile(tarDir, file.getAbsolutePath() + "/template/" + modelName + "/" + modelVersion);
             }
             if (modelType.equals(RepoCompConstant.repository_type_service)) {
                 if (ServiceVOFieldConstant.field_type_kernel.equals(component) || ServiceVOFieldConstant.field_type_system.equals(component) || ServiceVOFieldConstant.field_type_service.equals(component)) {
