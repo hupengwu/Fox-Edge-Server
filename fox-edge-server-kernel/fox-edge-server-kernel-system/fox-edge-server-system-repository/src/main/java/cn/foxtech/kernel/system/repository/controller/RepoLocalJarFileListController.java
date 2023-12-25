@@ -6,6 +6,7 @@ import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
+import cn.foxtech.kernel.common.service.EdgeService;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
 import cn.foxtech.kernel.system.repository.service.RepoLocalAppStartService;
 import cn.foxtech.kernel.system.repository.service.RepoLocalJarFileConfigService;
@@ -24,6 +25,8 @@ import java.util.Set;
 @RestController
 @RequestMapping("/kernel/manager/repository/local/jar-file")
 public class RepoLocalJarFileListController {
+    @Autowired
+    private EdgeService edgeService;
     @Autowired
     private RepoLocalAppStartService repoLocalAppStartService;
 
@@ -126,6 +129,8 @@ public class RepoLocalJarFileListController {
     @PostMapping("process/restart")
     public AjaxResult restartProcess(@RequestBody Map<String, Object> params) {
         try {
+                this.edgeService.disable4Docker();
+
             this.repoLocalAppStartService.restartProcess("device-service", "system");
             return AjaxResult.success();
         } catch (Exception e) {

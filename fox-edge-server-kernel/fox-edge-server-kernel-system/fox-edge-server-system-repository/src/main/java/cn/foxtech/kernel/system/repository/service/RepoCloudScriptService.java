@@ -14,10 +14,6 @@ public class RepoCloudScriptService {
     @Autowired
     private CloudRemoteService cloudRemoteService;
 
-    public Map<String, Object> queryCloudCompEntity(Map<String, Object> body) throws IOException {
-        return this.cloudRemoteService.executePost("/manager/repository/component/script/entity", body);
-    }
-
     public Map<String, Object> queryCloudCompList(Map<String, Object> body) throws IOException {
         return this.cloudRemoteService.executePost("/manager/repository/component/script/page", body);
     }

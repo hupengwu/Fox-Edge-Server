@@ -3,7 +3,7 @@ spring:
     name: fox-edge-server-persist-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.1.7:3306/fox_edge?useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://192.168.1.23:3306/fox_edge?useUnicode=true&characterEncoding=utf8
     username: fox-edge
     password: 12345678
 

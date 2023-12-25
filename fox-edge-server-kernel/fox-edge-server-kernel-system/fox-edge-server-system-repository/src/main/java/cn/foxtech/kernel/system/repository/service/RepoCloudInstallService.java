@@ -37,21 +37,39 @@ public class RepoCloudInstallService {
     @Autowired
     private ManageConfigService configService;
 
+    /**
+     * 本地端口分配
+     */
     @Autowired
     private RepoLocalAppPortService appPortService;
 
+    /**
+     * 云端远程访问
+     */
     @Autowired
     private CloudRemoteService cloudRemoteService;
 
+    /**
+     * jar文件信息
+     */
     @Autowired
     private RepoLocalJarFileInfoService jarFileService;
 
+    /**
+     * app服务的conf配置文件
+     */
     @Autowired
     private RepoLocalAppConfService appConfService;
 
+    /**
+     * 路径名称
+     */
     @Autowired
     private RepoLocalPathNameService pathNameService;
 
+    /**
+     * 组件安装状态
+     */
     @Autowired
     private RepoCloudInstallStatus installStatus;
 
