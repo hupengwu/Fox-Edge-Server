@@ -5,6 +5,7 @@ import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTask;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTaskType;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
+import cn.foxtech.kernel.system.repository.service.RepoCloudCacheService;
 import cn.foxtech.kernel.system.repository.service.RepoCloudInstallService;
 import cn.foxtech.kernel.system.repository.service.RepoCloudInstallStatus;
 import cn.foxtech.kernel.system.repository.service.RepoLocalPathNameService;
@@ -21,6 +22,9 @@ public class RepoScanStatusTask extends PeriodTask {
     private final RepoCloudInstallStatus installStatus;
 
     private final RepoLocalPathNameService pathNameService;
+
+    @Autowired
+    private RepoCloudCacheService cacheService;
 
     private final String modelType;
 
@@ -66,7 +70,7 @@ public class RepoScanStatusTask extends PeriodTask {
     private void deleteJunkFiles(String modelType) {
         try {
             // 名单列表
-            List<Map<String, Object>> localList = this.pathNameService.queryLocalListFile(modelType);
+            List<Map<String, Object>> localList = this.cacheService.queryLocalListFile(modelType);
             Set<String> tables = new HashSet<>();
             for (Map<String, Object> map : localList) {
                 String modelName = (String) map.getOrDefault(RepoCompConstant.filed_model_name, "");

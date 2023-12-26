@@ -3,12 +3,15 @@ package cn.foxtech.kernel.system.repository.controller;
 
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.entity.utils.PageUtils;
+import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.common.service.EdgeService;
 import cn.foxtech.kernel.system.common.scheduler.PeriodTasksScheduler;
+import cn.foxtech.kernel.system.common.service.LocalSystemConfService;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
+import cn.foxtech.kernel.system.repository.service.RepoCloudCacheService;
 import cn.foxtech.kernel.system.repository.service.RepoCloudInstallService;
 import cn.foxtech.kernel.system.repository.service.RepoCloudInstallStatus;
 import cn.foxtech.kernel.system.repository.service.RepoLocalPathNameService;
@@ -38,6 +41,9 @@ public class RepoCloudCompController {
     private RepoCloudInstallService installService;
 
     @Autowired
+    private RepoCloudCacheService cacheService;
+
+    @Autowired
     private RepoCloudInstallStatus installStatus;
 
     @Autowired
@@ -52,6 +58,10 @@ public class RepoCloudCompController {
 
     @Autowired
     private EdgeService edgeService;
+
+    @Autowired
+    private LocalSystemConfService systemConfService;
+
 
     @PostMapping("/page")
     public AjaxResult selectPageList(@RequestBody Map<String, Object> body) {
@@ -68,7 +78,7 @@ public class RepoCloudCompController {
             // 查询本地/远程文件列表
             List<Map<String, Object>> list;
             if ("local".equals(source)) {
-                list = this.pathNameService.queryLocalListFile(modelType);
+                list = this.cacheService.queryLocalListFile(modelType);
             } else {
                 list = this.installService.queryUriListFile(modelType);
             }
@@ -118,8 +128,14 @@ public class RepoCloudCompController {
                 }
             });
 
-            // 分页查询
-            return PageUtils.getPageMapList(resultList, body);
+            // 敏感词的处理
+            List<Map<String, Object>> cloneList = JsonUtils.clone(resultList);
+            this.systemConfService.sensitiveWordsString(cloneList, "replace", "description", "description");
+            this.systemConfService.sensitiveWordsString(cloneList, "duplicate", "manufacturer", "manufacturerShow");
+            this.systemConfService.sensitiveWordsString(cloneList, "duplicate", "modelName", "modelNameShow");
+
+            //   分页查询
+            return PageUtils.getPageMapList(cloneList, body);
         } catch (FileNotFoundException e) {
             return AjaxResult.error("本地文件不存在:" + e.getMessage());
         } catch (Exception e) {

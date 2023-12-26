@@ -9,6 +9,7 @@ import cn.foxtech.kernel.system.common.scheduler.PersistRespondScheduler;
 import cn.foxtech.kernel.system.common.scheduler.TopicManagerScheduler;
 import cn.foxtech.kernel.system.common.service.DeviceTimeOutService;
 import cn.foxtech.kernel.system.common.service.EntityManageService;
+import cn.foxtech.kernel.system.common.service.LocalSystemConfService;
 import cn.foxtech.kernel.system.common.task.GateWayRouteUpdateTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,10 +53,16 @@ public class CommonInitialize {
     @Autowired
     private DeviceTimeOutService deviceTimeOutService;
 
+    @Autowired
+    private LocalSystemConfService systemConfService;
+
     public void initialize() {
         String message = "------------------------SystemInitialize初始化开始！------------------------";
         console.info(message);
         logger.info(message);
+
+        // 从本地文件读取配置数据
+        this.systemConfService.initialize();
 
         this.kernelInitialize.initialize();
 

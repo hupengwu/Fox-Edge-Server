@@ -1,8 +1,10 @@
 package cn.foxtech.kernel.system.repository.controller;
 
+import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
+import cn.foxtech.kernel.system.common.service.LocalSystemConfService;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
 import cn.foxtech.kernel.system.repository.constants.RepoStatusConstant;
 import cn.foxtech.kernel.system.repository.service.RepoCloudInstallService;
@@ -38,6 +40,9 @@ public class RepoProductManageController {
     @Autowired
     private RepoLocalAppLoadService appLoadService;
 
+    @Autowired
+    private LocalSystemConfService systemConfService;
+
 
     @PostMapping("/page")
     public Map<String, Object> selectPageList(@RequestBody Map<String, Object> body) {
@@ -66,7 +71,17 @@ public class RepoProductManageController {
 
             this.extendLoadConfig(entity);
 
-            return AjaxResult.success(entity);
+            Map<String, Object> clone = JsonUtils.clone(entity);
+
+            Object data = clone.get("comps");
+            if (data != null && data instanceof List) {
+                List<Map<String, Object>> list = (List<Map<String, Object>>) data;
+
+                // 敏感词的处理
+                this.systemConfService.sensitiveWordsString(list, "duplicate", "modelName", "modelNameShow");
+            }
+
+            return AjaxResult.success(clone);
 
         } catch (FileNotFoundException e) {
             return AjaxResult.error("本地文件不存在:" + e.getMessage());

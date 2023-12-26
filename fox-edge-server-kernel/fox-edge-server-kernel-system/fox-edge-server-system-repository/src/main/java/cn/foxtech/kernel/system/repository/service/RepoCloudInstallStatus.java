@@ -32,6 +32,9 @@ public class RepoCloudInstallStatus {
     @Autowired
     private RepoLocalPathNameService pathNameService;
 
+    @Autowired
+    private RepoCloudCacheService cacheService;
+
     /**
      * 扫描仓库状态
      */
@@ -59,7 +62,7 @@ public class RepoCloudInstallStatus {
             }
 
             // 获得云端组件列表
-            List<Map<String, Object>> cloudList = this.pathNameService.queryLocalListFile(modelType);
+            List<Map<String, Object>> cloudList = this.cacheService.queryLocalListFile(modelType);
 
             // 尚未下载云端组件，标识未未下载状态
             for (Map<String, Object> map : cloudList) {

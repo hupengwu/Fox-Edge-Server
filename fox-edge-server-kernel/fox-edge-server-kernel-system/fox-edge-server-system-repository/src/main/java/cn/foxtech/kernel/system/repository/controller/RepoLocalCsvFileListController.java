@@ -3,9 +3,11 @@ package cn.foxtech.kernel.system.repository.controller;
 import cn.foxtech.common.entity.constant.RepoCompVOFieldConstant;
 import cn.foxtech.common.entity.entity.RepoCompEntity;
 import cn.foxtech.common.entity.utils.PageUtils;
+import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
+import cn.foxtech.kernel.system.common.service.LocalSystemConfService;
 import cn.foxtech.kernel.system.repository.service.RepoLocalCompService;
 import cn.foxtech.kernel.system.repository.service.RepoLocalCsvFileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,9 @@ public class RepoLocalCsvFileListController {
     @Autowired
     private RepoLocalCsvFileService fileService;
 
+    @Autowired
+    private LocalSystemConfService systemConfService;
+
 
     @PostMapping("page")
     public Map<String, Object> selectFilePage(@RequestBody Map<String, Object> body) {
@@ -63,8 +68,13 @@ public class RepoLocalCsvFileListController {
             // 查询数据
             List<Map<String, Object>> entityList = this.fileService.queryFileList(compEntity);
 
+            // 敏感詞
+            List<Map<String, Object>> cloneList = JsonUtils.clone(entityList);
+            this.systemConfService.sensitiveWordsString(cloneList, "duplicate", "manufacturer", "manufacturerShow");
+            this.systemConfService.sensitiveWordsString(cloneList, "duplicate", "modelName", "modelNameShow");
+
             // 分页查询
-            return AjaxResult.success(PageUtils.getPageList(entityList, pageNum, pageSize));
+            return AjaxResult.success(PageUtils.getPageList(cloneList, pageNum, pageSize));
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
         }

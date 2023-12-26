@@ -5,9 +5,11 @@ import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.OperateEntity;
 import cn.foxtech.common.entity.entity.RepoCompEntity;
 import cn.foxtech.common.entity.utils.PageUtils;
+import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
+import cn.foxtech.kernel.system.common.service.LocalSystemConfService;
 import cn.foxtech.kernel.system.repository.service.EngineParamService;
 import cn.foxtech.kernel.system.repository.service.RepoLocalCompService;
 import cn.foxtech.kernel.system.repository.service.RepoLocalOperateService;
@@ -33,6 +35,8 @@ public class RepoLocalOperateListController {
     @Autowired
     private RepoLocalOperateService operateService;
 
+    @Autowired
+    private LocalSystemConfService systemConfService;
 
     @PostMapping("page")
     public Map<String, Object> selectOperatePage(@RequestBody Map<String, Object> body) {
@@ -56,8 +60,13 @@ public class RepoLocalOperateListController {
             // 查询数据
             List<BaseEntity> entityList = this.operateService.getOperateEntityList(compEntity);
 
+
+            // 敏感詞
+            List<Map<String, Object>> cloneList = JsonUtils.buildObject(entityList,List.class);
+            this.systemConfService.sensitiveWordsString(cloneList, "duplicate", "manufacturer", "manufacturerShow");
+
             // 分页查询
-            return AjaxResult.success(PageUtils.getPageList(entityList, pageNum, pageSize));
+            return AjaxResult.success(PageUtils.getPageList(cloneList, pageNum, pageSize));
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
         }

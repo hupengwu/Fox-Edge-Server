@@ -10,6 +10,7 @@ import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.system.common.service.EntityManageService;
+import cn.foxtech.kernel.system.common.service.LocalSystemConfService;
 import cn.foxtech.kernel.system.repository.service.RepoLocalApplicationService;
 import cn.foxtech.kernel.system.repository.service.RepoLocalCompService;
 import cn.foxtech.kernel.system.repository.service.RepoLocalCsvFileService;
@@ -46,6 +47,9 @@ public class RepoLocalCompListController {
     @Autowired
     private RepoLocalJarFileInfoService jarFileInfoService;
 
+    @Autowired
+    private LocalSystemConfService systemConfService;
+
 
     @PostMapping("page")
     public Map<String, Object> selectCompPage(@RequestBody Map<String, Object> body) {
@@ -74,8 +78,15 @@ public class RepoLocalCompListController {
                 mapList = BeanMapUtils.objectToMap(entityList);
             }
 
+            // 敏感詞
+            List<Map<String, Object>> cloneList = JsonUtils.clone(mapList);
+            this.systemConfService.sensitiveWordsMap(cloneList, "duplicate", "compParam", "compParamShow");
+            this.systemConfService.sensitiveWordsMapString(cloneList, "replace", "compParamShow", "fileName", "fileName");
+            this.systemConfService.sensitiveWordsMapString(cloneList, "replace", "compParamShow", "modelName", "modelName");
+            this.systemConfService.sensitiveWordsMapString(cloneList, "replace", "compParamShow", "manufacturer", "manufacturer");
+
             // 分页查询
-            return PageUtils.getPageMapList(mapList, body);
+            return PageUtils.getPageMapList(cloneList, body);
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
         }
