@@ -24,6 +24,7 @@ public class Demo {
         CJT188Entity entity1 = new CJT188Entity();
         entity1 = CJT188ProtocolFrame.decodePack(pack);
         entity1 = CJT188ProtocolFrame.decodePack(HexUtils.hexStringToByteArray("68 10 01 00 00 05 08 00 00 01 03 1F 90 00 39 16"));
+        entity1 = CJT188ProtocolFrame.decodePack(HexUtils.hexStringToByteArray("68 10 01 00 00 05 08 00 00 01 03 90 1f 00 39 16"));
 
 
         entity1 = CJT188ProtocolFrame.decodePack(HexUtils.hexStringToByteArray("FE FE FE 68 10 01 00 00 05 08 00 00 81 16 90 1F 00 00 23 01 00 2C 00 00 00 00 2C 00 00 00 00 00 00 00 00 00 48 16 "));

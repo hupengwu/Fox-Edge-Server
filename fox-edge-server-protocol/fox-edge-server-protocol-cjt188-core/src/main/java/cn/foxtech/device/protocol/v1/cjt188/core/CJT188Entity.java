@@ -32,9 +32,9 @@ public class CJT188Entity {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("仪表类型=" + this.getType().getName() + ",");
-        sb.append("地址信息=" + this.getAddress().toString() + ",");
-        sb.append("控制码=" + this.getCtrl().toString());
+        sb.append("{仪表类型=" + this.getType().getName() + "},");
+        sb.append("{地址信息=" + this.getAddress().toString() + "},");
+        sb.append("{控制码=" + this.getCtrl().toString() + "},");
         return sb.toString();
     }
 }

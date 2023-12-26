@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -494,7 +495,8 @@ public class RepoLocalCompService {
         repoCompEntity.setCompName(manufacturer + ":" + deviceType);
 
         // 如果组件对象不存在，那么就创建一个新的组件对象
-        if (!this.entityManageService.hasEntity(repoCompEntity.makeServiceKey(), RepoCompEntity.class)) {
+        RepoCompEntity existCompEntity = this.entityManageService.getEntity(repoCompEntity.makeServiceKey(), RepoCompEntity.class);
+        if (existCompEntity == null) {
             Map<String, Object> compParam = repoCompEntity.getCompParam();
             compParam.put(RepoCompVOFieldConstant.field_comp_id, scriptId);
             compParam.put(RepoCompVOFieldConstant.field_group_name, groupName);
@@ -502,6 +504,8 @@ public class RepoLocalCompService {
             compParam.put(OperateVOFieldConstant.field_device_type, deviceType);
 
             this.entityManageService.insertEntity(repoCompEntity);
+        } else {
+            repoCompEntity = existCompEntity;
         }
 
 
@@ -555,6 +559,22 @@ public class RepoLocalCompService {
             dstEntity.setId(srcEntity.getId());
             this.entityManageService.updateEntity(dstEntity);
         }
+
+        // 获得版本日期
+        Long updateTime = Long.valueOf(data.getOrDefault("updateTime", "0").toString());
+        String format = "yyyy-MM-dd HH:mm:ss";
+        SimpleDateFormat SDF = new SimpleDateFormat(format);
+        String timer = SDF.format(new Date(updateTime));
+
+        // 更新：安装版本的信息
+        Map<String, Object> install = new HashMap<>();
+        install.put("updateTime", timer);
+        install.put("description", data.get("description"));
+        install.put("id", data.get("id"));
+
+        // 更新版本信息
+        repoCompEntity.getCompParam().put("installVersion", install);
+        this.entityManageService.updateEntity(repoCompEntity);
 
         return null;
     }
