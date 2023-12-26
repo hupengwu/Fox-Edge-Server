@@ -1,4 +1,4 @@
-package cn.foxtech.kernel.system.common.service;
+package cn.foxtech.kernel.gateway.service;
 
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.file.FileNameUtils;

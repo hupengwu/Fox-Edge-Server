@@ -4,6 +4,7 @@ package cn.foxtech.kernel.gateway.initialize;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.kernel.common.initialize.KernelInitialize;
 import cn.foxtech.kernel.gateway.service.EntityManageService;
+import cn.foxtech.kernel.gateway.service.LocalSystemConfService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -25,10 +26,14 @@ public class Initialize implements CommandLineRunner {
     @Autowired
     private EntityManageService entityManageService;
 
+    @Autowired
+    private LocalSystemConfService systemConfService;
 
     @Override
     public void run(String... args) {
         logger.info("------------------------Manager Service 初始化开始！------------------------");
+
+        this.systemConfService.initialize();
 
         this.kernelInitialize.initialize();
 

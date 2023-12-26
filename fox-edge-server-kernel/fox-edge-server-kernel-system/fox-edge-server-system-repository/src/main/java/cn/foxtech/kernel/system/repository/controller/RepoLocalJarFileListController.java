@@ -3,12 +3,10 @@ package cn.foxtech.kernel.system.repository.controller;
 
 import cn.foxtech.common.entity.constant.DeviceDecoderVOFieldConstant;
 import cn.foxtech.common.entity.utils.PageUtils;
-import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.common.service.EdgeService;
-import cn.foxtech.kernel.system.common.service.LocalSystemConfService;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
 import cn.foxtech.kernel.system.repository.service.RepoCloudCacheService;
 import cn.foxtech.kernel.system.repository.service.RepoLocalAppStartService;
@@ -40,9 +38,6 @@ public class RepoLocalJarFileListController {
 
     @Autowired
     private RepoLocalJarFileConfigService configService;
-
-    @Autowired
-    private LocalSystemConfService systemConfService;
 
 
     @PostMapping("entities")
@@ -158,13 +153,6 @@ public class RepoLocalJarFileListController {
                 throw new ServiceException("读取jar文件的信息失败!");
             }
 
-            // 敏感詞
-            jarInfo = JsonUtils.clone(jarInfo);
-            this.systemConfService.sensitiveWordsString(jarInfo, "duplicate", "fileName", "fileNameShow");
-            this.systemConfService.sensitiveWordsString(jarInfo, "duplicate", "groupId", "groupIdShow");
-            this.systemConfService.sensitiveWordsString(jarInfo, "duplicate", "artifactId", "artifactIdShow");
-            this.systemConfService.sensitiveWordsStringList(jarInfo, "duplicate", "classFileName", "classFileNameShow");
-            this.systemConfService.sensitiveWordsString((List<Map<String, Object>>)jarInfo.get("dependencies"),"duplicate", "artifactId", "artifactIdShow");
             // 分页查询
             return AjaxResult.success(jarInfo);
         } catch (Exception e) {
