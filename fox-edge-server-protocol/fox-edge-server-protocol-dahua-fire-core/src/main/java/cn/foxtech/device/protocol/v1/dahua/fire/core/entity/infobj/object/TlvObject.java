@@ -16,7 +16,7 @@ import java.util.List;
  * 他们通过TLV结构的嵌套，变相实现了一个树形结构。
  * 当最后一个层级不再符合根据TLV的L长度进行判定的时候，说明这个是叶子节点
  * 。
- * 这边只实现第一层的拆解，后面应用层自己进一步去拆解数据。
+ * 这边只实现树的第一层的拆解，后面应用层自己进一步去拆解数据。
  */
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)

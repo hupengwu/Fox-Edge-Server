@@ -52,29 +52,9 @@ public class InfObjCompStatusEntity extends InfObjEntity {
      */
     private String time = "2000-01-01 00:00:00";
 
-    @Override
-    public List<Integer> getAduSizes(byte[] data, int offset, int aduLength) {
-        // 信息体的数量
-        int count = data[offset + 1];
-
-        // 类型标志[1 字节]+信息体数量[1 字节]+多个信息体对象[N 字节]
-        int length = count * this.getSize();
-
-        if (aduLength != 2 + length) {
-            throw new ProtocolException("验证ADU的长度与具体的格式，不匹配");
-        }
-
-        // 返回列表
-        List<Integer> aduList = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            aduList.add(this.getSize());
-        }
-        return aduList;
-    }
-
     public static void decodeEntity(byte[] data, InfObjCompStatusEntity entity) {
         if (data.length != entity.getSize()) {
-            throw new ProtocolException("注册包类型的信息对象，固定长度为110");
+            throw new ProtocolException("信息对象" + entity.getClass().getSimpleName() + "，必须长度为" + entity.getSize());
         }
 
 
@@ -112,7 +92,7 @@ public class InfObjCompStatusEntity extends InfObjEntity {
     }
 
     public static byte[] encodeEntity(InfObjCompStatusEntity entity) {
-        byte[] data = new byte[entity.getEncodeSize()];
+        byte[] data = new byte[entity.getSize()];
 
 
         int index = 0;
@@ -153,24 +133,30 @@ public class InfObjCompStatusEntity extends InfObjEntity {
         return data;
     }
 
+    @Override
+    public List<Integer> getAduSizes(byte[] data, int offset, int aduLength) {
+        // 信息体的数量
+        int count = data[offset + 1];
+
+        // 类型标志[1 字节]+信息体数量[1 字节]+多个信息体对象[N 字节]
+        int length = count * this.getSize();
+
+        if (aduLength != 2 + length) {
+            throw new ProtocolException("验证ADU的长度与具体的格式，不匹配");
+        }
+
+        // 返回列表
+        List<Integer> aduList = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            aduList.add(this.getSize());
+        }
+        return aduList;
+    }
+
     public int getSize() {
         return 46;
     }
 
-    /**
-     * 包长度
-     *
-     * @return 包长度
-     */
-    @Override
-    public int getEncodeSize() {
-        return getSize();
-    }
-
-    @Override
-    public int getDecodeSize(byte[] data, int offset, int aduLength){
-        return getSize();
-    }
 
     @Override
     public void decode(byte[] data) {

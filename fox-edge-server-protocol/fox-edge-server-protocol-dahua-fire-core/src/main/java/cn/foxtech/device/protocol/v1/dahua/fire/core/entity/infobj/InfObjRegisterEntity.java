@@ -94,7 +94,7 @@ public class InfObjRegisterEntity extends InfObjEntity {
 
     public static void decodeEntity(byte[] data, InfObjRegisterEntity entity) {
         if (data.length != entity.getSize()) {
-            throw new ProtocolException("注册包类型的信息对象，固定长度为110");
+            throw new ProtocolException("信息对象" + entity.getClass().getSimpleName() + "，必须长度为" + entity.getSize());
         }
 
 
@@ -174,7 +174,7 @@ public class InfObjRegisterEntity extends InfObjEntity {
     }
 
     public static byte[] encodeEntity(InfObjRegisterEntity entity) {
-        byte[] data = new byte[entity.getEncodeSize()];
+        byte[] data = new byte[entity.getSize()];
 
 
         int index = 0;
@@ -293,21 +293,4 @@ public class InfObjRegisterEntity extends InfObjEntity {
     public int getSize() {
         return 110;
     }
-
-    /**
-     * 包长度
-     *
-     * @return 包长度
-     */
-    @Override
-    public int getEncodeSize() {
-        return getSize();
-    }
-
-    @Override
-    public int getDecodeSize(byte[] data, int offset, int aduLength) {
-        return getSize();
-    }
-
-
 }

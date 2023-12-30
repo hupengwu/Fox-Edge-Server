@@ -76,7 +76,7 @@ public class InfObjSyncParamVarEntity extends InfObjEntity {
     }
 
     public static byte[] encodeEntity(InfObjSyncParamVarEntity entity) {
-        byte[] data = new byte[entity.getEncodeSize()];
+        byte[] data = new byte[entity.getSize()];
 
 
         int index = 0;
@@ -151,15 +151,10 @@ public class InfObjSyncParamVarEntity extends InfObjEntity {
      *
      * @return 包长度
      */
-    @Override
-    public int getEncodeSize() {
-        return 9 + this.param.getEncodeLength();
+    public int getSize() {
+        return 9 + this.param.getSize();
     }
 
-    @Override
-    public int getDecodeSize(byte[] data, int offset, int aduLength) {
-        return 9 + this.param.getDecodeLength(data, offset, aduLength);
-    }
 
     @Override
     public void decode(byte[] data) {

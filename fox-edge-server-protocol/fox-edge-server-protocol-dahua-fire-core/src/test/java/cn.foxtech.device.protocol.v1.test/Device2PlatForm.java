@@ -23,6 +23,13 @@ public class Device2PlatForm {
         syncParamFix();
         syncParamVar();
         generalData();
+        deleteFunc();
+        getParamRspFix();
+        getParamRspVar();
+        getFuncRsp();
+        setFunc();
+        upgradeStart();
+        upgradeEnd();
     }
 
     public static void testRegister() {
@@ -319,4 +326,141 @@ public class Device2PlatForm {
         device = PduEntity.decodeEntity(data);
     }
 
+    public static void deleteFunc() {
+        byte[] data = new byte[10];
+
+        // 设备请求
+        PduEntity device = new PduEntity();
+        device.getCtrlEntity().setSn(8);
+        device.getCtrlEntity().setSrcAddr(AddressUtil.DEVICE_DEFAULT);
+        device.getCtrlEntity().setDstAddr(AddressUtil.PLATFORM_DEFAULT);
+        device.getCtrlEntity().setCmd(CmdType.deleteFunc.getCmd());
+        device.setAduEntity(new AduEntity());
+        device.getAduEntity().setType(CmdType.deleteFunc);
+        InfObjDeleteFuncEntity infObj = new InfObjDeleteFuncEntity();
+        TlvObject tlv = new TlvObject();
+        tlv.setType(1);
+        tlv.setValue("12345678");
+        infObj.getTlvs().add(tlv);
+        infObj.getTlvs().add(tlv);
+        device.getAduEntity().getInfObjEntities().add(infObj);
+        data = PduEntity.encodeEntity(device);
+
+        // 自我验证
+        device = PduEntity.decodeEntity(data);
+    }
+
+    public static void getParamRspFix() {
+        byte[] data = new byte[10];
+
+        // 设备请求
+        PduEntity device = new PduEntity();
+        device.getCtrlEntity().setSn(8);
+        device.getCtrlEntity().setSrcAddr(AddressUtil.DEVICE_DEFAULT);
+        device.getCtrlEntity().setDstAddr(AddressUtil.PLATFORM_DEFAULT);
+        device.getCtrlEntity().setCmd(CmdType.getParamRspFix.getCmd());
+        device.setAduEntity(new AduEntity());
+        device.getAduEntity().setType(CmdType.getParamRspFix);
+        InfObjGetParamRspFixEntity infObj = new InfObjGetParamRspFixEntity();
+        device.getAduEntity().getInfObjEntities().add(infObj);
+        data = PduEntity.encodeEntity(device);
+
+        // 自我验证
+        device = PduEntity.decodeEntity(data);
+    }
+
+    public static void getParamRspVar() {
+        byte[] data = new byte[10];
+
+        // 设备请求
+        PduEntity device = new PduEntity();
+        device.getCtrlEntity().setSn(8);
+        device.getCtrlEntity().setSrcAddr(AddressUtil.DEVICE_DEFAULT);
+        device.getCtrlEntity().setDstAddr(AddressUtil.PLATFORM_DEFAULT);
+        device.getCtrlEntity().setCmd(CmdType.getParamRspVar.getCmd());
+        device.setAduEntity(new AduEntity());
+        device.getAduEntity().setType(CmdType.getParamRspVar);
+        InfObjGetParamRspVarEntity infObj = new InfObjGetParamRspVarEntity();
+        device.getAduEntity().getInfObjEntities().add(infObj);
+        data = PduEntity.encodeEntity(device);
+
+        // 自我验证
+        device = PduEntity.decodeEntity(data);
+    }
+
+    public static void getFuncRsp() {
+        byte[] data = new byte[10];
+
+        // 设备请求
+        PduEntity device = new PduEntity();
+        device.getCtrlEntity().setSn(8);
+        device.getCtrlEntity().setSrcAddr(AddressUtil.DEVICE_DEFAULT);
+        device.getCtrlEntity().setDstAddr(AddressUtil.PLATFORM_DEFAULT);
+        device.getCtrlEntity().setCmd(CmdType.getFuncRsp.getCmd());
+        device.setAduEntity(new AduEntity());
+        device.getAduEntity().setType(CmdType.getFuncRsp);
+        InfObjGetFuncRspEntity infObj = new InfObjGetFuncRspEntity();
+        device.getAduEntity().getInfObjEntities().add(infObj);
+        data = PduEntity.encodeEntity(device);
+
+        // 自我验证
+        device = PduEntity.decodeEntity(data);
+    }
+
+    public static void setFunc() {
+        byte[] data = new byte[10];
+
+        // 设备请求
+        PduEntity device = new PduEntity();
+        device.getCtrlEntity().setSn(8);
+        device.getCtrlEntity().setSrcAddr(AddressUtil.DEVICE_DEFAULT);
+        device.getCtrlEntity().setDstAddr(AddressUtil.PLATFORM_DEFAULT);
+        device.getCtrlEntity().setCmd(CmdType.setFuncReq.getCmd());
+        device.setAduEntity(new AduEntity());
+        device.getAduEntity().setType(CmdType.setFuncReq);
+        InfObjSetFuncReqEntity infObj = new InfObjSetFuncReqEntity();
+        device.getAduEntity().getInfObjEntities().add(infObj);
+        data = PduEntity.encodeEntity(device);
+
+        // 自我验证
+        device = PduEntity.decodeEntity(data);
+    }
+
+    public static void upgradeStart() {
+        byte[] data = new byte[0];
+
+        // 平台请求
+        PduEntity platform = new PduEntity();
+        platform.getCtrlEntity().setSn(8);
+        platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
+        platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
+        platform.getCtrlEntity().setCmd(CmdType.upgradeStart.getCmd());
+        platform.setAduEntity(new AduEntity());
+        platform.getAduEntity().setType(CmdType.upgradeStart);
+        InfObjUpgradeStartEntity infObj = new InfObjUpgradeStartEntity();
+        platform.getAduEntity().getInfObjEntities().add(infObj);
+        data = PduEntity.encodeEntity(platform);
+
+        // 自我验证
+        platform = PduEntity.decodeEntity(data);
+    }
+
+    public static void upgradeEnd() {
+        byte[] data = new byte[0];
+
+        // 平台请求
+        PduEntity platform = new PduEntity();
+        platform.getCtrlEntity().setSn(8);
+        platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
+        platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
+        platform.getCtrlEntity().setCmd(CmdType.upgradeEnd.getCmd());
+        platform.setAduEntity(new AduEntity());
+        platform.getAduEntity().setType(CmdType.upgradeEnd);
+        InfObjUpgradeEndEntity infObj = new InfObjUpgradeEndEntity();
+        platform.getAduEntity().getInfObjEntities().add(infObj);
+        data = PduEntity.encodeEntity(platform);
+
+        // 自我验证
+        platform = PduEntity.decodeEntity(data);
+    }
 }

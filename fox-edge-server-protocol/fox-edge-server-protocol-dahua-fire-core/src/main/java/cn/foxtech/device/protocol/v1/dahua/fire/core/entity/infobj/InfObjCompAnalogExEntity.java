@@ -105,7 +105,7 @@ public class InfObjCompAnalogExEntity extends InfObjEntity {
     }
 
     public static byte[] encodeEntity(InfObjCompAnalogExEntity entity) {
-        byte[] data = new byte[entity.getEncodeSize()];
+        byte[] data = new byte[entity.getSize()];
 
 
         int index = 0;
@@ -153,6 +153,10 @@ public class InfObjCompAnalogExEntity extends InfObjEntity {
         return data;
     }
 
+    public int getSize() {
+        return 14 + 4 * this.analogs.size();
+    }
+
     @Override
     public List<Integer> getAduSizes(byte[] data, int offset, int aduLength) {
         // 信息体的数量
@@ -193,20 +197,6 @@ public class InfObjCompAnalogExEntity extends InfObjEntity {
         return aduList;
     }
 
-    /**
-     * 包长度
-     *
-     * @return 包长度
-     */
-    @Override
-    public int getEncodeSize() {
-        return 14 + 4 * this.analogs.size();
-    }
-
-    @Override
-    public int getDecodeSize(byte[] data, int offset, int aduLength) {
-        return 14 + 4 * this.analogs.size();
-    }
 
     @Override
     public void decode(byte[] data) {

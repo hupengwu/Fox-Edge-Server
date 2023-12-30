@@ -26,7 +26,12 @@ public class ParVarObject {
      */
     private String value = "";
 
-    public int getEncodeLength() {
+    /**
+     * 编码长度
+     *
+     * @return 编码长度
+     */
+    public int getSize() {
         // 截断数据
         String txt = this.value.substring(0, Math.min(this.value.length(), 250));
 
@@ -43,11 +48,6 @@ public class ParVarObject {
         }
 
         return 0;
-    }
-
-    public int getDecodeLength(byte[] data, int offset, int aduLength) {
-        int length = data[offset+8];
-        return length;
     }
 
     public int encode(byte[] data, int offset) {

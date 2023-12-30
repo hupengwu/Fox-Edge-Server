@@ -10,6 +10,5 @@ import lombok.Setter;
  */
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
-public class InfObjGeneralDataEntity extends InfObjGeneralEntity {
+public class InfObjGeneralSetEntity extends InfObjGeneralEntity {
 }
-

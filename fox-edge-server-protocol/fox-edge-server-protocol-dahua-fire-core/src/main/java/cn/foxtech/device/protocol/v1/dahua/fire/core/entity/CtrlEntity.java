@@ -135,6 +135,6 @@ public class CtrlEntity {
         /**
          * 命令字(1 字节)
          */
-        entity.cmd = data[index++];
+        entity.cmd = data[index++] & 0xff;
     }
 }

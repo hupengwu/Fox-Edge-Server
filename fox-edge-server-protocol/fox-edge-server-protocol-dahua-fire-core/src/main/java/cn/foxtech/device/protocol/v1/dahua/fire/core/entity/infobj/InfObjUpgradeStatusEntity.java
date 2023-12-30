@@ -1,8 +1,8 @@
 package cn.foxtech.device.protocol.v1.dahua.fire.core.entity.infobj;
 
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
-import cn.foxtech.device.protocol.v1.dahua.fire.core.utils.IntegerUtil;
-import cn.foxtech.device.protocol.v1.dahua.fire.core.utils.TimeUtil;
+import cn.foxtech.device.protocol.v1.dahua.fire.core.utils.StringUtil;
+import cn.foxtech.device.protocol.v1.utils.ByteUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
-public class InfObjCompAnalogEntity extends InfObjEntity {
+public abstract class InfObjUpgradeStatusEntity extends InfObjEntity {
     /**
      * 系统类型（1 字节）
      */
@@ -29,28 +29,20 @@ public class InfObjCompAnalogEntity extends InfObjEntity {
      */
     private int compType = 0;
     /**
-     * 部件回路（2 字节）
+     * 部件地址（32 字节）
      */
-    private int compCirc = 0;
+    private String compAddress = "";
     /**
-     * 部件节点（2 字节）
+     * 软件类型（1 字节）
      */
-    private int compNode = 0;
+    private int softwareType = 0;
     /**
-     * 模拟量类型（1 字节）
+     * 状态（1 字节）
      */
-    private int analogType = 0;
-    /**
-     * 模拟量数值（2 字节）
-     */
-    private int analogValue = 0;
+    private int status = 0;
 
-    /**
-     * 时间标签(6 字节)：控制单元中时间标签传输，秒在前，年在后，取自系统当前时间，如 15:14:17 11/9/19；
-     */
-    private String time = "2000-01-01 00:00:00";
 
-    public static void decodeEntity(byte[] data, InfObjCompAnalogEntity entity) {
+    public static void decodeEntity(byte[] data, InfObjUpgradeStatusEntity entity) {
         if (data.length != entity.getSize()) {
             throw new ProtocolException("信息对象" + entity.getClass().getSimpleName() + "，必须长度为" + entity.getSize());
         }
@@ -67,31 +59,18 @@ public class InfObjCompAnalogEntity extends InfObjEntity {
         // 部件类型(1 字节)
         entity.compType = data[index++] & 0xff;
 
-        // 部件回路(2 字节)
-        entity.compCirc = IntegerUtil.decodeInteger2byte(data, index);
-        index += 2;
-        // 部件节点(2 字节)
-        entity.compNode = IntegerUtil.decodeInteger2byte(data, index);
-        index += 2;
+        // 部件地址(32 字节)
+        entity.compAddress = ByteUtils.decodeAscii(data, index, 32, true);
+        index += 32;
 
-        /**
-         * 模拟量类型(1 字节)
-         */
-        entity.analogType = data[index++] & 0xff;
+        // 软件类型(1 字节)
+        entity.softwareType = data[index++] & 0xff;
 
-        /**
-         * 模拟量数值(2 字节)
-         */
-        entity.analogValue = IntegerUtil.decodeInteger2byte(data, index);
-        index += 2;
-
-
-        // 时间标签(6 字节)
-        entity.time = TimeUtil.decodeTime6byte(data, index);
-        index += 6;
+        // 状态(1 字节)
+        entity.status = data[index++] & 0xff;
     }
 
-    public static byte[] encodeEntity(InfObjCompAnalogEntity entity) {
+    public static byte[] encodeEntity(InfObjUpgradeStatusEntity entity) {
         byte[] data = new byte[entity.getSize()];
 
 
@@ -106,28 +85,16 @@ public class InfObjCompAnalogEntity extends InfObjEntity {
         // 部件类型(1 字节)
         data[index++] = (byte) entity.compType;
 
-        // 部件回路(2 字节)
-        IntegerUtil.encodeInteger2byte(entity.compCirc, data, index);
-        index += 2;
+        // 部件地址(32 字节)
+        String compAddress = StringUtil.truncateString(entity.compAddress, 32);
+        ByteUtils.encodeAscii(compAddress, data, index, 32, true);
+        index += 32;
 
-        // 部件节点(2 字节)
-        IntegerUtil.encodeInteger2byte(entity.compNode, data, index);
-        index += 2;
+        // 软件类型(1 字节)
+        data[index++] = (byte) entity.softwareType;
 
-        /**
-         * 模拟量类型(1 字节)
-         */
-        data[index++] = (byte) entity.analogType;
-
-        /**
-         * 模拟量数值(2 字节)
-         */
-        IntegerUtil.encodeInteger2byte(entity.analogValue, data, index);
-        index += 2;
-
-        // 时间标签(6 字节)
-        TimeUtil.encodeTime6byte(entity.time, data, index);
-        index += 6;
+        // 软件类型(1 字节)
+        data[index++] = (byte) entity.status;
 
         return data;
     }
@@ -153,7 +120,7 @@ public class InfObjCompAnalogEntity extends InfObjEntity {
     }
 
     public int getSize() {
-        return 16;
+        return 37;
     }
 
 

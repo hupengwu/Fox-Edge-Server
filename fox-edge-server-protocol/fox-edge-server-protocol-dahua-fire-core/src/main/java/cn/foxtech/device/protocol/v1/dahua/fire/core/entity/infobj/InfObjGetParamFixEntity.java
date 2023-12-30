@@ -2,7 +2,6 @@ package cn.foxtech.device.protocol.v1.dahua.fire.core.entity.infobj;
 
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.dahua.fire.core.utils.IntegerUtil;
-import cn.foxtech.device.protocol.v1.dahua.fire.core.utils.TimeUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +14,7 @@ import java.util.List;
  */
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
-public class InfObjCompAnalogEntity extends InfObjEntity {
+public class InfObjGetParamFixEntity extends InfObjEntity {
     /**
      * 系统类型（1 字节）
      */
@@ -37,20 +36,11 @@ public class InfObjCompAnalogEntity extends InfObjEntity {
      */
     private int compNode = 0;
     /**
-     * 模拟量类型（1 字节）
+     * 参数类型（1 字节）
      */
-    private int analogType = 0;
-    /**
-     * 模拟量数值（2 字节）
-     */
-    private int analogValue = 0;
+    private int paramType = 0;
 
-    /**
-     * 时间标签(6 字节)：控制单元中时间标签传输，秒在前，年在后，取自系统当前时间，如 15:14:17 11/9/19；
-     */
-    private String time = "2000-01-01 00:00:00";
-
-    public static void decodeEntity(byte[] data, InfObjCompAnalogEntity entity) {
+    public static void decodeEntity(byte[] data, InfObjGetParamFixEntity entity) {
         if (data.length != entity.getSize()) {
             throw new ProtocolException("信息对象" + entity.getClass().getSimpleName() + "，必须长度为" + entity.getSize());
         }
@@ -70,28 +60,16 @@ public class InfObjCompAnalogEntity extends InfObjEntity {
         // 部件回路(2 字节)
         entity.compCirc = IntegerUtil.decodeInteger2byte(data, index);
         index += 2;
+
         // 部件节点(2 字节)
         entity.compNode = IntegerUtil.decodeInteger2byte(data, index);
         index += 2;
 
-        /**
-         * 模拟量类型(1 字节)
-         */
-        entity.analogType = data[index++] & 0xff;
-
-        /**
-         * 模拟量数值(2 字节)
-         */
-        entity.analogValue = IntegerUtil.decodeInteger2byte(data, index);
-        index += 2;
-
-
-        // 时间标签(6 字节)
-        entity.time = TimeUtil.decodeTime6byte(data, index);
-        index += 6;
+        // 参数类型(1 字节)
+        entity.paramType = data[index++] & 0xff;
     }
 
-    public static byte[] encodeEntity(InfObjCompAnalogEntity entity) {
+    public static byte[] encodeEntity(InfObjGetParamFixEntity entity) {
         byte[] data = new byte[entity.getSize()];
 
 
@@ -114,20 +92,8 @@ public class InfObjCompAnalogEntity extends InfObjEntity {
         IntegerUtil.encodeInteger2byte(entity.compNode, data, index);
         index += 2;
 
-        /**
-         * 模拟量类型(1 字节)
-         */
-        data[index++] = (byte) entity.analogType;
-
-        /**
-         * 模拟量数值(2 字节)
-         */
-        IntegerUtil.encodeInteger2byte(entity.analogValue, data, index);
-        index += 2;
-
-        // 时间标签(6 字节)
-        TimeUtil.encodeTime6byte(entity.time, data, index);
-        index += 6;
+        // 参数类型(1 字节)
+        data[index++] = (byte) entity.paramType;
 
         return data;
     }
@@ -153,7 +119,7 @@ public class InfObjCompAnalogEntity extends InfObjEntity {
     }
 
     public int getSize() {
-        return 16;
+        return 8;
     }
 
 
@@ -166,6 +132,4 @@ public class InfObjCompAnalogEntity extends InfObjEntity {
     public byte[] encode() {
         return encodeEntity(this);
     }
-
-
 }

@@ -73,7 +73,7 @@ public class AduEntity {
         }
 
         // 信息对象数目（1 字节）
-        int count = data[index++];
+        int count = data[index++] & 0xff;
 
 
         // 获得对应的class
