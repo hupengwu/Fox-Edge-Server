@@ -6,16 +6,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 报文单元
+ * TCP模式下对的报文单元
  * 报文结构：启动符 + 控制单元 + 应用数据单元 + 校验和 + 结束符
  */
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
-public class PduEntity {
+public class TcpPduEntity {
     /**
      * 控制单元
      */
-    private CtrlEntity ctrlEntity = new CtrlEntity();
+    private TcpCtrlEntity ctrlEntity = new TcpCtrlEntity();
     /**
      * 应用数据单元：可选项目
      */
@@ -30,7 +30,7 @@ public class PduEntity {
         return sum;
     }
 
-    public static byte[] encodeEntity(PduEntity pduEntity) {
+    public static byte[] encodeEntity(TcpPduEntity pduEntity) {
         // 对应用单元，进行数据编码
         byte[] aduData = pduEntity.aduEntity == null ? null : AduEntity.encodeEntity(pduEntity.aduEntity);
 
@@ -41,7 +41,7 @@ public class PduEntity {
         pduEntity.ctrlEntity.setAduLength(aduDataLength);
 
         // 对控制单元进行数据编码
-        byte[] ctrlData = CtrlEntity.encodeEntity(pduEntity.ctrlEntity);
+        byte[] ctrlData = TcpCtrlEntity.encodeEntity(pduEntity.ctrlEntity);
 
         // 分配PDU的数据块
         byte[] data = new byte[5 + ctrlData.length + aduDataLength];
@@ -74,8 +74,8 @@ public class PduEntity {
         return data;
     }
 
-    public static PduEntity decodeEntity(byte[] data) {
-        PduEntity pduEntity = new PduEntity();
+    public static TcpPduEntity decodeEntity(byte[] data) {
+        TcpPduEntity pduEntity = new TcpPduEntity();
 
         // 获得PDU的大小：PUD外层格式，是否合法
         int pduSize = getPduSize(data);
@@ -83,9 +83,9 @@ public class PduEntity {
         int index = 2;
 
         // 解码：控制单元
-        CtrlEntity ctrlEntity = pduEntity.getCtrlEntity();
-        CtrlEntity.decodeEntity(data, index, ctrlEntity);
-        index += CtrlEntity.size();
+        TcpCtrlEntity ctrlEntity = pduEntity.getCtrlEntity();
+        TcpCtrlEntity.decodeEntity(data, index, ctrlEntity);
+        index += TcpCtrlEntity.size();
 
 
         // 检测：是否有应用数据
@@ -115,10 +115,10 @@ public class PduEntity {
         }
 
         // 控制单元的报文长度
-        int ctrlLength = CtrlEntity.size();
+        int ctrlLength = TcpCtrlEntity.size();
 
         // 应用单元的报文长度
-        int lengthOffset = CtrlEntity.getLengthOffset();
+        int lengthOffset = TcpCtrlEntity.getLengthOffset();
         l = data[2 + lengthOffset + 0] & 0xff;
         h = data[2 + lengthOffset + 1] & 0xff;
         int aduLength = h * 0x100 + l;

@@ -17,7 +17,7 @@ import java.util.List;
 @Setter(value = AccessLevel.PUBLIC)
 public class AduEntity {
     /**
-     * 类型
+     * 类型：CmdType的type属性
      */
     private CmdType type = CmdType.register;
     /**

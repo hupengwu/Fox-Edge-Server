@@ -1,0 +1,131 @@
+package cn.foxtech.device.protocol.v1.dahua.fire.core.entity;
+
+import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
+import cn.foxtech.device.protocol.v1.dahua.fire.core.utils.IntegerUtil;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * Coap模式（电信IoT平台）
+ */
+@Getter(value = AccessLevel.PUBLIC)
+@Setter(value = AccessLevel.PUBLIC)
+public class CoapPduEntity {
+    /**
+     * 业务流水号(2 字节)
+     * 发生改变，流水号增加
+     */
+    private int sn = 0;
+    /**
+     * 控制单元
+     */
+    private CoapCtrlEntity ctrlEntity = new CoapCtrlEntity();
+    /**
+     * 应用数据单元：可选项目
+     */
+    private AduEntity aduEntity;
+
+    public static int getSum(byte[] data, int offset, int length) {
+        int sum = 0;
+        for (int i = 0; i < length; i++) {
+            sum += data[offset + i] & 0xff;
+        }
+
+        return sum;
+    }
+
+    public static byte[] encodeEntity(CoapPduEntity pduEntity) {
+        // 对应用单元，进行数据编码
+        byte[] aduData = pduEntity.aduEntity == null ? null : AduEntity.encodeEntity(pduEntity.aduEntity);
+
+        // 确定：应用单元和它的长度
+        int aduDataLength = (aduData != null ? aduData.length : 0);
+
+        // 将应用单元的长度，记录到控制单元上
+        pduEntity.ctrlEntity.setAduLength(aduDataLength);
+
+        // 对控制单元进行数据编码
+        byte[] ctrlData = CoapCtrlEntity.encodeEntity(pduEntity.ctrlEntity);
+
+        // 分配PDU的数据块
+        byte[] data = new byte[5 + ctrlData.length + aduDataLength];
+
+        int index = 0;
+
+        // 业务流水号（2 字节）
+        IntegerUtil.encodeInteger2byte(pduEntity.sn, data, index);
+        index += 2;
+
+        // 数据帧长度（2 字节）
+        IntegerUtil.encodeInteger2byte(ctrlData.length + aduDataLength + 1, data, index);
+        index += 2;
+
+        // 控制单元
+        System.arraycopy(ctrlData, 0, data, index, ctrlData.length);
+        index += ctrlData.length;
+
+        // 应用单元
+        if (aduData != null) {
+            System.arraycopy(aduData, 0, data, index, aduData.length);
+            index += aduData.length;
+        }
+
+        // 校验和（1 字节）
+        int sum = getSum(data, 4, ctrlData.length + aduDataLength);
+        data[index++] = (byte) sum;
+
+        return data;
+    }
+
+    public static CoapPduEntity decodeEntity(byte[] data) {
+        CoapPduEntity pduEntity = new CoapPduEntity();
+
+        // 获得PDU的大小：PUD外层格式，是否合法
+        int pduSize = getPduSize(data);
+
+        int index = 4;
+
+        // 解码：控制单元
+        CoapCtrlEntity ctrlEntity = pduEntity.getCtrlEntity();
+        CoapCtrlEntity.decodeEntity(data, index, ctrlEntity);
+        index += CoapCtrlEntity.size();
+
+
+        // 检测：是否有应用数据
+        if (ctrlEntity.getAduLength() == 0) {
+            pduEntity.aduEntity = null;
+            return pduEntity;
+        }
+
+        // 解码：应用数据单元
+        AduEntity aduEntity = new AduEntity();
+        AduEntity.decodeEntity(data, index, ctrlEntity.getAduLength(), ctrlEntity.getCmd(), aduEntity);
+        pduEntity.aduEntity = aduEntity;
+
+        return pduEntity;
+    }
+
+    public static int getPduSize(byte[] data) {
+        if (data.length < 5) {
+            throw new ProtocolException("PDU的长度，至少5个字节");
+        }
+
+        // 数据帧长度（2 字节）
+        int length = IntegerUtil.decodeInteger2byte(data, 2);
+
+
+        // 报文长度不正确
+        if (data.length != 4 + length) {
+            throw new ProtocolException("PDU的长度，不匹配");
+        }
+
+        // 校验和（1 字节）
+        int sum = getSum(data, 4, length - 1);
+        if (data[3 + length] != (byte) sum) {
+            throw new ProtocolException("校验和不正确");
+        }
+
+        return length + 5;
+    }
+}

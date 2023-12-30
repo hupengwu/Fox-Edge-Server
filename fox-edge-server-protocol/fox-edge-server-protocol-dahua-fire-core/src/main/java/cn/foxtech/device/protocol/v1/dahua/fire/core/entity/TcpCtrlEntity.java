@@ -14,7 +14,7 @@ import lombok.Setter;
  */
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
-public class CtrlEntity {
+public class TcpCtrlEntity {
     /**
      * 业务流水号(2 字节)：业务流水号由通信主动发起方维护，按小端格式传输，从 1 开始计数，2B 满值后自动翻转为 0。帧内容发
      * 生改变，流水号增加
@@ -57,11 +57,11 @@ public class CtrlEntity {
      * @return 报文长度，在控制域中的偏移量
      */
     public static int getLengthOffset() {
-        return 25 - 3;
+        return TcpCtrlEntity.size() - 3;
     }
 
-    public static byte[] encodeEntity(CtrlEntity entity) {
-        byte[] data = new byte[25];
+    public static byte[] encodeEntity(TcpCtrlEntity entity) {
+        byte[] data = new byte[TcpCtrlEntity.size()];
 
         int index = 0;
 
@@ -99,8 +99,8 @@ public class CtrlEntity {
         return data;
     }
 
-    public static void decodeEntity(byte[] data, int offset, CtrlEntity entity) {
-        if (data.length < 25 + offset) {
+    public static void decodeEntity(byte[] data, int offset, TcpCtrlEntity entity) {
+        if (data.length < TcpCtrlEntity.size() + offset) {
             throw new ProtocolException("控制单元，固定长度为25");
         }
 
