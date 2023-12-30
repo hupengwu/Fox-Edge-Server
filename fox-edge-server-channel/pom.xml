@@ -20,8 +20,8 @@
         <module>fox-edge-server-channel-common</module>
 
         <!-- 各类channel服务的实现 -->
+        <module>fox-edge-server-channel-bacnet-client</module>
         <module>fox-edge-server-channel-coap-client</module>
-        <module>fox-edge-server-channel-simulator-service</module>
         <module>fox-edge-server-channel-opc-ua</module>
         <module>fox-edge-server-channel-tcp-server</module>
         <module>fox-edge-server-channel-tcp-client</module>
@@ -30,7 +30,6 @@
         <module>fox-edge-server-channel-mqtt-client</module>
         <module>fox-edge-server-channel-http-client</module>
         <module>fox-edge-server-channel-iec104</module>
-        <module>fox-edge-server-channel-bacnet-client</module>
         <module>fox-edge-server-channel-proxy-service</module>
         <module>fox-edge-server-channel-gdana-digester</module>
         <module>fox-edge-server-channel-snmp-service</module>
@@ -38,6 +37,7 @@
         <module>fox-edge-server-channel-socket-core</module>
         <module>fox-edge-server-channel-serialport</module>
         <module>fox-edge-server-channel-serialport-analyzer</module>
+        <module>fox-edge-server-channel-simulator-service</module>
     </modules>
 
 

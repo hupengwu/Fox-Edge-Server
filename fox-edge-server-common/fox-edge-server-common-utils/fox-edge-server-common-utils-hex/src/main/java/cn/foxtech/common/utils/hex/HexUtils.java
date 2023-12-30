@@ -72,18 +72,4 @@ public class HexUtils {
         }
         return hexString.toString();
     }
-
-    public static String byteArrayToHexString1(byte[] byteArray, int offset, int length) {
-        final StringBuilder hexString = new StringBuilder();
-        for (int i = offset; i < length; i++) {
-            if ((byteArray[i] & 0xff) < 0x10) {
-                // 0~F前面不零
-                hexString.append("0");
-            }
-
-            hexString.append(Integer.toHexString(0xFF & byteArray[i]));
-        }
-        return hexString.toString();
-    }
-
 }

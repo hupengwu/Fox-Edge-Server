@@ -1,0 +1,79 @@
+package cn.foxtech.device.protocol.v1.dahua.fire.core.entity.infobj;
+
+import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
+import cn.foxtech.device.protocol.v1.dahua.fire.core.utils.TimeUtil;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+
+/**
+ * 信息对象: 注册包
+ */
+@Getter(value = AccessLevel.PUBLIC)
+@Setter(value = AccessLevel.PUBLIC)
+public class InfObjSyncClockEntity extends InfObjEntity {
+    /**
+     * 时间标签(6 字节)：控制单元中时间标签传输，秒在前，年在后，取自系统当前时间，如 15:14:17 11/9/19；
+     */
+    private String time = "2000-01-01 00:00:00";
+
+    public static void decodeEntity(byte[] data, InfObjSyncClockEntity entity) {
+        if (data.length != entity.getEncodeSize()) {
+            throw new ProtocolException("注册包类型的信息对象，固定长度为110");
+        }
+
+
+        int index = 0;
+
+        // 时间标签(6 字节)
+        entity.time = TimeUtil.decodeTime6byte(data, index);
+        index += 6;
+    }
+
+    public static byte[] encodeEntity(InfObjSyncClockEntity entity) {
+        byte[] data = new byte[entity.getEncodeSize()];
+
+
+        int index = 0;
+
+        // 时间标签(6 字节)
+        TimeUtil.encodeTime6byte(entity.time, data, index);
+        index += 6;
+
+        return data;
+    }
+
+    @Override
+    public List<Integer> getAduSizes(byte[] data, int offset, int aduLength) {
+        throw new ProtocolException("验证ADU的长度与具体的格式，不匹配");
+    }
+
+    @Override
+    public void decode(byte[] data) {
+        decodeEntity(data, this);
+    }
+
+    @Override
+    public byte[] encode() {
+        return encodeEntity(this);
+    }
+
+    /**
+     * 包长度
+     *
+     * @return 包长度
+     */
+    @Override
+    public int getEncodeSize() {
+        return 6;
+    }
+
+    @Override
+    public int getDecodeSize(byte[] data, int offset, int aduLength){
+        return 6;
+    }
+
+
+}

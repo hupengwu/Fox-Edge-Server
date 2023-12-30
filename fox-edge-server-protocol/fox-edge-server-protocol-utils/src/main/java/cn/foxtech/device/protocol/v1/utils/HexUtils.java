@@ -30,16 +30,24 @@ public class HexUtils {
     public static byte[] hexStringToByteArray(String hexString) {
         String string = hexString.replaceAll(" ", "");
         final byte[] byteArray = new byte[string.length() / 2];
-        int pos = 0;
-        for (int i = 0; i < byteArray.length; i++) {
-            // 因为是16进制，最多只会占用4位，转换成字节需要两个16进制的字符，高位在先
-            byte high = (byte) (Character.digit(string.charAt(pos), 16) & 0xff);
-            byte low = (byte) (Character.digit(string.charAt(pos + 1), 16) & 0xff);
-            byteArray[i] = (byte) (high << 4 | low);
-            pos += 2;
+        hexStringToByteArray(hexString, byteArray, 0);
+        return byteArray;
+    }
+
+    public static void hexStringToByteArray(String hexString, byte[] byteArray, int offset) {
+        int length = hexString.length() / 2;
+        if (byteArray.length < length) {
+            length = byteArray.length;
         }
 
-        return byteArray;
+        int pos = 0;
+        for (int i = 0; i < length; i++) {
+            // 因为是16进制，最多只会占用4位，转换成字节需要两个16进制的字符，高位在先
+            byte high = (byte) (Character.digit(hexString.charAt(pos), 16) & 0xff);
+            byte low = (byte) (Character.digit(hexString.charAt(pos + 1), 16) & 0xff);
+            byteArray[offset + i] = (byte) (high << 4 | low);
+            pos += 2;
+        }
     }
 
     /**
@@ -53,8 +61,13 @@ public class HexUtils {
     }
 
     public static String byteArrayToHexString(byte[] byteArray, boolean blankz) {
+        return byteArrayToHexString(byteArray, 0, byteArray.length, blankz);
+    }
+
+    public static String byteArrayToHexString(byte[] byteArray, int offset, int length, boolean blankz) {
         final StringBuilder hexString = new StringBuilder();
-        for (int i = 0; i < byteArray.length; i++) {
+        int end = offset + length;
+        for (int i = offset; i < end; i++) {
             if ((byteArray[i] & 0xff) < 0x10) {
                 // 0~F前面不零
                 hexString.append("0");
@@ -68,5 +81,4 @@ public class HexUtils {
         }
         return hexString.toString();
     }
-
 }

@@ -16,9 +16,14 @@
 
     <modules>
         <module>fox-edge-server-protocol-anno</module>
-        <module>fox-edge-server-protocol-utils</module>
         <module>fox-edge-server-protocol-core</module>
+        <module>fox-edge-server-protocol-utils</module>
         <module>fox-edge-server-protocol-bass260zj</module>
+        <module>fox-edge-server-protocol-cjt188-core</module>
+        <module>fox-edge-server-protocol-cjt188</module>
+        <module>fox-edge-server-protocol-dlt645-core</module>
+        <module>fox-edge-server-protocol-dlt645-1997</module>
+        <module>fox-edge-server-protocol-dahua-fire-core</module>
         <module>fox-edge-server-protocol-lrw</module>
         <module>fox-edge-server-protocol-gdana-digester</module>
         <module>fox-edge-server-protocol-modbus</module>
@@ -30,10 +35,6 @@
         <module>fox-edge-server-protocol-zktl-ctrl4g</module>
         <module>fox-edge-server-protocol-telecom-core</module>
         <module>fox-edge-server-protocol-snmp</module>
-        <module>fox-edge-server-protocol-dlt645-core</module>
-        <module>fox-edge-server-protocol-dlt645-1997</module>
-        <module>fox-edge-server-protocol-cjt188-core</module>
-        <module>fox-edge-server-protocol-cjt188</module>
         <module>fox-edge-server-protocol-opc-ua</module>
         <module>fox-edge-server-protocol-iec104-core</module>
         <module>fox-edge-server-protocol-iec104-slaver</module>
