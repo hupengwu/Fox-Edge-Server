@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
-public class LwM2MCtrlEntity {
+public class LwM2MCtrlEntity extends CtrlEntity {
     /**
      * 应用数据单元长度(2 字节):按小端格式传输，信息对象数目不能过大，应用数据单元总长度不得超过 512 字节；
      */

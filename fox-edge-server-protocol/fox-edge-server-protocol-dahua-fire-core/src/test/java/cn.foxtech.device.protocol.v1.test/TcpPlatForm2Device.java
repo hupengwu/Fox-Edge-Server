@@ -27,7 +27,7 @@ public class TcpPlatForm2Device {
 
         // 平台请求
         TcpPduEntity platform = new TcpPduEntity();
-        platform.getCtrlEntity().setSn(8);
+        platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
         platform.getCtrlEntity().setCmd(CmdType.syncClock.getCmd());
@@ -43,7 +43,7 @@ public class TcpPlatForm2Device {
         TcpPduEntity device = new TcpPduEntity();
         device.getCtrlEntity().setSrcAddr(AddressUtil.DEVICE_DEFAULT);
         device.getCtrlEntity().setDstAddr(platform.getCtrlEntity().getSrcAddr());
-        device.getCtrlEntity().setSn(platform.getCtrlEntity().getSn());
+        device.setSn(platform.getSn());
         device.getCtrlEntity().setProtocolVersion(platform.getCtrlEntity().getProtocolVersion());
         device.getCtrlEntity().setCmd(CmdType.confirm.getCmd());
         data = TcpPduEntity.encodeEntity(device);
@@ -57,7 +57,7 @@ public class TcpPlatForm2Device {
 
         // 平台请求
         TcpPduEntity platform = new TcpPduEntity();
-        platform.getCtrlEntity().setSn(8);
+        platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
         platform.getCtrlEntity().setCmd(CmdType.getParamFix.getCmd());
@@ -73,7 +73,7 @@ public class TcpPlatForm2Device {
         TcpPduEntity device = new TcpPduEntity();
         device.getCtrlEntity().setSrcAddr(AddressUtil.DEVICE_DEFAULT);
         device.getCtrlEntity().setDstAddr(platform.getCtrlEntity().getSrcAddr());
-        device.getCtrlEntity().setSn(platform.getCtrlEntity().getSn());
+        device.setSn(platform.getSn());
         device.getCtrlEntity().setProtocolVersion(platform.getCtrlEntity().getProtocolVersion());
         device.getCtrlEntity().setCmd(CmdType.confirm.getCmd());
         data = TcpPduEntity.encodeEntity(device);
@@ -87,7 +87,7 @@ public class TcpPlatForm2Device {
 
         // 平台请求
         TcpPduEntity platform = new TcpPduEntity();
-        platform.getCtrlEntity().setSn(8);
+        platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
         platform.getCtrlEntity().setCmd(CmdType.getParamVar.getCmd());
@@ -105,7 +105,7 @@ public class TcpPlatForm2Device {
 
         // 平台请求
         TcpPduEntity platform = new TcpPduEntity();
-        platform.getCtrlEntity().setSn(8);
+        platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
         platform.getCtrlEntity().setCmd(CmdType.setParamFix.getCmd());
@@ -123,7 +123,7 @@ public class TcpPlatForm2Device {
 
         // 平台请求
         TcpPduEntity platform = new TcpPduEntity();
-        platform.getCtrlEntity().setSn(8);
+        platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
         platform.getCtrlEntity().setCmd(CmdType.setParamVar.getCmd());
@@ -141,7 +141,7 @@ public class TcpPlatForm2Device {
 
         // 平台请求
         TcpPduEntity platform = new TcpPduEntity();
-        platform.getCtrlEntity().setSn(8);
+        platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
         platform.getCtrlEntity().setCmd(CmdType.remoteMute.getCmd());
@@ -159,7 +159,7 @@ public class TcpPlatForm2Device {
 
         // 平台请求
         TcpPduEntity platform = new TcpPduEntity();
-        platform.getCtrlEntity().setSn(8);
+        platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
         platform.getCtrlEntity().setCmd(CmdType.generalGet.getCmd());
@@ -183,7 +183,7 @@ public class TcpPlatForm2Device {
 
         // 平台请求
         TcpPduEntity platform = new TcpPduEntity();
-        platform.getCtrlEntity().setSn(8);
+        platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
         platform.getCtrlEntity().setCmd(CmdType.generalSet.getCmd());
@@ -207,7 +207,7 @@ public class TcpPlatForm2Device {
 
         // 平台请求
         TcpPduEntity platform = new TcpPduEntity();
-        platform.getCtrlEntity().setSn(8);
+        platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
         platform.getCtrlEntity().setCmd(CmdType.getFuncReq.getCmd());
@@ -231,7 +231,7 @@ public class TcpPlatForm2Device {
 
         // 平台请求
         TcpPduEntity platform = new TcpPduEntity();
-        platform.getCtrlEntity().setSn(8);
+        platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
         platform.getCtrlEntity().setCmd(CmdType.setFuncReq.getCmd());
@@ -250,7 +250,7 @@ public class TcpPlatForm2Device {
 
         // 平台请求
         TcpPduEntity platform = new TcpPduEntity();
-        platform.getCtrlEntity().setSn(8);
+        platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
         platform.getCtrlEntity().setCmd(CmdType.upgradeReq.getCmd());

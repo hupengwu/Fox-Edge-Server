@@ -11,7 +11,7 @@ import lombok.Setter;
  */
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
-public class LwM2MPduEntity {
+public class LwM2MPduEntity extends PduEntity {
     /**
      * 业务流水号(2 字节)
      * 发生改变，流水号增加

@@ -34,6 +34,9 @@ public class RepoCompConstant {
     public static final String filed_manufacturer = "manufacturer";
     public static final String filed_device_type = "deviceType";
 
+    public static final String value_default_manufacturer = "Fox-Edge";
+    public static final String value_default_device_type = "public";
+
 
     public static final String filed_value_model_version_default = "v1";
 }

@@ -4,8 +4,8 @@ import cn.foxtech.common.domain.constant.ServiceVOFieldConstant;
 import cn.foxtech.common.entity.constant.RepoCompVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.RepoCompEntity;
+import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.DifferUtils;
-import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.kernel.system.common.service.EntityManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,6 +25,12 @@ public class RepoLocalApplicationService {
     @Autowired
     private EntityManageService entityManageService;
 
+    @Autowired
+    private RepoLocalCompService localCompService;
+
+    @Autowired
+    private RedisConsoleService logger;
+
     public void syncRepoCompEntity4Application(String appType) throws IOException {
         File file = new File("");
         List<Map<String, Object>> appList = this.appConfigService.readConfFile(file.getAbsolutePath(), appType);
@@ -32,27 +38,14 @@ public class RepoLocalApplicationService {
         // 构造：本地仓库的jar-decoder组件源
         Map<String, RepoCompEntity> dstEntityMap = new HashMap<>();
         for (Map<String, Object> appMap : appList) {
+            try {
+                Map<String, Object> localMap = this.localCompService.convertConf2Local(appMap);
+                RepoCompEntity compEntity = this.localCompService.buildCompEntity(localMap);
 
-            RepoCompEntity compEntity = new RepoCompEntity();
-            compEntity.setCompRepo(RepoCompVOFieldConstant.value_comp_repo_local);
-            compEntity.setCompType(RepoCompVOFieldConstant.value_comp_type_app_service);
-
-            String appNameConf = (String) appMap.get(ServiceVOFieldConstant.field_app_name);
-            String appTypeConf = (String) appMap.get(ServiceVOFieldConstant.field_app_type);
-            if (MethodUtils.hasEmpty(appTypeConf, appNameConf)) {
-                continue;
+                dstEntityMap.put(compEntity.makeServiceKey(), compEntity);
+            } catch (Exception e) {
+                this.logger.error("从配置文件中构造参数失败!" + e.getMessage());
             }
-
-            compEntity.setCompName(appTypeConf + ":" + appNameConf);
-
-            compEntity.getCompParam().put(ServiceVOFieldConstant.field_app_name, appMap.get(ServiceVOFieldConstant.field_app_name));
-            compEntity.getCompParam().put(ServiceVOFieldConstant.field_app_type, appMap.get(ServiceVOFieldConstant.field_app_type));
-            compEntity.getCompParam().put(ServiceVOFieldConstant.field_file_name, appMap.get(ServiceVOFieldConstant.field_file_name));
-            compEntity.getCompParam().put(ServiceVOFieldConstant.field_loader_name, appMap.get(ServiceVOFieldConstant.field_loader_name));
-            compEntity.getCompParam().put(ServiceVOFieldConstant.field_spring_param, appMap.get(ServiceVOFieldConstant.field_spring_param));
-            compEntity.getCompParam().put(ServiceVOFieldConstant.field_conf_files, appMap.get(ServiceVOFieldConstant.field_conf_files));
-
-            dstEntityMap.put(compEntity.makeServiceKey(), compEntity);
         }
 
         Map<String, RepoCompEntity> srcEntityMap = new HashMap<>();
@@ -122,29 +115,29 @@ public class RepoLocalApplicationService {
         }
     }
 
-    public List<BaseEntity> sort(List<BaseEntity> entityList){
+    public List<BaseEntity> sort(List<BaseEntity> entityList) {
         List<BaseEntity> resultList = new ArrayList<>();
 
 
         List<BaseEntity> kernelList = new ArrayList<>();
         List<BaseEntity> systemList = new ArrayList<>();
         List<BaseEntity> serviceList = new ArrayList<>();
-        for (BaseEntity entity:entityList){
+        for (BaseEntity entity : entityList) {
             RepoCompEntity compEntity = (RepoCompEntity) entity;
             if (!RepoCompVOFieldConstant.value_comp_type_app_service.equals(compEntity.getCompType())) {
                 resultList.add(compEntity);
             }
 
             String appType = (String) compEntity.getCompParam().getOrDefault(ServiceVOFieldConstant.field_app_type, "");
-            if (ServiceVOFieldConstant.field_type_kernel.equals(appType)){
+            if (ServiceVOFieldConstant.field_type_kernel.equals(appType)) {
                 kernelList.add(compEntity);
                 continue;
             }
-            if (ServiceVOFieldConstant.field_type_system.equals(appType)){
+            if (ServiceVOFieldConstant.field_type_system.equals(appType)) {
                 systemList.add(compEntity);
                 continue;
             }
-            if (ServiceVOFieldConstant.field_type_service.equals(appType)){
+            if (ServiceVOFieldConstant.field_type_service.equals(appType)) {
                 serviceList.add(compEntity);
                 continue;
             }

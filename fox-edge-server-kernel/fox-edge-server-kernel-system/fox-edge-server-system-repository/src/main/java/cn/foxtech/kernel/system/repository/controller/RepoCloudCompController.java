@@ -212,6 +212,10 @@ public class RepoCloudCompController {
                 throw new ServiceException("参数不能为空: modelType, modelName, modelVersion, version, stage, component");
             }
 
+            // 创建所属的组件实体
+            this.installService.insertRepoCompEntity(modelType, modelName, modelVersion);
+
+            // 安装文件组件
             this.installService.installFile(modelType, modelName, modelVersion, version, stage, component);
             return AjaxResult.success();
         } catch (Exception e) {

@@ -11,7 +11,7 @@ import lombok.Setter;
  */
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
-public class TcpPduEntity {
+public class TcpPduEntity extends PduEntity {
     /**
      * 控制单元
      */
@@ -142,6 +142,14 @@ public class TcpPduEntity {
         }
 
         return ctrlLength + aduLength + 5;
+    }
+
+    public int getSn() {
+        return this.getCtrlEntity().getSn();
+    }
+
+    public void setSn(int sn) {
+        this.getCtrlEntity().setSn(sn);
     }
 }
 

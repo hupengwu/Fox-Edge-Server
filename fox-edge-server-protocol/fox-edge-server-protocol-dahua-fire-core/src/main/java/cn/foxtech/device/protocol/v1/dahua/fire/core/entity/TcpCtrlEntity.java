@@ -14,7 +14,7 @@ import lombok.Setter;
  */
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
-public class TcpCtrlEntity {
+public class TcpCtrlEntity extends CtrlEntity {
     /**
      * 业务流水号(2 字节)：业务流水号由通信主动发起方维护，按小端格式传输，从 1 开始计数，2B 满值后自动翻转为 0。帧内容发
      * 生改变，流水号增加

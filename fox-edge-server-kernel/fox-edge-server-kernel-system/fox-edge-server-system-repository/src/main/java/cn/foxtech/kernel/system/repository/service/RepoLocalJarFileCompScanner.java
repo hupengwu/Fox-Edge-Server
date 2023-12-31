@@ -1,12 +1,13 @@
 package cn.foxtech.kernel.system.repository.service;
 
+import cn.foxtech.common.entity.constant.DeviceDecoderVOFieldConstant;
 import cn.foxtech.common.entity.constant.OperateVOFieldConstant;
 import cn.foxtech.common.entity.constant.RepoCompVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.OperateMethodEntity;
 import cn.foxtech.common.entity.entity.RepoCompEntity;
+import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.DifferUtils;
-import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
 import cn.foxtech.kernel.system.common.service.EntityManageService;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
@@ -28,6 +29,11 @@ public class RepoLocalJarFileCompScanner {
 
     @Autowired
     private RepoLocalJarFileNameService jarFileNameService;
+
+    @Autowired
+    private RepoLocalCompService localCompService;
+
+    private RedisConsoleService logger;
 
 
     public void scanRepoCompEntity(Map<String, RepoCompEntity> dstEntityMap) {
@@ -75,10 +81,15 @@ public class RepoLocalJarFileCompScanner {
             String srcDeviceType = (String) srcEntity.getCompParam().getOrDefault(OperateVOFieldConstant.field_device_type, "");
             String dstDeviceType = (String) dstEntity.getCompParam().getOrDefault(OperateVOFieldConstant.field_device_type, "");
 
+            // 检查：是否发生了变化
             if (dstDeviceType.equals(srcDeviceType) && dstManufacturer.equals(srcManufacturer)) {
                 continue;
             }
 
+            // 检查：是否为默认的缺省值，避免覆盖用户输入
+            if (RepoCompConstant.value_default_manufacturer.equals(dstManufacturer) && RepoCompConstant.value_default_device_type.equals(dstDeviceType)) {
+                continue;
+            }
 
             // 修改内容
             srcEntity.getCompParam().put(OperateVOFieldConstant.field_manufacturer, dstManufacturer);
@@ -106,39 +117,18 @@ public class RepoLocalJarFileCompScanner {
         // 获得jar文件的信息
         List<Map<String, Object>> jarInfoList = this.jarFileInfoService.findJarNameList();
         for (Map<String, Object> jarInfo : jarInfoList) {
-            // 取出文件名和JAR文件版本信息
-            String fileName = (String) jarInfo.get("fileName");
-            String manufacturer = "Fox-Edge";
-            String deviceType = "public";
-            if (MethodUtils.hasEmpty(fileName)) {
-                continue;
+            try {
+                // 取出文件名和JAR文件版本信息
+                String fileName = (String) jarInfo.get(DeviceDecoderVOFieldConstant.field_file_name);
+
+                // 构造缺省的对象
+                Map<String, Object> localMap = this.localCompService.convertFileName2Local(fileName);
+                RepoCompEntity compEntity = this.localCompService.buildCompEntity(localMap);
+
+                fileNameMap.put(fileName, compEntity);
+            } catch (Exception e) {
+                this.logger.error("根据文件名构造本地对象异常：" + e.getMessage());
             }
-
-            // 从结构化的文件名中，取出信息
-            Map<String, String> map = this.jarFileNameService.splitJarFileName(fileName);
-            if (map == null) {
-                continue;
-            }
-
-            String modelName = map.get(RepoCompConstant.filed_model_name);
-            String modelVersion = map.get(RepoCompConstant.filed_model_version);
-            if (MethodUtils.hasEmpty(modelName, modelVersion)) {
-                continue;
-            }
-
-            // 构造成对象
-            RepoCompEntity compEntity = new RepoCompEntity();
-            compEntity.setCompRepo(RepoCompVOFieldConstant.value_comp_repo_local);
-            compEntity.setCompType(RepoCompVOFieldConstant.value_comp_type_jar_decoder);
-            compEntity.setCompName(fileName);
-
-            compEntity.getCompParam().put(OperateVOFieldConstant.field_manufacturer, manufacturer);
-            compEntity.getCompParam().put(OperateVOFieldConstant.field_device_type, deviceType);
-            compEntity.getCompParam().put(RepoCompConstant.filed_model_name, modelName);
-            compEntity.getCompParam().put(RepoCompConstant.filed_model_version, modelVersion);
-            compEntity.getCompParam().put(RepoCompConstant.filed_file_name, fileName);
-
-            fileNameMap.put(fileName, compEntity);
         }
 
         return fileNameMap;
@@ -149,33 +139,23 @@ public class RepoLocalJarFileCompScanner {
 
         Map<String, RepoCompEntity> fileNameMap = new HashMap<>();
         for (BaseEntity entity : operateEntityList) {
-            OperateMethodEntity operateEntity = (OperateMethodEntity) entity;
+            try {
+                OperateMethodEntity operateEntity = (OperateMethodEntity) entity;
+                if (operateEntity.getEngineType().equals("JavaScript")) {
+                    continue;
+                }
 
-            String fileName = (String) operateEntity.getEngineParam().getOrDefault(DeviceMethodVOFieldConstant.field_file, "");
+                // 从JAR类型的Operate中获得JAR的文件名
+                String fileName = (String) operateEntity.getEngineParam().getOrDefault(DeviceMethodVOFieldConstant.field_file, "");
 
-            // 分拆xxx.v1.jar格式的文件信息
-            Map<String, String> jarFileMap = this.fileNameService.splitJarFileName(fileName);
-            if (jarFileMap == null) {
-                continue;
+                // 构造缺省的RepoCompEntity
+                Map<String, Object> localMap = this.localCompService.convertOperateEntity2Local(operateEntity);
+                RepoCompEntity compEntity = this.localCompService.buildCompEntity(localMap);
+
+                fileNameMap.put(fileName, compEntity);
+            } catch (Exception e) {
+                this.logger.error("从OperateMethod获得设备厂商信息失败:" + e.getMessage());
             }
-
-            String modelName = jarFileMap.get(RepoCompConstant.filed_model_name);
-            String modelVersion = jarFileMap.get(RepoCompConstant.filed_model_version);
-            if (MethodUtils.hasEmpty(modelName, modelVersion)) {
-                continue;
-            }
-
-            RepoCompEntity compEntity = new RepoCompEntity();
-            compEntity.setCompRepo(RepoCompVOFieldConstant.value_comp_repo_local);
-            compEntity.setCompType(RepoCompVOFieldConstant.value_comp_type_jar_decoder);
-            compEntity.setCompName(fileName);
-
-            compEntity.getCompParam().put(OperateVOFieldConstant.field_manufacturer, operateEntity.getManufacturer());
-            compEntity.getCompParam().put(OperateVOFieldConstant.field_device_type, operateEntity.getDeviceType());
-            compEntity.getCompParam().put(RepoCompConstant.filed_file_name, fileName);
-            compEntity.getCompParam().putAll(jarFileMap);
-
-            fileNameMap.put(fileName, compEntity);
         }
 
         return fileNameMap;

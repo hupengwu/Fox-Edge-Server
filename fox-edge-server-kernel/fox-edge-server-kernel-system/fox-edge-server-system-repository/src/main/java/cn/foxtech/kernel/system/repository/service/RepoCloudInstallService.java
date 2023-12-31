@@ -1,6 +1,7 @@
 package cn.foxtech.kernel.system.repository.service;
 
 import cn.foxtech.common.domain.constant.ServiceVOFieldConstant;
+import cn.foxtech.common.entity.entity.RepoCompEntity;
 import cn.foxtech.common.process.ProcessUtils;
 import cn.foxtech.common.utils.file.FileCompareUtils;
 import cn.foxtech.common.utils.file.FileNameUtils;
@@ -10,6 +11,7 @@ import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.shell.ShellUtils;
 import cn.foxtech.core.exception.ServiceException;
+import cn.foxtech.kernel.system.common.service.EntityManageService;
 import cn.foxtech.kernel.system.common.service.ManageConfigService;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
 import cn.foxtech.kernel.system.repository.constants.RepoConfigConstant;
@@ -37,17 +39,15 @@ public class RepoCloudInstallService {
     @Autowired
     private ManageConfigService configService;
 
+    @Autowired
+    private EntityManageService entityManageService;
+
     /**
      * 本地端口分配
      */
     @Autowired
     private RepoLocalAppPortService appPortService;
 
-    /**
-     * 云端远程访问
-     */
-    @Autowired
-    private CloudRemoteService cloudRemoteService;
 
     /**
      * jar文件信息
@@ -73,6 +73,12 @@ public class RepoCloudInstallService {
     @Autowired
     private RepoCloudInstallStatus installStatus;
 
+    @Autowired
+    private RepoCloudRemoteService cloudRemoteService;
+
+    @Autowired
+    private RepoLocalCompService localCompService;
+
 
     /**
      * 从云端查询仓库列表，并保存到本地
@@ -84,7 +90,7 @@ public class RepoCloudInstallService {
     public List<Map<String, Object>> queryUriListFile(String modelType) throws IOException {
         Map<String, Object> body = new HashMap<>();
         body.put(RepoCompConstant.filed_model_type, modelType);
-        Map<String, Object> respond = this.cloudRemoteService.executePost("/manager/repository/component/entities", body);
+        Map<String, Object> respond = this.cloudRemoteService.queryCloudCompFileList(body);
 
         List<Map<String, Object>> list = (List<Map<String, Object>>) respond.get("data");
         if (list == null) {
@@ -155,6 +161,44 @@ public class RepoCloudInstallService {
                     entity.put(RepoCompConstant.filed_used_version, verEntity);
                 }
             }
+        }
+    }
+
+    public void insertRepoCompEntity(String modelType, String modelName, String modelVersion) throws IOException {
+        // 向云端查询组件信息
+        Map<String, Object> body = new HashMap<>();
+        body.put(RepoCompConstant.filed_model_type, modelType);
+        body.put(RepoCompConstant.filed_model_name, modelName);
+        body.put(RepoCompConstant.filed_model_version, modelVersion);
+        Map<String, Object> respond = this.cloudRemoteService.queryCloudCompFileList(body);
+
+        // 取出组件信息
+        List<Map<String, Object>> list = (List<Map<String, Object>>) respond.get("data");
+        if (MethodUtils.hasEmpty(list)) {
+            throw new ServiceException("云端数据仓库返回的数据为空！");
+        }
+        Map<String, Object> data = list.get(0);
+
+        // 构造本地仓库组件实体需要的参数
+        Map<String, Object> localMap = this.localCompService.convertCloud2Local(data);
+        if (localMap==null){
+            return;
+        }
+
+        // 构造本地仓库实体
+        RepoCompEntity repoCompEntity = this.localCompService.buildCompEntity(localMap);
+        if (repoCompEntity == null) {
+            throw new ServiceException("构造的本地仓库组件实体为null");
+        }
+
+        // 插入、更新数据
+        RepoCompEntity exist = this.entityManageService.getEntity(repoCompEntity.makeServiceKey(), RepoCompEntity.class);
+        if (exist == null) {
+            this.entityManageService.insertEntity(repoCompEntity);
+        } else {
+            RepoCompEntity clone = JsonUtils.clone(exist);
+            clone.getCompParam().putAll(repoCompEntity.getCompParam());
+            this.entityManageService.updateEntity(clone);
         }
     }
 

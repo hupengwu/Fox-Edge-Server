@@ -3,7 +3,7 @@ package cn.foxtech.kernel.system.repository.controller;
 import cn.foxtech.common.constant.HttpStatus;
 import cn.foxtech.common.entity.constant.RepoCompVOFieldConstant;
 import cn.foxtech.core.domain.AjaxResult;
-import cn.foxtech.kernel.system.repository.service.RepoCloudScriptService;
+import cn.foxtech.kernel.system.repository.service.RepoCloudRemoteService;
 import cn.foxtech.kernel.system.repository.service.RepoLocalCompService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +21,7 @@ public class RepoCloudScriptController {
      * 仓库服务
      */
     @Autowired
-    private RepoCloudScriptService cloudScriptService;
+    private RepoCloudRemoteService cloudScriptService;
 
     @Autowired
     private RepoLocalCompService compService;
@@ -29,7 +29,7 @@ public class RepoCloudScriptController {
     @PostMapping("/page")
     public Map<String, Object> selectCompPageList(@RequestBody Map<String, Object> body) {
         try {
-            Map<String, Object> result = this.cloudScriptService.queryCloudCompList(body);
+            Map<String, Object> result = this.cloudScriptService.queryCloudCompScriptPage(body);
             return result;
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
@@ -39,7 +39,7 @@ public class RepoCloudScriptController {
     @PostMapping("/version/operate/entities")
     public Map<String, Object> selectOperateList(@RequestBody Map<String, Object> body) {
         try {
-            Map<String, Object> result = this.cloudScriptService.queryCloudOperateList(body);
+            Map<String, Object> result = this.cloudScriptService.queryCloudScriptOperateList(body);
             return result;
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
@@ -50,7 +50,7 @@ public class RepoCloudScriptController {
     public Map<String, Object> installVersionEntity(@RequestBody Map<String, Object> body) {
         try {
             // 查询数据
-            Map<String, Object> result = this.cloudScriptService.queryCloudVersionList(body);
+            Map<String, Object> result = this.cloudScriptService.queryCloudScriptVersionList(body);
 
             // 检查状态
             if (!HttpStatus.SUCCESS.equals(result.get(AjaxResult.CODE_TAG))) {
@@ -76,7 +76,7 @@ public class RepoCloudScriptController {
     @PostMapping("/version/page")
     public Map<String, Object> selectVersionPageList(@RequestBody Map<String, Object> body) {
         try {
-            Map<String, Object> result = this.cloudScriptService.queryCloudVersionPage(body);
+            Map<String, Object> result = this.cloudScriptService.queryCloudScriptVersionPage(body);
             return result;
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
@@ -86,7 +86,7 @@ public class RepoCloudScriptController {
     @PostMapping("/version/operate/entity")
     public Map<String, Object> getVersionPageList(@RequestBody Map<String, Object> body) {
         try {
-            Map<String, Object> result = this.cloudScriptService.queryCloudOperateEntity(body);
+            Map<String, Object> result = this.cloudScriptService.queryCloudScriptOperateEntity(body);
             return result;
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());

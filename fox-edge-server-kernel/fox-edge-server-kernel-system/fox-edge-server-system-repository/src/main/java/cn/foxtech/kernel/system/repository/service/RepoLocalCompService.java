@@ -6,6 +6,7 @@ import cn.foxtech.common.entity.constant.OperateVOFieldConstant;
 import cn.foxtech.common.entity.constant.RepoCompVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.OperateEntity;
+import cn.foxtech.common.entity.entity.OperateMethodEntity;
 import cn.foxtech.common.entity.entity.RepoCompEntity;
 import cn.foxtech.common.utils.ContainerUtils;
 import cn.foxtech.common.utils.DifferUtils;
@@ -13,6 +14,7 @@ import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
+import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
 import cn.foxtech.kernel.system.common.service.EntityManageService;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,9 @@ public class RepoLocalCompService {
 
     @Autowired
     private RepoLocalShellService shellService;
+
+    @Autowired
+    private RepoLocalJarFileNameService jarFileNameService;
 
 
     public List<BaseEntity> getCompEntityList(Map<String, Object> body) {
@@ -134,15 +139,208 @@ public class RepoLocalCompService {
     }
 
 
+    public Map<String, Object> convertCloud2Local(Map<String, Object> cloud) {
+        String modelType = (String) cloud.get(RepoCompConstant.filed_model_type);
+        String modelName = (String) cloud.get(RepoCompConstant.filed_model_name);
+        String modelVersion = (String) cloud.get(RepoCompConstant.filed_model_version);
+        String manufacturer = (String) cloud.get(OperateVOFieldConstant.field_manufacturer);
+        String deviceType = (String) cloud.get(OperateVOFieldConstant.field_device_type);
+        String compId = (String) cloud.get(RepoCompVOFieldConstant.field_id);
+
+
+        // 必选参数
+        if (MethodUtils.hasEmpty(modelType, modelName, modelVersion)) {
+            throw new ServiceException("cloud参数不能为空: modelType, modelName, modelVersion");
+        }
+
+        Map<String, Object> localMap = new HashMap<>();
+
+
+        if (modelType.equals(RepoCompConstant.repository_type_decoder)) {
+            localMap.put(RepoCompVOFieldConstant.field_comp_repo, RepoCompVOFieldConstant.value_comp_repo_local);
+            localMap.put(RepoCompVOFieldConstant.field_comp_type, RepoCompVOFieldConstant.value_comp_type_jar_decoder);
+            localMap.put(RepoCompVOFieldConstant.field_comp_param, new HashMap<>());
+
+            // 必选参数
+            if (MethodUtils.hasEmpty(modelName, modelVersion, manufacturer, deviceType)) {
+                throw new ServiceException("参数不能为空: modelName, modelVersion, manufacturer, deviceType");
+            }
+
+            String fileName = modelName + "." + modelVersion + ".jar";
+
+            // 可选参数
+            Map<String, Object> compParam = (Map<String, Object>) localMap.get(RepoCompVOFieldConstant.field_comp_param);
+            compParam.put(OperateVOFieldConstant.field_manufacturer, manufacturer);
+            compParam.put(OperateVOFieldConstant.field_device_type, deviceType);
+            compParam.put(RepoCompVOFieldConstant.field_comp_id, compId);
+            compParam.put(RepoCompConstant.filed_model_name, modelName);
+            compParam.put(RepoCompConstant.filed_model_version, modelVersion);
+            compParam.put(RepoCompConstant.filed_file_name, fileName);
+
+            return localMap;
+        }
+        if (modelType.equals(RepoCompConstant.repository_type_template)) {
+            localMap.put(RepoCompVOFieldConstant.field_comp_repo, RepoCompVOFieldConstant.value_comp_repo_local);
+            localMap.put(RepoCompVOFieldConstant.field_comp_type, RepoCompVOFieldConstant.value_comp_type_file_template);
+            localMap.put(RepoCompVOFieldConstant.field_comp_param, new HashMap<>());
+
+            // 必选参数
+            if (MethodUtils.hasEmpty(modelName, modelVersion, manufacturer, deviceType)) {
+                throw new ServiceException("参数不能为空: modelName, modelVersion, manufacturer, deviceType");
+            }
+
+            // 可选参数
+            Map<String, Object> compParam = (Map<String, Object>) localMap.get(RepoCompVOFieldConstant.field_comp_param);
+            compParam.put(OperateVOFieldConstant.field_manufacturer, manufacturer);
+            compParam.put(OperateVOFieldConstant.field_device_type, deviceType);
+            compParam.put(RepoCompVOFieldConstant.field_comp_id, compId);
+            compParam.put(RepoCompConstant.filed_model_name, modelName);
+            compParam.put(RepoCompConstant.filed_model_version, modelVersion);
+
+            return localMap;
+        }
+
+        return null;
+    }
+
+    public Map<String, Object> convertConf2Local(Map<String, Object> confMap) {
+        Map<String, Object> localMap = new HashMap<>();
+        localMap.put(RepoCompVOFieldConstant.field_comp_repo, RepoCompVOFieldConstant.value_comp_repo_local);
+        localMap.put(RepoCompVOFieldConstant.field_comp_type, RepoCompVOFieldConstant.value_comp_type_app_service);
+        localMap.put(RepoCompVOFieldConstant.field_comp_param, new HashMap<>());
+
+        String appName = (String) confMap.get(ServiceVOFieldConstant.field_app_name);
+        String appType = (String) confMap.get(ServiceVOFieldConstant.field_app_type);
+        if (MethodUtils.hasEmpty(appType, appName)) {
+            throw new ServiceException("参数不能为空: appName,appType");
+        }
+
+        Map<String, Object> compParam = (Map<String, Object>) localMap.get(RepoCompVOFieldConstant.field_comp_param);
+        compParam.put(ServiceVOFieldConstant.field_app_name, confMap.get(ServiceVOFieldConstant.field_app_name));
+        compParam.put(ServiceVOFieldConstant.field_app_type, confMap.get(ServiceVOFieldConstant.field_app_type));
+        compParam.put(ServiceVOFieldConstant.field_file_name, confMap.get(ServiceVOFieldConstant.field_file_name));
+        compParam.put(ServiceVOFieldConstant.field_loader_name, confMap.get(ServiceVOFieldConstant.field_loader_name));
+        compParam.put(ServiceVOFieldConstant.field_spring_param, confMap.get(ServiceVOFieldConstant.field_spring_param));
+        compParam.put(ServiceVOFieldConstant.field_conf_files, confMap.get(ServiceVOFieldConstant.field_conf_files));
+
+        return localMap;
+    }
+
+
+    /**
+     * 将JAR解码器的文件名，转换为一个缺省的本地组件结构
+     * 注意：该信息是缺省的，并不完整，它包含一个Fox-Edge/public
+     * 它的作用：主要是在没有对应的JAR解码器组件的时候，先创建一个组件对象，形成组件/操作的结构化关系
+     * 后面，在通过其他场景，更新替换该Fox-Edge/public信息
+     *
+     * @param fileName 文件名
+     * @return 一个低优先级的JAR本地组件对象
+     */
+    public Map<String, Object> convertFileName2Local(String fileName){
+        Map<String, Object> localMap = new HashMap<>();
+        localMap.put(RepoCompVOFieldConstant.field_comp_repo, RepoCompVOFieldConstant.value_comp_repo_local);
+        localMap.put(RepoCompVOFieldConstant.field_comp_type, RepoCompVOFieldConstant.value_comp_type_jar_decoder);
+        localMap.put(RepoCompVOFieldConstant.field_comp_param, new HashMap<>());
+
+
+        // 取出文件名和JAR文件版本信息
+        String manufacturer = RepoCompConstant.value_default_manufacturer;
+        String deviceType = RepoCompConstant.value_default_device_type;
+        if (MethodUtils.hasEmpty(fileName)) {
+            throw new ServiceException("文件名称不能为空!");
+        }
+
+        // 从结构化的文件名中，取出信息
+        Map<String, String> map = this.jarFileNameService.splitJarFileName(fileName);
+        if (map == null) {
+            throw new ServiceException("文件名称格式不正确!");
+        }
+
+        String modelName = map.get(RepoCompConstant.filed_model_name);
+        String modelVersion = map.get(RepoCompConstant.filed_model_version);
+        if (MethodUtils.hasEmpty(modelName, modelVersion)) {
+            throw new ServiceException("参数不能为空： modelName, modelVersion");
+        }
+
+        Map<String, Object> compParam = (Map<String, Object>) localMap.get(RepoCompVOFieldConstant.field_comp_param);
+        compParam.put(OperateVOFieldConstant.field_manufacturer, manufacturer);
+        compParam.put(OperateVOFieldConstant.field_device_type, deviceType);
+        compParam.put(RepoCompConstant.filed_model_name, modelName);
+        compParam.put(RepoCompConstant.filed_model_version, modelVersion);
+        compParam.put(RepoCompConstant.filed_file_name, fileName);
+
+        return localMap;
+    }
+
+    /**
+     * 将JAR解码器的操作对象，转换为一个缺省的本地组件结构
+     *
+     * 注意：该信息是缺省的，并不完整，它主要是能够从JAR解码器的注解中，获得准确的组件信息
+     *
+     * 它的作用：主要是用来更新JAR组件的manufacturer和deviceType信息
+     *
+     * @param operateEntity 文件名
+     * @return 一个低优先级的JAR本地组件对象
+     */
+    public Map<String, Object> convertOperateEntity2Local(OperateMethodEntity operateEntity){
+        Map<String, Object> localMap = new HashMap<>();
+        localMap.put(RepoCompVOFieldConstant.field_comp_repo, RepoCompVOFieldConstant.value_comp_repo_local);
+        localMap.put(RepoCompVOFieldConstant.field_comp_type, RepoCompVOFieldConstant.value_comp_type_jar_decoder);
+        localMap.put(RepoCompVOFieldConstant.field_comp_param, new HashMap<>());
+
+        String fileName = (String) operateEntity.getEngineParam().getOrDefault(DeviceMethodVOFieldConstant.field_file, "");
+
+        // 从结构化的文件名中，取出信息
+        Map<String, String> map = this.jarFileNameService.splitJarFileName(fileName);
+        if (map == null) {
+            throw new ServiceException("文件名称格式不正确!");
+        }
+
+        String modelName = map.get(RepoCompConstant.filed_model_name);
+        String modelVersion = map.get(RepoCompConstant.filed_model_version);
+        if (MethodUtils.hasEmpty(modelName, modelVersion)) {
+            throw new ServiceException("参数不能为空： modelName, modelVersion");
+        }
+
+
+        Map<String, Object> compParam = (Map<String, Object>) localMap.get(RepoCompVOFieldConstant.field_comp_param);
+        compParam.put(OperateVOFieldConstant.field_manufacturer, operateEntity.getManufacturer());
+        compParam.put(OperateVOFieldConstant.field_device_type, operateEntity.getDeviceType());
+        compParam.put(RepoCompConstant.filed_model_name, modelName);
+        compParam.put(RepoCompConstant.filed_model_version, modelVersion);
+        compParam.put(RepoCompConstant.filed_file_name, fileName);
+
+        return localMap;
+    }
+
     public RepoCompEntity buildCompEntity(Map<String, Object> params) {
         // 提取业务参数
         String compType = (String) params.get(RepoCompVOFieldConstant.field_comp_type);
         String compRepo = (String) params.get(RepoCompVOFieldConstant.field_comp_repo);
         Map<String, Object> compParam = (Map<String, Object>) params.get(RepoCompVOFieldConstant.field_comp_param);
 
+
         // 简单校验参数
         if (MethodUtils.hasNull(compType, compRepo, compParam)) {
             throw new ServiceException("参数不能为空: compType, compRepo, compParam");
+        }
+
+        if (compRepo.equals(RepoCompVOFieldConstant.value_comp_repo_local) && compType.equals(RepoCompVOFieldConstant.value_comp_type_jar_decoder)) {
+            String manufacturer = (String) compParam.get(OperateVOFieldConstant.field_manufacturer);
+            String deviceType = (String) compParam.get(OperateVOFieldConstant.field_device_type);
+            String fileName = (String) compParam.get(RepoCompConstant.filed_file_name);
+            if (MethodUtils.hasNull(manufacturer, deviceType, fileName)) {
+                throw new ServiceException("参数不能为空: manufacturer, deviceType, fileName");
+            }
+
+            // 构造作为参数的实体
+            RepoCompEntity entity = new RepoCompEntity();
+            entity.setCompRepo(compRepo);
+            entity.setCompType(compType);
+            entity.setCompName(fileName);
+            entity.setCompParam(compParam);
+
+            return entity;
         }
 
         if (compRepo.equals(RepoCompVOFieldConstant.value_comp_repo_local) && compType.equals(RepoCompVOFieldConstant.value_comp_type_jsp_decoder)) {
