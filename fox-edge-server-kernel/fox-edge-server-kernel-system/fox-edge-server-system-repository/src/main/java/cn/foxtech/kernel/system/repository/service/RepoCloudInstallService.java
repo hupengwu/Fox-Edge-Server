@@ -77,7 +77,10 @@ public class RepoCloudInstallService {
     private RepoCloudRemoteService cloudRemoteService;
 
     @Autowired
-    private RepoLocalCompService localCompService;
+    private RepoLocalCompConvert compConvert;
+
+    @Autowired
+    private RepoLocalCompBuilder compBuilder;
 
 
     /**
@@ -180,13 +183,13 @@ public class RepoCloudInstallService {
         Map<String, Object> data = list.get(0);
 
         // 构造本地仓库组件实体需要的参数
-        Map<String, Object> localMap = this.localCompService.convertCloud2Local(data);
-        if (localMap==null){
+        Map<String, Object> localMap = this.compConvert.convertCloud2Local(data);
+        if (localMap == null) {
             return;
         }
 
         // 构造本地仓库实体
-        RepoCompEntity repoCompEntity = this.localCompService.buildCompEntity(localMap);
+        RepoCompEntity repoCompEntity = this.compBuilder.buildCompEntity(localMap);
         if (repoCompEntity == null) {
             throw new ServiceException("构造的本地仓库组件实体为null");
         }

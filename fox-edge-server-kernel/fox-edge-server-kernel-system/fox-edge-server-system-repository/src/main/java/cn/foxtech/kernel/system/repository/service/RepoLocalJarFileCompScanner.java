@@ -22,17 +22,15 @@ public class RepoLocalJarFileCompScanner {
     private EntityManageService entityManageService;
 
     @Autowired
-    private RepoLocalJarFileNameService fileNameService;
-
-    @Autowired
     private RepoLocalJarFileInfoService jarFileInfoService;
 
     @Autowired
-    private RepoLocalJarFileNameService jarFileNameService;
+    private RepoLocalCompConvert compConvert;
 
     @Autowired
-    private RepoLocalCompService localCompService;
+    private RepoLocalCompBuilder compBuilder;
 
+    @Autowired
     private RedisConsoleService logger;
 
 
@@ -122,8 +120,8 @@ public class RepoLocalJarFileCompScanner {
                 String fileName = (String) jarInfo.get(DeviceDecoderVOFieldConstant.field_file_name);
 
                 // 构造缺省的对象
-                Map<String, Object> localMap = this.localCompService.convertFileName2Local(fileName);
-                RepoCompEntity compEntity = this.localCompService.buildCompEntity(localMap);
+                Map<String, Object> localMap = this.compConvert.convertFileName2Local(fileName);
+                RepoCompEntity compEntity = this.compBuilder.buildCompEntity(localMap);
 
                 fileNameMap.put(fileName, compEntity);
             } catch (Exception e) {
@@ -149,8 +147,8 @@ public class RepoLocalJarFileCompScanner {
                 String fileName = (String) operateEntity.getEngineParam().getOrDefault(DeviceMethodVOFieldConstant.field_file, "");
 
                 // 构造缺省的RepoCompEntity
-                Map<String, Object> localMap = this.localCompService.convertOperateEntity2Local(operateEntity);
-                RepoCompEntity compEntity = this.localCompService.buildCompEntity(localMap);
+                Map<String, Object> localMap = this.compConvert.convertOperateEntity2Local(operateEntity);
+                RepoCompEntity compEntity = this.compBuilder.buildCompEntity(localMap);
 
                 fileNameMap.put(fileName, compEntity);
             } catch (Exception e) {

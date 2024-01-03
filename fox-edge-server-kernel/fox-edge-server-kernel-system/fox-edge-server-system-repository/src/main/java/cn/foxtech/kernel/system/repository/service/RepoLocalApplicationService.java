@@ -26,7 +26,10 @@ public class RepoLocalApplicationService {
     private EntityManageService entityManageService;
 
     @Autowired
-    private RepoLocalCompService localCompService;
+    private RepoLocalCompConvert compConvert;
+
+    @Autowired
+    private RepoLocalCompBuilder compBuilder;
 
     @Autowired
     private RedisConsoleService logger;
@@ -39,8 +42,8 @@ public class RepoLocalApplicationService {
         Map<String, RepoCompEntity> dstEntityMap = new HashMap<>();
         for (Map<String, Object> appMap : appList) {
             try {
-                Map<String, Object> localMap = this.localCompService.convertConf2Local(appMap);
-                RepoCompEntity compEntity = this.localCompService.buildCompEntity(localMap);
+                Map<String, Object> localMap = this.compConvert.convertConf2Local(appMap);
+                RepoCompEntity compEntity = this.compBuilder.buildCompEntity(localMap);
 
                 dstEntityMap.put(compEntity.makeServiceKey(), compEntity);
             } catch (Exception e) {

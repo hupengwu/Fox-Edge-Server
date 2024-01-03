@@ -10,10 +10,7 @@ import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.system.common.service.EntityManageService;
-import cn.foxtech.kernel.system.repository.service.RepoLocalApplicationService;
-import cn.foxtech.kernel.system.repository.service.RepoLocalCompService;
-import cn.foxtech.kernel.system.repository.service.RepoLocalCsvFileService;
-import cn.foxtech.kernel.system.repository.service.RepoLocalJarFileInfoService;
+import cn.foxtech.kernel.system.repository.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,13 +35,22 @@ public class RepoLocalCompListController {
     private RepoLocalCompService compService;
 
     @Autowired
-    private RepoLocalApplicationService appServerService;
+    private RepoLocalCompSync compSync;
 
     @Autowired
-    private RepoLocalCsvFileService fileService;
+    private RepoLocalCompUpload compUpload;
 
     @Autowired
-    private RepoLocalJarFileInfoService jarFileInfoService;
+    private RepoLocalCompBuilder compBuilder;
+
+    @Autowired
+    private RepoLocalApplicationService appService;
+
+    @Autowired
+    private RepoLocalCsvFileService csvFileService;
+
+    @Autowired
+    private RepoLocalJarFileInfoService jarFileService;
 
 
     @PostMapping("page")
@@ -63,13 +69,13 @@ public class RepoLocalCompListController {
 
             // 服务场景：进行登记排序
             if (compType.equals(RepoCompVOFieldConstant.value_comp_type_app_service)) {
-                entityList = this.appServerService.sort(entityList);
+                entityList = this.appService.sort(entityList);
 
                 mapList = BeanMapUtils.objectToMap(entityList);
             } else if (compType.equals(RepoCompVOFieldConstant.value_comp_type_file_template)) {
-                mapList = this.fileService.extendCompFileCount(entityList);
+                mapList = this.csvFileService.extendCompFileCount(entityList);
             } else if (compType.equals(RepoCompVOFieldConstant.value_comp_type_jar_decoder)) {
-                mapList = this.jarFileInfoService.extendCompJarInfo(entityList);
+                mapList = this.jarFileService.extendCompJarInfo(entityList);
             } else {
                 mapList = BeanMapUtils.objectToMap(entityList);
             }
@@ -100,7 +106,7 @@ public class RepoLocalCompListController {
     private AjaxResult insertOrUpdate(Map<String, Object> params) {
         try {
             // 构造作为参数的实体
-            RepoCompEntity entity = this.compService.buildCompEntity(params);
+            RepoCompEntity entity = this.compBuilder.buildCompEntity(params);
 
             // 简单验证实体的合法性
             if (entity.hasNullServiceKey()) {
@@ -156,7 +162,7 @@ public class RepoLocalCompListController {
             }
 
             // 上传组件
-            Map<String, Object> result = this.compService.uploadEntity(Long.parseLong(id.toString()), commitKey, description);
+            Map<String, Object> result = this.compUpload.uploadEntity(Long.parseLong(id.toString()), commitKey, description);
 
             return JsonUtils.buildObject(result, AjaxResult.class);
         } catch (Exception e) {
@@ -173,7 +179,7 @@ public class RepoLocalCompListController {
             }
 
             // 上传组件
-            Map<String, Object> result = this.compService.syncEntity(Long.parseLong(id.toString()));
+            Map<String, Object> result = this.compSync.syncEntity(Long.parseLong(id.toString()));
 
             return JsonUtils.buildObject(result, AjaxResult.class);
         } catch (Exception e) {
