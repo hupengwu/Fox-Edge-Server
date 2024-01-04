@@ -102,7 +102,6 @@ public class JspEngine {
 
             // 创建一个Tcp Server实例
             NettyTcpServer.createServer(serverPort, splitNotify.getSplitMessageHandler(), channelHandler);
-
         } catch (Exception e) {
             this.consoleService.error("scanJarFile出现异常:" + e.getMessage());
         }

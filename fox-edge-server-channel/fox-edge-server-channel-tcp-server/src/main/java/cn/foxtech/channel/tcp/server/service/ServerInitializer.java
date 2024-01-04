@@ -7,6 +7,7 @@ import cn.foxtech.common.entity.manager.LocalConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.device.protocol.v1.utils.MethodUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,11 +20,12 @@ import java.util.Map;
  */
 @Component
 public class ServerInitializer {
+    private final Logger logger = Logger.getLogger(this.getClass());
     /**
      * 日志
      */
     @Autowired
-    private RedisConsoleService consoleService;
+    private RedisConsoleService console;
 
     @Autowired
     private ChannelProperties channelProperties;
@@ -79,9 +81,14 @@ public class ServerInitializer {
                     this.jspEngine.startJspEngine(serverPort, engine);
                 }
 
+                String message = "启动服务端口:" + serverPort;
+                this.logger.info(message);
+                this.console.info(message);
+
             } catch (Exception e) {
-                e.printStackTrace();
-                this.consoleService.error("scanJarFile出现异常:" + e.getMessage());
+                String message = "scanJarFile出现异常:" + e.getMessage();
+                this.logger.error(message);
+                this.console.error(message);
             }
         }
     }
