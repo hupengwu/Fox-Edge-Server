@@ -1,10 +1,12 @@
 package cn.foxtech.device.script.engine;
 
+import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.constants.FoxEdgeConstant;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.script.ScriptEngine;
@@ -14,6 +16,9 @@ import java.util.Map;
 
 @Component
 public class ScriptEngineOperator {
+    @Autowired
+    private InitialConfigService initialConfigService;
+
     /**
      * 设置环境变量
      *
@@ -25,6 +30,9 @@ public class ScriptEngineOperator {
             // 先将Map转成JSP能够处理的JSON字符串
             engine.put("fox_edge_param", JsonUtils.buildJson(params));
         } catch (Exception e) {
+            // 打印日志
+            this.printLogger(e.getMessage());
+
             throw new ProtocolException(e.getMessage());
         }
     }
@@ -48,6 +56,9 @@ public class ScriptEngineOperator {
 
             throw new ServiceException("对通道返回的数据，只支持String、Map、List三种数据结构！");
         } catch (Exception e) {
+            // 打印日志
+            this.printLogger(e.getMessage());
+
             throw new ProtocolException(e.getMessage());
         }
     }
@@ -74,6 +85,9 @@ public class ScriptEngineOperator {
 
             return result;
         } catch (Exception e) {
+            // 打印日志
+            this.printLogger(e.getMessage());
+
             throw new ProtocolException(e.getMessage());
         }
     }
@@ -98,6 +112,9 @@ public class ScriptEngineOperator {
             result.put(FoxEdgeConstant.DATA_TAG, statusValue);
             return result;
         } catch (Exception e) {
+            // 打印日志
+            this.printLogger(e.getMessage());
+
             throw new ProtocolException(e.getMessage());
         }
     }
@@ -119,6 +136,9 @@ public class ScriptEngineOperator {
             return result;
 
         } catch (Exception e) {
+            // 打印日志
+            this.printLogger(e.getMessage());
+
             throw new ProtocolException(e.getMessage());
         }
     }
@@ -143,7 +163,23 @@ public class ScriptEngineOperator {
                 return out;
             }
         } catch (Exception e) {
+            // 打印日志
+            this.printLogger(e.getMessage());
+
             throw new ServiceException(e.getMessage());
         }
+    }
+
+    private void printLogger(Object recv) {
+        if (recv == null) {
+            return;
+        }
+
+        if (!Boolean.TRUE.equals(this.initialConfigService.getConfigParam("serverConfig").get("logger"))) {
+            return;
+        }
+
+
+        this.initialConfigService.getLogger().info(recv.toString());
     }
 }

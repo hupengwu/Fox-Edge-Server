@@ -4,11 +4,14 @@ import cn.foxtech.channel.socket.core.service.ChannelManager;
 import cn.foxtech.channel.tcp.server.service.ReportService;
 import cn.foxtech.common.utils.netty.handler.SocketChannelHandler;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
+import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 import cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.MethodHandle;
 
 public class ChannelHandler extends SocketChannelHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelHandler.class);
@@ -24,6 +27,9 @@ public class ChannelHandler extends SocketChannelHandler {
 
     @Setter
     private boolean logger = false;
+
+    @Setter
+    private String returnText = "";
 
 
     /**
@@ -64,12 +70,25 @@ public class ChannelHandler extends SocketChannelHandler {
             // 从报文总获得业务特征信息
             serviceKey = this.serviceKeyHandler.getServiceKey(data);
 
+            // 检查：key是否为空
+            if (MethodUtils.hasEmpty(serviceKey)){
+                return;
+            }
+
             // 标记:serviceKey信息
             this.channelManager.setServiceKey(ctx, serviceKey);
         }
 
-        // 保存PDU到接收缓存
-        this.reportService.push(serviceKey, (byte[]) msg);
+        if (MethodUtils.hasEmpty(this.returnText)){
+            // 保存PDU到接收缓存
+            this.reportService.push(serviceKey, (byte[]) msg);
+        }
+        else {
+            String message = new String((byte[]) msg, returnText);
+            this.reportService.push(serviceKey, message);
+        }
+
+
     }
 
     /**

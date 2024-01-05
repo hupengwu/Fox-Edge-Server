@@ -1,13 +1,13 @@
 package cn.foxtech.kernel.system.service.controller;
 
+import cn.foxtech.common.entity.constant.DeviceRecordVOFieldConstant;
+import cn.foxtech.common.entity.entity.DeviceRecordEntity;
 import cn.foxtech.common.entity.entity.DeviceRecordPo;
+import cn.foxtech.common.entity.service.devicerecord.DeviceRecordEntityMapper;
+import cn.foxtech.common.entity.service.devicerecord.DeviceRecordMaker;
 import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
-import cn.foxtech.common.entity.constant.DeviceRecordVOFieldConstant;
-import cn.foxtech.common.entity.entity.DeviceRecordEntity;
-import cn.foxtech.common.entity.service.devicerecord.DeviceRecordEntityMapper;
-import cn.foxtech.common.entity.service.devicerecord.DeviceRecordMaker;
 import cn.foxtech.core.domain.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

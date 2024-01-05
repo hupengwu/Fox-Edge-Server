@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.script.Invocable;
 import javax.script.ScriptEngine;
 
 /**
@@ -36,10 +37,11 @@ public class ScriptServiceKey {
                 data = PackUtil.byteArrayToHexString(pack);
             }
 
-            String serviceKey = (String) scriptEngine.eval("getServiceKey('" + data + "')");
+            Invocable invoke = (Invocable) scriptEngine;
+            String serviceKey = (String)invoke.invokeFunction("getServiceKey", data);
             return serviceKey;
         } catch (Exception e) {
-            return "null";
+            return "";
         }
     }
 

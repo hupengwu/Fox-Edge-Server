@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.script.Invocable;
 import javax.script.ScriptEngine;
 
 /**
@@ -70,7 +71,9 @@ public class ScriptSplitMessage {
             } else {
                 data = PackUtil.byteArrayToHexString(pack);
             }
-            return (Boolean) scriptEngine.eval("isInvalidPack('" + data + "')");
+
+            Invocable invoke = (Invocable) scriptEngine;
+            return (Boolean)invoke.invokeFunction("isInvalidPack", data);
         } catch (Exception e) {
             return true;
         }

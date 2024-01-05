@@ -99,7 +99,7 @@ public class RepoLocalOperateService {
         Boolean polling = (Boolean) params.get(OperateVOFieldConstant.field_polling);
         Integer timeout = (Integer) params.get(OperateVOFieldConstant.field_timeout);
         Map<String, Object> engineParam = (Map<String, Object>) params.get(OperateVOFieldConstant.field_engine_param);
-        String description = (String) params.get(OperateVOFieldConstant.field_description);
+        String description = (String) engineParam.get(OperateVOFieldConstant.field_description);
 
         // 简单校验参数
         if (MethodUtils.hasEmpty(compId, operateName, operateMode, dataType, serviceType, engineType, polling, timeout)) {

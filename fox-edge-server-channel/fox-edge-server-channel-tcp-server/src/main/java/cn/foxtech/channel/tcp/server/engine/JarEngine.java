@@ -13,6 +13,7 @@ import cn.foxtech.device.protocol.RootLocation;
 import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 import cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler;
 import cn.foxtech.device.protocol.v1.utils.netty.SplitMessageHandler;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,11 +27,13 @@ import java.util.Set;
  */
 @Component
 public class JarEngine {
+    private final Logger logger = Logger.getLogger(this.getClass());
+
     /**
      * 日志
      */
     @Autowired
-    private RedisConsoleService consoleService;
+    private RedisConsoleService console;
 
     @Autowired
     private ReportService reportService;
@@ -56,14 +59,18 @@ public class JarEngine {
             // 取出splitHandler的java类
             Class splitHandlerClass = this.getSplitHandler(classSet, splitHandler);
             if (splitHandlerClass == null) {
-                this.consoleService.error("找不到splitHandler对应的JAVA类：" + splitHandler);
+                String message = "找不到splitHandler对应的JAVA类：" + splitHandler;
+                this.console.error(message);
+                this.logger.error(message);
                 return;
             }
 
             // 取出keyHandler的java类
             Class keyHandlerClass = this.getKeyHandler(classSet, keyHandler);
             if (keyHandlerClass == null) {
-                this.consoleService.error("找不到keyHandler对应的JAVA类：" + splitHandler);
+                String message = "找不到keyHandler对应的JAVA类：" + splitHandler;
+                this.console.error(message);
+                this.logger.error(message);
                 return;
             }
 
@@ -83,7 +90,10 @@ public class JarEngine {
             NettyTcpServer.createServer(serverPort, splitMessageHandler, channelHandler);
         } catch (Exception e) {
             e.printStackTrace();
-            this.consoleService.error("scanJarFile出现异常:" + e.getMessage());
+
+            String message = "scanJarFile出现异常：" + e.getMessage();
+            this.console.error(message);
+            this.logger.error(message);
         }
     }
 
