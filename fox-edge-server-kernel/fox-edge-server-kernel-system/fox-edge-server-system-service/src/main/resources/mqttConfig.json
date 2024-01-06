@@ -1,0 +1,39 @@
+{
+  "configValue": {
+    "mqtt": {
+      "host": "39.108.137.38",
+      "name": "Mica-Mqtt-Client",
+      "port": 1883,
+      "enabled": true,
+      "timeout": 5,
+      "use-ssl": false,
+      "version": "mqtt_3_1_1",
+      "clientId": "",
+      "password": "12345678",
+      "reconnect": true,
+      "user-name": "mica",
+      "re-interval": 5000,
+      "clean-session": true,
+      "keep-alive-secs": 60,
+      "buffer-allocator": "heap",
+      "read-buffer-size": "8KB",
+      "max-bytes-in-message": "10MB"
+    },
+    "topic": {
+      "request": "/fox/proxy/c2e/{edgeId}/forward",
+      "respond": "/fox/proxy/e2c/forward/{edgeId}"
+    }
+  },
+  "configParam": {
+    "list": [
+      {
+        "saveMode": "Raw",
+        "showMode": "Security",
+        "fieldName": "cloud.mqtt.password",
+        "valueType": "string",
+        "defaultValue": ""
+      }
+    ]
+  },
+  "remark": ""
+}

@@ -5,6 +5,7 @@ import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.kernel.system.common.initialize.CommonInitialize;
 import cn.foxtech.kernel.system.common.scheduler.PeriodTasksScheduler;
 import cn.foxtech.kernel.system.repository.initialize.RepoInitialize;
+import cn.foxtech.kernel.system.service.mqtt.MqttProxyService;
 import cn.foxtech.kernel.system.service.task.CleanCacheTask;
 import cn.foxtech.kernel.system.service.task.CleanLogFileTask;
 import cn.foxtech.kernel.system.service.task.CleanTimeOutTask;
@@ -57,6 +58,9 @@ public class Initialize implements CommandLineRunner {
     @Autowired
     private CleanTimeOutTask cleanTimeOutTask;
 
+    @Autowired
+    private MqttProxyService mqttProxyService;
+
     public void run(String... args) {
         String message = "------------------------Initialize初始化开始！------------------------";
         console.info(message);
@@ -65,6 +69,8 @@ public class Initialize implements CommandLineRunner {
         this.commonInitialize.initialize();
 
         this.repoInitialize.initialize();
+
+        this.mqttProxyService.initialize();
 
         this.createPeriodTask();
 

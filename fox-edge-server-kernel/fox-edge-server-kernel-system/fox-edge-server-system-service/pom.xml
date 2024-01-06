@@ -148,6 +148,12 @@
             <version>${fox-edge-server.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-common-mqtt</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
