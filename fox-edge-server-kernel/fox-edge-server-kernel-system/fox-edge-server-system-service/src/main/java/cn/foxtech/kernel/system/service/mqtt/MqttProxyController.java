@@ -108,23 +108,6 @@ public class MqttProxyController {
                     Maps.setValue(this.controllerMethod, methodKey, "method", method);
                     continue;
                 }
-                if (method.isAnnotationPresent(RequestMapping.class)) {
-                    RequestMapping operAnnotation = method.getAnnotation(RequestMapping.class);
-                    String[] methodPaths = operAnnotation.value();
-                    if (methodPaths == null || methodPaths.length == 0) {
-                        continue;
-                    }
-
-                    if (!classPath.equals("/kernel/manager/proxy-redis-topic")) {
-                        continue;
-                    }
-
-                    String res = classPath;
-                    String methodKey = res + ":" + "**";
-                    Maps.setValue(this.controllerMethod, methodKey, "bean", bean);
-                    Maps.setValue(this.controllerMethod, methodKey, "method", method);
-                    continue;
-                }
             }
         }
     }
