@@ -21,13 +21,20 @@
         <module>fox-edge-server-protocol-bass260zj</module>
         <module>fox-edge-server-protocol-cjt188-core</module>
         <module>fox-edge-server-protocol-cjt188</module>
+        <module>fox-edge-server-protocol-cetups</module>
         <module>fox-edge-server-protocol-dlt645-core</module>
         <module>fox-edge-server-protocol-dlt645-1997</module>
         <module>fox-edge-server-protocol-dahua-fire-core</module>
         <module>fox-edge-server-protocol-lrw</module>
         <module>fox-edge-server-protocol-gdana-digester</module>
+        <module>fox-edge-server-protocol-hj212-2017</module>
+        <module>fox-edge-server-protocol-hikvision-core</module>
         <module>fox-edge-server-protocol-modbus</module>
         <module>fox-edge-server-protocol-modbus-core</module>
+        <module>fox-edge-server-protocol-mitsubishi-plc-fx-core</module>
+        <module>fox-edge-server-protocol-mitsubishi-plc-fx</module>
+        <module>fox-edge-server-protocol-omron-fins-core</module>
+        <module>fox-edge-server-protocol-omron-fins</module>
         <module>fox-edge-server-protocol-zs-sht30-1t-1h</module>
         <module>fox-edge-server-protocol-zktl-air6in1</module>
         <module>fox-edge-server-protocol-zktl-air5in1</module>
@@ -39,14 +46,9 @@
         <module>fox-edge-server-protocol-iec104-core</module>
         <module>fox-edge-server-protocol-iec104-slaver</module>
         <module>fox-edge-server-protocol-zxdu58</module>
-        <module>fox-edge-server-protocol-cetups</module>
         <module>fox-edge-server-protocol-shmeter</module>
         <module>fox-edge-server-protocol-s7plc-core</module>
         <module>fox-edge-server-protocol-s7plc</module>
-        <module>fox-edge-server-protocol-mitsubishi-plc-fx-core</module>
-        <module>fox-edge-server-protocol-mitsubishi-plc-fx</module>
-        <module>fox-edge-server-protocol-omron-fins-core</module>
-        <module>fox-edge-server-protocol-omron-fins</module>
     </modules>
 
 

@@ -35,5 +35,5 @@
       }
     ]
   },
-  "remark": ""
+  "remark": "mqtt：mqtt的连接参数\n\ntopic/request：请求topic，fox-edge订阅了这个接口，云端服务可以向这个topic发出请求\ntopic/respond：响应topic，云端服务可以订阅这个接口，fox-edge会通过该topic返回对应的操作结果\n\nedgeId：这是fox-edge的设备ID，可以通过首页查看这个ID\n"
 }
