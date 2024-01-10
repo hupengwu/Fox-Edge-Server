@@ -128,13 +128,22 @@ public class ByteUtils {
         if (msbFirst) {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < length; i++) {
-                sb.append((char) data[i + offset]);
+                byte by = data[i + offset];
+                if (by == 0) {
+                    break;
+                }
+                sb.append((char) by);
             }
             return sb.toString();
         } else {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < length; i++) {
-                sb.append((char) data[i + length + offset - 1]);
+                byte by = data[i + length + offset - 1];
+                if (by == 0) {
+                    break;
+                }
+
+                sb.append((char) by);
             }
             return sb.toString();
         }

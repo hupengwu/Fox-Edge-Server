@@ -1,7 +1,7 @@
-package cn.foxtech.device.protocol.v1.dahua.fire.core.entity.infobj;
+package cn.foxtech.device.protocol.v1.hikvision.fire.core.entity.infobj;
 
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
-import cn.foxtech.device.protocol.v1.dahua.fire.core.utils.TimeUtil;
+import cn.foxtech.device.protocol.v1.hikvision.fire.core.utils.TimeUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +27,7 @@ public class InfObjSyncClockEntity extends InfObjEntity {
 
 
         int index = 0;
+
 
         // 时间标签(6 字节)
         entity.time = TimeUtil.decodeTime6byte(data, index);

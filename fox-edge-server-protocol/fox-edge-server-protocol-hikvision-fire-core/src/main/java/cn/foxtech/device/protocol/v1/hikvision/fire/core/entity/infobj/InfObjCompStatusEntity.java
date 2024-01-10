@@ -1,8 +1,8 @@
-package cn.foxtech.device.protocol.v1.dahua.fire.core.entity.infobj;
+package cn.foxtech.device.protocol.v1.hikvision.fire.core.entity.infobj;
 
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
-import cn.foxtech.device.protocol.v1.dahua.fire.core.utils.IntegerUtil;
-import cn.foxtech.device.protocol.v1.dahua.fire.core.utils.TimeUtil;
+import cn.foxtech.device.protocol.v1.hikvision.fire.core.utils.IntegerUtil;
+import cn.foxtech.device.protocol.v1.hikvision.fire.core.utils.TimeUtil;
 import cn.foxtech.device.protocol.v1.utils.ByteUtils;
 import lombok.AccessLevel;
 import lombok.Getter;

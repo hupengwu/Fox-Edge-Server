@@ -1,7 +1,8 @@
-package cn.foxtech.device.protocol.v1.dahua.fire.core.entity.infobj;
+package cn.foxtech.device.protocol.v1.hikvision.fire.core.entity.infobj;
 
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
-import cn.foxtech.device.protocol.v1.dahua.fire.core.utils.TimeUtil;
+import cn.foxtech.device.protocol.v1.hikvision.fire.core.utils.IntegerUtil;
+import cn.foxtech.device.protocol.v1.hikvision.fire.core.utils.TimeUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,13 +15,26 @@ import java.util.List;
  */
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
-public class InfObjSyncClockEntity extends InfObjEntity {
+public class InfObjSysStatusEntity extends InfObjEntity {
+    /**
+     * 系统类型（1 字节）
+     */
+    private int sysType = 0;
+    /**
+     * 系统地址（1 字节）
+     */
+    private int sysAddress = 0;
+    /**
+     * 系统状态（2 字节）
+     */
+    private int sysStatus = 0;
+
     /**
      * 时间标签(6 字节)：控制单元中时间标签传输，秒在前，年在后，取自系统当前时间，如 15:14:17 11/9/19；
      */
     private String time = "2000-01-01 00:00:00";
 
-    public static void decodeEntity(byte[] data, InfObjSyncClockEntity entity) {
+    public static void decodeEntity(byte[] data, InfObjSysStatusEntity entity) {
         if (data.length != entity.getSize()) {
             throw new ProtocolException("信息对象" + entity.getClass().getSimpleName() + "，必须长度为" + entity.getSize());
         }
@@ -28,17 +42,37 @@ public class InfObjSyncClockEntity extends InfObjEntity {
 
         int index = 0;
 
+        // 系统类型(1 字节)
+        entity.sysType = data[index++] & 0xff;
+
+        // 系统地址(1 字节)
+        entity.sysAddress = data[index++] & 0xff;
+
+        // 系统状态(2 字节)
+        entity.sysStatus = IntegerUtil.decodeInteger2byte(data, index);
+        index += 2;
+
         // 时间标签(6 字节)
         entity.time = TimeUtil.decodeTime6byte(data, index);
         index += 6;
     }
 
-    public static byte[] encodeEntity(InfObjSyncClockEntity entity) {
+    public static byte[] encodeEntity(InfObjSysStatusEntity entity) {
         byte[] data = new byte[entity.getSize()];
 
 
         int index = 0;
 
+        // 系统类型(1 字节)
+        data[index++] = (byte) entity.sysType;
+
+        // 系统地址(1 字节)
+        data[index++] = (byte) entity.sysAddress;
+
+
+        // 系统状态(2 字节)
+        IntegerUtil.encodeInteger2byte(entity.sysStatus, data, index);
+        index += 2;
 
         // 时间标签(6 字节)
         TimeUtil.encodeTime6byte(entity.time, data, index);
@@ -68,9 +102,8 @@ public class InfObjSyncClockEntity extends InfObjEntity {
     }
 
     public int getSize() {
-        return 0 + 6;
+        return 4 + 6;
     }
-
 
     @Override
     public void decode(byte[] data) {

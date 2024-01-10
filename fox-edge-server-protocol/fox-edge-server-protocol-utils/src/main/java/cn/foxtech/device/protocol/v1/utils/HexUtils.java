@@ -30,7 +30,7 @@ public class HexUtils {
     public static byte[] hexStringToByteArray(String hexString) {
         String string = hexString.replaceAll(" ", "");
         final byte[] byteArray = new byte[string.length() / 2];
-        hexStringToByteArray(hexString, byteArray, 0);
+        hexStringToByteArray(string, byteArray, 0);
         return byteArray;
     }
 

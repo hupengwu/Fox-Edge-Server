@@ -1,7 +1,6 @@
-package cn.foxtech.device.protocol.v1.dahua.fire.core.entity.infobj;
+package cn.foxtech.device.protocol.v1.hikvision.fire.core.entity.infobj;
 
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
-import cn.foxtech.device.protocol.v1.dahua.fire.core.utils.TimeUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,13 +13,13 @@ import java.util.List;
  */
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
-public class InfObjSyncClockEntity extends InfObjEntity {
+public class InfObjSetInspectionEntity extends InfObjEntity {
     /**
-     * 时间标签(6 字节)：控制单元中时间标签传输，秒在前，年在后，取自系统当前时间，如 15:14:17 11/9/19；
+     * 查 岗 应 答 超 时 设 定 时 间 ( 单位:min)（1 字节）
      */
-    private String time = "2000-01-01 00:00:00";
+    private int period = 1;
 
-    public static void decodeEntity(byte[] data, InfObjSyncClockEntity entity) {
+    public static void decodeEntity(byte[] data, InfObjSetInspectionEntity entity) {
         if (data.length != entity.getSize()) {
             throw new ProtocolException("信息对象" + entity.getClass().getSimpleName() + "，必须长度为" + entity.getSize());
         }
@@ -28,21 +27,18 @@ public class InfObjSyncClockEntity extends InfObjEntity {
 
         int index = 0;
 
-        // 时间标签(6 字节)
-        entity.time = TimeUtil.decodeTime6byte(data, index);
-        index += 6;
+        // 查 岗 应 答 超 时 设 定 时 间 ( 单位:min)（1 字节）
+        entity.period = data[index++] & 0xff;
     }
 
-    public static byte[] encodeEntity(InfObjSyncClockEntity entity) {
+    public static byte[] encodeEntity(InfObjSetInspectionEntity entity) {
         byte[] data = new byte[entity.getSize()];
 
 
         int index = 0;
 
-
-        // 时间标签(6 字节)
-        TimeUtil.encodeTime6byte(entity.time, data, index);
-        index += 6;
+        // 系统类型(1 字节)
+        data[index++] = (byte) entity.period;
 
         return data;
     }
@@ -68,7 +64,7 @@ public class InfObjSyncClockEntity extends InfObjEntity {
     }
 
     public int getSize() {
-        return 0 + 6;
+        return 1;
     }
 
 

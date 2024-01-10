@@ -102,7 +102,7 @@ public class InfObjSysStatusEntity extends InfObjEntity {
     }
 
     public int getSize() {
-        return 10;
+        return 4 + 6;
     }
 
     @Override
