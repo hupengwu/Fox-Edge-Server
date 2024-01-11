@@ -19,9 +19,9 @@ public class SerialPortWin32 implements ISerialPort {
     private static final Win32API KERNELPLUS = Win32API.INSTANCE;
 
     /**
-     * 无效指针
+     * 无效指针：4294967295是32位下的-1
      */
-    private static final Pointer INVALID_HANDLE_VALUE = Pointer.createConstant(-1);
+    private static final Pointer INVALID_HANDLE_VALUE = Pointer.createConstant(4294967295L);
 
     //串口句柄
     private WinNT.HANDLE handle = null;
@@ -129,11 +129,17 @@ public class SerialPortWin32 implements ISerialPort {
      */
     @Override
     public boolean open(String szPort) {
+        if (szPort.startsWith("COM")) {
+            szPort = "\\\\.\\COM" + szPort.substring("COM".length());
+        }
+
+
         //用异步方式读写串口
         this.handle = KERNEL.CreateFile(szPort, WinNT.GENERIC_READ | WinNT.GENERIC_WRITE, 0, null, WinNT.OPEN_EXISTING, WinNT.FILE_ATTRIBUTE_NORMAL, null);
         if (this.handle.getPointer().equals(INVALID_HANDLE_VALUE)) {
             return false;
         }
+
 
         this.name = szPort;
 
