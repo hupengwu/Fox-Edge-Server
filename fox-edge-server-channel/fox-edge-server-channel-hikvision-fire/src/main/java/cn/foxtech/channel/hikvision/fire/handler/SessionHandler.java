@@ -65,7 +65,11 @@ public class SessionHandler {
     }
 
     private void report(String serviceKey, TcpPduEntity pduEntity) throws JsonProcessingException {
-      //  String body = JsonUtils.buildJson(pduEntity);
+        if (this.logger) {
+            String message = "report: " + JsonUtils.buildJson(pduEntity);
+            LOGGER.info(message);
+            console.info(message);
+        }
 
         // 上报数据
         this.reportService.push(serviceKey, pduEntity);

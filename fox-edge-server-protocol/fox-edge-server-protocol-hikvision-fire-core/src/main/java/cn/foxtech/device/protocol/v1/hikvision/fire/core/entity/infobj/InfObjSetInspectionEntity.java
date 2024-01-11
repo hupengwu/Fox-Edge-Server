@@ -20,8 +20,8 @@ public class InfObjSetInspectionEntity extends InfObjEntity {
     private int period = 1;
 
     public static void decodeEntity(byte[] data, InfObjSetInspectionEntity entity) {
-        if (data.length != entity.getSize()) {
-            throw new ProtocolException("信息对象" + entity.getClass().getSimpleName() + "，必须长度为" + entity.getSize());
+        if (data.length != entity.size()) {
+            throw new ProtocolException("信息对象" + entity.getClass().getSimpleName() + "，必须长度为" + entity.size());
         }
 
 
@@ -32,7 +32,7 @@ public class InfObjSetInspectionEntity extends InfObjEntity {
     }
 
     public static byte[] encodeEntity(InfObjSetInspectionEntity entity) {
-        byte[] data = new byte[entity.getSize()];
+        byte[] data = new byte[entity.size()];
 
 
         int index = 0;
@@ -49,7 +49,7 @@ public class InfObjSetInspectionEntity extends InfObjEntity {
         int count = data[offset + 1];
 
         // 类型标志[1 字节]+信息体数量[1 字节]+多个信息体对象[N 字节]
-        int length = count * this.getSize();
+        int length = count * this.size();
 
         if (aduLength != 2 + length) {
             throw new ProtocolException("验证ADU的长度与具体的格式，不匹配");
@@ -58,12 +58,12 @@ public class InfObjSetInspectionEntity extends InfObjEntity {
         // 返回列表
         List<Integer> aduList = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            aduList.add(this.getSize());
+            aduList.add(this.size());
         }
         return aduList;
     }
 
-    public int getSize() {
+    public int size() {
         return 1;
     }
 

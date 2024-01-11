@@ -38,7 +38,7 @@ public class Test {
         device.getCtrlEntity().setDstAddr(AddressUtil.PLATFORM_DEFAULT);
         device.getCtrlEntity().setCmd(CmdType.confirm.getCmd());
         device.setAduEntity(new AduEntity());
-        device.getAduEntity().setType(AduType.systemStatus);
+        device.getAduEntity().setType(AduType.systemStatus.getType());
         device.getAduEntity().getInfObjEntities().add(new InfObjSysStatusEntity());
         device.getAduEntity().getInfObjEntities().add(new InfObjSysStatusEntity());
         data = TcpPduEntity.encodeEntity(device);
@@ -69,7 +69,7 @@ public class Test {
         device.getCtrlEntity().setDstAddr(AddressUtil.PLATFORM_DEFAULT);
         device.getCtrlEntity().setCmd(CmdType.confirm.getCmd());
         device.setAduEntity(new AduEntity());
-        device.getAduEntity().setType(AduType.compStatus);
+        device.getAduEntity().setType(AduType.compStatus.getType());
         device.getAduEntity().getInfObjEntities().add(new InfObjCompStatusEntity());
         device.getAduEntity().getInfObjEntities().add(new InfObjCompStatusEntity());
         data = TcpPduEntity.encodeEntity(device);
@@ -88,7 +88,7 @@ public class Test {
         device.getCtrlEntity().setDstAddr(AddressUtil.PLATFORM_DEFAULT);
         device.getCtrlEntity().setCmd(CmdType.confirm.getCmd());
         device.setAduEntity(new AduEntity());
-        device.getAduEntity().setType(AduType.deviceStatus);
+        device.getAduEntity().setType(AduType.deviceStatus.getType());
         device.getAduEntity().getInfObjEntities().add(new InfObjDeviceStatusEntity());
         data = TcpPduEntity.encodeEntity(device);
 
@@ -106,7 +106,7 @@ public class Test {
         device.getCtrlEntity().setDstAddr(AddressUtil.PLATFORM_DEFAULT);
         device.getCtrlEntity().setCmd(CmdType.confirm.getCmd());
         device.setAduEntity(new AduEntity());
-        device.getAduEntity().setType(AduType.deviceOperate);
+        device.getAduEntity().setType(AduType.deviceOperate.getType());
         device.getAduEntity().getInfObjEntities().add(new InfObjDeviceOperateEntity());
         data = TcpPduEntity.encodeEntity(device);
 
@@ -124,7 +124,7 @@ public class Test {
         device.getCtrlEntity().setDstAddr(AddressUtil.PLATFORM_DEFAULT);
         device.getCtrlEntity().setCmd(CmdType.confirm.getCmd());
         device.setAduEntity(new AduEntity());
-        device.getAduEntity().setType(AduType.syncClock);
+        device.getAduEntity().setType(AduType.syncClock.getType());
         device.getAduEntity().getInfObjEntities().add(new InfObjSyncClockEntity());
         data = TcpPduEntity.encodeEntity(device);
 
@@ -142,7 +142,7 @@ public class Test {
         device.getCtrlEntity().setDstAddr(AddressUtil.PLATFORM_DEFAULT);
         device.getCtrlEntity().setCmd(CmdType.confirm.getCmd());
         device.setAduEntity(new AduEntity());
-        device.getAduEntity().setType(AduType.setInspection);
+        device.getAduEntity().setType(AduType.setInspection.getType());
         device.getAduEntity().getInfObjEntities().add(new InfObjSetInspectionEntity());
         data = TcpPduEntity.encodeEntity(device);
 

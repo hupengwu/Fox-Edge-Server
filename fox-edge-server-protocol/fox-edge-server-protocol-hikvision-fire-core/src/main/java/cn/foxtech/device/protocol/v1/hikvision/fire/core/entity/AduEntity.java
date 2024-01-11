@@ -19,7 +19,7 @@ public class AduEntity {
     /**
      * 类型：AduType
      */
-    private AduType type = AduType.systemStatus;
+    private int type = 0;
     /**
      * 信息对象列表
      */
@@ -41,10 +41,7 @@ public class AduEntity {
         int index = 0;
 
         // 类型标志（1 字节）
-        if (aduEntity.type.getType() == null) {
-            throw new ProtocolException("类型标志，不允许为空!");
-        }
-        data[index++] = aduEntity.type.getType().byteValue();
+        data[index++] = (byte) aduEntity.type;
 
         // 信息对象数目（1 字节）
         data[index++] = (byte) aduEntity.infObjEntities.size();
@@ -67,19 +64,16 @@ public class AduEntity {
 
         // 类型标志（1 字节）
         int type = data[index++] & 0xff;
-        aduEntity.type = AduType.getEnum(type);
-        if (aduEntity.type == null) {
-            throw new ProtocolException("不支持的命令字:" + String.format("%02X", cmd) + ",类型标识" + String.format("%02X", type));
-        }
+        aduEntity.type = type;
 
         // 信息对象数目（1 字节）
         int count = data[index++] & 0xff;
 
 
         // 获得对应的class
-        Class clazz = AduInfObjMap.getInfObjClass(aduEntity.type);
+        Class clazz = AduInfObjMap.getInfObjClass(AduType.getEnum(aduEntity.type));
         if (clazz == null) {
-            throw new ProtocolException("不支持的类型标识" + String.format("%02X", aduEntity.type.getType()));
+            throw new ProtocolException("不支持的类型标识" + String.format("%02X", aduEntity.type));
         }
 
 
