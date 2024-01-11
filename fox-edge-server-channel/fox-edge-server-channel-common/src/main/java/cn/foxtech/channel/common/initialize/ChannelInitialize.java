@@ -1,7 +1,5 @@
 package cn.foxtech.channel.common.initialize;
 
-import cn.foxtech.channel.common.linker.LinkerMethodScanner;
-import cn.foxtech.channel.common.linker.LinkerScheduler;
 import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.common.scheduler.ChannelRedisScheduler;
 import cn.foxtech.channel.common.service.EntityManageService;
@@ -49,19 +47,8 @@ public class ChannelInitialize {
     @Autowired
     private EntityManageService entityManageService;
 
-
-    /**
-     * 简单链路
-     */
-    @Autowired
-    private LinkerScheduler linkerScheduler;
-
     @Autowired
     private ChannelProperties channelProperties;
-
-    @Autowired
-    private LinkerMethodScanner linkerMethodScanner;
-
 
     public void initialize() {
         Set<String> others = new HashSet<>();
@@ -91,15 +78,5 @@ public class ChannelInitialize {
 
         // 启动实体同步线程：该线程允许阻塞
         this.channelRedisScheduler.schedule();
-
-
-        // 开启链路模式
-        if (this.channelProperties.getLinkerMode()) {
-            this.linkerMethodScanner.loadJar();
-            this.linkerMethodScanner.scanMethod();
-
-            this.linkerScheduler.initialize();
-            this.linkerScheduler.schedule();
-        }
     }
 }

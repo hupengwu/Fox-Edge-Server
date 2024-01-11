@@ -2,7 +2,6 @@ package cn.foxtech.channel.common.scheduler;
 
 
 import cn.foxtech.channel.common.api.ChannelClientAPI;
-import cn.foxtech.channel.common.linker.LinkerManager;
 import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.common.service.EntityManageService;
 import cn.foxtech.common.entity.entity.BaseEntity;
@@ -97,10 +96,6 @@ public class ChannelRedisScheduler extends PeriodTaskService {
                 this.channelService.openChannel(channelEntity.getChannelName(), channelEntity.getChannelParam());
                 this.channelEntityMap.put(key, channelEntity);
 
-                // 标识链路失效
-                LinkerManager.registerChannel(channelEntity.getChannelName());
-
-
                 String message = "通道打开成功:" + key;
                 this.console.info(message);
                 logger.info(message);
@@ -115,9 +110,6 @@ public class ChannelRedisScheduler extends PeriodTaskService {
         for (String key : delList) {
             try {
                 ChannelEntity channelEntity = this.channelEntityMap.get(key);
-
-                // 标识链路失效
-                LinkerManager.unregisterChannel(channelEntity.getChannelName());
 
                 this.channelService.closeChannel(channelEntity.getChannelName(), channelEntity.getChannelParam());
                 this.channelEntityMap.remove(key);
