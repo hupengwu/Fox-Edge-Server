@@ -47,7 +47,6 @@ public class RepoCloudCompController {
     @Autowired
     private RepoLocalPathNameService pathNameService;
 
-
     /**
      * 周期任务调度器
      */
@@ -187,7 +186,7 @@ public class RepoCloudCompController {
                 throw new ServiceException("参数不能为空: modelType");
             }
 
-            this.periodTasksScheduler.insertPeriodTask(new RepoScanStatusTask(this.installService, this.installStatus, this.pathNameService, this.logger, modelType));
+            this.periodTasksScheduler.insertPeriodTask(new RepoScanStatusTask(this.installService, this.installStatus, this.cacheService, this.pathNameService, this.logger, modelType));
             return AjaxResult.success();
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());

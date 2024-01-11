@@ -23,7 +23,6 @@ public class RepoScanStatusTask extends PeriodTask {
 
     private final RepoLocalPathNameService pathNameService;
 
-    @Autowired
     private RepoCloudCacheService cacheService;
 
     private final String modelType;
@@ -31,9 +30,10 @@ public class RepoScanStatusTask extends PeriodTask {
     private RedisConsoleService logger;
 
 
-    public RepoScanStatusTask(RepoCloudInstallService installService, RepoCloudInstallStatus installStatus, RepoLocalPathNameService pathNameService,RedisConsoleService logger, String modelType) {
+    public RepoScanStatusTask(RepoCloudInstallService installService, RepoCloudInstallStatus installStatus,RepoCloudCacheService cacheService, RepoLocalPathNameService pathNameService,RedisConsoleService logger, String modelType) {
         this.installService = installService;
         this.installStatus = installStatus;
+        this.cacheService = cacheService;
         this.pathNameService = pathNameService;
         this.modelType = modelType;
         this.logger = logger;

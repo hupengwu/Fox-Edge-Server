@@ -34,6 +34,9 @@ public class RepoInitialize {
     private RepoCloudInstallStatus installStatus;
 
     @Autowired
+    private RepoCloudCacheService cacheService;
+
+    @Autowired
     private RepoLocalPathNameService pathNameService;
 
     @Autowired
@@ -70,10 +73,10 @@ public class RepoInitialize {
         this.periodTasksScheduler.insertPeriodTask(this.processStartTask);
 
         // 一次性任务
-        this.periodTasksScheduler.insertPeriodTask(new RepoScanStatusTask(this.installService, this.installStatus, this.pathNameService, this.logger, RepoCompConstant.repository_type_decoder));
-        this.periodTasksScheduler.insertPeriodTask(new RepoScanStatusTask(this.installService, this.installStatus, this.pathNameService, this.logger, RepoCompConstant.repository_type_template));
-        this.periodTasksScheduler.insertPeriodTask(new RepoScanStatusTask(this.installService, this.installStatus, this.pathNameService, this.logger, RepoCompConstant.repository_type_webpack));
-        this.periodTasksScheduler.insertPeriodTask(new RepoScanStatusTask(this.installService, this.installStatus, this.pathNameService, this.logger, RepoCompConstant.repository_type_service));
+        this.periodTasksScheduler.insertPeriodTask(new RepoScanStatusTask(this.installService, this.installStatus, this.cacheService, this.pathNameService, this.logger, RepoCompConstant.repository_type_decoder));
+        this.periodTasksScheduler.insertPeriodTask(new RepoScanStatusTask(this.installService, this.installStatus, this.cacheService, this.pathNameService, this.logger, RepoCompConstant.repository_type_template));
+        this.periodTasksScheduler.insertPeriodTask(new RepoScanStatusTask(this.installService, this.installStatus, this.cacheService, this.pathNameService, this.logger, RepoCompConstant.repository_type_webpack));
+        this.periodTasksScheduler.insertPeriodTask(new RepoScanStatusTask(this.installService, this.installStatus, this.cacheService, this.pathNameService, this.logger, RepoCompConstant.repository_type_service));
 
         // 一次性任务
         this.periodTasksScheduler.insertPeriodTask(new RepoAppScanTask(this.appServerService, ServiceVOFieldConstant.field_type_kernel));
