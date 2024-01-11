@@ -3,6 +3,7 @@ package cn.foxtech.channel.common.initialize;
 import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.common.scheduler.ChannelRedisScheduler;
 import cn.foxtech.channel.common.service.EntityManageService;
+import cn.foxtech.channel.common.service.RedisTopicReportToDeviceService;
 import cn.foxtech.channel.common.service.RedisTopicRespondDeviceService;
 import cn.foxtech.channel.common.service.RedisTopicRespondManagerService;
 import cn.foxtech.common.entity.entity.ChannelEntity;
@@ -41,6 +42,9 @@ public class ChannelInitialize {
     @Autowired
     private RedisTopicRespondDeviceService redisTopicRespondDeviceService;
 
+    @Autowired
+    private RedisTopicReportToDeviceService redisTopicReportToDeviceService;
+
     /**
      * 实体状态管理线程
      */
@@ -74,6 +78,7 @@ public class ChannelInitialize {
 
         // 启动独立的Topic发布线程：该线程不能阻塞
         this.redisTopicRespondDeviceService.schedule();
+        this.redisTopicReportToDeviceService.schedule();
         this.redisTopicRespondManagerService.schedule();
 
         // 启动实体同步线程：该线程允许阻塞

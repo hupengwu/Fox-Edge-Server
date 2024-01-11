@@ -40,6 +40,9 @@ public class ChannelService extends ChannelServerAPI {
     @Autowired
     private ExecuteService executeService;
 
+    @Autowired
+    private ReportService reportService;
+
     /**
      * 重新打开串口
      */
@@ -107,6 +110,6 @@ public class ChannelService extends ChannelServerAPI {
      */
     @Override
     public List<ChannelRespondVO> report() throws ServiceException {
-        return this.executeService.receive(constants.getChannelType(), this.channel2event);
+        return this.reportService.popAll(constants.getChannelType(), this.channel2event);
     }
 }

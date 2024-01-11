@@ -27,6 +27,15 @@ public class ChannelService extends ChannelServerAPI {
     @Autowired
     private ReportService reportService;
 
+    /**
+     * 指定ReportService为多线程之间通知的Lock对象
+     *
+     * @return 通知对象
+     */
+    @Override
+    public Object getReportLock() {
+        return this.reportService;
+    }
 
     /**
      * 打开通道：tcp-server是服务端，连接是自动触发的，不存在真正的打开和关闭操作
@@ -62,6 +71,7 @@ public class ChannelService extends ChannelServerAPI {
 
     /**
      * 执行发布操作：单向下行操作
+     *
      * @param requestVO 发布报文
      * @throws ServiceException 异常信息
      */
@@ -82,6 +92,7 @@ public class ChannelService extends ChannelServerAPI {
 
     /**
      * 主动上报操作：单向上行
+     *
      * @return 上行报文
      * @throws ServiceException 异常信息
      */

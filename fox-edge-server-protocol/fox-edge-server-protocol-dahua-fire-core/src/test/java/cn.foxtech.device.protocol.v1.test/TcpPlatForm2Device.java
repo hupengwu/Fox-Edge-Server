@@ -4,7 +4,7 @@ import cn.foxtech.device.protocol.v1.dahua.fire.core.entity.AduEntity;
 import cn.foxtech.device.protocol.v1.dahua.fire.core.entity.TcpPduEntity;
 import cn.foxtech.device.protocol.v1.dahua.fire.core.entity.infobj.*;
 import cn.foxtech.device.protocol.v1.dahua.fire.core.entity.infobj.object.TlvObject;
-import cn.foxtech.device.protocol.v1.dahua.fire.core.enums.CmdType;
+import cn.foxtech.device.protocol.v1.dahua.fire.core.enums.AduType;
 import cn.foxtech.device.protocol.v1.dahua.fire.core.utils.AddressUtil;
 
 public class TcpPlatForm2Device {
@@ -30,9 +30,9 @@ public class TcpPlatForm2Device {
         platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
-        platform.getCtrlEntity().setCmd(CmdType.syncClock.getCmd());
+        platform.getCtrlEntity().setCmd(AduType.syncClock.getCmd());
         platform.setAduEntity(new AduEntity());
-        platform.getAduEntity().setType(CmdType.syncClock);
+        platform.getAduEntity().setType(AduType.syncClock.getType());
         platform.getAduEntity().getInfObjEntities().add(new InfObjSyncClockEntity());
         data = TcpPduEntity.encodeEntity(platform);
 
@@ -45,7 +45,7 @@ public class TcpPlatForm2Device {
         device.getCtrlEntity().setDstAddr(platform.getCtrlEntity().getSrcAddr());
         device.setSn(platform.getSn());
         device.getCtrlEntity().setProtocolVersion(platform.getCtrlEntity().getProtocolVersion());
-        device.getCtrlEntity().setCmd(CmdType.confirm.getCmd());
+        device.getCtrlEntity().setCmd(AduType.confirm.getCmd());
         data = TcpPduEntity.encodeEntity(device);
 
         // 自我验证
@@ -60,9 +60,9 @@ public class TcpPlatForm2Device {
         platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
-        platform.getCtrlEntity().setCmd(CmdType.getParamFix.getCmd());
+        platform.getCtrlEntity().setCmd(AduType.getParamFix.getCmd());
         platform.setAduEntity(new AduEntity());
-        platform.getAduEntity().setType(CmdType.getParamFix);
+        platform.getAduEntity().setType(AduType.getParamFix.getType());
         platform.getAduEntity().getInfObjEntities().add(new InfObjGetParamFixEntity());
         data = TcpPduEntity.encodeEntity(platform);
 
@@ -75,7 +75,7 @@ public class TcpPlatForm2Device {
         device.getCtrlEntity().setDstAddr(platform.getCtrlEntity().getSrcAddr());
         device.setSn(platform.getSn());
         device.getCtrlEntity().setProtocolVersion(platform.getCtrlEntity().getProtocolVersion());
-        device.getCtrlEntity().setCmd(CmdType.confirm.getCmd());
+        device.getCtrlEntity().setCmd(AduType.confirm.getCmd());
         data = TcpPduEntity.encodeEntity(device);
 
         // 自我验证
@@ -90,9 +90,9 @@ public class TcpPlatForm2Device {
         platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
-        platform.getCtrlEntity().setCmd(CmdType.getParamVar.getCmd());
+        platform.getCtrlEntity().setCmd(AduType.getParamVar.getCmd());
         platform.setAduEntity(new AduEntity());
-        platform.getAduEntity().setType(CmdType.getParamVar);
+        platform.getAduEntity().setType(AduType.getParamVar.getType());
         platform.getAduEntity().getInfObjEntities().add(new InfObjGetParamVarEntity());
         data = TcpPduEntity.encodeEntity(platform);
 
@@ -108,9 +108,9 @@ public class TcpPlatForm2Device {
         platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
-        platform.getCtrlEntity().setCmd(CmdType.setParamFix.getCmd());
+        platform.getCtrlEntity().setCmd(AduType.setParamFix.getCmd());
         platform.setAduEntity(new AduEntity());
-        platform.getAduEntity().setType(CmdType.setParamFix);
+        platform.getAduEntity().setType(AduType.setParamFix.getType());
         platform.getAduEntity().getInfObjEntities().add(new InfObjSetParamFixEntity());
         data = TcpPduEntity.encodeEntity(platform);
 
@@ -126,9 +126,9 @@ public class TcpPlatForm2Device {
         platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
-        platform.getCtrlEntity().setCmd(CmdType.setParamVar.getCmd());
+        platform.getCtrlEntity().setCmd(AduType.setParamVar.getCmd());
         platform.setAduEntity(new AduEntity());
-        platform.getAduEntity().setType(CmdType.setParamVar);
+        platform.getAduEntity().setType(AduType.setParamVar.getType());
         platform.getAduEntity().getInfObjEntities().add(new InfObjSetParamVarEntity());
         data = TcpPduEntity.encodeEntity(platform);
 
@@ -144,9 +144,9 @@ public class TcpPlatForm2Device {
         platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
-        platform.getCtrlEntity().setCmd(CmdType.remoteMute.getCmd());
+        platform.getCtrlEntity().setCmd(AduType.remoteMute.getCmd());
         platform.setAduEntity(new AduEntity());
-        platform.getAduEntity().setType(CmdType.remoteMute);
+        platform.getAduEntity().setType(AduType.remoteMute.getType());
         platform.getAduEntity().getInfObjEntities().add(new InfObjRemoteMuteEntity());
         data = TcpPduEntity.encodeEntity(platform);
 
@@ -162,9 +162,9 @@ public class TcpPlatForm2Device {
         platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
-        platform.getCtrlEntity().setCmd(CmdType.generalGet.getCmd());
+        platform.getCtrlEntity().setCmd(AduType.generalGet.getCmd());
         platform.setAduEntity(new AduEntity());
-        platform.getAduEntity().setType(CmdType.generalGet);
+        platform.getAduEntity().setType(AduType.generalGet.getType());
         InfObjGeneralGetEntity infObj = new InfObjGeneralGetEntity();
         TlvObject tlv = new TlvObject();
         tlv.setType(1);
@@ -186,9 +186,9 @@ public class TcpPlatForm2Device {
         platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
-        platform.getCtrlEntity().setCmd(CmdType.generalSet.getCmd());
+        platform.getCtrlEntity().setCmd(AduType.generalSet.getCmd());
         platform.setAduEntity(new AduEntity());
-        platform.getAduEntity().setType(CmdType.generalSet);
+        platform.getAduEntity().setType(AduType.generalSet.getType());
         InfObjGeneralSetEntity infObj = new InfObjGeneralSetEntity();
         TlvObject tlv = new TlvObject();
         tlv.setType(1);
@@ -210,9 +210,9 @@ public class TcpPlatForm2Device {
         platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
-        platform.getCtrlEntity().setCmd(CmdType.getFuncReq.getCmd());
+        platform.getCtrlEntity().setCmd(AduType.getFuncReq.getCmd());
         platform.setAduEntity(new AduEntity());
-        platform.getAduEntity().setType(CmdType.getFuncReq);
+        platform.getAduEntity().setType(AduType.getFuncReq.getType());
         InfObjGetFuncReqEntity infObj = new InfObjGetFuncReqEntity();
         TlvObject tlv = new TlvObject();
         tlv.setType(1);
@@ -234,9 +234,9 @@ public class TcpPlatForm2Device {
         platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
-        platform.getCtrlEntity().setCmd(CmdType.setFuncReq.getCmd());
+        platform.getCtrlEntity().setCmd(AduType.setFuncReq.getCmd());
         platform.setAduEntity(new AduEntity());
-        platform.getAduEntity().setType(CmdType.setFuncReq);
+        platform.getAduEntity().setType(AduType.setFuncReq.getType());
         InfObjSetFuncReqEntity infObj = new InfObjSetFuncReqEntity();
         platform.getAduEntity().getInfObjEntities().add(infObj);
         data = TcpPduEntity.encodeEntity(platform);
@@ -253,9 +253,9 @@ public class TcpPlatForm2Device {
         platform.setSn(8);
         platform.getCtrlEntity().setSrcAddr(AddressUtil.PLATFORM_DEFAULT);
         platform.getCtrlEntity().setDstAddr(AddressUtil.DEVICE_DEFAULT);
-        platform.getCtrlEntity().setCmd(CmdType.upgradeReq.getCmd());
+        platform.getCtrlEntity().setCmd(AduType.upgradeReq.getCmd());
         platform.setAduEntity(new AduEntity());
-        platform.getAduEntity().setType(CmdType.upgradeReq);
+        platform.getAduEntity().setType(AduType.upgradeReq.getType());
         InfObjUpgradeReqEntity infObj = new InfObjUpgradeReqEntity();
         platform.getAduEntity().getInfObjEntities().add(infObj);
         data = TcpPduEntity.encodeEntity(platform);

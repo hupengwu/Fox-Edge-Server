@@ -1,24 +1,25 @@
 package cn.foxtech.channel.common.service;
 
+import cn.foxtech.channel.common.api.ChannelClientAPI;
+import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.common.domain.constant.RedisTopicConstant;
+import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.redis.topic.service.RedisTopicPublisher;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
-import cn.foxtech.common.utils.syncobject.SyncQueueObjectMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-/**
- * 主从问答方式设备的数据采集<br>
- * 背景知识：主从半双工设备，这类设备只会被动响应上位机的命令请求。现实中大多数简单的工控设备都是这种设备<br>
- */
 @Component
-public class RedisTopicRespondDeviceService extends PeriodTaskService {
+public class RedisTopicReportToDeviceService extends PeriodTaskService {
     private final String deviceTopic = RedisTopicConstant.topic_channel_respond + RedisTopicConstant.model_device;
 
     @Autowired
     private RedisTopicPublisher publisher;
+
+    @Autowired
+    private ChannelClientAPI channelService;
 
     /**
      * 执行任务
@@ -33,9 +34,13 @@ public class RedisTopicRespondDeviceService extends PeriodTaskService {
      * @throws Exception 异常情况
      */
     public void execute(long threadId) throws Exception {
-        List<Object> privateList = SyncQueueObjectMap.inst().popup(this.deviceTopic, false, 1000);
-        for (Object object : privateList) {
-            this.publisher.sendMessage(this.deviceTopic, object);
+        List<ChannelRespondVO> respondVOList = this.channelService.reportTo(1 * 1000);
+        for (ChannelRespondVO respondVO : respondVOList) {
+            // 标识为主动上报模式
+            respondVO.setMode(ChannelRespondVO.MODE_RECEIVE);
+
+            String json = JsonUtils.buildJsonWithoutException(respondVO);
+            this.publisher.sendMessage(this.deviceTopic, json);
         }
     }
 }

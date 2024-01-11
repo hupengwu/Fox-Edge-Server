@@ -105,7 +105,7 @@ public class InfObjCompAnalogExEntity extends InfObjEntity {
     }
 
     public static byte[] encodeEntity(InfObjCompAnalogExEntity entity) {
-        byte[] data = new byte[entity.getSize()];
+        byte[] data = new byte[entity.size()];
 
 
         int index = 0;
@@ -153,7 +153,7 @@ public class InfObjCompAnalogExEntity extends InfObjEntity {
         return data;
     }
 
-    public int getSize() {
+    public int size() {
         return 14 + 4 * this.analogs.size();
     }
 

@@ -11,7 +11,7 @@ import lombok.Getter;
  * 2、类型标志，可以为null
  * 3、Sender.any是设备和平台，都是可以使用的
  */
-public enum CmdType {
+public enum AduType {
     // 注册
     register(0x00, 0x00, "注册帧", Sender.device),//
     registerEx(0x00, 0x8C, "注册扩展帧", Sender.device),//
@@ -76,15 +76,25 @@ public enum CmdType {
     @Getter
     private final String description;
 
-    CmdType(int cmd, Integer type, String description, Sender sender) {
+    AduType(int cmd, Integer type, String description, Sender sender) {
         this.cmd = cmd;
         this.type = type;
         this.sender = sender;
         this.description = description;
     }
 
-    public static CmdType getEnum(Integer cmd, Integer type) {
-        for (CmdType cmdType : CmdType.values()) {
+    public static AduType getEnum(Integer type) {
+        for (AduType cmdType : AduType.values()) {
+            if (type.equals(cmdType.type)) {
+                return cmdType;
+            }
+        }
+
+        return null;
+    }
+
+    public static AduType getEnum(Integer cmd, Integer type) {
+        for (AduType cmdType : AduType.values()) {
             if (cmd.equals(cmdType.cmd) && type.equals(cmdType.type)) {
                 return cmdType;
             }

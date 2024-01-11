@@ -26,11 +26,11 @@ public class ReportService {
 
     public synchronized void push(String channelName, byte[] pdu) {
         List<byte[]> list = this.channelMap.computeIfAbsent(channelName, k -> new CopyOnWriteArrayList<>());
-        if (list.size() > 128) {
-            return;
-        }
-
         list.add(pdu);
+
+        synchronized (this) {
+            this.notify();
+        }
     }
 
 

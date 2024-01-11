@@ -31,6 +31,11 @@ public class ChannelService extends ChannelServerAPI {
     @Autowired
     private ScriptEngineService scriptEngineService;
 
+    @Override
+    public Object getReportLock() {
+        return this.reportService;
+    }
+
     /**
      * 打开通道
      *

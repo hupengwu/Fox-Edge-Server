@@ -26,11 +26,11 @@ public class ReportService {
 
     public synchronized void push(String serviceKey, byte[] pdu) {
         List<byte[]> list = this.channelMap.computeIfAbsent(serviceKey, k -> new CopyOnWriteArrayList<>());
-        if (list.size() > 128) {
-            return;
-        }
-
         list.add(pdu);
+
+        synchronized (this) {
+            this.notify();
+        }
     }
 
 
@@ -43,7 +43,7 @@ public class ReportService {
                 ChannelEntity entity = (ChannelEntity) value;
 
                 // 检查：是否为本通道类型
-                if (!entity.getChannelType().equals(this.channelProperties.getChannelType())){
+                if (!entity.getChannelType().equals(this.channelProperties.getChannelType())) {
                     return false;
                 }
 

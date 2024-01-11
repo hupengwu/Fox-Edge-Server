@@ -76,7 +76,7 @@ public class InfObjGetParamRspVarEntity extends InfObjEntity {
     }
 
     public static byte[] encodeEntity(InfObjGetParamRspVarEntity entity) {
-        byte[] data = new byte[entity.getSize()];
+        byte[] data = new byte[entity.size()];
 
 
         int index = 0;
@@ -151,7 +151,7 @@ public class InfObjGetParamRspVarEntity extends InfObjEntity {
      *
      * @return 包长度
      */
-    public int getSize() {
+    public int size() {
         return 9 + this.param.getSize();
     }
 

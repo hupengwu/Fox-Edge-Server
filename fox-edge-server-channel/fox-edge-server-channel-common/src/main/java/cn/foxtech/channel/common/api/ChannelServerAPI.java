@@ -44,6 +44,16 @@ public class ChannelServerAPI {
         return new ArrayList<>();
     }
 
+    /**
+     * 获得上报通知的锁对象
+     * 默认：ChannelServerAPI的派生类，也就是各个ChannelService的实例
+     * 可以通过重载该方法，来指定其他作为同步锁的实例对象
+     *
+     * @return
+     */
+    public Object getReportLock() {
+        return this;
+    }
 
     /**
      * 打开通道

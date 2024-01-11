@@ -23,48 +23,41 @@ public class ReportService {
     private ChannelProperties channelProperties;
 
 
-    public void insert(String channelName, Object data) {
-        synchronized (this.channelNameMap) {
-            List<Object> list = this.channelNameMap.computeIfAbsent(channelName, k -> new CopyOnWriteArrayList<>());
-            list.add(data);
+    public void push(String channelName, Object data) {
+        List<Object> list = this.channelNameMap.computeIfAbsent(channelName, k -> new CopyOnWriteArrayList<>());
+        list.add(data);
 
-            this.channelNameMap.notify();
+        synchronized (this) {
+            this.notify();
         }
-
     }
 
     public List<ChannelRespondVO> report() throws ServiceException {
         List<ChannelRespondVO> respondVOList = new ArrayList<>();
 
-        synchronized (this.channelNameMap) {
-            try {
-                // 等待消息的到达
-                this.channelNameMap.wait(1000);
+        try {
+            for (String channelName : this.channelNameMap.keySet()) {
+                List<Object> list = this.channelNameMap.get(channelName);
 
-                for (String channelName : this.channelNameMap.keySet()) {
-                    List<Object> list = this.channelNameMap.get(channelName);
+                for (Object data : list) {
+                    ChannelRespondVO respondVO = new ChannelRespondVO();
+                    respondVO.setUuid(null);
+                    respondVO.setType(this.channelProperties.getChannelType());
+                    respondVO.setName(channelName);
 
-                    for (Object data : list) {
-                        ChannelRespondVO respondVO = new ChannelRespondVO();
-                        respondVO.setUuid(null);
-                        respondVO.setType(this.channelProperties.getChannelType());
-                        respondVO.setName(channelName);
-
-                        if (data instanceof String) {
-                            respondVO.setRecv(data);
-                        } else {
-                            respondVO.setRecv(HexUtils.byteArrayToHexString((byte[]) data));
-                        }
-
-                        respondVOList.add(respondVO);
+                    if (data instanceof String) {
+                        respondVO.setRecv(data);
+                    } else {
+                        respondVO.setRecv(HexUtils.byteArrayToHexString((byte[]) data));
                     }
-                }
 
-                this.channelNameMap.clear();
-            } catch (Exception e) {
-                e.getMessage();
+                    respondVOList.add(respondVO);
+                }
             }
 
+            this.channelNameMap.clear();
+        } catch (Exception e) {
+            e.getMessage();
         }
 
 

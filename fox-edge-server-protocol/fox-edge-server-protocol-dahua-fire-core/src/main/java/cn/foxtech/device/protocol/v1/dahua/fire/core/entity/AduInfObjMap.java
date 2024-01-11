@@ -1,59 +1,59 @@
 package cn.foxtech.device.protocol.v1.dahua.fire.core.entity;
 
 import cn.foxtech.device.protocol.v1.dahua.fire.core.entity.infobj.*;
-import cn.foxtech.device.protocol.v1.dahua.fire.core.enums.CmdType;
+import cn.foxtech.device.protocol.v1.dahua.fire.core.enums.AduType;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class AduInfObjMap {
-    private static final Map<CmdType, Class> cmdTypeInfObjMap = new HashMap<>();
+    private static final Map<AduType, Class> aduTypeInfObjMap = new HashMap<>();
 
     /**
      * 获得Class
      *
-     * @param cmdType 命令字类型
+     * @param aduType 命令字类型
      * @return 具体对应的InfObjEntity的Class
      */
-    public static Class getInfObjClass(CmdType cmdType) {
-        return inst().get(cmdType);
+    public static Class getInfObjClass(AduType aduType) {
+        return inst().get(aduType);
     }
 
-    private static Map<CmdType, Class> inst() {
-        if (!cmdTypeInfObjMap.isEmpty()) {
-            return cmdTypeInfObjMap;
+    private static Map<AduType, Class> inst() {
+        if (!aduTypeInfObjMap.isEmpty()) {
+            return aduTypeInfObjMap;
         }
 
-        cmdTypeInfObjMap.put(CmdType.register, InfObjRegisterEntity.class);
-        cmdTypeInfObjMap.put(CmdType.registerEx, InfObjRegisterExEntity.class);
-        cmdTypeInfObjMap.put(CmdType.syncClock, InfObjSyncClockEntity.class);
-        cmdTypeInfObjMap.put(CmdType.sysStatus, InfObjSysStatusEntity.class);
-        cmdTypeInfObjMap.put(CmdType.sysAnalog, InfObjSysAnalogEntity.class);
-        cmdTypeInfObjMap.put(CmdType.compStatus, InfObjCompStatusEntity.class);
-        cmdTypeInfObjMap.put(CmdType.compStatusEx, InfObjCompStatusExEntity.class);
-        cmdTypeInfObjMap.put(CmdType.compAnalog, InfObjCompAnalogEntity.class);
-        cmdTypeInfObjMap.put(CmdType.compAnalogEx, InfObjCompAnalogExEntity.class);
-        cmdTypeInfObjMap.put(CmdType.syncParamFix, InfObjSyncParamFixEntity.class);
-        cmdTypeInfObjMap.put(CmdType.syncParamVar, InfObjSyncParamVarEntity.class);
-        cmdTypeInfObjMap.put(CmdType.generalData, InfObjGeneralDataEntity.class);
-        cmdTypeInfObjMap.put(CmdType.deleteFunc, InfObjDeleteFuncEntity.class);
-        cmdTypeInfObjMap.put(CmdType.getParamFix, InfObjGetParamFixEntity.class);
-        cmdTypeInfObjMap.put(CmdType.getParamRspFix, InfObjGetParamRspFixEntity.class);
-        cmdTypeInfObjMap.put(CmdType.getParamVar, InfObjGetParamVarEntity.class);
-        cmdTypeInfObjMap.put(CmdType.getParamRspVar, InfObjGetParamRspVarEntity.class);
-        cmdTypeInfObjMap.put(CmdType.setParamFix, InfObjSetParamFixEntity.class);
-        cmdTypeInfObjMap.put(CmdType.setParamVar, InfObjSetParamVarEntity.class);
-        cmdTypeInfObjMap.put(CmdType.remoteMute, InfObjRemoteMuteEntity.class);
-        cmdTypeInfObjMap.put(CmdType.generalGet, InfObjGeneralGetEntity.class);
-        cmdTypeInfObjMap.put(CmdType.generalSet, InfObjGeneralSetEntity.class);
-        cmdTypeInfObjMap.put(CmdType.getFuncReq, InfObjGetFuncReqEntity.class);
-        cmdTypeInfObjMap.put(CmdType.getFuncRsp, InfObjGetFuncRspEntity.class);
-        cmdTypeInfObjMap.put(CmdType.setFuncReq, InfObjSetFuncReqEntity.class);
-        cmdTypeInfObjMap.put(CmdType.upgradeReq, InfObjUpgradeReqEntity.class);
-        cmdTypeInfObjMap.put(CmdType.upgradeStart, InfObjUpgradeStartEntity.class);
-        cmdTypeInfObjMap.put(CmdType.upgradeEnd, InfObjUpgradeEndEntity.class);
+        aduTypeInfObjMap.put(AduType.register, InfObjRegisterEntity.class);
+        aduTypeInfObjMap.put(AduType.registerEx, InfObjRegisterExEntity.class);
+        aduTypeInfObjMap.put(AduType.syncClock, InfObjSyncClockEntity.class);
+        aduTypeInfObjMap.put(AduType.sysStatus, InfObjSysStatusEntity.class);
+        aduTypeInfObjMap.put(AduType.sysAnalog, InfObjSysAnalogEntity.class);
+        aduTypeInfObjMap.put(AduType.compStatus, InfObjCompStatusEntity.class);
+        aduTypeInfObjMap.put(AduType.compStatusEx, InfObjCompStatusExEntity.class);
+        aduTypeInfObjMap.put(AduType.compAnalog, InfObjCompAnalogEntity.class);
+        aduTypeInfObjMap.put(AduType.compAnalogEx, InfObjCompAnalogExEntity.class);
+        aduTypeInfObjMap.put(AduType.syncParamFix, InfObjSyncParamFixEntity.class);
+        aduTypeInfObjMap.put(AduType.syncParamVar, InfObjSyncParamVarEntity.class);
+        aduTypeInfObjMap.put(AduType.generalData, InfObjGeneralDataEntity.class);
+        aduTypeInfObjMap.put(AduType.deleteFunc, InfObjDeleteFuncEntity.class);
+        aduTypeInfObjMap.put(AduType.getParamFix, InfObjGetParamFixEntity.class);
+        aduTypeInfObjMap.put(AduType.getParamRspFix, InfObjGetParamRspFixEntity.class);
+        aduTypeInfObjMap.put(AduType.getParamVar, InfObjGetParamVarEntity.class);
+        aduTypeInfObjMap.put(AduType.getParamRspVar, InfObjGetParamRspVarEntity.class);
+        aduTypeInfObjMap.put(AduType.setParamFix, InfObjSetParamFixEntity.class);
+        aduTypeInfObjMap.put(AduType.setParamVar, InfObjSetParamVarEntity.class);
+        aduTypeInfObjMap.put(AduType.remoteMute, InfObjRemoteMuteEntity.class);
+        aduTypeInfObjMap.put(AduType.generalGet, InfObjGeneralGetEntity.class);
+        aduTypeInfObjMap.put(AduType.generalSet, InfObjGeneralSetEntity.class);
+        aduTypeInfObjMap.put(AduType.getFuncReq, InfObjGetFuncReqEntity.class);
+        aduTypeInfObjMap.put(AduType.getFuncRsp, InfObjGetFuncRspEntity.class);
+        aduTypeInfObjMap.put(AduType.setFuncReq, InfObjSetFuncReqEntity.class);
+        aduTypeInfObjMap.put(AduType.upgradeReq, InfObjUpgradeReqEntity.class);
+        aduTypeInfObjMap.put(AduType.upgradeStart, InfObjUpgradeStartEntity.class);
+        aduTypeInfObjMap.put(AduType.upgradeEnd, InfObjUpgradeEndEntity.class);
 
 
-        return cmdTypeInfObjMap;
+        return aduTypeInfObjMap;
     }
 }

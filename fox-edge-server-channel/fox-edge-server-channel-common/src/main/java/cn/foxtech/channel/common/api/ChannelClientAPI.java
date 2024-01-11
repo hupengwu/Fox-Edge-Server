@@ -50,11 +50,23 @@ public class ChannelClientAPI {
     /**
      * 设备的主动上报消息：设备向上位机
      *
+     * @param timeout 等待超时
      * @return 上报消息
      * @throws ServiceException 异常信息
+     * @throws InterruptedException 异常信息
      */
-    public List<ChannelRespondVO> receive() throws ServiceException {
-        return this.channelServerAPI.report();
+    public List<ChannelRespondVO> reportTo(long timeout) throws ServiceException, InterruptedException {
+        // 获得作为同步锁的对象
+        Object lock = this.channelServerAPI.getReportLock();
+
+        // 等待其他线程的上报通知
+        synchronized (lock) {
+            lock.wait(timeout);
+        }
+
+        // 取出需要上报的数据
+        List<ChannelRespondVO> list = this.channelServerAPI.report();
+        return list;
     }
 
     /**

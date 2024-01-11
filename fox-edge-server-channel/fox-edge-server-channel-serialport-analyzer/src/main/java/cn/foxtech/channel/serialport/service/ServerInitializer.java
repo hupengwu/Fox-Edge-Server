@@ -200,14 +200,14 @@ public class ServerInitializer {
                             String returnText = (String) channelEntity.getChannelParam().get("returnText");
                             if (!MethodUtils.hasEmpty(returnText)) {
                                 String message = new String(data, returnText);
-                                this.reportService.insert(channelName, message);
+                                this.reportService.push(channelName, message);
 
                                 if (this.openLogger) {
                                     this.console.info("上报报文:" + message);
                                 }
 
                             } else {
-                                this.reportService.insert(channelName, data);
+                                this.reportService.push(channelName, data);
 
                                 if (this.openLogger) {
                                     this.console.info("串口接收到数据:" + HexUtils.byteArrayToHexString(data));

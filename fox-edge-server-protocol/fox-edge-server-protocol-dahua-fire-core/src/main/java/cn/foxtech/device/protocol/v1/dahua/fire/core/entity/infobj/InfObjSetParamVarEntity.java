@@ -76,7 +76,7 @@ public class InfObjSetParamVarEntity extends InfObjEntity {
     }
 
     public static byte[] encodeEntity(InfObjSetParamVarEntity entity) {
-        byte[] data = new byte[entity.getSize()];
+        byte[] data = new byte[entity.size()];
 
 
         int index = 0;
@@ -151,7 +151,7 @@ public class InfObjSetParamVarEntity extends InfObjEntity {
      *
      * @return 包长度
      */
-    public int getSize() {
+    public int size() {
         return 9 + this.param.getSize();
     }
 

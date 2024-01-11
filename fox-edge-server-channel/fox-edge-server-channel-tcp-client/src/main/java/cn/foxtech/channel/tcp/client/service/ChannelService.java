@@ -44,6 +44,10 @@ public class ChannelService extends ChannelServerAPI {
     @Autowired
     private RedisConsoleService consoleService;
 
+    @Override
+    public Object getReportLock() {
+        return this.reportService;
+    }
 
     /**
      * 打开通道：tcp-server是服务端，连接是自动触发的，不存在真正的打开和关闭操作

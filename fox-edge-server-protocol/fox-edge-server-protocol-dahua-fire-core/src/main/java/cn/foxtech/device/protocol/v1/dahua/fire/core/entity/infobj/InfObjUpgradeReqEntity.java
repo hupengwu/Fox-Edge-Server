@@ -59,8 +59,8 @@ public class InfObjUpgradeReqEntity extends InfObjEntity {
 
 
     public static void decodeEntity(byte[] data, InfObjUpgradeReqEntity entity) {
-        if (data.length != entity.getSize()) {
-            throw new ProtocolException("信息对象" + entity.getClass().getSimpleName() + "，必须长度为" + entity.getSize());
+        if (data.length != entity.size()) {
+            throw new ProtocolException("信息对象" + entity.getClass().getSimpleName() + "，必须长度为" + entity.size());
         }
 
 
@@ -99,7 +99,7 @@ public class InfObjUpgradeReqEntity extends InfObjEntity {
     }
 
     public static byte[] encodeEntity(InfObjUpgradeReqEntity entity) {
-        byte[] data = new byte[entity.getSize()];
+        byte[] data = new byte[entity.size()];
 
 
         int index = 0;
@@ -175,7 +175,7 @@ public class InfObjUpgradeReqEntity extends InfObjEntity {
         return aduList;
     }
 
-    public int getSize() {
+    public int size() {
         return 41 + this.addrObject.getSize();
     }
 
