@@ -26,7 +26,7 @@ public class RedisTopicController {
     public Object executeChannel(@RequestBody Map<String, Object> body) {
         try {
             return this.redisTopicService.executeChannel(body);
-           // return this.redisTopicService.querySouthLinks("hikvision-fire");
+            //  return this.redisTopicService.querySouthLinks("hikvision-fire");
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
         }

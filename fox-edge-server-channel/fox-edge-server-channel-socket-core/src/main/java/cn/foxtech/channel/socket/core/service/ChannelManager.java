@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.SocketAddress;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -19,6 +20,10 @@ public class ChannelManager {
 
     public void insert(ChannelHandlerContext ctx) {
         this.skt2ctx.put(ctx.channel().remoteAddress(), ctx);
+    }
+
+    public Set<String> getServiceKeys() {
+        return this.key2ctx.keySet();
     }
 
     public void setServiceKey(ChannelHandlerContext ctx, String serviceKey) {

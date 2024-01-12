@@ -2,9 +2,11 @@ package cn.foxtech.kernel.system.service.service;
 
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
+import cn.foxtech.channel.domain.ChannelRestfulConstant;
 import cn.foxtech.common.domain.constant.RedisStatusConstant;
 import cn.foxtech.common.domain.constant.RedisTopicConstant;
 import cn.foxtech.common.domain.vo.RestFulVO;
+import cn.foxtech.common.entity.constant.BaseVOFieldConstant;
 import cn.foxtech.common.entity.constant.ChannelVOFieldConstant;
 import cn.foxtech.common.status.ServiceStatus;
 import cn.foxtech.common.utils.json.JsonUtils;
@@ -44,9 +46,11 @@ public class RedisTopicService {
 
     public ChannelRespondVO querySouthLinks(String channelType) throws InterruptedException, IOException {
         RestFulVO param = new RestFulVO();
-        param.setUri("southLinks/query");
+        param.setUri(ChannelRestfulConstant.resource_south_links_page);
         param.setMethod("post");
         param.setData(new HashMap<>());
+        ((Map<String, Object>) param.getData()).put(BaseVOFieldConstant.field_page_num, 1);
+        ((Map<String, Object>) param.getData()).put(BaseVOFieldConstant.field_page_size, 10);
 
 
         // 转换消息 结构
