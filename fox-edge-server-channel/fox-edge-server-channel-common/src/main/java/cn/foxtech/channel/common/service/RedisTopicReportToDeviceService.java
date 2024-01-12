@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * 主动上报给device服务：这是带waite的独立线程
+ */
 @Component
 public class RedisTopicReportToDeviceService extends PeriodTaskService {
     private final String deviceTopic = RedisTopicConstant.topic_channel_respond + RedisTopicConstant.model_device;

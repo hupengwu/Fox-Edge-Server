@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * 主从问答方式设备的数据采集<br>
+ * 主从问答方式设备的数据采集
+ *
  * 背景知识：主从半双工设备，这类设备只会被动响应上位机的命令请求。现实中大多数简单的工控设备都是这种设备<br>
  */
 @Component

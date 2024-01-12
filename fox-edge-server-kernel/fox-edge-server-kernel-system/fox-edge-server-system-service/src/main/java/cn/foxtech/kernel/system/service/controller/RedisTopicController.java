@@ -2,7 +2,7 @@ package cn.foxtech.kernel.system.service.controller;
 
 
 import cn.foxtech.core.domain.AjaxResult;
-import cn.foxtech.kernel.system.service.service.RedisTopicProxyService;
+import cn.foxtech.kernel.system.service.service.RedisTopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,14 +18,15 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/kernel/manager/proxy-redis-topic/proxy/redis/topic")
-public class RedisTopicProxyController {
+public class RedisTopicController {
     @Autowired
-    RedisTopicProxyService proxyService;
+    RedisTopicService redisTopicService;
 
     @PostMapping("channel")
     public Object executeChannel(@RequestBody Map<String, Object> body) {
         try {
-            return this.proxyService.executeChannel(body);
+            return this.redisTopicService.executeChannel(body);
+           // return this.redisTopicService.querySouthLinks("hikvision-fire");
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
         }
@@ -34,7 +35,7 @@ public class RedisTopicProxyController {
     @PostMapping("device")
     public Object executeDevice(@RequestBody Map<String, Object> body) {
         try {
-            return this.proxyService.executeDevice(body);
+            return this.redisTopicService.executeDevice(body);
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
         }

@@ -27,6 +27,9 @@ public class ChannelService extends ChannelServerAPI {
     @Autowired
     private ReportService reportService;
 
+    @Autowired
+    private ManageService manageService;
+
     /**
      * 指定ReportService为多线程之间通知的Lock对象
      *
@@ -99,5 +102,10 @@ public class ChannelService extends ChannelServerAPI {
     @Override
     public synchronized List<ChannelRespondVO> report() throws ServiceException {
         return this.reportService.popAll();
+    }
+
+    @Override
+    public synchronized ChannelRespondVO manageChannel(ChannelRequestVO requestVO) throws ServiceException {
+        return this.manageService.manageChannel(requestVO);
     }
 }
