@@ -139,12 +139,6 @@ public class ServerInitializer {
         List<byte[]> list = asyncExecutor.waitReadable(100);
 
         for (byte[] data : list) {
-            // 检查：是否会溢出，如果要发生溢出，说明这个数据可能已经异常了，没有人能处理了，直接废弃吧
-            if (SerialStreamEntity.max < streamEntity.getEnd() + data.length) {
-                streamEntity.clear();
-                continue;
-            }
-
             synchronized (streamEntity) {
 
                 // 复制数据到缓存之中，等待JSP引擎进行遍历性的解析
