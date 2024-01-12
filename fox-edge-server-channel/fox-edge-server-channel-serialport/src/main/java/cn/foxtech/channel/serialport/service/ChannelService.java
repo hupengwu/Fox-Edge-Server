@@ -32,8 +32,14 @@ public class ChannelService extends ChannelServerAPI {
     @Autowired
     private ExecuteService executeService;
 
-    public void initService() {
+    @Autowired
+    private ReportService reportService;
+
+    @Override
+    public Object getReportLock() {
+        return this.reportService;
     }
+
 
     /**
      * 打开通道
@@ -113,6 +119,14 @@ public class ChannelService extends ChannelServerAPI {
             // 全双工模式：创建一个异步执行器
             if (channelEntity.getConfig().getFullDuplex()) {
                 AsyncExecutor asyncExecutor = new AsyncExecutor();
+
+                // 绑定一个数据到达通知的匿名接口，那么当有串口数据到达的时候，用户自定义线程可以在getReportLock()，wait()这个notify
+                asyncExecutor.setReadableNotify(() -> {
+                    synchronized (this.reportService) {
+                        this.reportService.notify();
+                    }
+                });
+
                 asyncExecutor.createExecutor(serialPort);
 
                 channelEntity.setAsyncExecutor(asyncExecutor);
@@ -248,6 +262,6 @@ public class ChannelService extends ChannelServerAPI {
 
     @Override
     public List<ChannelRespondVO> report() throws ServiceException {
-        return this.executeService.report(this.channelEntityMap);
+        return this.reportService.report(this.channelEntityMap);
     }
 }

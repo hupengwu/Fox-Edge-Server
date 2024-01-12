@@ -28,8 +28,6 @@ public class Initialize implements CommandLineRunner {
 
         this.channelInitialize.initialize();
 
-        this.channelService.initService();
-
         logger.info("------------------------初始化结束！------------------------");
 
     }

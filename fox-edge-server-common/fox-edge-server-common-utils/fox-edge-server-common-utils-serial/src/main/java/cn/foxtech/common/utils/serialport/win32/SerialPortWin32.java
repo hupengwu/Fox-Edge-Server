@@ -129,10 +129,15 @@ public class SerialPortWin32 implements ISerialPort {
      */
     @Override
     public boolean open(String szPort) {
-        if (szPort.startsWith("COM")) {
-            szPort = "\\\\.\\COM" + szPort.substring("COM".length());
+        if (!szPort.startsWith("COM")) {
+            return false;
         }
 
+        // 说明：Windows下当串口号小于10的时候串口名为COM2这样的名称，当大于10的时候串口名为\\.\COM12这样的名字
+        String no = szPort.substring("COM".length());
+        if (Integer.parseInt(no) >= 10) {
+            szPort = "\\\\.\\COM" + szPort.substring("COM".length());
+        }
 
         //用异步方式读写串口
         this.handle = KERNEL.CreateFile(szPort, WinNT.GENERIC_READ | WinNT.GENERIC_WRITE, 0, null, WinNT.OPEN_EXISTING, WinNT.FILE_ATTRIBUTE_NORMAL, null);

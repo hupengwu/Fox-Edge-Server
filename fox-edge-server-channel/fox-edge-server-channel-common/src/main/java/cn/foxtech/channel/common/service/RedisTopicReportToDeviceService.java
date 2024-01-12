@@ -34,7 +34,7 @@ public class RedisTopicReportToDeviceService extends PeriodTaskService {
      * @throws Exception 异常情况
      */
     public void execute(long threadId) throws Exception {
-        List<ChannelRespondVO> respondVOList = this.channelService.reportTo(1 * 1000);
+        List<ChannelRespondVO> respondVOList = this.channelService.reportTo(60 * 1000);
         for (ChannelRespondVO respondVO : respondVOList) {
             // 标识为主动上报模式
             respondVO.setMode(ChannelRespondVO.MODE_RECEIVE);

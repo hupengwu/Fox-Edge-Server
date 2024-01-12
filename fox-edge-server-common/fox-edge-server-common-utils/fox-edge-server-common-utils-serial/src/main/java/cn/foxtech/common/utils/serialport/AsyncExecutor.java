@@ -25,6 +25,19 @@ public class AsyncExecutor {
      */
     private final AtomicInteger exit = new AtomicInteger(0);
 
+
+    private ReadableNotify readableNotify;
+
+    /**
+     * 数据抵达时的外部通知接口
+     * 实现多线程之间的wait和notify
+     *
+     * @param readableNotify 通知接口
+     */
+    public void setReadableNotify(ReadableNotify readableNotify) {
+        this.readableNotify = readableNotify;
+    }
+
     /**
      * 关闭线程池
      */
@@ -76,7 +89,9 @@ public class AsyncExecutor {
     }
 
     /**
-     * 异步接收数据
+     * 异步接收数据的模式1：单线程模式
+     * 单线程中，该单循环waitWriteable()，来读取缓存中的数据
+     * 本异步线程在有数据到达的时候，会发出一个notify，来触发waitWriteable()往下一步执行
      *
      * @param timeout 等待超时
      * @return 接收到的一批数据
@@ -102,6 +117,28 @@ public class AsyncExecutor {
         }
 
         return new ArrayList<>();
+    }
+
+    /**
+     * 异步接收数据的模式2：多程模式
+     * 多线程中，setReadableNotify(readableNotify)后，外部线程等待readableNotify的wait()消息，然后来读取缓存中的数据
+     *
+     * 本异步线程在有数据到达的时候，会发出一个notify，来触发readableNotify上的wait后，可以用readRecvList进行读取数据
+     *
+     * @return 接收到的数据
+     */
+    public synchronized List<byte[]> readRecvList() {
+        List<byte[]> result = new ArrayList<>();
+        if (this.recvList.isEmpty()) {
+            return result;
+        }
+
+        // 弹出一个或者全部数据
+        result.addAll(this.recvList);
+        this.recvList.clear();
+
+        return result;
+
     }
 
     private void createSendExecutor(ISerialPort serialPort) {
@@ -178,12 +215,18 @@ public class AsyncExecutor {
                         byte[] data = new byte[count];
                         System.arraycopy(recv, 0, data, 0, count);
 
+                        // 数据可读的消息通知：单线程模式的通知
                         synchronized (recvList) {
                             // 保存数据
                             recvList.add(data);
 
                             // 通知外部有数据到达
                             recvList.notify();
+                        }
+
+                        // 数据可读的消息通知：多线程模式的通知
+                        if (readableNotify != null && !recvList.isEmpty()) {
+                            readableNotify.notifyReadable();
                         }
                     }
                 } catch (Exception e) {
@@ -192,6 +235,13 @@ public class AsyncExecutor {
             }
         }, 0, TimeUnit.MILLISECONDS);
         scheduledExecutorService.shutdown();
+    }
+
+    /**
+     * 有数据到达时的外部通知接口
+     */
+    public interface ReadableNotify {
+        void notifyReadable();
     }
 
 }
