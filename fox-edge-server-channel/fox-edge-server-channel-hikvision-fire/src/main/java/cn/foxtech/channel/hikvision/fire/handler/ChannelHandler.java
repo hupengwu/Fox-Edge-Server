@@ -28,6 +28,9 @@ public class ChannelHandler extends SocketChannelHandler {
     private SessionHandler sessionHandler;
 
     @Setter
+    private ManageHandler manageHandler;
+
+    @Setter
     private boolean logger = false;
 
     /**
@@ -84,6 +87,11 @@ public class ChannelHandler extends SocketChannelHandler {
             String message = "身份识别:" + ctx.channel().remoteAddress() + "; serviceKey=" + serviceKey;
             LOGGER.info(message);
             console.info(message);
+
+            // 发出创建通道的消息
+            this.manageHandler.createChannel(serviceKey);
+            // 发出创建设备的消息
+            this.manageHandler.createDevice(serviceKey);
         }
 
 

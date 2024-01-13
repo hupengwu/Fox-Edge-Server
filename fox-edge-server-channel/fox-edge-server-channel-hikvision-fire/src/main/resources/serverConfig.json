@@ -1,8 +1,14 @@
 {
   "configValue": {
     "serverPort": 9311,
-    "logger": false
+    "logger": false,
+    "register": {
+      "channelName": "海康威视",
+      "deviceName": "海康威视",
+      "manufacturer": "海康威视",
+      "deviceType": "消防主机"
+    }
   },
   "configParam": {},
-  "remark": ""
+  "remark": "全局配置：通过配置该信息，来自动注册通道和设备对象\n\n{\n     \"logger\": false,--------------------------是否打印日志：测试阶段，打印日志来定位问题\n     \"register\": {------------------------------是否在设备接入的时候，自动注册设备对象和通道对象\n          \"deviceName\": \"海康威视\",----------设备名称前缀\n          \"deviceType\": \"消防主机\",------------设备类型\n          \"channelName\": \"海康威视\",---------通道名称前缀\n          \"manufacturer\": \"海康威视\"----------厂商名称\n     },\n     \"serverPort\": 9311-----------------------服务端口\n}"
 }

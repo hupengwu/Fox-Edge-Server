@@ -200,7 +200,7 @@ public class OperateMonitorTaskManageController {
 
 
             // 新增/修改实体：参数不包含id为新增，包含为修改
-            if (!params.containsKey("id")) {
+            if (params.get("id") == null) {
                 OperateMonitorTaskEntity exist = this.entityManageService.getEntity(entity.makeServiceKey(), OperateMonitorTaskEntity.class);
                 if (exist != null) {
                     return AjaxResult.error("实体已存在");

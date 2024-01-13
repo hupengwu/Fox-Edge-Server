@@ -8,6 +8,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.List;
 
+/**
+ * 先进先出的队列
+ */
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
 public class RedisLoggerService {
@@ -25,7 +28,7 @@ public class RedisLoggerService {
      */
     protected void pushAll(List list) {
         // 左边插入数据
-        this.redisTemplate.opsForList().leftPushAll(this.key, list);
+        this.redisTemplate.opsForList().rightPushAll(this.key, list);
 
         // 删除溢出
         this.removeOverflow();
@@ -33,7 +36,7 @@ public class RedisLoggerService {
 
     protected void push(Object value) {
         // 左边插入数据
-        this.redisTemplate.opsForList().leftPush(this.key, value);
+        this.redisTemplate.opsForList().rightPush(this.key, value);
 
         // 删除溢出
         this.removeOverflow();
@@ -44,7 +47,7 @@ public class RedisLoggerService {
      */
     private void removeOverflow() {
         while (this.redisTemplate.opsForList().size(this.key) > this.maxSize) {
-            this.redisTemplate.opsForList().rightPop(this.key);
+            this.redisTemplate.opsForList().leftPop(this.key);
         }
     }
 
@@ -60,19 +63,27 @@ public class RedisLoggerService {
      * @return 列表中的对象
      */
     public Object pop() {
-        return this.redisTemplate.opsForList().rightPop(this.key);
+        return this.redisTemplate.opsForList().leftPop(this.key);
     }
 
     /**
      * 预览一个对象
      * 此时，这个对象依然在redis的列表中
-     *
+     * <p>
      * 说明：一般的做法，是想rang一下有没有数据，用完之后，在pop掉这个对象
      *
      * @return 列表中的对象
      */
     public Object rangeOne() {
-        return this.redisTemplate.opsForList().range(this.key, 0L, 1);
+        List<Object> list = this.redisTemplate.opsForList().range(this.key, 0L, 1);
+        if (list == null) {
+            return null;
+        }
+        if (list.isEmpty()) {
+            return null;
+        }
+
+        return list.get(0);
     }
 
 

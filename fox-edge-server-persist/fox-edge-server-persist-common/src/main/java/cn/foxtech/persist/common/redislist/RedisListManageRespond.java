@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * 接收列表
+ * 接收者：manage
+ * 发送者：persist
  */
 @Component
 public class RedisListManageRespond extends RedisLoggerService {

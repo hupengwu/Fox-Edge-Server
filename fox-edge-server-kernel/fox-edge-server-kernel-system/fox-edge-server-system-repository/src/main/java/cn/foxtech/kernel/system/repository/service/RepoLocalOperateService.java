@@ -137,7 +137,7 @@ public class RepoLocalOperateService {
 
 
         // 新增/修改实体：参数不包含id为新增，包含为修改
-        if (!params.containsKey("id")) {
+        if (params.get("id") == null) {
 
             // 如果没有填写，那么填入一个缺省值
             if (MethodUtils.hasEmpty(entity.getEngineParam())) {
