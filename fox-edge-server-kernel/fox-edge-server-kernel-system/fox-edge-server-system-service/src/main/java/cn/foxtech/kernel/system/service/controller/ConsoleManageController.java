@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/kernel/manager/console")
@@ -43,6 +40,9 @@ public class ConsoleManageController {
         // 只要用户填写了过滤参数：那么就将全部记录拿出来，然后手动筛选。
         if (!MethodUtils.hasNull(serviceType) || !MethodUtils.hasNull(serviceName) || !MethodUtils.hasNull(level)) {
             List<Map<String, Object>> range = this.consoleService.range();
+
+            Collections.reverse(range);
+
             List list = new ArrayList<>();
             for (Map<String, Object> object : range) {
                 if (!MethodUtils.hasEmpty(serviceType) && !this.like(object, RedisStatusConstant.field_service_type, serviceType)) {
@@ -67,11 +67,17 @@ public class ConsoleManageController {
             return AjaxResult.success(data);
         } else {
             // 用户没有填写过滤条件，那么直接在redis分页取数据
-            Integer pageStartId = pageSize * (pageNum - 1);
-            Integer pageEndId = pageSize * pageNum;
-
             Long total = this.consoleService.size();
-            List list = this.consoleService.range(pageStartId.longValue(), pageEndId.longValue());
+            long pageEndId = total - 1 - pageSize * (pageNum - 1);
+            long pageStartId = total - 1 - pageSize - pageSize * (pageNum - 1);
+            if (pageStartId < 0) {
+                pageStartId = 0;
+            }
+
+
+            List list = this.consoleService.range(pageStartId, pageEndId);
+
+            Collections.reverse(list);
 
             Map<String, Object> data = new HashMap<>();
             data.put("list", list);
