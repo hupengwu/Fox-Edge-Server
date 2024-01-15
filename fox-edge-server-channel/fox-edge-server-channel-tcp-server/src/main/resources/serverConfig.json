@@ -9,20 +9,32 @@
         "engineType": "Java",
         "keyHandler": "cn.foxtech.device.protocol.v1.zktl.air6in1.handler.ZktlServiceKeyHandler",
         "splitHandler": "cn.foxtech.device.protocol.v1.zktl.air6in1.handler.ZktlSplitMessageHandler"
+      },
+      "register": {
+        "channelName": "",
+        "deviceName": "",
+        "manufacturer": "",
+        "deviceType": ""
       }
     }, {
       "serverPort": 9302,
       "engine": {
         "engineType": "JavaScript",
         "splitHandler": {
-          "manufacturer": "武汉中科图灵",
+          "manufacturer": "武汉中科图灵科技有限公司",
           "deviceType": "消防用水五合一（LoRaWan）",
           "format": "TXT"
         },
         "keyHandler": {
-          "manufacturer": "武汉中科图灵",
+          "manufacturer": "武汉中科图灵科技有限公司",
           "deviceType": "消防用水五合一（LoRaWan）",
           "format": "TXT"
+        },
+        "register": {
+          "channelName": "消防用水五合一",
+          "deviceName": "消防用水五合一",
+          "manufacturer": "武汉中科图灵科技有限公司",
+          "deviceType": "消防用水五合一（LoRaWan）"
         }
       }
     }],

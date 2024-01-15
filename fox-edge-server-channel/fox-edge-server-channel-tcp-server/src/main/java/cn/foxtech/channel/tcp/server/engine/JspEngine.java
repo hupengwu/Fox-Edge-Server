@@ -7,7 +7,8 @@ import cn.foxtech.channel.socket.core.notify.OperateEntitySplitNotify;
 import cn.foxtech.channel.socket.core.script.ScriptEngineService;
 import cn.foxtech.channel.socket.core.service.ChannelManager;
 import cn.foxtech.channel.tcp.server.handler.ChannelHandler;
-import cn.foxtech.channel.tcp.server.service.ReportService;
+import cn.foxtech.channel.tcp.server.handler.ManageHandler;
+import cn.foxtech.channel.tcp.server.handler.SessionHandler;
 import cn.foxtech.common.entity.entity.OperateEntity;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.entity.service.redis.ConsumerRedisService;
@@ -36,9 +37,6 @@ public class JspEngine {
     private ChannelManager channelManager;
 
     @Autowired
-    private ReportService reportService;
-
-    @Autowired
     private ChannelProperties channelProperties;
 
     @Autowired
@@ -47,11 +45,23 @@ public class JspEngine {
     @Autowired
     private ScriptEngineService scriptEngineService;
 
+    @Autowired
+    private SessionHandler sessionHandler;
+
+    @Autowired
+    private ManageHandler manageHandler;
+
+
     public void startJspEngine(Integer serverPort, Map<String, Object> engine) {
         try {
             Map<String, Object> keyHandler = (Map<String, Object>) engine.getOrDefault("keyHandler", new HashMap<>());
             Map<String, Object> splitHandler = (Map<String, Object>) engine.getOrDefault("splitHandler", new HashMap<>());
             String returnText = (String) engine.getOrDefault("returnText", "");
+            Map<String, Object> register = (Map<String, Object>) engine.getOrDefault("register", new HashMap<>());
+            String channelName = (String) register.getOrDefault("channelName", "");
+            String manufacturer = (String) register.getOrDefault("manufacturer", "");
+            String deviceType = (String) register.getOrDefault("deviceType", "");
+            String deviceName = (String) register.getOrDefault("deviceName", "");
 
             OperateEntity find = new OperateEntity();
             find.setManufacturer((String) keyHandler.get("manufacturer"));
@@ -100,9 +110,19 @@ public class JspEngine {
             ChannelHandler channelHandler = new ChannelHandler();
             channelHandler.setServiceKeyHandler(keyNotify.getServiceKeyHandler());
             channelHandler.setChannelManager(this.channelManager);
-            channelHandler.setReportService(this.reportService);
             channelHandler.setLogger(this.channelProperties.isLogger());
+            channelHandler.setConsole(this.console);
             channelHandler.setReturnText(returnText);
+            channelHandler.setSessionHandler(this.sessionHandler);
+            channelHandler.setManageHandler(this.manageHandler);
+
+            // 绑定需要创建的通道和设备名称
+            this.manageHandler.setChannelName(channelName);
+            this.manageHandler.setManufacturer(manufacturer);
+            this.manageHandler.setDeviceType(deviceType);
+            this.manageHandler.setDeviceName(deviceName);
+
+            this.sessionHandler.setReturnText(returnText);
 
             // 创建一个Tcp Server实例
             NettyTcpServer.createServer(serverPort, splitNotify.getSplitMessageHandler(), channelHandler);

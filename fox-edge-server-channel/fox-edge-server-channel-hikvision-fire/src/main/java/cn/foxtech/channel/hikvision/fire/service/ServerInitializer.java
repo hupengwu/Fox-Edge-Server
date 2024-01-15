@@ -37,10 +37,6 @@ public class ServerInitializer {
     private LocalConfigService localConfigService;
 
     @Autowired
-    private ReportService reportService;
-
-
-    @Autowired
     private ChannelManager channelManager;
 
     @Autowired

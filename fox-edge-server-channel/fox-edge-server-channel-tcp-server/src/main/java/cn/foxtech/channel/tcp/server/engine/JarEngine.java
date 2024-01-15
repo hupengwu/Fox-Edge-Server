@@ -3,7 +3,8 @@ package cn.foxtech.channel.tcp.server.engine;
 import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.socket.core.service.ChannelManager;
 import cn.foxtech.channel.tcp.server.handler.ChannelHandler;
-import cn.foxtech.channel.tcp.server.service.ReportService;
+import cn.foxtech.channel.tcp.server.handler.ManageHandler;
+import cn.foxtech.channel.tcp.server.handler.SessionHandler;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.file.FileNameUtils;
 import cn.foxtech.common.utils.netty.server.tcp.NettyTcpServer;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,7 +30,6 @@ import java.util.Set;
 @Component
 public class JarEngine {
     private final Logger logger = Logger.getLogger(this.getClass());
-
     /**
      * 日志
      */
@@ -36,18 +37,29 @@ public class JarEngine {
     private RedisConsoleService console;
 
     @Autowired
-    private ReportService reportService;
+    private ChannelManager channelManager;
+
 
     @Autowired
     private ChannelProperties channelProperties;
 
+
     @Autowired
-    private ChannelManager channelManager;
+    private SessionHandler sessionHandler;
+
+    @Autowired
+    private ManageHandler manageHandler;
 
     public void startJarEngine(Integer serverPort, Map<String, Object> engine) {
         try {
             String keyHandler = (String) engine.get("keyHandler");
             String splitHandler = (String) engine.get("splitHandler");
+            String returnText = (String) engine.getOrDefault("returnText", "");
+            Map<String, Object> register = (Map<String, Object>) engine.getOrDefault("register", new HashMap<>());
+            String channelName = (String) register.getOrDefault("channelName", "");
+            String manufacturer = (String) register.getOrDefault("manufacturer", "");
+            String deviceType = (String) register.getOrDefault("deviceType", "");
+            String deviceName = (String) register.getOrDefault("deviceName", "");
 
             if (MethodUtils.hasEmpty(keyHandler, splitHandler)) {
                 throw new ServiceException("全局配置参数不能为空：keyHandler, splitHandler");
@@ -83,8 +95,19 @@ public class JarEngine {
             ChannelHandler channelHandler = new ChannelHandler();
             channelHandler.setServiceKeyHandler(serviceKeyHandler);
             channelHandler.setChannelManager(this.channelManager);
-            channelHandler.setReportService(this.reportService);
             channelHandler.setLogger(this.channelProperties.isLogger());
+            channelHandler.setConsole(this.console);
+            channelHandler.setReturnText(returnText);
+            channelHandler.setSessionHandler(this.sessionHandler);
+            channelHandler.setManageHandler(this.manageHandler);
+
+            // 绑定需要创建的通道和设备名称
+            this.manageHandler.setChannelName(channelName);
+            this.manageHandler.setManufacturer(manufacturer);
+            this.manageHandler.setDeviceType(deviceType);
+            this.manageHandler.setDeviceName(deviceName);
+
+            this.sessionHandler.setReturnText(returnText);
 
             // 创建一个Tcp Server实例
             NettyTcpServer.createServer(serverPort, splitMessageHandler, channelHandler);

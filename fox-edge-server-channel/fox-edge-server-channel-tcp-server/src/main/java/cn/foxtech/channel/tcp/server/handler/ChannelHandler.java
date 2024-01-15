@@ -1,7 +1,7 @@
 package cn.foxtech.channel.tcp.server.handler;
 
 import cn.foxtech.channel.socket.core.service.ChannelManager;
-import cn.foxtech.channel.tcp.server.service.ReportService;
+import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.netty.handler.SocketChannelHandler;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.utils.MethodUtils;
@@ -11,25 +11,30 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.invoke.MethodHandle;
-
 public class ChannelHandler extends SocketChannelHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelHandler.class);
+
+    @Setter
+    private RedisConsoleService console;
 
     @Setter
     private ChannelManager channelManager;
 
     @Setter
-    private ReportService reportService;
+    private ServiceKeyHandler serviceKeyHandler;
 
     @Setter
-    private ServiceKeyHandler serviceKeyHandler;
+    private SessionHandler sessionHandler;
+
+    @Setter
+    private ManageHandler manageHandler;
+
 
     @Setter
     private boolean logger = false;
 
     @Setter
-    private String returnText = "";
+    private String returnText;
 
 
     /**
@@ -41,8 +46,10 @@ public class ChannelHandler extends SocketChannelHandler {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         this.channelManager.insert(ctx);
 
-        LOGGER.info("建立连接:" + ctx.channel().remoteAddress());
-
+        // 记录接收到的报文
+        String message = "建立连接:" + ctx.channel().remoteAddress();
+        LOGGER.info(message);
+        console.info(message);
     }
 
     /**
@@ -60,7 +67,9 @@ public class ChannelHandler extends SocketChannelHandler {
 
         // 记录接收到的报文
         if (this.logger) {
-            LOGGER.info("channelRead: " + ctx.channel().remoteAddress() + ": " + HexUtils.byteArrayToHexString(data));
+            String message = "channelRead: " + ctx.channel().remoteAddress() + ": " + HexUtils.byteArrayToHexString(data);
+            LOGGER.info(message);
+            console.info(message);
         }
 
 
@@ -71,24 +80,27 @@ public class ChannelHandler extends SocketChannelHandler {
             serviceKey = this.serviceKeyHandler.getServiceKey(data);
 
             // 检查：key是否为空
-            if (MethodUtils.hasEmpty(serviceKey)){
+            if (MethodUtils.hasEmpty(serviceKey)) {
                 return;
             }
 
             // 标记:serviceKey信息
             this.channelManager.setServiceKey(ctx, serviceKey);
+
+            // 记录接收到的报文
+            String message = "身份识别:" + ctx.channel().remoteAddress() + "; serviceKey=" + serviceKey;
+            LOGGER.info(message);
+            console.info(message);
+
+            // 发出创建通道的消息
+            this.manageHandler.createChannel(serviceKey);
+            // 发出创建设备的消息
+            this.manageHandler.createDevice(serviceKey);
         }
 
-        if (MethodUtils.hasEmpty(this.returnText)){
-            // 保存PDU到接收缓存
-            this.reportService.push(serviceKey, (byte[]) msg);
-        }
-        else {
-            String message = new String((byte[]) msg, returnText);
-            this.reportService.push(serviceKey, message);
-        }
 
-
+        // 消息处理
+        this.sessionHandler.onMessage(ctx, serviceKey, data);
     }
 
     /**
@@ -99,7 +111,9 @@ public class ChannelHandler extends SocketChannelHandler {
     public void channelInactive(final ChannelHandlerContext ctx) {
         this.channelManager.remove(ctx.channel().remoteAddress());
 
-        LOGGER.info("连接断开:" + ctx.channel().remoteAddress());
+        String message = "连接断开:" + ctx.channel().remoteAddress();
+        LOGGER.info(message);
+        console.info(message);
     }
 
     /**
@@ -109,6 +123,8 @@ public class ChannelHandler extends SocketChannelHandler {
      * @param cause 源头
      */
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        LOGGER.info("连接异常:" + ctx.channel().remoteAddress());
+        String message = "连接异常:" + ctx.channel().remoteAddress() + "， cause: " + cause.getMessage();
+        LOGGER.error(message);
+        console.error(message);
     }
 }
