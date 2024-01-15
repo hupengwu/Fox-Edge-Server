@@ -40,6 +40,8 @@ public class EngineParamService {
         Map<String, Object> splitHandler = new HashMap<>();
         splitHandler.put("decode", buildSplitHandlerDefault());
         this.engineParamMap.put("splitHandler", splitHandler);
+
+        this.engineParamMap.put("include", buildIncludeDefault());
     }
 
     private Map<String, String> buildEncodeDefault() {
@@ -93,6 +95,16 @@ public class EngineParamService {
             scriptMethod.put("code", code);
 
             return scriptMethod;
+        } catch (Exception e) {
+            throw new ServiceException("装载缺省的JSP文件错误:" + e.getMessage());
+        }
+    }
+
+    private String buildIncludeDefault() {
+        try {
+            String code = this.loadClassPathFile("javascrpit/includeDefault.js");
+
+            return code;
         } catch (Exception e) {
             throw new ServiceException("装载缺省的JSP文件错误:" + e.getMessage());
         }

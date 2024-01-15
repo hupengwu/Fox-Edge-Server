@@ -11,8 +11,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class ScriptEngineService {
     private final ScriptEngineManager manager = new ScriptEngineManager();
-
     private final Map<String, Object> engineMap = new ConcurrentHashMap<>();
+
 
     public ScriptEngine getScriptEngine(String manufacturer, String deviceType) {
         ScriptEngine engine = (ScriptEngine) Maps.getValue(this.engineMap, manufacturer, deviceType);
@@ -23,4 +23,5 @@ public class ScriptEngineService {
 
         return engine;
     }
+
 }

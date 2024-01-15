@@ -19,6 +19,7 @@ public class Test {
     }
 
     public static void sysStatus() {
+        String t = "{ctrlEntity={sn=54, protocolVersion=1.01, time=2021-10-28 10:35:44, srcAddr=F6380C000000, dstAddr=000000000000, aduLength=48, cmd=2}, aduEntity={type=2, infObjEntities=[{sysType=1, sysAddress=0, compType=0, compCirc=35579, compNode=1, compStatus=3, compDescription=\u0002, time=2021-10-28 10:35:44}]}, sn=54}";
 
         // 设备发送报文
         byte[] data = HexUtils.hexStringToByteArray("4040360001012C230A1C0A15F6380C0000000000000000003000020201010000FB8A01000300020000000000000000000000000000000000000000000000000000000000002C230A1C0A155B2323");

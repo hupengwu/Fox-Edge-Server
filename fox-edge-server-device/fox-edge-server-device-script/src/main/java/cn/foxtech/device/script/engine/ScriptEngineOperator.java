@@ -67,9 +67,6 @@ public class ScriptEngineOperator {
         try {
             // 记录格式
 
-            // 装载JSP脚本
-            engine.eval(decodeScript);
-
             // 执行JSP脚本中的函数
             Object data = engine.eval(decodeMain + "();");
 
@@ -95,9 +92,6 @@ public class ScriptEngineOperator {
     public Map<String, Object> decodeStatus(ScriptEngine engine, String operateName, String decodeMain, String decodeScript) {
         // 状态格式
         try {
-            // 装载JSP脚本
-            engine.eval(decodeScript);
-
             // 执行JSP脚本中的函数
             Object data = engine.eval(decodeMain + "();");
 
@@ -121,9 +115,6 @@ public class ScriptEngineOperator {
 
     public Map<String, Object> decodeResult(ScriptEngine engine, String operateName, String decodeMain, String decodeScript) {
         try {
-            // 装载JSP脚本
-            engine.eval(decodeScript);
-
             // 执行JSP脚本中的函数
             Object data = engine.eval(decodeMain + "();");
 
@@ -145,9 +136,6 @@ public class ScriptEngineOperator {
 
     public Object encode(ScriptEngine engine, String encodeMain, String encodeScript) {
         try {
-            // 装载JSP脚本
-            engine.eval(encodeScript);
-
             // 执行JSP脚本中的函数
             String out = (String) engine.eval(encodeMain + "();");
             if (out == null) {

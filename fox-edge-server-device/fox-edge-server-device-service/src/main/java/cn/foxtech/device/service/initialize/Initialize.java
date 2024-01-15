@@ -4,6 +4,7 @@ package cn.foxtech.device.service.initialize;
 import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.status.ServiceStatusScheduler;
+import cn.foxtech.device.script.engine.ScriptEngineInitialize;
 import cn.foxtech.device.service.controller.DeviceExecuteController;
 import cn.foxtech.device.service.controller.DeviceReportController;
 import cn.foxtech.device.service.scheduler.EntityManageScheduler;
@@ -49,6 +50,8 @@ public class Initialize implements CommandLineRunner {
     @Autowired
     private InitialConfigService initialConfigService;
 
+    @Autowired
+    private ScriptEngineInitialize engineInitialize;
 
     @Override
     public void run(String... args) {
@@ -67,6 +70,9 @@ public class Initialize implements CommandLineRunner {
         // 从第三方jar扫描解码器，并生成redis记录
         this.methodEntityService.scanJarFile();
         this.methodEntityService.updateEntityList();
+
+        // 脚本引擎的初始化
+        this.engineInitialize.initialize();
 
         this.entityManageScheduler.schedule();
 
