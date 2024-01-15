@@ -112,7 +112,6 @@ public class JspEngine {
             channelHandler.setChannelManager(this.channelManager);
             channelHandler.setLogger(this.channelProperties.isLogger());
             channelHandler.setConsole(this.console);
-            channelHandler.setReturnText(returnText);
             channelHandler.setSessionHandler(this.sessionHandler);
             channelHandler.setManageHandler(this.manageHandler);
 

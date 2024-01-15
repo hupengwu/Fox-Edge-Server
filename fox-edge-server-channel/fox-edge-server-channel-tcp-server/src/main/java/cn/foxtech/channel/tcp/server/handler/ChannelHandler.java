@@ -33,9 +33,6 @@ public class ChannelHandler extends SocketChannelHandler {
     @Setter
     private boolean logger = false;
 
-    @Setter
-    private String returnText;
-
 
     /**
      * 客户端与服务端第一次建立连接时 执行

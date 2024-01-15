@@ -9,6 +9,7 @@ import java.util.Map;
 public class DemoTelecom {
 
     public static void main(String[] args) throws UnsupportedEncodingException {
+        String txtx = HexUtils.byteArrayToHexString("##0457QN=20210320163101890;ST=32;CN=2011;PW=123456;MN=81733553213013;Flag=4;CP=&&DataTime=20210320013400;w00000-Rtd=181.682,w00000-Flag=N;w21001-SampleTime=20210320005400,w21001-Rtd=45.160,w21001-Flag=N;w21011-SampleTime=20210320013400,w21011-Rtd=1.970,w21011-Flag=N;w21003-SampleTime=20210320013400,w21003-Rtd=53.131,w21003-Flag=N;w01018-SampleTime=20210320013400,w01018-Rtd=194.200,w01018-Flag=N;w01001-SampleTime=20210320013406,w01001-Rtd=7.496,w01001-Flag=N&&6E80\r\n".getBytes());
         byte[] arrCmd = HexUtils.hexStringToByteArray("1B 36 30 38 2F 31 32 2F 30 32 20 20 31 37 3A 32 34 0A 20 20 30 30 34  2D 30 30 34 0A1B 39 CAD7 B4 CE BB F0 BE AF  0AC8 B9 C2A5 D2 BB B2 E3 C9 CF BF D5 0A B8 D0 D1 CC CC BD B2 E2 C6 F7 0A0A");
         String txt1 = new String(arrCmd,"GB2312");
         System.out.println(txt1);
