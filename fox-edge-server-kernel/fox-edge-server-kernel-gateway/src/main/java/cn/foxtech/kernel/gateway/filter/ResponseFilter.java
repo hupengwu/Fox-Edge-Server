@@ -53,6 +53,7 @@ public class ResponseFilter implements GlobalFilter, Ordered {
         return chain.filter(exchange.mutate().response(decoratedResponse).build());
     }
 
+
     @Override
     public int getOrder() {
         return -10;
@@ -221,7 +222,7 @@ public class ResponseFilter implements GlobalFilter, Ordered {
                 String finalBody = this.responseHandler.wrapBody(originalBody);
 
                 // 重新打包
-                return this.getDelegate().bufferFactory().wrap(finalBody.getBytes());
+                return this.getDelegate().bufferFactory().wrap(finalBody.getBytes(StandardCharsets.UTF_8));
             });
             return super.writeWith(body);
         }
