@@ -91,7 +91,7 @@ public class JspEngine {
             // 绑定动态通知
             OperateEntitySplitNotify splitNotify = new OperateEntitySplitNotify();
             splitNotify.setScriptEngineService(this.scriptEngineService);
-            splitNotify.setConsoleService(this.console);
+            splitNotify.setConsole(this.console);
             splitNotify.setOperateEntity(splitHandlerEntity);
             splitNotify.setFormat((String) splitHandler.getOrDefault("format", "HEX"));
             splitNotify.reset();
@@ -100,7 +100,7 @@ public class JspEngine {
             // 绑定动态通知
             OperateEntityKeyNotify keyNotify = new OperateEntityKeyNotify();
             keyNotify.setScriptEngineService(this.scriptEngineService);
-            keyNotify.setConsoleService(this.console);
+            keyNotify.setConsole(this.console);
             keyNotify.setOperateEntity(keyHandlerEntity);
             keyNotify.setFormat((String) splitHandler.getOrDefault("format", "HEX"));
             keyNotify.reset();

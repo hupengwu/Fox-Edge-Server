@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 public class OperateEntitySplitNotify extends BaseConsumerEntityNotify {
     private static final Logger logger = Logger.getLogger(OperateEntitySplitNotify.class);
 
-    private RedisConsoleService consoleService;
+    private RedisConsoleService console;
 
     /**
      * 脚本引擎
@@ -62,8 +62,9 @@ public class OperateEntitySplitNotify extends BaseConsumerEntityNotify {
             this.splitMessageHandler.setScriptSplitMessage(scriptSplitMessage);
             this.splitMessageHandler.resetHeader();
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            this.consoleService.error(e.getMessage());
+            String message = "reset异常：manufacturer=" + this.operateEntity.getManufacturer() + "， deviceType=" + this.operateEntity.getDeviceType() + "， operateName=" + this.operateEntity.getOperateName() + e.getMessage();
+            this.logger.error(message);
+            this.console.error(message);
         }
     }
 }

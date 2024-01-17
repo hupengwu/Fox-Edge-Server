@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 public class OperateEntityKeyNotify extends BaseConsumerEntityNotify {
     private static final Logger logger = Logger.getLogger(OperateEntityKeyNotify.class);
 
-    private RedisConsoleService consoleService;
+    private RedisConsoleService console;
 
     /**
      * 脚本引擎
@@ -61,8 +61,9 @@ public class OperateEntityKeyNotify extends BaseConsumerEntityNotify {
 
             this.serviceKeyHandler.setScriptServiceKey(scriptServiceKey);
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            this.consoleService.error(e.getMessage());
+            String message = "reset异常：manufacturer=" + this.operateEntity.getManufacturer() + "， deviceType=" + this.operateEntity.getDeviceType() + "， operateName=" + this.operateEntity.getOperateName() + e.getMessage();
+            this.logger.error(message);
+            this.console.error(message);
         }
     }
 }
