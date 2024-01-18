@@ -99,7 +99,7 @@ public class RepoLocalOperateService {
         Boolean polling = (Boolean) params.get(OperateVOFieldConstant.field_polling);
         Integer timeout = (Integer) params.get(OperateVOFieldConstant.field_timeout);
         Map<String, Object> engineParam = (Map<String, Object>) params.get(OperateVOFieldConstant.field_engine_param);
-        String description = (String) engineParam.get(OperateVOFieldConstant.field_description);
+        Map<String, Object> extendParam = (Map<String, Object>) params.get(OperateVOFieldConstant.field_extend_param);
 
         // 简单校验参数
         if (MethodUtils.hasEmpty(compId, operateName, operateMode, dataType, serviceType, engineType, polling, timeout)) {
@@ -123,6 +123,7 @@ public class RepoLocalOperateService {
         entity.setManufacturer(manufacturer);
         entity.setEngineType(engineType);
         entity.setEngineParam(engineParam);
+        entity.setExtendParam(extendParam);
         entity.setOperateName(operateName);
         entity.setOperateMode(operateMode);
         entity.setDataType(dataType);
@@ -144,8 +145,13 @@ public class RepoLocalOperateService {
                 entity.setEngineParam(this.engineParamService.getDefault(operateMode));
             }
 
-            // 将描述信息，写在engineParam
-            entity.getEngineParam().put(OperateVOFieldConstant.field_description,description);
+            if (entity.getExtendParam() == null) {
+                entity.setExtendParam(new HashMap<>());
+            }
+            if (entity.getEngineParam() == null) {
+                entity.setEngineParam(new HashMap<>());
+            }
+
 
             OperateEntity exist = this.entityManageService.getEntity(entity.makeServiceKey(), OperateEntity.class);
             if (exist != null) {
@@ -164,9 +170,11 @@ public class RepoLocalOperateService {
             if (MethodUtils.hasEmpty(entity.getEngineParam())) {
                 entity.setEngineParam(exist.getEngineParam());
             }
+            // 如果为空，那么说明用户不想修改该数据
+            if (MethodUtils.hasNull(entity.getExtendParam())) {
+                entity.setExtendParam(exist.getExtendParam());
+            }
 
-            // 将描述信息，写在engineParam
-            entity.getEngineParam().put(OperateVOFieldConstant.field_description,description);
 
             if (!exist.getManufacturer().equals(manufacturer) // 不允许修改
                     || !exist.getDeviceType().equals(deviceType) // 不允许修改

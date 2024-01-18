@@ -21,6 +21,11 @@ public class OperateEntity extends OperateMethodBase {
      * 脚本引擎
      */
     private Map<String, Object> engineParam = new HashMap<>();
+    /**
+     * 扩展参数
+     */
+    private Map<String, Object> extendParam = new HashMap<>();
+
 
     /**
      * 获得bind方法
@@ -39,11 +44,13 @@ public class OperateEntity extends OperateMethodBase {
     public List<Object> makeServiceValueList() {
         List<Object> list = super.makeServiceValueList();
         list.add(this.engineParam);
+        list.add(this.extendParam);
         return list;
     }
 
     public void bind(Map<String, Object> map) {
         super.bind(map);
         this.engineParam = (Map<String, Object>) map.get("engineParam");
+        this.extendParam = (Map<String, Object>) map.get("extendParam");
     }
 }

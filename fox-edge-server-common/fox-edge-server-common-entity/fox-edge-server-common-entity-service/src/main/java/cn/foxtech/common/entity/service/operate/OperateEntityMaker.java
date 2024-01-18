@@ -36,6 +36,7 @@ public class OperateEntityMaker {
         result.bind(entity);
 
         result.setEngineParam(JsonUtils.buildJsonWithoutException(entity.getEngineParam()));
+        result.setExtendParam(JsonUtils.buildJsonWithoutException(entity.getExtendParam()));
         return result;
     }
 
@@ -55,6 +56,17 @@ public class OperateEntityMaker {
             e.printStackTrace();
         }
 
+        try {
+            Map<String, Object> params = JsonUtils.buildObject(entity.getExtendParam(), Map.class);
+            if (params != null) {
+                result.setExtendParam(params);
+            } else {
+                System.out.println("设备配置参数转换Json对象失败：" + entity.getOperateName() + ":" + entity.getExtendParam());
+            }
+        } catch (Exception e) {
+            System.out.println("设备配置参数转换Json对象失败：" + entity.getOperateName() + ":" + entity.getExtendParam());
+            e.printStackTrace();
+        }
 
 
         return result;

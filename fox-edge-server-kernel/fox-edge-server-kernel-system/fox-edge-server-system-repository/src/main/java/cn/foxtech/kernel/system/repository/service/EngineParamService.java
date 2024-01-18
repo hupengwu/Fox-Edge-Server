@@ -33,6 +33,10 @@ public class EngineParamService {
         report.put("decode", buildDecodeDefault());
         this.engineParamMap.put("report", report);
 
+        Map<String, Object> include = new HashMap<>();
+        include.put("include", buildIncludeDefault());
+        this.engineParamMap.put("include", include);
+
         Map<String, Object> keyHandler = new HashMap<>();
         keyHandler.put("decode", buildKeyHandlerDefault());
         this.engineParamMap.put("keyHandler", keyHandler);
@@ -40,8 +44,6 @@ public class EngineParamService {
         Map<String, Object> splitHandler = new HashMap<>();
         splitHandler.put("decode", buildSplitHandlerDefault());
         this.engineParamMap.put("splitHandler", splitHandler);
-
-        this.engineParamMap.put("include", buildIncludeDefault());
     }
 
     private Map<String, String> buildEncodeDefault() {
@@ -100,11 +102,15 @@ public class EngineParamService {
         }
     }
 
-    private String buildIncludeDefault() {
+    private Map<String, String> buildIncludeDefault() {
         try {
             String code = this.loadClassPathFile("javascrpit/includeDefault.js");
 
-            return code;
+            Map<String, String> scriptMethod = new HashMap<>();
+            scriptMethod.put("main", "include");
+            scriptMethod.put("code", code);
+
+            return scriptMethod;
         } catch (Exception e) {
             throw new ServiceException("装载缺省的JSP文件错误:" + e.getMessage());
         }

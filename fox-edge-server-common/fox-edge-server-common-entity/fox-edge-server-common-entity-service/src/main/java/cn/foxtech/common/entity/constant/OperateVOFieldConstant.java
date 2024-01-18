@@ -13,6 +13,7 @@ public class OperateVOFieldConstant extends BaseVOFieldConstant {
 
     public static final String field_engine_type = "engineType";
     public static final String field_engine_param = "engineParam";
+    public static final String field_extend_param = "extendParam";
 
     public static final String field_operate_mode = "operateMode";
     public static final String field_operate_modes = "operateModes";

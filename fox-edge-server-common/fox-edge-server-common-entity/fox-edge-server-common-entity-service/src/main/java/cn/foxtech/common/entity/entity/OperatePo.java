@@ -5,7 +5,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
@@ -17,6 +19,11 @@ public class OperatePo extends OperateMethodBase {
     private String engineParam;
 
     /**
+     * 扩展参数
+     */
+    private String extendParam;
+
+    /**
      * 获取业务值
      *
      * @return 对象列表
@@ -24,6 +31,7 @@ public class OperatePo extends OperateMethodBase {
     public List<Object> makeServiceValueListList() {
         List<Object> list = this.makeServiceValueList();
         list.add(this.engineParam);
+        list.add(this.extendParam);
         return list;
     }
 }
