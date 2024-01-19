@@ -49,12 +49,17 @@ public class RedisConsoleService extends RedisLoggerService {
     }
 
     private Map<String, Object> build(String level, Object value, Long time) {
+        // 调用者的堆栈深度
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+        StackTraceElement stackTraceElement = stackTraceElements[4];
+
         Map<String, Object> map = new HashMap<>();
         map.put(RedisStatusConstant.field_service_type, this.foxServiceType);
         map.put(RedisStatusConstant.field_service_name, this.foxServiceName);
         map.put("createTime", time);
         map.put("level", level);
         map.put("value", value);
+        map.put("stack", stackTraceElement.getClassName() + ":" + stackTraceElement.getLineNumber() + "   " + stackTraceElement.getMethodName() + "()");
 
         return map;
     }

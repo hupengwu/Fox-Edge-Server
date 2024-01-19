@@ -63,8 +63,11 @@ public class OperateNotify implements BaseConsumerTypeNotify {
 
             // 为引擎装载JSP脚本
             if (operateEntity.getOperateMode().equals("include")) {
-                String jsp = (String) operateEntity.getEngineParam().get("include");
-                engine.eval(jsp);
+                Map<String, Object> include = (Map<String, Object>) operateEntity.getEngineParam().get("include");
+                if (!MethodUtils.hasEmpty(include)) {
+                    String jsp = (String) include.get("code");
+                    engine.eval(jsp);
+                }
             } else {
                 Map<String, Object> decode = (Map<String, Object>) operateEntity.getEngineParam().get("decode");
                 if (!MethodUtils.hasEmpty(decode)) {
@@ -81,8 +84,8 @@ public class OperateNotify implements BaseConsumerTypeNotify {
 
         } catch (Exception e) {
             String message = "初始化脚本引擎异常：" + entity.makeServiceKey() + "; " + e.getMessage();
-            logger.error(message);
-            console.error(message);
+            this.logger.error(message);
+            this.console.error(message);
         }
 
 
