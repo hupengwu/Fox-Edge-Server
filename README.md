@@ -114,16 +114,26 @@ EMAIL： 5389408@QQ.COM
 
 ## 通信协议解码器列表
 1. fox-edge-server-protocol-bass260zj 广东高新兴的浙江移动版基站门禁的通信协议
-2. fox-edge-server-protocol-cetups CET的UPS通信协议
-3. fox-edge-server-protocol-cjt188 CJT188的通信协议
+2. fox-edge-server-protocol-cjt188 CJT188的通信协议
+3. fox-edge-server-protocol-cetups CET的UPS通信协议
 4. fox-edge-server-protocol-dlt645-1997 DLT645通信协议
-5. fox-edge-server-protocol-gdana-digester 格丹纳公司的检测仪的通信协议
-6. fox-edge-server-protocol-iec104-core IEC104的通信协议
-7. fox-edge-server-protocol-mitsubishi-plc-fx 三菱公司的PLC通信协议
-8. fox-edge-server-protocol-modbus 西门子的MODBUS通信协议
-9. fox-edge-server-protocol-omron-fins 欧姆龙的Fins系列通信协议
-10. fox-edge-server-protocol-shmeter上海电表厂的通信协议
-11. fox-edge-server-protocol-snmp SNMP的通用协议
-12. fox-edge-server-protocol-telecom-core 电信总局的通信协议
-13. fox-edge-server-protocol-zxdu58 中兴通信的DU58电源通信协议
+5. fox-edge-server-protocol-dahua-fire-core 大华消防通信协议
+6. fox-edge-server-protocol-gdana-digester 格丹纳公司的检测仪通信协议
+7. fox-edge-server-protocol-hj212-2017 中国环境HJ212-2017通信协议
+8. fox-edge-server-protocol-hikvision-fire-core 海康威视通信协议
+9. fox-edge-server-protocol-modbus ModBus通信协议
+10. fox-edge-server-protocol-mitsubishi-plc-fx 三菱 PLC协议
+11. fox-edge-server-protocol-omron-fins 欧姆龙Fins PLC协议
+12. fox-edge-server-protocol-zs-sht30-1t-1h zs-sht30-1t-1h温湿度传感器协议
+13. fox-edge-server-protocol-zktl-air6in1 中科图灵air6in1协议
+14. fox-edge-server-protocol-zktl-air5in1 中科图灵air5in1协议
+15. fox-edge-server-protocol-zktl-electric 中科图灵电气协议协议
+16. fox-edge-server-protocol-zktl-ctrl4g 中科图灵ctrl4g协议协议
+17. fox-edge-server-protocol-telecom-core 中国电信总局的通信协议
+18. fox-edge-server-protocol-snmp SNMP通信协议
+19. fox-edge-server-protocol-opc-ua OPC-UA通信协议
+20. fox-edge-server-protocol-iec104-core IEC104通信协议
+21. fox-edge-server-protocol-zxdu58 中兴通信的DU58电源通信协议
+22. fox-edge-server-protocol-shmeter 上海电表通信协议
+23. fox-edge-server-protocol-s7plc 西门子S7通信协议
 
