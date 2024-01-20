@@ -1,5 +1,6 @@
 {
   "configValue": {
+    "enable": false,
     "mqtt": {
       "host": "39.108.137.38",
       "name": "Mica-Mqtt-Client",

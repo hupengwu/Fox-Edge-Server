@@ -34,6 +34,12 @@ public class MqttProxyService {
         this.configService.initialize("mqttConfig", "mqttConfig.json");
         Map<String, Object> configValue = this.configService.getConfigParam("mqttConfig");
         this.mqttConfig = (Map<String, Object>) configValue.getOrDefault("mqtt", new HashMap<>());
+        Boolean enable = (Boolean) configValue.getOrDefault("enable", false);
+
+        // 检查：是否需要开启MQTT订阅
+        if (!Boolean.TRUE.equals(enable)) {
+            return;
+        }
 
         // 提取参数
         Map<String, Object> topic = (Map<String, Object>) configValue.getOrDefault("topic", new HashMap<>());
