@@ -1,19 +1,63 @@
 {
   "configValue": {
-    "decoderList": [{
-      "decoder": [{
-        "jarFile": "\\jar\\decoder\\fox-edge-server-protocol-zktl-air6in1-1.0.3.jar"
-      }],
-      "keyHandler": "cn.foxtech.device.protocol.v1.zktl.air6in1.handler.ZktlServiceKeyHandler",
-      "serverPort": 9301,
-      "lifeCycle": 3600
-    }, {
-      "decoder": [{
-        "jarFile": "\\jar\\decoder\\fox-edge-server-protocol-zktl-air5in1-1.0.3.jar"
-      }],
-      "keyHandler": "cn.foxtech.device.protocol.v1.zktl.air5in1.handler.ZktlServiceKeyHandler",
-      "serverPort": 9302
-    }],
+    "jarFiles": [
+      {
+        "jarFile": "/jar/decoder/fox-edge-server-protocol-zktl-air6in1.v1.jar"
+      }
+    ],
+    "servers": [
+      {
+        "serverPort": 9301,
+        "engine": {
+          "engineType": "Java",
+          "returnText": "",
+          "keyHandler": "cn.foxtech.device.protocol.v1.zktl.air6in1.handler.ZktlServiceKeyHandler"
+        },
+        "register": {
+          "channelName": "",
+          "deviceName": "",
+          "manufacturer": "",
+          "deviceType": ""
+        }
+      },
+      {
+        "serverPort": 9302,
+        "engine": {
+          "engineType": "JavaScript",
+          "returnText": "",
+          "keyHandler": {
+            "manufacturer": "武汉中科图灵科技有限公司",
+            "deviceType": "消防用水五合一（LoRaWan）",
+            "format": "TXT"
+          },
+          "register": {
+            "channelName": "消防用水五合一",
+            "deviceName": "消防用水五合一",
+            "manufacturer": "武汉中科图灵科技有限公司",
+            "deviceType": "消防用水五合一（LoRaWan）"
+          }
+        }
+      },
+      {
+        "serverPort": 9303,
+        "engine": {
+          "engineType": "JavaScript",
+          "returnText": "GB2312",
+          "keyHandler": {
+            "manufacturer": "中国环境保护设备",
+            "deviceType": "HJ212-2017",
+            "format": "TXT"
+          },
+          "register": {
+            "channelName": "HJ212-2017",
+            "deviceName": "HJ212-2017",
+            "manufacturer": "中国环境保护设备",
+            "deviceType": "HJ212-2017"
+          }
+        }
+      }
+    ],
+    "lifeCycle": 3600,
     "logger": false
   },
   "configParam": {},

@@ -16,7 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Component
 public class ReportService {
-    private final Map<String, List<byte[]>> channelMap = new ConcurrentHashMap<>();
+    private final Map<String, List<Object>> channelMap = new ConcurrentHashMap<>();
 
     @Autowired
     private ChannelProperties channelProperties;
@@ -24,8 +24,8 @@ public class ReportService {
     @Autowired
     private EntityManageService entityManageService;
 
-    public synchronized void push(String serviceKey, byte[] pdu) {
-        List<byte[]> list = this.channelMap.computeIfAbsent(serviceKey, k -> new CopyOnWriteArrayList<>());
+    public synchronized void push(String serviceKey, Object pdu) {
+        List<Object> list = this.channelMap.computeIfAbsent(serviceKey, k -> new CopyOnWriteArrayList<>());
         list.add(pdu);
 
         synchronized (this) {
@@ -37,7 +37,7 @@ public class ReportService {
     public List<ChannelRespondVO> popAll() {
         List<ChannelRespondVO> respondVOList = new ArrayList<>();
         for (String serviceKey : this.channelMap.keySet()) {
-            List<byte[]> list = this.channelMap.get(serviceKey);
+            List<Object> list = this.channelMap.get(serviceKey);
 
             ChannelEntity channelEntity = this.entityManageService.getEntity(ChannelEntity.class, (Object value) -> {
                 ChannelEntity entity = (ChannelEntity) value;
@@ -57,12 +57,17 @@ public class ReportService {
             }
 
 
-            for (byte[] pdu : list) {
+            for (Object pdu : list) {
                 ChannelRespondVO respondVO = new ChannelRespondVO();
                 respondVO.setUuid(null);
                 respondVO.setType(this.channelProperties.getChannelType());
                 respondVO.setName(channelEntity.getChannelName());
-                respondVO.setRecv(HexUtils.byteArrayToHexString(pdu));
+                if (pdu instanceof String) {
+                    respondVO.setRecv(pdu);
+                } else {
+                    respondVO.setRecv(HexUtils.byteArrayToHexString((byte[]) pdu));
+                }
+
 
                 respondVOList.add(respondVO);
             }
@@ -71,5 +76,6 @@ public class ReportService {
         }
 
         return respondVOList;
+
     }
 }

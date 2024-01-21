@@ -1,18 +1,17 @@
-package cn.foxtech.channel.tcp.server.engine;
+package cn.foxtech.channel.udp.server.engine;
 
 import cn.foxtech.channel.common.properties.ChannelProperties;
 import cn.foxtech.channel.common.service.EntityManageService;
 import cn.foxtech.channel.socket.core.notify.OperateEntityKeyNotify;
-import cn.foxtech.channel.socket.core.notify.OperateEntitySplitNotify;
 import cn.foxtech.channel.socket.core.script.ScriptEngineService;
-import cn.foxtech.channel.socket.core.service.ChannelManager;
-import cn.foxtech.channel.tcp.server.handler.ChannelHandler;
-import cn.foxtech.channel.tcp.server.handler.ManageHandler;
-import cn.foxtech.channel.tcp.server.handler.SessionHandler;
+import cn.foxtech.channel.udp.server.handler.ChannelHandler;
+import cn.foxtech.channel.udp.server.handler.ManageHandler;
+import cn.foxtech.channel.udp.server.handler.SessionHandler;
+import cn.foxtech.channel.udp.server.service.ChannelManager;
 import cn.foxtech.common.entity.entity.OperateEntity;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.entity.service.redis.ConsumerRedisService;
-import cn.foxtech.common.utils.netty.server.tcp.NettyTcpServer;
+import cn.foxtech.common.utils.netty.server.udp.NettyUdpServer;
 import cn.foxtech.core.exception.ServiceException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +54,6 @@ public class JspEngine {
     public void startJspEngine(Integer serverPort, Map<String, Object> engine) {
         try {
             Map<String, Object> keyHandler = (Map<String, Object>) engine.getOrDefault("keyHandler", new HashMap<>());
-            Map<String, Object> splitHandler = (Map<String, Object>) engine.getOrDefault("splitHandler", new HashMap<>());
             String returnText = (String) engine.getOrDefault("returnText", "");
             Map<String, Object> register = (Map<String, Object>) engine.getOrDefault("register", new HashMap<>());
             String channelName = (String) register.getOrDefault("channelName", "");
@@ -74,28 +72,9 @@ public class JspEngine {
                 throw new ServiceException("获得身份识别keyHandler的操作方法出错：manufacturer, deviceType" + find.makeServiceKey());
             }
 
-            find = new OperateEntity();
-            find.setManufacturer((String) splitHandler.get("manufacturer"));
-            find.setDeviceType((String) splitHandler.get("deviceType"));
-            find.setOperateName("splitHandler");
-
-            // 获得操作实体：报文分拆
-            OperateEntity splitHandlerEntity = this.entityManageService.getEntity(find.makeServiceKey(), OperateEntity.class);
-            if (splitHandlerEntity == null) {
-                throw new ServiceException("获得报文分拆splitHandler的操作方法出错：manufacturer, deviceType" + find.makeServiceKey());
-            }
 
             ConsumerRedisService consumerRedisService = (ConsumerRedisService) this.entityManageService.getBaseRedisService(OperateEntity.class);
 
-
-            // 绑定动态通知
-            OperateEntitySplitNotify splitNotify = new OperateEntitySplitNotify();
-            splitNotify.setScriptEngineService(this.scriptEngineService);
-            splitNotify.setConsole(this.console);
-            splitNotify.setOperateEntity(splitHandlerEntity);
-            splitNotify.setFormat((String) splitHandler.getOrDefault("format", "HEX"));
-            splitNotify.reset();
-            consumerRedisService.bindEntityNotify(splitNotify);
 
             // 绑定动态通知
             OperateEntityKeyNotify keyNotify = new OperateEntityKeyNotify();
@@ -124,7 +103,7 @@ public class JspEngine {
             this.sessionHandler.setReturnText(returnText);
 
             // 创建一个Tcp Server实例
-            NettyTcpServer.createServer(serverPort, splitNotify.getSplitMessageHandler(), channelHandler);
+            NettyUdpServer.createServer(serverPort, channelHandler);
         } catch (Exception e) {
             String message = "startJspEngine出现异常:" + e.getMessage();
             this.logger.info(message);

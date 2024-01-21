@@ -12,7 +12,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * 连接状态的管理
  * 设备主动上行连接的时候，它能够直接提供的是自己的IP+PORT信息，所以用SocketAddress来查询信息
  */
-@Component
 public class ChannelManager {
     private final Map<SocketAddress, ChannelHandlerContext> skt2ctx = new ConcurrentHashMap<>();
     private final Map<SocketAddress, String> skt2key = new ConcurrentHashMap<>();

@@ -80,6 +80,12 @@
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-channel-socket-core</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-utils-file</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
@@ -94,7 +100,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
-
 
     </dependencies>
 

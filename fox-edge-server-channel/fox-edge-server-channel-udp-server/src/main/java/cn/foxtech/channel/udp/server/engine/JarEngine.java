@@ -1,13 +1,13 @@
-package cn.foxtech.channel.tcp.server.engine;
+package cn.foxtech.channel.udp.server.engine;
 
 import cn.foxtech.channel.common.properties.ChannelProperties;
-import cn.foxtech.channel.socket.core.service.ChannelManager;
-import cn.foxtech.channel.tcp.server.handler.ChannelHandler;
-import cn.foxtech.channel.tcp.server.handler.ManageHandler;
-import cn.foxtech.channel.tcp.server.handler.SessionHandler;
+import cn.foxtech.channel.udp.server.handler.ChannelHandler;
+import cn.foxtech.channel.udp.server.handler.ManageHandler;
+import cn.foxtech.channel.udp.server.handler.SessionHandler;
+import cn.foxtech.channel.udp.server.service.ChannelManager;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.file.FileNameUtils;
-import cn.foxtech.common.utils.netty.server.tcp.NettyTcpServer;
+import cn.foxtech.common.utils.netty.server.udp.NettyUdpServer;
 import cn.foxtech.common.utils.reflect.JarLoaderUtils;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.device.protocol.RootLocation;
@@ -53,7 +53,6 @@ public class JarEngine {
     public void startJarEngine(Integer serverPort, Map<String, Object> engine) {
         try {
             String keyHandler = (String) engine.get("keyHandler");
-            String splitHandler = (String) engine.get("splitHandler");
             String returnText = (String) engine.getOrDefault("returnText", "");
             Map<String, Object> register = (Map<String, Object>) engine.getOrDefault("register", new HashMap<>());
             String channelName = (String) register.getOrDefault("channelName", "");
@@ -61,21 +60,12 @@ public class JarEngine {
             String deviceType = (String) register.getOrDefault("deviceType", "");
             String deviceName = (String) register.getOrDefault("deviceName", "");
 
-            if (MethodUtils.hasEmpty(keyHandler, splitHandler)) {
-                throw new ServiceException("全局配置参数不能为空：keyHandler, splitHandler");
+            if (MethodUtils.hasEmpty(keyHandler)) {
+                throw new ServiceException("全局配置参数不能为空：keyHandler");
             }
 
             // 装载器：加载类信息
             Set<Class<?>> classSet = JarLoaderUtils.getClasses(RootLocation.class.getPackage().getName());
-
-            // 取出splitHandler的java类
-            Class splitHandlerClass = this.getSplitHandler(classSet, splitHandler);
-            if (splitHandlerClass == null) {
-                String message = "找不到splitHandler对应的JAVA类：" + splitHandler;
-                this.console.error(message);
-                this.logger.error(message);
-                return;
-            }
 
             // 取出keyHandler的java类
             Class keyHandlerClass = this.getKeyHandler(classSet, keyHandler);
@@ -86,8 +76,6 @@ public class JarEngine {
                 return;
             }
 
-            // 实例化一个SplitMessageHandler对象
-            SplitMessageHandler splitMessageHandler = (SplitMessageHandler) splitHandlerClass.newInstance();
             // 实例化一个serviceKeyHandler对象
             ServiceKeyHandler serviceKeyHandler = (ServiceKeyHandler) keyHandlerClass.newInstance();
 
@@ -109,7 +97,7 @@ public class JarEngine {
             this.sessionHandler.setReturnText(returnText);
 
             // 创建一个Tcp Server实例
-            NettyTcpServer.createServer(serverPort, splitMessageHandler, channelHandler);
+            NettyUdpServer.createServer(serverPort, channelHandler);
         } catch (Exception e) {
             e.printStackTrace();
 

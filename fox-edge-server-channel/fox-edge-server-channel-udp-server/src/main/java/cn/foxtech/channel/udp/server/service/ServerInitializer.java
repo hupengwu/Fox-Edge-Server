@@ -1,31 +1,27 @@
 package cn.foxtech.channel.udp.server.service;
 
 import cn.foxtech.channel.common.properties.ChannelProperties;
-import cn.foxtech.channel.udp.server.handler.ChannelHandler;
-import cn.foxtech.common.entity.manager.InitialConfigService;
+import cn.foxtech.channel.udp.server.engine.JarEngine;
+import cn.foxtech.channel.udp.server.engine.JspEngine;
+import cn.foxtech.channel.udp.server.handler.ManageHandler;
+import cn.foxtech.common.entity.manager.LocalConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
-import cn.foxtech.common.utils.netty.server.udp.NettyUdpServer;
-import cn.foxtech.common.utils.reflect.JarLoaderUtils;
-import cn.foxtech.device.protocol.RootLocation;
+import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.device.protocol.v1.utils.MethodUtils;
-import cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler;
-import cn.foxtech.device.protocol.v1.utils.netty.SplitMessageHandler;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 启动TCP服务器的异步线程
  */
 @Component
 public class ServerInitializer {
-    private static final Logger logger = Logger.getLogger(ServerInitializer.class);
-
+    private final Logger logger = Logger.getLogger(this.getClass());
     /**
      * 日志
      */
@@ -33,49 +29,42 @@ public class ServerInitializer {
     private RedisConsoleService console;
 
     @Autowired
-    private ChannelManager channelManager;
-
-    @Autowired
-    private ReportService reportService;
-
-    @Autowired
     private ChannelProperties channelProperties;
 
     @Autowired
-    private InitialConfigService configManageService;
+    private JarEngine jarEngine;
+
+    @Autowired
+    private JspEngine jspEngine;
+
+    @Autowired
+    private LocalConfigService localConfigService;
+
+    @Autowired
+    private ManageHandler manageHandler;
+
+    @Autowired
+    private ChannelService channelService;
 
 
     public void initialize() {
         // 读取配置参数
-        this.configManageService.initialize("serverConfig", "serverConfig.json");
-        Map<String, Object> configs = this.configManageService.getConfigParam("serverConfig");
+        this.localConfigService.initialize();
+        Map<String, Object> configs = this.localConfigService.getConfig();
 
         // 记录启动参数，方便后面全局使用
         this.channelProperties.setLogger((Boolean) configs.getOrDefault("logger", false));
 
-        // 启动多个服务器
-        this.startServers(configs);
-    }
+        // 设置生命周期
+        Long lifeCycle = Long.parseLong(configs.getOrDefault("lifeCycle", 2600).toString());
+        this.manageHandler.setLifeCycle(lifeCycle);
+        this.channelService.setLifeCycle(lifeCycle);
 
-    /**
-     * 扫描解码器
-     *
-     * @param configs 总配置参数
-     */
-    public void startServers(Map<String, Object> configs) {
-        try {
-            // 启动多个UDP 服务器
-            List<Map<String, Object>> decoderList = (List<Map<String, Object>>) configs.get("decoderList");
-            for (Map<String, Object> decoder : decoderList) {
-                // 启动一个UDP Server
-                this.startUdpServer(decoder);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            String message = "scanJarFile出现异常:" + e.getMessage();
-            logger.error(message);
-            this.console.error(message);
-        }
+        // 装载jar包
+        this.jarEngine.loadJarFiles(configs);
+
+        // 启动多个服务器
+        this.startUdpServer(configs);
     }
 
     /**
@@ -84,94 +73,34 @@ public class ServerInitializer {
      * @param config 配置参数项目
      */
     private void startUdpServer(Map<String, Object> config) {
-        try {
-            List<Map<String, Object>> configList = (List<Map<String, Object>>) config.get("decoder");
-            String splitHandler = (String) config.get("splitHandler");
-            String keyHandler = (String) config.get("keyHandler");
-            Integer serverPort = (Integer) config.get("serverPort");
+        List<Map<String, Object>> servers = (List<Map<String, Object>>) config.get("servers");
+        for (Map<String, Object> server : servers) {
+            try {
+                Integer serverPort = (Integer) server.get("serverPort");
+                Map<String, Object> engine = (Map<String, Object>) server.getOrDefault("engine", new HashMap<>());
+                String engineType = (String) engine.get("engineType");
 
-
-            File file = new File("");
-            String absolutePath = file.getAbsolutePath();
-
-            // 取出需要加载的文件名
-            for (Map<String, Object> map : configList) {
-                String fileName = (String) map.get("jarFile");
-                if (MethodUtils.hasEmpty(fileName)) {
-                    continue;
+                // 检测配置参数
+                if (MethodUtils.hasEmpty(engineType, serverPort)) {
+                    throw new ServiceException("全局配置参数不能为空：engineType, serverPort");
                 }
 
-                // 装载器：装载jar包
-                JarLoaderUtils.loadJar(absolutePath + fileName);
-            }
+                if (engineType.equals("Java")) {
+                    this.jarEngine.startJarEngine(serverPort, engine);
+                }
+                if (engineType.equals("JavaScript")) {
+                    this.jspEngine.startJspEngine(serverPort, engine);
+                }
 
-            // 装载器：加载类信息
-            Set<Class<?>> classSet = JarLoaderUtils.getClasses(RootLocation.class.getPackage().getName());
+                String message = "启动服务端口:" + serverPort;
+                this.logger.info(message);
+                this.console.info(message);
 
-
-            // 取出keyHandler的java类
-            Class keyHandlerClass = this.getKeyHandler(classSet, keyHandler);
-            if (keyHandlerClass == null) {
-                 String message = "找不到keyHandler对应的JAVA类：" + splitHandler;
-                logger.error(message);
+            } catch (Exception e) {
+                String message = "scanJarFile出现异常:" + e.getMessage();
+                this.logger.error(message);
                 this.console.error(message);
-                return;
             }
-
-            // 实例化一个serviceKeyHandler对象
-            ServiceKeyHandler serviceKeyHandler = (ServiceKeyHandler) keyHandlerClass.newInstance();
-
-            // 绑定关系
-            ChannelHandler channelHandler = new ChannelHandler();
-            channelHandler.setServiceKeyHandler(serviceKeyHandler);
-            channelHandler.setChannelManager(this.channelManager);
-            channelHandler.setReportService(this.reportService);
-            channelHandler.setLogger(this.channelProperties.isLogger());
-
-            // 创建一个Tcp Server实例
-            NettyUdpServer.createServer(serverPort, channelHandler);
-        } catch (Exception e) {
-            e.printStackTrace();
-            String message = "startUdpServer 出现异常:" + e.getMessage();
-            logger.error(message);
-            this.console.error(message);
         }
     }
-
-    private Class getSplitHandler(Set<Class<?>> classSet, String className) {
-        for (Class<?> aClass : classSet) {
-            String name = aClass.getName();
-
-            if (!SplitMessageHandler.class.isAssignableFrom(aClass)) {
-                continue;
-            }
-
-            if (!name.equals(className)) {
-                continue;
-            }
-
-            return aClass;
-        }
-
-        return null;
-    }
-
-    private Class getKeyHandler(Set<Class<?>> classSet, String className) {
-        for (Class<?> aClass : classSet) {
-            String name = aClass.getName();
-
-            if (!ServiceKeyHandler.class.isAssignableFrom(aClass)) {
-                continue;
-            }
-
-            if (!name.equals(className)) {
-                continue;
-            }
-
-            return aClass;
-        }
-
-        return null;
-    }
-
 }

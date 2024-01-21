@@ -4,9 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -19,38 +17,37 @@ public class ChannelManager {
     private final Map<String, ChannelHandlerContext> key2ctx = new ConcurrentHashMap<>();
     private final Map<String, InetSocketAddress> key2skt = new ConcurrentHashMap<>();
 
-    public void register(InetSocketAddress skt, ChannelHandlerContext ctx, String serviceKey) {
+    private final Map<String, Long> key2tik = new ConcurrentHashMap<>();
+
+    public void setServiceKey(InetSocketAddress skt, ChannelHandlerContext ctx, String serviceKey) {
         this.skt2key.put(skt, serviceKey);
         this.key2ctx.put(serviceKey, ctx);
         this.key2skt.put(serviceKey, skt);
+        this.key2tik.put(serviceKey, System.currentTimeMillis());
     }
 
-    /**
-     * 清理不在serviceKeys中的数据
-     * @param serviceKeys 来自channel管理器的serviceKeys信息
-     */
-    public void clearLifeCycle(Set<String> serviceKeys) {
-        Set<String> removeKey = new HashSet<>();
-        Set<InetSocketAddress> removeSkt = new HashSet<>();
+    public void setTime(String serviceKey) {
+        this.key2tik.put(serviceKey, System.currentTimeMillis());
+    }
 
-        for (String key : this.key2skt.keySet()) {
-            if (serviceKeys.contains(key)) {
+    public void removeTimeout(long timeout) {
+        Long currTime = System.currentTimeMillis();
+        for (String key : this.key2tik.keySet()) {
+            Long active = this.key2tik.get(key);
+
+            // 检查：是否超时
+            if (currTime - active < timeout) {
                 continue;
             }
-            // 准备删除的key2skt/key2ctx
-            removeKey.add(key);
 
-            // 准备删除的skt2key
-            removeSkt.add(this.key2skt.get(key));
-        }
+            InetSocketAddress skt = this.key2skt.get(key);
+            if (skt != null) {
+                this.skt2key.remove(skt);
+            }
 
-        for (String key : removeKey) {
-            this.key2skt.remove(key);
             this.key2ctx.remove(key);
-        }
-
-        for (InetSocketAddress skt : removeSkt) {
-            this.skt2key.remove(skt);
+            this.key2skt.remove(key);
+            this.key2tik.remove(key);
         }
     }
 

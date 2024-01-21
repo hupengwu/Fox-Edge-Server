@@ -39,7 +39,7 @@
         <jackson.version>2.9.0</jackson.version>
         <lombok.version>1.18.28</lombok.version>
         <mica-mqtt.version>2.1.2</mica-mqtt.version>
-        <californium-coap.version>3.5.0</californium-coap.version>
+        <californium-coap.version>3.9.1</californium-coap.version>
         <mysql-connector.version>8.0.29</mysql-connector.version>
         <mybatis-plus.version>3.5.0</mybatis-plus.version>
         <cn.hutool.version>5.8.3</cn.hutool.version>

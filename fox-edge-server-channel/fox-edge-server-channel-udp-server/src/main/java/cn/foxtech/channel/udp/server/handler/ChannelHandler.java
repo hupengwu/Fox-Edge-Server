@@ -1,7 +1,8 @@
 package cn.foxtech.channel.udp.server.handler;
 
 import cn.foxtech.channel.udp.server.service.ChannelManager;
-import cn.foxtech.channel.udp.server.service.ReportService;
+import cn.foxtech.common.entity.manager.RedisConsoleService;
+import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.netty.handler.SocketChannelHandler;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler;
@@ -15,13 +16,20 @@ public class ChannelHandler extends SocketChannelHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelHandler.class);
 
     @Setter
+    private RedisConsoleService console;
+
+    @Setter
     private ChannelManager channelManager;
 
     @Setter
-    private ReportService reportService;
+    private ServiceKeyHandler serviceKeyHandler;
 
     @Setter
-    private ServiceKeyHandler serviceKeyHandler;
+    private SessionHandler sessionHandler;
+
+    @Setter
+    private ManageHandler manageHandler;
+
 
     @Setter
     private boolean logger = false;
@@ -45,7 +53,9 @@ public class ChannelHandler extends SocketChannelHandler {
 
         // 记录接收到的报文
         if (this.logger) {
-            LOGGER.info("channelRead: " + packet.sender() + ": " + HexUtils.byteArrayToHexString(data));
+            String message = "channelRead: " + packet.sender() + ": " + HexUtils.byteArrayToHexString(data);
+            LOGGER.info(message);
+            console.info(message);
         }
 
         // 检查：channel是否已经标识上了信息
@@ -55,12 +65,28 @@ public class ChannelHandler extends SocketChannelHandler {
             // 从报文总获得业务特征信息
             serviceKey = this.serviceKeyHandler.getServiceKey(data);
 
-            // 登记信息：serviceKey信息和channel信息
-            this.channelManager.register(packet.sender(), ctx, serviceKey);
+            // 检查：key是否为空
+            if (MethodUtils.hasEmpty(serviceKey)) {
+                return;
+            }
+
+            // 标记:serviceKey信息
+            // 注意：UDP场景下，因为无连接，它的SocketAddress在报文信息上，而不在ctx连接上
+            this.channelManager.setServiceKey(packet.sender(), ctx, serviceKey);
+
+            // 记录接收到的报文
+            String message = "设备接入:" + packet.sender() + "; serviceKey=" + serviceKey;
+            LOGGER.info(message);
+            console.info(message);
+
+            // 发出创建通道的消息
+            this.manageHandler.createChannel(serviceKey);
+            // 发出创建设备的消息
+            this.manageHandler.createDevice(serviceKey);
         }
 
-        // 保存PDU到接收缓存
-        this.reportService.push(serviceKey, data);
+        // 消息处理
+        this.sessionHandler.onMessage(ctx, serviceKey, data);
     }
 
     /**
@@ -70,6 +96,8 @@ public class ChannelHandler extends SocketChannelHandler {
      * @param cause 源头
      */
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        LOGGER.info("连接异常:" + ctx.channel().remoteAddress());
+        String message = "连接异常:" + ctx.channel().remoteAddress();
+        LOGGER.error(message);
+        console.error(message);
     }
 }
