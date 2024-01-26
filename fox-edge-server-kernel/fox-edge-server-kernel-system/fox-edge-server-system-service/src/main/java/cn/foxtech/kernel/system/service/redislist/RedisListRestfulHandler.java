@@ -17,6 +17,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+/**
+ * 为各服务提供的Restful操作接口：该接口不进行返回，只进行静默操作
+ */
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
 @Component

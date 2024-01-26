@@ -1,0 +1,3888 @@
+[
+    {
+        "id": "c190049a86b98c61",
+        "type": "tab",
+        "label": "配置流程",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "a73bac9ebd630aa1",
+        "type": "tab",
+        "label": "消息流程",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "673a17ab56aa8dfb",
+        "type": "group",
+        "z": "c190049a86b98c61",
+        "name": "channel实体（生产者：管理服务；消费者：通道服务）",
+        "style": {
+            "fill": "#bfdbef",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "8e286eaa3150b44b",
+            "88a14ef88c5cbc87",
+            "27a895aac741c216",
+            "6025c753bed21826",
+            "ddb5fdaa3a9c3222",
+            "13b6ef77046e33cc",
+            "29601b8c83f5cf3e"
+        ],
+        "x": 14,
+        "y": 199,
+        "w": 912,
+        "h": 242
+    },
+    {
+        "id": "b4384659eb9e9e41",
+        "type": "group",
+        "z": "c190049a86b98c61",
+        "name": "operate实体（生产者：管理服务；消费者：通道服务、设备服务）",
+        "style": {
+            "fill": "#bfdbef",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "77cc1a89686eac87",
+            "7816960493c899e4",
+            "8bde6c7b9cc0e7b7",
+            "23356593e5643bf4",
+            "fa5a513f918b1e18",
+            "17e558e2c9071362",
+            "029658653776cd2a"
+        ],
+        "x": 14,
+        "y": 479,
+        "w": 912,
+        "h": 242
+    },
+    {
+        "id": "c887dc331b0993f9",
+        "type": "group",
+        "z": "c190049a86b98c61",
+        "name": "config实体（生产者：管理服务；消费者：各个后台服务）",
+        "style": {
+            "fill": "#bfdbef",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "451d843918ebde2c",
+            "1e30405a8367050d",
+            "592e6b33a10ce49b",
+            "bffbe8554efd5439",
+            "092fbab82c6f290e",
+            "4ce1c8e046af7321",
+            "7811d574665bf8bf"
+        ],
+        "x": 14,
+        "y": 759,
+        "w": 912,
+        "h": 242
+    },
+    {
+        "id": "48bcf1ef87fc4550",
+        "type": "group",
+        "z": "c190049a86b98c61",
+        "name": "设备实体（生产者：管理服务；消费者：设备服务、控制器服务、持久化服务）",
+        "style": {
+            "fill": "#bfdbef",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "f9888ba7d8d5da86",
+            "7fa16693be702b22",
+            "1d85a447887c8287",
+            "472edddb787404c1",
+            "105ed5891a15932c",
+            "fac1657266b64893",
+            "20b69dad8a86e340"
+        ],
+        "x": 14,
+        "y": 1059,
+        "w": 912,
+        "h": 242
+    },
+    {
+        "id": "04767e554063b97d",
+        "type": "group",
+        "z": "c190049a86b98c61",
+        "name": "设备数值实体（生产者：持久化服务；消费者：管理服务，以及各北向服务）",
+        "style": {
+            "fill": "#bfdbef",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "0e96a0b919142973",
+            "3cc50df9cd919a9c",
+            "082a6af6d45689d0",
+            "e652f72b730ef23c",
+            "0ae74ca752f9b254",
+            "dcf7e8991f0ded4a",
+            "eb88535b02fa6e16"
+        ],
+        "x": 14,
+        "y": 1339,
+        "w": 912,
+        "h": 242
+    },
+    {
+        "id": "e4455790a126f501",
+        "type": "group",
+        "z": "a73bac9ebd630aa1",
+        "name": "持久化服务的消息接口",
+        "style": {
+            "fill": "#e3f3d3",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "23d4093ddabd9215",
+            "16a82f6ea81e4ef1",
+            "a0627c48625aca55",
+            "5cfcd5fa42f18583",
+            "ca76520867468d6b",
+            "869b2be5215d7f34",
+            "b852cd21f703324f",
+            "e04b68eee69877f8"
+        ],
+        "x": 14,
+        "y": 879,
+        "w": 912,
+        "h": 262
+    },
+    {
+        "id": "c136c8e33cf97d6f",
+        "type": "group",
+        "z": "a73bac9ebd630aa1",
+        "name": "设备服务的消息接口",
+        "style": {
+            "fill": "#e3f3d3",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "46c709dd26d9ab21",
+            "b45eaced7d902df6",
+            "0e6455de65f39d59",
+            "4acb88ca9fa4a927",
+            "e42593ee8627cda0",
+            "74ed2c7721b11eca",
+            "b6989736de8555b5",
+            "affd28cc1f2d2a06",
+            "0115c881215b0415",
+            "df79c8f99a3b6a9a",
+            "3082e2baf9e3882d",
+            "69cd5c064de3bc1b"
+        ],
+        "x": 14,
+        "y": 439,
+        "w": 912,
+        "h": 382
+    },
+    {
+        "id": "d1fad3e3e9db57fb",
+        "type": "group",
+        "z": "a73bac9ebd630aa1",
+        "name": "通道服务的消息接口",
+        "style": {
+            "label": true,
+            "fill": "#e3f3d3",
+            "color": "#000000"
+        },
+        "nodes": [
+            "42d370f32f02fa3e",
+            "784aedcca1f8258e",
+            "c219c5eca2692d42",
+            "3273b3d4ac43cb3b",
+            "281ca0c78f04f40f",
+            "9283b8ea80905463",
+            "20c4c69f4022ddb7",
+            "2ef137ec940627f0"
+        ],
+        "x": 14,
+        "y": 39,
+        "w": 912,
+        "h": 322
+    },
+    {
+        "id": "70cc95c6af7a6091",
+        "type": "group",
+        "z": "c190049a86b98c61",
+        "name": "设备操作实体（生产者：设备服务；消费者：管理服务）",
+        "style": {
+            "fill": "#bfdbef",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "b60b1d028a6b0f6a",
+            "7e4e9946ebd10ee1",
+            "6ca93af73079ce86",
+            "754b3c03c25024ef",
+            "d0fafefd4f131518",
+            "b9521ee80068cd52",
+            "f1d20ea070b8c5ba"
+        ],
+        "x": 14,
+        "y": 1619,
+        "w": 912,
+        "h": 242
+    },
+    {
+        "id": "bbaa16df0dd1e22f",
+        "type": "group",
+        "z": "c190049a86b98c61",
+        "name": "设备对象实体（生产者：持久化服务；消费者：管理服务）",
+        "style": {
+            "fill": "#bfdbef",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "6d06989cf7b598f5",
+            "8e9d7af86c04e471",
+            "6aab66927ead2ba7",
+            "0a2edf506751e60d",
+            "45fd656ced071209",
+            "c9b494c7a26eeb4a",
+            "fc12e9e7f91ba249"
+        ],
+        "x": 14,
+        "y": 1899,
+        "w": 912,
+        "h": 242
+    },
+    {
+        "id": "22bdf77d2ecfe314",
+        "type": "group",
+        "z": "c190049a86b98c61",
+        "name": "设备状态实体（生产者：持久化服务；消费者：管理服务）",
+        "style": {
+            "fill": "#bfdbef",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "d45c7f4d239a1652",
+            "21a4b2a07bef46c9",
+            "c7a4bc924c55a9b7",
+            "8275ec158220ca11",
+            "b057ba511fc59448",
+            "8a345dba56b5d751",
+            "ea0c439578174fc8"
+        ],
+        "x": 14,
+        "y": 2179,
+        "w": 912,
+        "h": 242
+    },
+    {
+        "id": "8ad1d58558e40ead",
+        "type": "group",
+        "z": "c190049a86b98c61",
+        "name": "通道操作任务（生产者：管理服务；消费者：管理服务）",
+        "style": {
+            "fill": "#bfdbef",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "fe6d385c74b162e6",
+            "cc4a20f676f66b38",
+            "07e531e3bba6c6d3",
+            "7543c11db0f628b4",
+            "f61aaaa9d94e7e03",
+            "c0d64933a4f92aad",
+            "a6bcba2e4a1a4122"
+        ],
+        "x": 14,
+        "y": 2459,
+        "w": 912,
+        "h": 242
+    },
+    {
+        "id": "07d39fab98079425",
+        "type": "group",
+        "z": "c190049a86b98c61",
+        "name": "设备操作任务（生产者：管理服务；消费者：管理服务）",
+        "style": {
+            "fill": "#bfdbef",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "0c4fb5bcd1791ccb",
+            "b5df95d71f1e50fd",
+            "a668bdcc2035c1e6",
+            "70bfc258c1b5d562",
+            "2a68c33f88ecafda",
+            "52a2c455acedc7e2",
+            "1ba55acd851fc2b8"
+        ],
+        "x": 14,
+        "y": 2739,
+        "w": 912,
+        "h": 242
+    },
+    {
+        "id": "f8a95b2333526cba",
+        "type": "group",
+        "z": "c190049a86b98c61",
+        "name": "设备监控任务（生产者：管理服务；消费者：控制器服务）",
+        "style": {
+            "fill": "#bfdbef",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "7bb01709d0d73961",
+            "f84184c78e8cea27",
+            "6a6e2c73325ae716",
+            "3e4fad540e1f0f62",
+            "8c2edd4f6d999ed0",
+            "2a72f15bd812bf82",
+            "aae7135417e205f4"
+        ],
+        "x": 14,
+        "y": 3019,
+        "w": 912,
+        "h": 242
+    },
+    {
+        "id": "4c621febc12cb4ae",
+        "type": "group",
+        "z": "c190049a86b98c61",
+        "name": "本地组件实体（生产者：管理服务；消费者：管理服务）",
+        "style": {
+            "fill": "#bfdbef",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "3653319cdbf31767",
+            "173c87b78abc3822",
+            "493b52165b3cd8fc",
+            "b46081104dc6b067",
+            "5b44c342d2f624d2",
+            "bad569301eed6d80",
+            "a71dbb7b302bcd6d"
+        ],
+        "x": 14,
+        "y": 3299,
+        "w": 912,
+        "h": 242
+    },
+    {
+        "id": "7d3f70c9ce233abd",
+        "type": "group",
+        "z": "c190049a86b98c61",
+        "name": "进程状态实体（生产者：各个服务；消费者：管理服务）",
+        "style": {
+            "fill": "#bfdbef",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "440f35b2e330530f",
+            "920b949487ba9989",
+            "b615708f0f36b189",
+            "682baf6af83e66fb",
+            "1c77db14cb50bd01"
+        ],
+        "x": 14,
+        "y": 3579,
+        "w": 912,
+        "h": 162
+    },
+    {
+        "id": "e19e0e915a4be564",
+        "type": "group",
+        "z": "a73bac9ebd630aa1",
+        "name": "管理服务的消息接口",
+        "style": {
+            "fill": "#e3f3d3",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "d3ff171a066f7ecc",
+            "dd56e6779231c7fa",
+            "8d0199fa12d2a7d2",
+            "3b6d124a7be80ea9",
+            "17c692058bd03776",
+            "01fccc474ccd608f",
+            "0e9a2c8035715493",
+            "1ada2c56588eaea6",
+            "50232f34a97605a5",
+            "0166ca63eee016df",
+            "786ffd3c4e34d222",
+            "716b06719f56fab0"
+        ],
+        "x": 14,
+        "y": 1179,
+        "w": 912,
+        "h": 382
+    },
+    {
+        "id": "7f7ae86bb2b1bd6d",
+        "type": "group",
+        "z": "c190049a86b98c61",
+        "name": "扩展配置实体（生产者：管理服务；消费者：通道服务、设备服务、管理服务、各北向服务）",
+        "style": {
+            "fill": "#bfdbef",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "54aac7acdcc8e0d8",
+            "f4e9f7e4977fa51e",
+            "9c9bd2d30b9dc946",
+            "1e4b720a22b010df",
+            "6c5ad68808f2c213",
+            "c3a98c6c5e72bed4",
+            "8a0bcdb5610c1b88"
+        ],
+        "x": 14,
+        "y": 3779,
+        "w": 912,
+        "h": 242
+    },
+    {
+        "id": "27610dfe922b1cf2",
+        "type": "group",
+        "z": "c190049a86b98c61",
+        "name": "设备映射实体（生产者：管理服务；消费者：持久化服务）",
+        "style": {
+            "fill": "#bfdbef",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "bf389d3ce1187ac3",
+            "85a04fa85b2a3a24",
+            "bbcd03b037c95831",
+            "7977ec55c4b3fa79",
+            "41e3954e967a091d",
+            "0f63390da258f892",
+            "0c627ef8444fd699"
+        ],
+        "x": 14,
+        "y": 4059,
+        "w": 912,
+        "h": 242
+    },
+    {
+        "id": "7dcced234f675f08",
+        "type": "group",
+        "z": "c190049a86b98c61",
+        "name": "链路实体（生产者：管理服务；消费者：链路服务）",
+        "style": {
+            "fill": "#bfdbef",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "e1b62843fa3debce",
+            "c1f6d5c868ef0ce6",
+            "ecfc723719bff4a9",
+            "eb5e5a03fe20b9c6",
+            "b7d0d8cb3b90bcd1",
+            "1bc94df5cc92f19a",
+            "e85849712a92f557"
+        ],
+        "x": 14,
+        "y": 4339,
+        "w": 912,
+        "h": 242
+    },
+    {
+        "id": "3a02868b14c5e440",
+        "type": "group",
+        "z": "c190049a86b98c61",
+        "name": "触发器配置实体（生产者：管理服务；消费者：触发器服务）",
+        "style": {
+            "fill": "#bfdbef",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "cc475e95b305275f",
+            "931504d41fa8f48a",
+            "17ba71b78dc7e3ca",
+            "c5678c08bdeffc8a",
+            "1a301221e6cab490",
+            "d7d6d6e22f91bab2",
+            "40caee03b30dc801"
+        ],
+        "x": 14,
+        "y": 4619,
+        "w": 912,
+        "h": 242
+    },
+    {
+        "id": "7301e99eaab06d3a",
+        "type": "group",
+        "z": "c190049a86b98c61",
+        "name": "触发器实体（生产者：管理服务；消费者：触发器服务）",
+        "style": {
+            "fill": "#bfdbef",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "eea098249173fad4",
+            "26b9ba21a964807f",
+            "c62e5c199ee41627",
+            "20cc0150e5911c62",
+            "1cf6588b093f8b4e",
+            "4731229f7df35097",
+            "31d5aa249d884411"
+        ],
+        "x": 14,
+        "y": 4879,
+        "w": 912,
+        "h": 242
+    },
+    {
+        "id": "ecd447db8f3ecad4",
+        "type": "redis-config",
+        "name": "Local",
+        "options": "{\"host\":\"127.0.0.1\",\"port\":6379,\"password\":\"12345678\",\"defaultExpiry\":60}",
+        "cluster": false,
+        "optionsType": "json"
+    },
+    {
+        "id": "f73aa80ae92193f0",
+        "type": "redis-instance",
+        "z": "c190049a86b98c61",
+        "server": "ecd447db8f3ecad4",
+        "name": "redis连接配置",
+        "topic": "redis",
+        "location": "flow",
+        "x": 90,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "8e286eaa3150b44b",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "673a17ab56aa8dfb",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.ChannelEntity.data（通道实体配置内容）",
+        "topic": "fox.edge.entity.ChannelEntity.data",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 470,
+        "y": 240,
+        "wires": [
+            [
+                "27a895aac741c216"
+            ]
+        ]
+    },
+    {
+        "id": "88a14ef88c5cbc87",
+        "type": "inject",
+        "z": "c190049a86b98c61",
+        "g": "673a17ab56aa8dfb",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 340,
+        "wires": [
+            [
+                "8e286eaa3150b44b",
+                "6025c753bed21826",
+                "13b6ef77046e33cc"
+            ]
+        ]
+    },
+    {
+        "id": "27a895aac741c216",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "673a17ab56aa8dfb",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "6025c753bed21826",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "673a17ab56aa8dfb",
+        "server": "ecd447db8f3ecad4",
+        "command": "GET",
+        "name": "fox.edge.entity.ChannelEntity.sync（通道全局变更时间戳）",
+        "topic": "fox.edge.entity.ChannelEntity.sync",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 480,
+        "y": 320,
+        "wires": [
+            [
+                "ddb5fdaa3a9c3222"
+            ]
+        ]
+    },
+    {
+        "id": "ddb5fdaa3a9c3222",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "673a17ab56aa8dfb",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "13b6ef77046e33cc",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "673a17ab56aa8dfb",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.ChannelEntity.agile（通道明细变更时间戳）",
+        "topic": "fox.edge.entity.ChannelEntity.agile",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 480,
+        "y": 400,
+        "wires": [
+            [
+                "29601b8c83f5cf3e"
+            ]
+        ]
+    },
+    {
+        "id": "29601b8c83f5cf3e",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "673a17ab56aa8dfb",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "77cc1a89686eac87",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "b4384659eb9e9e41",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.OperateEntity.data",
+        "topic": "fox.edge.entity.OperateEntity.data",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 440,
+        "y": 520,
+        "wires": [
+            [
+                "8bde6c7b9cc0e7b7"
+            ]
+        ]
+    },
+    {
+        "id": "7816960493c899e4",
+        "type": "inject",
+        "z": "c190049a86b98c61",
+        "g": "b4384659eb9e9e41",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 600,
+        "wires": [
+            [
+                "77cc1a89686eac87",
+                "23356593e5643bf4",
+                "17e558e2c9071362"
+            ]
+        ]
+    },
+    {
+        "id": "8bde6c7b9cc0e7b7",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "b4384659eb9e9e41",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "23356593e5643bf4",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "b4384659eb9e9e41",
+        "server": "ecd447db8f3ecad4",
+        "command": "GET",
+        "name": "fox.edge.entity.OperateEntity.sync",
+        "topic": "fox.edge.entity.OperateEntity.sync",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 420,
+        "y": 600,
+        "wires": [
+            [
+                "fa5a513f918b1e18"
+            ]
+        ]
+    },
+    {
+        "id": "fa5a513f918b1e18",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "b4384659eb9e9e41",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "17e558e2c9071362",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "b4384659eb9e9e41",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.OperateEntity.agile",
+        "topic": "fox.edge.entity.OperateEntity.agile",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 440,
+        "y": 680,
+        "wires": [
+            [
+                "029658653776cd2a"
+            ]
+        ]
+    },
+    {
+        "id": "029658653776cd2a",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "b4384659eb9e9e41",
+        "name": "debug 6",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "451d843918ebde2c",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "c887dc331b0993f9",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.ConfigEntity.data",
+        "topic": "fox.edge.entity.ConfigEntity.data",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 410,
+        "y": 800,
+        "wires": [
+            [
+                "592e6b33a10ce49b"
+            ]
+        ]
+    },
+    {
+        "id": "1e30405a8367050d",
+        "type": "inject",
+        "z": "c190049a86b98c61",
+        "g": "c887dc331b0993f9",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 820,
+        "wires": [
+            [
+                "451d843918ebde2c",
+                "bffbe8554efd5439",
+                "4ce1c8e046af7321"
+            ]
+        ]
+    },
+    {
+        "id": "592e6b33a10ce49b",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "c887dc331b0993f9",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "bffbe8554efd5439",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "c887dc331b0993f9",
+        "server": "ecd447db8f3ecad4",
+        "command": "GET",
+        "name": "",
+        "topic": "fox.edge.entity.ConfigEntity.sync",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 430,
+        "y": 880,
+        "wires": [
+            [
+                "092fbab82c6f290e"
+            ]
+        ]
+    },
+    {
+        "id": "092fbab82c6f290e",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "c887dc331b0993f9",
+        "name": "debug 8",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "4ce1c8e046af7321",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "c887dc331b0993f9",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.ConfigEntity.agile",
+        "topic": "fox.edge.entity.ConfigEntity.agile",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 410,
+        "y": 960,
+        "wires": [
+            [
+                "7811d574665bf8bf"
+            ]
+        ]
+    },
+    {
+        "id": "7811d574665bf8bf",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "c887dc331b0993f9",
+        "name": "debug 9",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "f9888ba7d8d5da86",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "48bcf1ef87fc4550",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.DeviceEntity.data",
+        "topic": "fox.edge.entity.DeviceEntity.data",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 410,
+        "y": 1100,
+        "wires": [
+            [
+                "1d85a447887c8287"
+            ]
+        ]
+    },
+    {
+        "id": "7fa16693be702b22",
+        "type": "inject",
+        "z": "c190049a86b98c61",
+        "g": "48bcf1ef87fc4550",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 1120,
+        "wires": [
+            [
+                "f9888ba7d8d5da86",
+                "472edddb787404c1",
+                "fac1657266b64893"
+            ]
+        ]
+    },
+    {
+        "id": "1d85a447887c8287",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "48bcf1ef87fc4550",
+        "name": "debug 10",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 1100,
+        "wires": []
+    },
+    {
+        "id": "472edddb787404c1",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "48bcf1ef87fc4550",
+        "server": "ecd447db8f3ecad4",
+        "command": "GET",
+        "name": "",
+        "topic": "fox.edge.entity.DeviceEntity.sync",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 430,
+        "y": 1180,
+        "wires": [
+            [
+                "105ed5891a15932c"
+            ]
+        ]
+    },
+    {
+        "id": "105ed5891a15932c",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "48bcf1ef87fc4550",
+        "name": "debug 11",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "fac1657266b64893",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "48bcf1ef87fc4550",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.DeviceEntity.agile",
+        "topic": "fox.edge.entity.DeviceEntity.agile",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 420,
+        "y": 1260,
+        "wires": [
+            [
+                "20b69dad8a86e340"
+            ]
+        ]
+    },
+    {
+        "id": "20b69dad8a86e340",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "48bcf1ef87fc4550",
+        "name": "debug 12",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 1260,
+        "wires": []
+    },
+    {
+        "id": "0e96a0b919142973",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "04767e554063b97d",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.DeviceValueEntity.data",
+        "topic": "fox.edge.entity.DeviceValueEntity.data",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 430,
+        "y": 1380,
+        "wires": [
+            [
+                "082a6af6d45689d0"
+            ]
+        ]
+    },
+    {
+        "id": "3cc50df9cd919a9c",
+        "type": "inject",
+        "z": "c190049a86b98c61",
+        "g": "04767e554063b97d",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 1400,
+        "wires": [
+            [
+                "0e96a0b919142973",
+                "e652f72b730ef23c",
+                "dcf7e8991f0ded4a"
+            ]
+        ]
+    },
+    {
+        "id": "082a6af6d45689d0",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "04767e554063b97d",
+        "name": "debug 32",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 1380,
+        "wires": []
+    },
+    {
+        "id": "e652f72b730ef23c",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "04767e554063b97d",
+        "server": "ecd447db8f3ecad4",
+        "command": "GET",
+        "name": "fox.edge.entity.DeviceValueEntity.sync",
+        "topic": "fox.edge.entity.DeviceValueEntity.sync",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 410,
+        "y": 1460,
+        "wires": [
+            [
+                "0ae74ca752f9b254"
+            ]
+        ]
+    },
+    {
+        "id": "0ae74ca752f9b254",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "04767e554063b97d",
+        "name": "debug 33",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 1460,
+        "wires": []
+    },
+    {
+        "id": "dcf7e8991f0ded4a",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "04767e554063b97d",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.DeviceValueEntity.agile",
+        "topic": "fox.edge.entity.DeviceValueEntity.agile",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 430,
+        "y": 1540,
+        "wires": [
+            [
+                "eb88535b02fa6e16"
+            ]
+        ]
+    },
+    {
+        "id": "eb88535b02fa6e16",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "04767e554063b97d",
+        "name": "debug 34",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 1540,
+        "wires": []
+    },
+    {
+        "id": "b60b1d028a6b0f6a",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "70cc95c6af7a6091",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.OperateMethodEntity.data",
+        "topic": "fox.edge.entity.OperateMethodEntity.data",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 440,
+        "y": 1660,
+        "wires": [
+            [
+                "6ca93af73079ce86"
+            ]
+        ]
+    },
+    {
+        "id": "7e4e9946ebd10ee1",
+        "type": "inject",
+        "z": "c190049a86b98c61",
+        "g": "70cc95c6af7a6091",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 1680,
+        "wires": [
+            [
+                "b60b1d028a6b0f6a",
+                "754b3c03c25024ef",
+                "b9521ee80068cd52"
+            ]
+        ]
+    },
+    {
+        "id": "6ca93af73079ce86",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "70cc95c6af7a6091",
+        "name": "debug 49",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 1660,
+        "wires": []
+    },
+    {
+        "id": "754b3c03c25024ef",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "70cc95c6af7a6091",
+        "server": "ecd447db8f3ecad4",
+        "command": "GET",
+        "name": "fox.edge.entity.OperateMethodEntity.sync",
+        "topic": "fox.edge.entity.OperateMethodEntity.sync",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 420,
+        "y": 1740,
+        "wires": [
+            [
+                "d0fafefd4f131518"
+            ]
+        ]
+    },
+    {
+        "id": "d0fafefd4f131518",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "70cc95c6af7a6091",
+        "name": "debug 50",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 1740,
+        "wires": []
+    },
+    {
+        "id": "b9521ee80068cd52",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "70cc95c6af7a6091",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.OperateMethodEntity.agile",
+        "topic": "fox.edge.entity.OperateMethodEntity.agile",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 440,
+        "y": 1820,
+        "wires": [
+            [
+                "f1d20ea070b8c5ba"
+            ]
+        ]
+    },
+    {
+        "id": "f1d20ea070b8c5ba",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "70cc95c6af7a6091",
+        "name": "debug 51",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 1820,
+        "wires": []
+    },
+    {
+        "id": "6d06989cf7b598f5",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "bbaa16df0dd1e22f",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.DeviceObjInfEntity.data",
+        "topic": "fox.edge.entity.DeviceObjInfEntity.data",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 430,
+        "y": 1940,
+        "wires": [
+            [
+                "6aab66927ead2ba7"
+            ]
+        ]
+    },
+    {
+        "id": "8e9d7af86c04e471",
+        "type": "inject",
+        "z": "c190049a86b98c61",
+        "g": "bbaa16df0dd1e22f",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 1960,
+        "wires": [
+            [
+                "6d06989cf7b598f5",
+                "0a2edf506751e60d",
+                "c9b494c7a26eeb4a"
+            ]
+        ]
+    },
+    {
+        "id": "6aab66927ead2ba7",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "bbaa16df0dd1e22f",
+        "name": "debug 52",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 1940,
+        "wires": []
+    },
+    {
+        "id": "0a2edf506751e60d",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "bbaa16df0dd1e22f",
+        "server": "ecd447db8f3ecad4",
+        "command": "GET",
+        "name": "fox.edge.entity.DeviceObjInfEntity.sync",
+        "topic": "fox.edge.entity.DeviceObjInfEntity.sync",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 410,
+        "y": 2020,
+        "wires": [
+            [
+                "45fd656ced071209"
+            ]
+        ]
+    },
+    {
+        "id": "45fd656ced071209",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "bbaa16df0dd1e22f",
+        "name": "debug 53",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 2020,
+        "wires": []
+    },
+    {
+        "id": "c9b494c7a26eeb4a",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "bbaa16df0dd1e22f",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.DeviceObjInfEntity.agile",
+        "topic": "fox.edge.entity.DeviceObjInfEntity.agile",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 430,
+        "y": 2100,
+        "wires": [
+            [
+                "fc12e9e7f91ba249"
+            ]
+        ]
+    },
+    {
+        "id": "fc12e9e7f91ba249",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "bbaa16df0dd1e22f",
+        "name": "debug 54",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 2100,
+        "wires": []
+    },
+    {
+        "id": "d45c7f4d239a1652",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "22bdf77d2ecfe314",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.DeviceStatusEntity.data",
+        "topic": "fox.edge.entity.DeviceStatusEntity.data",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 430,
+        "y": 2220,
+        "wires": [
+            [
+                "c7a4bc924c55a9b7"
+            ]
+        ]
+    },
+    {
+        "id": "21a4b2a07bef46c9",
+        "type": "inject",
+        "z": "c190049a86b98c61",
+        "g": "22bdf77d2ecfe314",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 2240,
+        "wires": [
+            [
+                "d45c7f4d239a1652",
+                "8275ec158220ca11",
+                "8a345dba56b5d751"
+            ]
+        ]
+    },
+    {
+        "id": "c7a4bc924c55a9b7",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "22bdf77d2ecfe314",
+        "name": "debug 55",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 2220,
+        "wires": []
+    },
+    {
+        "id": "8275ec158220ca11",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "22bdf77d2ecfe314",
+        "server": "ecd447db8f3ecad4",
+        "command": "GET",
+        "name": "fox.edge.entity.DeviceStatusEntity.sync",
+        "topic": "fox.edge.entity.DeviceStatusEntity.sync",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 410,
+        "y": 2300,
+        "wires": [
+            [
+                "b057ba511fc59448"
+            ]
+        ]
+    },
+    {
+        "id": "b057ba511fc59448",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "22bdf77d2ecfe314",
+        "name": "debug 56",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 2300,
+        "wires": []
+    },
+    {
+        "id": "8a345dba56b5d751",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "22bdf77d2ecfe314",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.DeviceStatusEntity.agile",
+        "topic": "fox.edge.entity.DeviceStatusEntity.agile",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 440,
+        "y": 2380,
+        "wires": [
+            [
+                "ea0c439578174fc8"
+            ]
+        ]
+    },
+    {
+        "id": "ea0c439578174fc8",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "22bdf77d2ecfe314",
+        "name": "debug 57",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 2380,
+        "wires": []
+    },
+    {
+        "id": "fe6d385c74b162e6",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "8ad1d58558e40ead",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.OperateChannelTaskEntity.data",
+        "topic": "fox.edge.entity.OperateChannelTaskEntity.data",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 460,
+        "y": 2500,
+        "wires": [
+            [
+                "07e531e3bba6c6d3"
+            ]
+        ]
+    },
+    {
+        "id": "cc4a20f676f66b38",
+        "type": "inject",
+        "z": "c190049a86b98c61",
+        "g": "8ad1d58558e40ead",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 2520,
+        "wires": [
+            [
+                "fe6d385c74b162e6",
+                "7543c11db0f628b4",
+                "c0d64933a4f92aad"
+            ]
+        ]
+    },
+    {
+        "id": "07e531e3bba6c6d3",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "8ad1d58558e40ead",
+        "name": "debug 58",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 2500,
+        "wires": []
+    },
+    {
+        "id": "7543c11db0f628b4",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "8ad1d58558e40ead",
+        "server": "ecd447db8f3ecad4",
+        "command": "GET",
+        "name": "fox.edge.entity.OperateChannelTaskEntity.sync",
+        "topic": "fox.edge.entity.OperateChannelTaskEntity.sync",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 440,
+        "y": 2580,
+        "wires": [
+            [
+                "f61aaaa9d94e7e03"
+            ]
+        ]
+    },
+    {
+        "id": "f61aaaa9d94e7e03",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "8ad1d58558e40ead",
+        "name": "debug 59",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 2580,
+        "wires": []
+    },
+    {
+        "id": "c0d64933a4f92aad",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "8ad1d58558e40ead",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.OperateChannelTaskEntity.agile",
+        "topic": "fox.edge.entity.OperateChannelTaskEntity.agile",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 460,
+        "y": 2660,
+        "wires": [
+            [
+                "a6bcba2e4a1a4122"
+            ]
+        ]
+    },
+    {
+        "id": "a6bcba2e4a1a4122",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "8ad1d58558e40ead",
+        "name": "debug 60",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 2660,
+        "wires": []
+    },
+    {
+        "id": "0c4fb5bcd1791ccb",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "07d39fab98079425",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.OperateManualTaskEntity.data",
+        "topic": "fox.edge.entity.OperateManualTaskEntity.data",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 460,
+        "y": 2780,
+        "wires": [
+            [
+                "a668bdcc2035c1e6"
+            ]
+        ]
+    },
+    {
+        "id": "b5df95d71f1e50fd",
+        "type": "inject",
+        "z": "c190049a86b98c61",
+        "g": "07d39fab98079425",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 2800,
+        "wires": [
+            [
+                "0c4fb5bcd1791ccb",
+                "70bfc258c1b5d562",
+                "52a2c455acedc7e2"
+            ]
+        ]
+    },
+    {
+        "id": "a668bdcc2035c1e6",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "07d39fab98079425",
+        "name": "debug 61",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 2780,
+        "wires": []
+    },
+    {
+        "id": "70bfc258c1b5d562",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "07d39fab98079425",
+        "server": "ecd447db8f3ecad4",
+        "command": "GET",
+        "name": "fox.edge.entity.OperateManualTaskEntity.sync",
+        "topic": "fox.edge.entity.OperateManualTaskEntity.sync",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 440,
+        "y": 2860,
+        "wires": [
+            [
+                "2a68c33f88ecafda"
+            ]
+        ]
+    },
+    {
+        "id": "2a68c33f88ecafda",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "07d39fab98079425",
+        "name": "debug 62",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 2860,
+        "wires": []
+    },
+    {
+        "id": "52a2c455acedc7e2",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "07d39fab98079425",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.OperateManualTaskEntity.agile",
+        "topic": "fox.edge.entity.OperateManualTaskEntity.agile",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 460,
+        "y": 2940,
+        "wires": [
+            [
+                "1ba55acd851fc2b8"
+            ]
+        ]
+    },
+    {
+        "id": "1ba55acd851fc2b8",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "07d39fab98079425",
+        "name": "debug 63",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 2940,
+        "wires": []
+    },
+    {
+        "id": "7bb01709d0d73961",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "f8a95b2333526cba",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.OperateMonitorTaskEntity.data",
+        "topic": "fox.edge.entity.OperateMonitorTaskEntity.data",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 460,
+        "y": 3060,
+        "wires": [
+            [
+                "6a6e2c73325ae716"
+            ]
+        ]
+    },
+    {
+        "id": "f84184c78e8cea27",
+        "type": "inject",
+        "z": "c190049a86b98c61",
+        "g": "f8a95b2333526cba",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 3080,
+        "wires": [
+            [
+                "7bb01709d0d73961",
+                "3e4fad540e1f0f62",
+                "2a72f15bd812bf82"
+            ]
+        ]
+    },
+    {
+        "id": "6a6e2c73325ae716",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "f8a95b2333526cba",
+        "name": "debug 64",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 3060,
+        "wires": []
+    },
+    {
+        "id": "3e4fad540e1f0f62",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "f8a95b2333526cba",
+        "server": "ecd447db8f3ecad4",
+        "command": "GET",
+        "name": "fox.edge.entity.OperateMonitorTaskEntity.sync",
+        "topic": "fox.edge.entity.OperateMonitorTaskEntity.sync",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 440,
+        "y": 3140,
+        "wires": [
+            [
+                "8c2edd4f6d999ed0"
+            ]
+        ]
+    },
+    {
+        "id": "8c2edd4f6d999ed0",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "f8a95b2333526cba",
+        "name": "debug 65",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 3140,
+        "wires": []
+    },
+    {
+        "id": "2a72f15bd812bf82",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "f8a95b2333526cba",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.OperateMonitorTaskEntity.agile",
+        "topic": "fox.edge.entity.OperateMonitorTaskEntity.agile",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 460,
+        "y": 3220,
+        "wires": [
+            [
+                "aae7135417e205f4"
+            ]
+        ]
+    },
+    {
+        "id": "aae7135417e205f4",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "f8a95b2333526cba",
+        "name": "debug 66",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 3220,
+        "wires": []
+    },
+    {
+        "id": "3653319cdbf31767",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "4c621febc12cb4ae",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.RepoCompEntity.data",
+        "topic": "fox.edge.entity.RepoCompEntity.data",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 430,
+        "y": 3340,
+        "wires": [
+            [
+                "493b52165b3cd8fc"
+            ]
+        ]
+    },
+    {
+        "id": "173c87b78abc3822",
+        "type": "inject",
+        "z": "c190049a86b98c61",
+        "g": "4c621febc12cb4ae",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 3360,
+        "wires": [
+            [
+                "3653319cdbf31767",
+                "b46081104dc6b067",
+                "bad569301eed6d80"
+            ]
+        ]
+    },
+    {
+        "id": "493b52165b3cd8fc",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "4c621febc12cb4ae",
+        "name": "debug 67",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 3340,
+        "wires": []
+    },
+    {
+        "id": "b46081104dc6b067",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "4c621febc12cb4ae",
+        "server": "ecd447db8f3ecad4",
+        "command": "GET",
+        "name": "fox.edge.entity.RepoCompEntity.sync",
+        "topic": "fox.edge.entity.RepoCompEntity.sync",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 410,
+        "y": 3420,
+        "wires": [
+            [
+                "5b44c342d2f624d2"
+            ]
+        ]
+    },
+    {
+        "id": "5b44c342d2f624d2",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "4c621febc12cb4ae",
+        "name": "debug 68",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 3420,
+        "wires": []
+    },
+    {
+        "id": "bad569301eed6d80",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "4c621febc12cb4ae",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.RepoCompEntity.agile",
+        "topic": "fox.edge.entity.RepoCompEntity.agile",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 430,
+        "y": 3500,
+        "wires": [
+            [
+                "a71dbb7b302bcd6d"
+            ]
+        ]
+    },
+    {
+        "id": "a71dbb7b302bcd6d",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "4c621febc12cb4ae",
+        "name": "debug 69",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 3500,
+        "wires": []
+    },
+    {
+        "id": "440f35b2e330530f",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "7d3f70c9ce233abd",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.service.status.data",
+        "topic": "fox.edge.service.status.data",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 400,
+        "y": 3620,
+        "wires": [
+            [
+                "b615708f0f36b189"
+            ]
+        ]
+    },
+    {
+        "id": "920b949487ba9989",
+        "type": "inject",
+        "z": "c190049a86b98c61",
+        "g": "7d3f70c9ce233abd",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 3640,
+        "wires": [
+            [
+                "440f35b2e330530f",
+                "682baf6af83e66fb"
+            ]
+        ]
+    },
+    {
+        "id": "b615708f0f36b189",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "7d3f70c9ce233abd",
+        "name": "debug 70",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 3620,
+        "wires": []
+    },
+    {
+        "id": "682baf6af83e66fb",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "7d3f70c9ce233abd",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.service.status.sync",
+        "topic": "fox.edge.service.status.sync",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 380,
+        "y": 3700,
+        "wires": [
+            [
+                "1c77db14cb50bd01"
+            ]
+        ]
+    },
+    {
+        "id": "1c77db14cb50bd01",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "7d3f70c9ce233abd",
+        "name": "debug 71",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 3700,
+        "wires": []
+    },
+    {
+        "id": "54aac7acdcc8e0d8",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "7f7ae86bb2b1bd6d",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.ExtendConfigEntity.data",
+        "topic": "fox.edge.entity.ExtendConfigEntity.data",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 430,
+        "y": 3820,
+        "wires": [
+            [
+                "9c9bd2d30b9dc946"
+            ]
+        ]
+    },
+    {
+        "id": "f4e9f7e4977fa51e",
+        "type": "inject",
+        "z": "c190049a86b98c61",
+        "g": "7f7ae86bb2b1bd6d",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 3840,
+        "wires": [
+            [
+                "54aac7acdcc8e0d8",
+                "1e4b720a22b010df",
+                "c3a98c6c5e72bed4"
+            ]
+        ]
+    },
+    {
+        "id": "9c9bd2d30b9dc946",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "7f7ae86bb2b1bd6d",
+        "name": "debug 73",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 3820,
+        "wires": []
+    },
+    {
+        "id": "1e4b720a22b010df",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "7f7ae86bb2b1bd6d",
+        "server": "ecd447db8f3ecad4",
+        "command": "GET",
+        "name": "fox.edge.entity.ExtendConfigEntity.sync",
+        "topic": "fox.edge.entity.ExtendConfigEntity.sync",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 420,
+        "y": 3900,
+        "wires": [
+            [
+                "6c5ad68808f2c213"
+            ]
+        ]
+    },
+    {
+        "id": "6c5ad68808f2c213",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "7f7ae86bb2b1bd6d",
+        "name": "debug 74",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 3900,
+        "wires": []
+    },
+    {
+        "id": "c3a98c6c5e72bed4",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "7f7ae86bb2b1bd6d",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.ExtendConfigEntity.agile",
+        "topic": "fox.edge.entity.ExtendConfigEntity.agile",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 440,
+        "y": 3980,
+        "wires": [
+            [
+                "8a0bcdb5610c1b88"
+            ]
+        ]
+    },
+    {
+        "id": "8a0bcdb5610c1b88",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "7f7ae86bb2b1bd6d",
+        "name": "debug 75",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 3980,
+        "wires": []
+    },
+    {
+        "id": "bf389d3ce1187ac3",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "27610dfe922b1cf2",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.DeviceMapperEntity.data",
+        "topic": "fox.edge.entity.DeviceMapperEntity.data",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 440,
+        "y": 4100,
+        "wires": [
+            [
+                "bbcd03b037c95831"
+            ]
+        ]
+    },
+    {
+        "id": "85a04fa85b2a3a24",
+        "type": "inject",
+        "z": "c190049a86b98c61",
+        "g": "27610dfe922b1cf2",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 4120,
+        "wires": [
+            [
+                "bf389d3ce1187ac3",
+                "7977ec55c4b3fa79",
+                "0f63390da258f892"
+            ]
+        ]
+    },
+    {
+        "id": "bbcd03b037c95831",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "27610dfe922b1cf2",
+        "name": "debug 76",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 4100,
+        "wires": []
+    },
+    {
+        "id": "7977ec55c4b3fa79",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "27610dfe922b1cf2",
+        "server": "ecd447db8f3ecad4",
+        "command": "GET",
+        "name": "fox.edge.entity.DeviceMapperEntity.sync",
+        "topic": "fox.edge.entity.DeviceMapperEntity.sync",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 420,
+        "y": 4180,
+        "wires": [
+            [
+                "41e3954e967a091d"
+            ]
+        ]
+    },
+    {
+        "id": "41e3954e967a091d",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "27610dfe922b1cf2",
+        "name": "debug 77",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 4180,
+        "wires": []
+    },
+    {
+        "id": "0f63390da258f892",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "27610dfe922b1cf2",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.DeviceMapperEntity.agile",
+        "topic": "fox.edge.entity.DeviceMapperEntity.agile",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 440,
+        "y": 4260,
+        "wires": [
+            [
+                "0c627ef8444fd699"
+            ]
+        ]
+    },
+    {
+        "id": "0c627ef8444fd699",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "27610dfe922b1cf2",
+        "name": "debug 78",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 4260,
+        "wires": []
+    },
+    {
+        "id": "e1b62843fa3debce",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "7dcced234f675f08",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.LinkEntity.data",
+        "topic": "fox.edge.entity.LinkEntity.data",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 410,
+        "y": 4380,
+        "wires": [
+            [
+                "ecfc723719bff4a9"
+            ]
+        ]
+    },
+    {
+        "id": "c1f6d5c868ef0ce6",
+        "type": "inject",
+        "z": "c190049a86b98c61",
+        "g": "7dcced234f675f08",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 4400,
+        "wires": [
+            [
+                "e1b62843fa3debce",
+                "eb5e5a03fe20b9c6",
+                "1bc94df5cc92f19a"
+            ]
+        ]
+    },
+    {
+        "id": "ecfc723719bff4a9",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "7dcced234f675f08",
+        "name": "debug 79",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 4380,
+        "wires": []
+    },
+    {
+        "id": "eb5e5a03fe20b9c6",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "7dcced234f675f08",
+        "server": "ecd447db8f3ecad4",
+        "command": "GET",
+        "name": "fox.edge.entity.LinkEntity.sync",
+        "topic": "fox.edge.entity.LinkEntity.sync",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 390,
+        "y": 4460,
+        "wires": [
+            [
+                "b7d0d8cb3b90bcd1"
+            ]
+        ]
+    },
+    {
+        "id": "b7d0d8cb3b90bcd1",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "7dcced234f675f08",
+        "name": "debug 80",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 4460,
+        "wires": []
+    },
+    {
+        "id": "1bc94df5cc92f19a",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "7dcced234f675f08",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.LinkEntity.agile",
+        "topic": "fox.edge.entity.LinkEntity.agile",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 410,
+        "y": 4540,
+        "wires": [
+            [
+                "e85849712a92f557"
+            ]
+        ]
+    },
+    {
+        "id": "e85849712a92f557",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "7dcced234f675f08",
+        "name": "debug 81",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 4540,
+        "wires": []
+    },
+    {
+        "id": "cc475e95b305275f",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "3a02868b14c5e440",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.TriggerConfigEntity.data",
+        "topic": "fox.edge.entity.TriggerConfigEntity.data",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 430,
+        "y": 4660,
+        "wires": [
+            [
+                "17ba71b78dc7e3ca"
+            ]
+        ]
+    },
+    {
+        "id": "931504d41fa8f48a",
+        "type": "inject",
+        "z": "c190049a86b98c61",
+        "g": "3a02868b14c5e440",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 4680,
+        "wires": [
+            [
+                "cc475e95b305275f",
+                "c5678c08bdeffc8a",
+                "d7d6d6e22f91bab2"
+            ]
+        ]
+    },
+    {
+        "id": "17ba71b78dc7e3ca",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "3a02868b14c5e440",
+        "name": "debug 82",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 4660,
+        "wires": []
+    },
+    {
+        "id": "c5678c08bdeffc8a",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "3a02868b14c5e440",
+        "server": "ecd447db8f3ecad4",
+        "command": "GET",
+        "name": "fox.edge.entity.TriggerConfigEntity.sync",
+        "topic": "fox.edge.entity.TriggerConfigEntity.sync",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 420,
+        "y": 4740,
+        "wires": [
+            [
+                "1a301221e6cab490"
+            ]
+        ]
+    },
+    {
+        "id": "1a301221e6cab490",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "3a02868b14c5e440",
+        "name": "debug 83",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 4740,
+        "wires": []
+    },
+    {
+        "id": "d7d6d6e22f91bab2",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "3a02868b14c5e440",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.TriggerConfigEntity.agile",
+        "topic": "fox.edge.entity.TriggerConfigEntity.agile",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 440,
+        "y": 4820,
+        "wires": [
+            [
+                "40caee03b30dc801"
+            ]
+        ]
+    },
+    {
+        "id": "40caee03b30dc801",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "3a02868b14c5e440",
+        "name": "debug 84",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 4820,
+        "wires": []
+    },
+    {
+        "id": "eea098249173fad4",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "7301e99eaab06d3a",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.TriggerEntity.data",
+        "topic": "fox.edge.entity.TriggerEntity.data",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 410,
+        "y": 4920,
+        "wires": [
+            [
+                "c62e5c199ee41627"
+            ]
+        ]
+    },
+    {
+        "id": "26b9ba21a964807f",
+        "type": "inject",
+        "z": "c190049a86b98c61",
+        "g": "7301e99eaab06d3a",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 4940,
+        "wires": [
+            [
+                "eea098249173fad4",
+                "20cc0150e5911c62",
+                "4731229f7df35097"
+            ]
+        ]
+    },
+    {
+        "id": "c62e5c199ee41627",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "7301e99eaab06d3a",
+        "name": "debug 85",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 4920,
+        "wires": []
+    },
+    {
+        "id": "20cc0150e5911c62",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "7301e99eaab06d3a",
+        "server": "ecd447db8f3ecad4",
+        "command": "GET",
+        "name": "fox.edge.entity.TriggerEntity.sync",
+        "topic": "fox.edge.entity.TriggerEntity.sync",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 400,
+        "y": 5000,
+        "wires": [
+            [
+                "1cf6588b093f8b4e"
+            ]
+        ]
+    },
+    {
+        "id": "1cf6588b093f8b4e",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "7301e99eaab06d3a",
+        "name": "debug 86",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 5000,
+        "wires": []
+    },
+    {
+        "id": "4731229f7df35097",
+        "type": "redis-command",
+        "z": "c190049a86b98c61",
+        "g": "7301e99eaab06d3a",
+        "server": "ecd447db8f3ecad4",
+        "command": "HGETALL",
+        "name": "fox.edge.entity.TriggerEntity.agile",
+        "topic": "fox.edge.entity.TriggerEntity.agile",
+        "params": "[]",
+        "paramsType": "json",
+        "payloadType": "json",
+        "block": false,
+        "x": 420,
+        "y": 5080,
+        "wires": [
+            [
+                "31d5aa249d884411"
+            ]
+        ]
+    },
+    {
+        "id": "31d5aa249d884411",
+        "type": "debug",
+        "z": "c190049a86b98c61",
+        "g": "7301e99eaab06d3a",
+        "name": "debug 87",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 5080,
+        "wires": []
+    },
+    {
+        "id": "23d4093ddabd9215",
+        "type": "redis-in",
+        "z": "a73bac9ebd630aa1",
+        "g": "e4455790a126f501",
+        "server": "ecd447db8f3ecad4",
+        "command": "blpop",
+        "name": "fox.edge.list.persist.record（持久化服务从该Topic接收记录保存请求）",
+        "topic": "fox.edge.list.persist.record",
+        "obj": true,
+        "timeout": "0",
+        "x": 290,
+        "y": 920,
+        "wires": [
+            [
+                "16a82f6ea81e4ef1"
+            ]
+        ]
+    },
+    {
+        "id": "16a82f6ea81e4ef1",
+        "type": "debug",
+        "z": "a73bac9ebd630aa1",
+        "g": "e4455790a126f501",
+        "name": "debug 35",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "a0627c48625aca55",
+        "type": "redis-in",
+        "z": "a73bac9ebd630aa1",
+        "g": "e4455790a126f501",
+        "server": "ecd447db8f3ecad4",
+        "command": "blpop",
+        "name": "fox.edge.list.persist.value（持久化服务从该Topic接收数值保存请求）",
+        "topic": "fox.edge.list.persist.value1",
+        "obj": true,
+        "timeout": "0",
+        "x": 280,
+        "y": 980,
+        "wires": [
+            [
+                "5cfcd5fa42f18583"
+            ]
+        ]
+    },
+    {
+        "id": "5cfcd5fa42f18583",
+        "type": "debug",
+        "z": "a73bac9ebd630aa1",
+        "g": "e4455790a126f501",
+        "name": "debug 36",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "ca76520867468d6b",
+        "type": "redis-in",
+        "z": "a73bac9ebd630aa1",
+        "g": "e4455790a126f501",
+        "server": "ecd447db8f3ecad4",
+        "command": "blpop",
+        "name": "fox.edge.list.persist.manage（持久化服务从该Topic接收管理操作请求）",
+        "topic": "fox.edge.list.persist.manage",
+        "obj": true,
+        "timeout": "0",
+        "x": 290,
+        "y": 1040,
+        "wires": [
+            [
+                "869b2be5215d7f34"
+            ]
+        ]
+    },
+    {
+        "id": "869b2be5215d7f34",
+        "type": "debug",
+        "z": "a73bac9ebd630aa1",
+        "g": "e4455790a126f501",
+        "name": "debug 37",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "b852cd21f703324f",
+        "type": "redis-in",
+        "z": "a73bac9ebd630aa1",
+        "g": "e4455790a126f501",
+        "server": "ecd447db8f3ecad4",
+        "command": "blpop",
+        "name": "fox.edge.list.manage.persist（持久化服务从该Topic返回管理操作响应）",
+        "topic": "fox.edge.list.manage.persist",
+        "obj": true,
+        "timeout": "0",
+        "x": 290,
+        "y": 1100,
+        "wires": [
+            [
+                "e04b68eee69877f8"
+            ]
+        ]
+    },
+    {
+        "id": "e04b68eee69877f8",
+        "type": "debug",
+        "z": "a73bac9ebd630aa1",
+        "g": "e4455790a126f501",
+        "name": "debug 38",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 1100,
+        "wires": []
+    },
+    {
+        "id": "46c709dd26d9ab21",
+        "type": "redis-in",
+        "z": "a73bac9ebd630aa1",
+        "g": "c136c8e33cf97d6f",
+        "server": "ecd447db8f3ecad4",
+        "command": "blpop",
+        "name": "fox.edge.list.persist.record（持久化服务从该Topic接收上层服务对设备服务的操作记录请求）",
+        "topic": "fox.edge.list.persist.record",
+        "obj": true,
+        "timeout": "0",
+        "x": 360,
+        "y": 780,
+        "wires": [
+            [
+                "69cd5c064de3bc1b"
+            ]
+        ]
+    },
+    {
+        "id": "b45eaced7d902df6",
+        "type": "redis-in",
+        "z": "a73bac9ebd630aa1",
+        "g": "c136c8e33cf97d6f",
+        "server": "ecd447db8f3ecad4",
+        "command": "subscribe",
+        "name": "topic_channel_request_simulator（设备服务通过该Topic请求发送报文）",
+        "topic": "topic_channel_request_simulator1",
+        "obj": true,
+        "timeout": "0",
+        "x": 290,
+        "y": 480,
+        "wires": [
+            [
+                "0e6455de65f39d59"
+            ]
+        ]
+    },
+    {
+        "id": "0e6455de65f39d59",
+        "type": "debug",
+        "z": "a73bac9ebd630aa1",
+        "g": "c136c8e33cf97d6f",
+        "name": "debug 39",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "4acb88ca9fa4a927",
+        "type": "redis-in",
+        "z": "a73bac9ebd630aa1",
+        "g": "c136c8e33cf97d6f",
+        "server": "ecd447db8f3ecad4",
+        "command": "subscribe",
+        "name": "topic_device_respond_manager（管理服务从该Topic接收响应）",
+        "topic": "topic_device_respond_manager",
+        "obj": true,
+        "timeout": "0",
+        "x": 270,
+        "y": 720,
+        "wires": [
+            [
+                "3082e2baf9e3882d"
+            ]
+        ]
+    },
+    {
+        "id": "e42593ee8627cda0",
+        "type": "redis-in",
+        "z": "a73bac9ebd630aa1",
+        "g": "c136c8e33cf97d6f",
+        "server": "ecd447db8f3ecad4",
+        "command": "subscribe",
+        "name": "topic_channel_respond_device（设备服务从该Topci接收响应）",
+        "topic": "topic_channel_respond_device1",
+        "obj": true,
+        "timeout": "0",
+        "x": 270,
+        "y": 540,
+        "wires": [
+            [
+                "df79c8f99a3b6a9a"
+            ]
+        ]
+    },
+    {
+        "id": "74ed2c7721b11eca",
+        "type": "redis-in",
+        "z": "a73bac9ebd630aa1",
+        "g": "c136c8e33cf97d6f",
+        "server": "ecd447db8f3ecad4",
+        "command": "subscribe",
+        "name": "topic_device_respond_system_controller（控制服务从该Topic接收响应）",
+        "topic": "topic_device_respond_system_controller1",
+        "obj": true,
+        "timeout": "0",
+        "x": 300,
+        "y": 660,
+        "wires": [
+            [
+                "b6989736de8555b5"
+            ]
+        ]
+    },
+    {
+        "id": "b6989736de8555b5",
+        "type": "debug",
+        "z": "a73bac9ebd630aa1",
+        "g": "c136c8e33cf97d6f",
+        "name": "debug 40",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "affd28cc1f2d2a06",
+        "type": "redis-in",
+        "z": "a73bac9ebd630aa1",
+        "g": "c136c8e33cf97d6f",
+        "server": "ecd447db8f3ecad4",
+        "command": "subscribe",
+        "name": "topic_device_request_public（设备服务通过该Topic接收请求）",
+        "topic": "topic_device_request_public1",
+        "obj": true,
+        "timeout": "0",
+        "x": 270,
+        "y": 600,
+        "wires": [
+            [
+                "0115c881215b0415"
+            ]
+        ]
+    },
+    {
+        "id": "0115c881215b0415",
+        "type": "debug",
+        "z": "a73bac9ebd630aa1",
+        "g": "c136c8e33cf97d6f",
+        "name": "debug 41",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "df79c8f99a3b6a9a",
+        "type": "debug",
+        "z": "a73bac9ebd630aa1",
+        "g": "c136c8e33cf97d6f",
+        "name": "debug 42",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "3082e2baf9e3882d",
+        "type": "debug",
+        "z": "a73bac9ebd630aa1",
+        "g": "c136c8e33cf97d6f",
+        "name": "debug 43",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "69cd5c064de3bc1b",
+        "type": "debug",
+        "z": "a73bac9ebd630aa1",
+        "g": "c136c8e33cf97d6f",
+        "name": "debug 44",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "42d370f32f02fa3e",
+        "type": "redis-in",
+        "z": "a73bac9ebd630aa1",
+        "g": "d1fad3e3e9db57fb",
+        "server": "ecd447db8f3ecad4",
+        "command": "blpop",
+        "name": "fox.edge.list.manager.restful.message（管理服务从该Topic接收新增通道/设备请求）",
+        "topic": "fox.edge.list.manager.restful.message",
+        "obj": true,
+        "timeout": "0",
+        "x": 330,
+        "y": 320,
+        "wires": [
+            [
+                "784aedcca1f8258e"
+            ]
+        ]
+    },
+    {
+        "id": "784aedcca1f8258e",
+        "type": "debug",
+        "z": "a73bac9ebd630aa1",
+        "g": "d1fad3e3e9db57fb",
+        "name": "debug 45",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "c219c5eca2692d42",
+        "type": "debug",
+        "z": "a73bac9ebd630aa1",
+        "g": "d1fad3e3e9db57fb",
+        "name": "debug 46",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "3273b3d4ac43cb3b",
+        "type": "redis-in",
+        "z": "a73bac9ebd630aa1",
+        "g": "d1fad3e3e9db57fb",
+        "server": "ecd447db8f3ecad4",
+        "command": "subscribe",
+        "name": "topic_channel_respond_device（设备服务从该Topci接收响应）",
+        "topic": "topic_channel_respond_device1",
+        "obj": true,
+        "timeout": "0",
+        "x": 270,
+        "y": 160,
+        "wires": [
+            [
+                "c219c5eca2692d42"
+            ]
+        ]
+    },
+    {
+        "id": "281ca0c78f04f40f",
+        "type": "debug",
+        "z": "a73bac9ebd630aa1",
+        "g": "d1fad3e3e9db57fb",
+        "name": "debug 47",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "9283b8ea80905463",
+        "type": "redis-in",
+        "z": "a73bac9ebd630aa1",
+        "g": "d1fad3e3e9db57fb",
+        "server": "ecd447db8f3ecad4",
+        "command": "subscribe",
+        "name": "topic_channel_respond_manager（管理服务从该Topic接收响应）",
+        "topic": "topic_channel_respond_manager",
+        "obj": true,
+        "timeout": "0",
+        "x": 270,
+        "y": 240,
+        "wires": [
+            [
+                "281ca0c78f04f40f"
+            ]
+        ]
+    },
+    {
+        "id": "20c4c69f4022ddb7",
+        "type": "redis-in",
+        "z": "a73bac9ebd630aa1",
+        "g": "d1fad3e3e9db57fb",
+        "server": "ecd447db8f3ecad4",
+        "command": "subscribe",
+        "name": "topic_channel_request_simulator（各服务通过该Topic请求发送报文）",
+        "topic": "topic_channel_request_simulator1",
+        "obj": true,
+        "timeout": "0",
+        "x": 290,
+        "y": 80,
+        "wires": [
+            [
+                "2ef137ec940627f0"
+            ]
+        ]
+    },
+    {
+        "id": "2ef137ec940627f0",
+        "type": "debug",
+        "z": "a73bac9ebd630aa1",
+        "g": "d1fad3e3e9db57fb",
+        "name": "debug 48",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "d3ff171a066f7ecc",
+        "type": "redis-in",
+        "z": "a73bac9ebd630aa1",
+        "g": "e19e0e915a4be564",
+        "server": "ecd447db8f3ecad4",
+        "command": "blpop",
+        "name": "fox.edge.service.console.public（管理服务从该Topic接收前台日志内容）",
+        "topic": "fox.edge.service.console.public",
+        "obj": true,
+        "timeout": "0",
+        "x": 300,
+        "y": 1220,
+        "wires": [
+            [
+                "dd56e6779231c7fa"
+            ]
+        ]
+    },
+    {
+        "id": "dd56e6779231c7fa",
+        "type": "debug",
+        "z": "a73bac9ebd630aa1",
+        "g": "e19e0e915a4be564",
+        "name": "debug 72",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 1220,
+        "wires": []
+    },
+    {
+        "id": "8d0199fa12d2a7d2",
+        "type": "redis-in",
+        "z": "a73bac9ebd630aa1",
+        "g": "e19e0e915a4be564",
+        "server": "ecd447db8f3ecad4",
+        "command": "subscribe",
+        "name": "topic_manager_request_public（管理服务通过该Topic接收Restful风格的操作请求）",
+        "topic": "topic_manager_request_public1",
+        "obj": true,
+        "timeout": "0",
+        "x": 330,
+        "y": 1280,
+        "wires": [
+            [
+                "3b6d124a7be80ea9"
+            ]
+        ]
+    },
+    {
+        "id": "3b6d124a7be80ea9",
+        "type": "debug",
+        "z": "a73bac9ebd630aa1",
+        "g": "e19e0e915a4be564",
+        "name": "debug 88",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 1280,
+        "wires": []
+    },
+    {
+        "id": "17c692058bd03776",
+        "type": "redis-in",
+        "z": "a73bac9ebd630aa1",
+        "g": "e19e0e915a4be564",
+        "server": "ecd447db8f3ecad4",
+        "command": "subscribe",
+        "name": "topic_device_respond_manager（管理服务通过该Topic接收设备服务的响应）",
+        "topic": "topic_device_respond_manager",
+        "obj": true,
+        "timeout": "0",
+        "x": 310,
+        "y": 1520,
+        "wires": [
+            [
+                "01fccc474ccd608f"
+            ]
+        ]
+    },
+    {
+        "id": "01fccc474ccd608f",
+        "type": "debug",
+        "z": "a73bac9ebd630aa1",
+        "g": "e19e0e915a4be564",
+        "name": "debug 89",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 1520,
+        "wires": []
+    },
+    {
+        "id": "0e9a2c8035715493",
+        "type": "redis-in",
+        "z": "a73bac9ebd630aa1",
+        "g": "e19e0e915a4be564",
+        "server": "ecd447db8f3ecad4",
+        "command": "subscribe",
+        "name": "topic_channel_respond_manager（管理服务通过该Topic接收通道服务的响应）",
+        "topic": "topic_channel_respond_manager",
+        "obj": true,
+        "timeout": "0",
+        "x": 320,
+        "y": 1400,
+        "wires": [
+            [
+                "1ada2c56588eaea6"
+            ]
+        ]
+    },
+    {
+        "id": "1ada2c56588eaea6",
+        "type": "debug",
+        "z": "a73bac9ebd630aa1",
+        "g": "e19e0e915a4be564",
+        "name": "debug 90",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 1400,
+        "wires": []
+    },
+    {
+        "id": "50232f34a97605a5",
+        "type": "redis-in",
+        "z": "a73bac9ebd630aa1",
+        "g": "e19e0e915a4be564",
+        "server": "ecd447db8f3ecad4",
+        "command": "subscribe",
+        "name": "topic_channel_request_simulator（管理服务通过该Topic向通道服务的发送请求）",
+        "topic": "topic_channel_request_simulator1",
+        "obj": true,
+        "timeout": "0",
+        "x": 320,
+        "y": 1340,
+        "wires": [
+            [
+                "0166ca63eee016df"
+            ]
+        ]
+    },
+    {
+        "id": "0166ca63eee016df",
+        "type": "debug",
+        "z": "a73bac9ebd630aa1",
+        "g": "e19e0e915a4be564",
+        "name": "debug 91",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 1340,
+        "wires": []
+    },
+    {
+        "id": "786ffd3c4e34d222",
+        "type": "redis-in",
+        "z": "a73bac9ebd630aa1",
+        "g": "e19e0e915a4be564",
+        "server": "ecd447db8f3ecad4",
+        "command": "subscribe",
+        "name": "topic_device_request_public（管理服务通过该Topic向设备服务发送操作请求）",
+        "topic": "topic_device_request_public1",
+        "obj": true,
+        "timeout": "0",
+        "x": 310,
+        "y": 1460,
+        "wires": [
+            [
+                "716b06719f56fab0"
+            ]
+        ]
+    },
+    {
+        "id": "716b06719f56fab0",
+        "type": "debug",
+        "z": "a73bac9ebd630aa1",
+        "g": "e19e0e915a4be564",
+        "name": "debug 92",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 1460,
+        "wires": []
+    }
+]
