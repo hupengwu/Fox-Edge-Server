@@ -1,13 +1,13 @@
 package cn.foxtech.kernel.system.common.initialize;
 
 
+import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.kernel.common.initialize.KernelInitialize;
 import cn.foxtech.kernel.system.common.scheduler.EntityManageScheduler;
 import cn.foxtech.kernel.system.common.scheduler.PeriodTasksScheduler;
 import cn.foxtech.kernel.system.common.scheduler.PersistRespondScheduler;
 import cn.foxtech.kernel.system.common.scheduler.TopicManagerScheduler;
-import cn.foxtech.kernel.system.common.service.DeviceTimeOutService;
 import cn.foxtech.kernel.system.common.service.EntityManageService;
 import cn.foxtech.kernel.system.common.task.GateWayRouteUpdateTask;
 import org.slf4j.Logger;
@@ -49,8 +49,11 @@ public class CommonInitialize {
     @Autowired
     private PersistRespondScheduler persistRespondScheduler;
 
+    /**
+     * 初始化配置：需要感知运行期的用户动态输入的配置，所以直接使用这个组件
+     */
     @Autowired
-    private DeviceTimeOutService deviceTimeOutService;
+    private InitialConfigService configService;
 
 
     public void initialize() {
@@ -68,7 +71,8 @@ public class CommonInitialize {
         this.entityManageScheduler.schedule();
 
         // 初始化通信超时配置
-        this.deviceTimeOutService.initialize();
+        this.configService.initialize("deviceTimeOutConfig", "deviceTimeOutConfig.json");
+
 
         // topic响应
         this.topicManagerScheduler.schedule();

@@ -28,7 +28,7 @@ public class EntityManageScheduler extends PeriodTaskService {
     private DeviceObjectMapper deviceObjectMapper;
 
     @Autowired
-    private InitialConfigService configManageService;
+    private InitialConfigService configService;
 
     @Autowired
     private RedisTagService redisTagService;
@@ -63,7 +63,7 @@ public class EntityManageScheduler extends PeriodTaskService {
                 return;
             }
 
-            Map<String, Object> configs = this.configManageService.getConfigParam("serverConfig");
+            Map<String, Object> configs = this.configService.getConfigParam("serverConfig");
             Map<String, Object> params = (Map<String, Object>) configs.getOrDefault("deviceHistory", new HashMap<>());
 
             Integer maxCount = (Integer) params.getOrDefault("maxCount", 1000000);
@@ -89,7 +89,7 @@ public class EntityManageScheduler extends PeriodTaskService {
                 return;
             }
 
-            Map<String, Object> configs = this.configManageService.getConfigParam("serverConfig");
+            Map<String, Object> configs = this.configService.getConfigParam("serverConfig");
             Map<String, Object> params = (Map<String, Object>) configs.getOrDefault("operateRecord", new HashMap<>());
 
             Integer maxCount = (Integer) params.getOrDefault("maxCount", 10000);

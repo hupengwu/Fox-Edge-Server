@@ -52,7 +52,7 @@ public class CollectorExchangeService extends PeriodTaskService {
 
 
     @Autowired
-    private InitialConfigService initialConfigService;
+    private InitialConfigService configService;
 
     /**
      * 执行任务
@@ -90,7 +90,7 @@ public class CollectorExchangeService extends PeriodTaskService {
                 }
 
                 // 获得时间间隔配置:如果没有配置，那么默认100毫秒
-                Map<String, Object> configValue = this.initialConfigService.getConfigParam("serverConfig");
+                Map<String, Object> configValue = this.configService.getConfigParam("serverConfig");
                 Integer sleep = (Integer) configValue.getOrDefault("sleep", 100);
 
                 // 不能访问太快，否则CPU占用率都受不了

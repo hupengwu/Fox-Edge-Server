@@ -20,7 +20,7 @@ import java.util.Map;
 public class LocalConfigService {
     private final Map<String, Object> configs = new HashMap<>();
     @Autowired
-    private InitialConfigService configManageService;
+    private InitialConfigService configService;
 
     /**
      * 按默认方式进行初始化：从“serverConfig.json”装载初始化数值，并保存到“serverConfig”的Key中
@@ -40,10 +40,10 @@ public class LocalConfigService {
 
     public void initialize(String configName, String classpathFile) {
         // 从redis缓存之中，从Redis中读取配置信息，该信息由ConfigManageService组件，自动冲serverConfig.json、redis缓存、管理服务通告，三者中自动判定出数值
-        this.configManageService.initialize(configName, classpathFile);
+        this.configService.initialize(configName, classpathFile);
 
         // 读取配置数据
-        Map<String, Object> configs = this.configManageService.getConfigParam(configName);
+        Map<String, Object> configs = this.configService.getConfigParam(configName);
 
         // 本应用反正不想动态根据全局变化，调整，将上面艰难获得的信息，缓存起来，反复使用
         this.configs.computeIfAbsent(configName, k -> JsonUtils.clone(configs));

@@ -1,6 +1,7 @@
 package cn.foxtech.kernel.system.repository.service;
 
 import cn.foxtech.common.constant.HttpStatus;
+import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.Maps;
 import cn.foxtech.common.utils.http.HttpClientUtil;
@@ -49,7 +50,7 @@ public class CloudRemoteService {
     private Integer lockdown = 60;
 
     @Autowired
-    private RepoCloudConfigService configService;
+    private InitialConfigService configService;
 
     @Autowired
     private EntityManageService manageService;
@@ -78,7 +79,7 @@ public class CloudRemoteService {
      */
     public synchronized void login() throws IOException {
         // 获得账号/密码
-        Map<String, Object> valueConfig = this.configService.getConfigValue();
+        Map<String, Object> valueConfig = this.configService.getConfigParam("repositoryConfig");
         if (valueConfig.isEmpty()) {
             throw new RuntimeException("登录云端服务器：从Redis配置中获得账号/密码失败！");
         }

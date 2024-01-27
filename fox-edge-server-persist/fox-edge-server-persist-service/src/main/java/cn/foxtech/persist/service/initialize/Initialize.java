@@ -29,7 +29,7 @@ public class Initialize implements CommandLineRunner {
     private PersistInitialize persistInitialize;
 
     @Autowired
-    private InitialConfigService configManageService;
+    private InitialConfigService configService;
 
 
     @Override
@@ -40,7 +40,7 @@ public class Initialize implements CommandLineRunner {
         this.persistInitialize.initialize();
 
         // 初始化全局配置参数
-        this.configManageService.initialize("serverConfig", "serverConfig.json");
+        this.configService.initialize("serverConfig", "serverConfig.json");
 
         // 设备记录的上报接收任务
         this.periodTaskScheduler.schedule();

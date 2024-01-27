@@ -46,14 +46,14 @@ public class MqttClientService {
      * 配置服务：从redis中获得配置信息
      */
     @Autowired
-    private MqttConfigService configService;
+    private MqttConfigService mqttConfigService;
     /**
      * 客户端连接
      */
     private MqttClient mqttClient;
 
     @Autowired
-    private InitialConfigService configManageService;
+    private InitialConfigService configService;
 
     private String subTopic;
 
@@ -65,23 +65,23 @@ public class MqttClientService {
 
 
     public boolean Initialize() {
-        this.configManageService.initialize("serverConfig", "serverConfig.json");
-        Map<String, Object> configs =this.configManageService.getConfigParam("serverConfig");
+        this.configService.initialize("serverConfig", "serverConfig.json");
+        Map<String, Object> configs =this.configService.getConfigParam("serverConfig");
 
         Map<String, Object> cloudConfig = (Map<String, Object>) configs.getOrDefault("cloud", new HashMap<>());
         Map<String, Object> mqttConfig = (Map<String, Object>) cloudConfig.getOrDefault("mqtt", new HashMap<>());
 
 
         // 初始化配置
-        this.configService.initialize(mqttConfig);
+        this.mqttConfigService.initialize(mqttConfig);
 
 
-        String clientId = this.configService.getClientId() + ":" + UUID.randomUUID().toString().replace("-", "");
-        this.subTopic = this.configService.getSubscribe() + "/" + this.edgeId + "/#";
-        this.publish2aggregate = this.configService.getPublish2Aggregate() + "/" + this.edgeId;
-        this.publish2forward = this.configService.getPublish2Forward() + "/" + this.edgeId;
-        this.subscribeAggregate = this.configService.getSubscribe() + "/" + this.edgeId + "/aggregate";
-        this.subscribeForward = this.configService.getSubscribe() + "/" + this.edgeId + "/forward";
+        String clientId = this.mqttConfigService.getClientId() + ":" + UUID.randomUUID().toString().replace("-", "");
+        this.subTopic = this.mqttConfigService.getSubscribe() + "/" + this.edgeId + "/#";
+        this.publish2aggregate = this.mqttConfigService.getPublish2Aggregate() + "/" + this.edgeId;
+        this.publish2forward = this.mqttConfigService.getPublish2Forward() + "/" + this.edgeId;
+        this.subscribeAggregate = this.mqttConfigService.getSubscribe() + "/" + this.edgeId + "/aggregate";
+        this.subscribeForward = this.mqttConfigService.getSubscribe() + "/" + this.edgeId + "/forward";
 
         logger.info("mqtt clientId       :" + clientId);
         logger.info("mqtt topic subscribe:" + this.subTopic);
@@ -89,13 +89,13 @@ public class MqttClientService {
         logger.info("mqtt topic publish2forward:  " + this.publish2forward);
 
         // 从把配置参数填入组件当中
-        this.creator.ip(this.configService.getIp());
-        this.creator.port(this.configService.getPort());
-        this.creator.name(this.configService.getName());
-        this.creator.username(this.configService.getUserName());
-        this.creator.password(this.configService.getPassword());
-        this.creator.keepAliveSecs(this.configService.getKeepAliveSecs());
-        this.creator.reInterval(this.configService.getReInterval());
+        this.creator.ip(this.mqttConfigService.getIp());
+        this.creator.port(this.mqttConfigService.getPort());
+        this.creator.name(this.mqttConfigService.getName());
+        this.creator.username(this.mqttConfigService.getUserName());
+        this.creator.password(this.mqttConfigService.getPassword());
+        this.creator.keepAliveSecs(this.mqttConfigService.getKeepAliveSecs());
+        this.creator.reInterval(this.mqttConfigService.getReInterval());
         this.creator.clientId(clientId);
 
         // 连接broker服务器

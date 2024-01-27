@@ -42,6 +42,7 @@ public class MqttClientService {
      * 客户端连接
      */
     private MqttClient mqttClient;
+
     /**
      * channel的通用配置信息
      */

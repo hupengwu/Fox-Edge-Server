@@ -51,7 +51,7 @@ public class LocalHttpProxyService {
     private Integer lockdown = 60;
 
     @Autowired
-    private InitialConfigService configManageService;
+    private InitialConfigService configService;
 
     @Autowired
     private RedisConsoleService consoleService;
@@ -77,8 +77,8 @@ public class LocalHttpProxyService {
      */
     public synchronized void login() throws IOException {
         // 获得账号密码
-        this.configManageService.initialize("serverConfig", "serverConfig.json");
-        Map<String, Object> configs = this.configManageService.getConfigParam("serverConfig");
+        this.configService.initialize("serverConfig", "serverConfig.json");
+        Map<String, Object> configs = this.configService.getConfigParam("serverConfig");
 
 
         Map<String, Object> localConfig = (Map<String, Object>) configs.getOrDefault("local", new HashMap<>());

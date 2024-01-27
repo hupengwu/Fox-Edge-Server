@@ -6,7 +6,6 @@ import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTask;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTaskType;
-import cn.foxtech.kernel.system.common.service.DeviceTimeOutService;
 import cn.foxtech.kernel.system.common.service.EntityManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,7 +22,7 @@ public class CleanTimeOutTask extends PeriodTask {
     private EntityManageService entityManageService;
 
     @Autowired
-    private DeviceTimeOutService deviceTimeOutService;
+    private InitialConfigService configService;
 
     /**
      * 上次处理时间
@@ -52,7 +51,7 @@ public class CleanTimeOutTask extends PeriodTask {
     public void execute() {
         try {
             // 获取配置参数
-            Map<String, Object> configValue = this.deviceTimeOutService.getConfigValue();
+            Map<String, Object> configValue = this.configService.getConfigParam("deviceTimeOutConfig");
 
             Integer lifetime = (Integer) configValue.getOrDefault("lifetime", 3600);
             Integer period = (Integer) configValue.getOrDefault("period", 3600);

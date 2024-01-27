@@ -48,7 +48,7 @@ public class Initialize implements CommandLineRunner {
      * 动态参数配置
      */
     @Autowired
-    private InitialConfigService initialConfigService;
+    private InitialConfigService configService;
 
     @Autowired
     private ScriptEngineInitialize engineInitialize;
@@ -65,7 +65,7 @@ public class Initialize implements CommandLineRunner {
         this.entityManageService.initLoadEntity();
 
         // 初始化配置参数
-        this.initialConfigService.initialize("serverConfig", "serverConfig.json");
+        this.configService.initialize("serverConfig", "serverConfig.json");
 
         // 从第三方jar扫描解码器，并生成redis记录
         this.methodEntityService.scanJarFile();

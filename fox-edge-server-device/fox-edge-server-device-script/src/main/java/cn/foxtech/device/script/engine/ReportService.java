@@ -17,7 +17,7 @@ import java.util.Map;
 @Component
 public class ReportService {
     @Autowired
-    private InitialConfigService initialConfigService;
+    private InitialConfigService configService;
 
     @Autowired
     private ScriptEngineService engineService;
@@ -75,12 +75,12 @@ public class ReportService {
             return;
         }
 
-        if (!Boolean.TRUE.equals(this.initialConfigService.getConfigParam("serverConfig").get("logger"))) {
+        if (!Boolean.TRUE.equals(this.configService.getConfigParam("serverConfig").get("logger"))) {
             return;
         }
 
 
-        this.initialConfigService.getLogger().info(recv.toString());
+        this.configService.getLogger().info(recv.toString());
     }
 
 }

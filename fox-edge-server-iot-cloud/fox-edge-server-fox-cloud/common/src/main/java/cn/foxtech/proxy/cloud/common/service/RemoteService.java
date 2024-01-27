@@ -27,7 +27,7 @@ public class RemoteService {
     private CloudMqttProxyService mqttProxyService;
 
     @Autowired
-    private InitialConfigService configManageService;
+    private InitialConfigService configService;
 
     private String mode;
 
@@ -48,8 +48,8 @@ public class RemoteService {
 
     private String getMode() {
         if (MethodUtils.hasEmpty(this.mode)) {
-            this.configManageService.initialize("serverConfig", "serverConfig.json");
-            Map<String, Object> configs = this.configManageService.getConfigParam("serverConfig");
+            this.configService.initialize("serverConfig", "serverConfig.json");
+            Map<String, Object> configs = this.configService.getConfigParam("serverConfig");
 
             Map<String, Object> cloudConfig = (Map<String, Object>) configs.getOrDefault("cloud", new HashMap<>());
             this.mode = (String) cloudConfig.getOrDefault("mode", "mix");

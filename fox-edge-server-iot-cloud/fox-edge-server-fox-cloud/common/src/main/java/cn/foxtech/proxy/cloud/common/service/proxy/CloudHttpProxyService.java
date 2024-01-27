@@ -49,7 +49,7 @@ public class CloudHttpProxyService {
 
 
     @Autowired
-    private InitialConfigService configManageService;
+    private InitialConfigService configService;
 
     @Autowired
     private RedisConsoleService consoleService;
@@ -75,8 +75,8 @@ public class CloudHttpProxyService {
      */
     private synchronized void login() throws IOException {
         // 获得账号密码
-        this.configManageService.initialize("serverConfig", "serverConfig.json");
-        Map<String, Object> configs = this.configManageService.getConfigParam("serverConfig");
+        this.configService.initialize("serverConfig", "serverConfig.json");
+        Map<String, Object> configs = this.configService.getConfigParam("serverConfig");
 
         Map<String, Object> cloudConfig = (Map<String, Object>) configs.getOrDefault("cloud", new HashMap<>());
         Map<String, Object> httpConfig = (Map<String, Object>) cloudConfig.getOrDefault("http", new HashMap<>());

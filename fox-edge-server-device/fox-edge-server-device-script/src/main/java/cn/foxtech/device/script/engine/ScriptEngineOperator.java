@@ -17,7 +17,7 @@ import java.util.Map;
 @Component
 public class ScriptEngineOperator {
     @Autowired
-    private InitialConfigService initialConfigService;
+    private InitialConfigService configService;
 
     /**
      * 设置环境变量
@@ -163,11 +163,11 @@ public class ScriptEngineOperator {
             return;
         }
 
-        if (!Boolean.TRUE.equals(this.initialConfigService.getConfigParam("serverConfig").get("logger"))) {
+        if (!Boolean.TRUE.equals(this.configService.getConfigParam("serverConfig").get("logger"))) {
             return;
         }
 
 
-        this.initialConfigService.getLogger().info(recv.toString());
+        this.configService.getLogger().info(recv.toString());
     }
 }

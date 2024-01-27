@@ -1,7 +1,8 @@
 {
   "configValue": {
     "mysql-server": "/sbin/mysqld",
-    "redis-server": "/bin/redis-server"
+    "redis-server": "/bin/redis-server",
+    "node-red": "node-red"
   },
   "configParam": {
   },
