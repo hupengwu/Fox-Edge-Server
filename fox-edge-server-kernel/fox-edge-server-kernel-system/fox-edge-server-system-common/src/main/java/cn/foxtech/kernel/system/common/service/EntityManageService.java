@@ -22,8 +22,6 @@ import cn.foxtech.common.entity.service.operatetask.manual.OperateManualTaskEnti
 import cn.foxtech.common.entity.service.operatetask.monitor.OperateMonitorTaskEntityService;
 import cn.foxtech.common.entity.service.probe.ProbeEntityService;
 import cn.foxtech.common.entity.service.repocomp.RepoCompEntityService;
-import cn.foxtech.common.entity.service.trigger.TriggerEntityService;
-import cn.foxtech.common.entity.service.triggerconfig.TriggerConfigService;
 import cn.foxtech.common.entity.service.user.UserEntityService;
 import cn.foxtech.common.entity.service.usermenu.UserMenuEntityService;
 import cn.foxtech.common.entity.service.userpermission.UserPermissionEntityService;
@@ -90,8 +88,6 @@ public class EntityManageService extends EntityServiceManager {
     @Autowired
     protected OperateChannelTaskEntityService operateChannelTaskEntityService;
 
-    @Autowired
-    protected TriggerEntityService triggerEntityService;
 
     @Autowired
     protected ConfigEntityService configEntityService;
@@ -99,8 +95,6 @@ public class EntityManageService extends EntityServiceManager {
     @Autowired
     protected ProbeEntityService probeEntityService;
 
-    @Autowired
-    protected TriggerConfigService triggerConfigEntityService;
 
     @Autowired
     protected RepoCompEntityService repoCompEntityService;
@@ -145,13 +139,11 @@ public class EntityManageService extends EntityServiceManager {
         dBService.put(ExtendConfigEntity.class.getSimpleName(), this.extendConfigEntityService);
         dBService.put(DeviceRecordEntity.class.getSimpleName(), this.deviceRecordEntityService);
         dBService.put(ProbeEntity.class.getSimpleName(), this.probeEntityService);
-        dBService.put(TriggerConfigEntity.class.getSimpleName(), this.triggerConfigEntityService);
         dBService.put(OperateRecordEntity.class.getSimpleName(), this.operateRecordEntityService);
         dBService.put(OperateMonitorTaskEntity.class.getSimpleName(), this.operateMonitorTaskEntityService);
         dBService.put(OperateManualTaskEntity.class.getSimpleName(), this.operateManualTaskEntityService);
         dBService.put(OperateChannelTaskEntity.class.getSimpleName(), this.operateChannelTaskEntityService);
         dBService.put(OperateEntity.class.getSimpleName(), this.operateEntityService);
-        dBService.put(TriggerEntity.class.getSimpleName(), this.triggerEntityService);
         dBService.put(DeviceModelEntity.class.getSimpleName(), this.deviceModelEntityService);
         dBService.put(RepoCompEntity.class.getSimpleName(), this.repoCompEntityService);
 
@@ -166,8 +158,6 @@ public class EntityManageService extends EntityServiceManager {
         producer.add(UserPermissionEntity.class.getSimpleName());
         producer.add(ExtendConfigEntity.class.getSimpleName());
         producer.add(ProbeEntity.class.getSimpleName());
-        producer.add(TriggerEntity.class.getSimpleName());
-        producer.add(TriggerConfigEntity.class.getSimpleName());
         producer.add(OperateEntity.class.getSimpleName());
         producer.add(OperateMonitorTaskEntity.class.getSimpleName());
         producer.add(OperateManualTaskEntity.class.getSimpleName());
@@ -188,8 +178,6 @@ public class EntityManageService extends EntityServiceManager {
         this.getSourceMySQL().add(UserPermissionEntity.class.getSimpleName());
         this.getSourceMySQL().add(ExtendConfigEntity.class.getSimpleName());
         this.getSourceMySQL().add(ProbeEntity.class.getSimpleName());
-        this.getSourceMySQL().add(TriggerEntity.class.getSimpleName());
-        this.getSourceMySQL().add(TriggerConfigEntity.class.getSimpleName());
         this.getSourceMySQL().add(OperateEntity.class.getSimpleName());
         this.getSourceMySQL().add(OperateMonitorTaskEntity.class.getSimpleName());
         this.getSourceMySQL().add(OperateManualTaskEntity.class.getSimpleName());
@@ -202,14 +190,11 @@ public class EntityManageService extends EntityServiceManager {
 
 
         // 注册消费者
-        consumer.add(TriggerStatusEntity.class.getSimpleName());
         consumer.add(DeviceObjInfEntity.class.getSimpleName());
         consumer.add(OperateMethodEntity.class.getSimpleName());
-        consumer.add(TriggerMethodEntity.class.getSimpleName());
 
         // 注册redis读数据
         reader.add(DeviceValueEntity.class.getSimpleName());
-        reader.add(TriggerValueEntity.class.getSimpleName());
         reader.add(DeviceStatusEntity.class.getSimpleName());
 
         reader.add(DeviceEntity.class.getSimpleName());
@@ -228,8 +213,6 @@ public class EntityManageService extends EntityServiceManager {
         this.entityPublishManager.setPublishEntityUpdateTime(DeviceEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, DeviceEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(ExtendConfigEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, ExtendConfigEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(ProbeEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, ProbeEntity.class.getSimpleName());
-        this.entityPublishManager.setPublishEntityUpdateTime(TriggerEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, TriggerEntity.class.getSimpleName());
-        this.entityPublishManager.setPublishEntityUpdateTime(TriggerConfigEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, TriggerConfigEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(OperateEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, OperateEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(OperateMonitorTaskEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, OperateMonitorTaskEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(OperateManualTaskEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, OperateManualTaskEntity.class.getSimpleName());
@@ -245,7 +228,5 @@ public class EntityManageService extends EntityServiceManager {
         this.entityOptionManager.setOptionEntity(LinkEntity.class.getSimpleName(), "tb_link", new String[]{"link_name", "link_type"});
         this.entityOptionManager.setOptionEntity(OperateEntity.class.getSimpleName(), "tb_operate", new String[]{"manufacturer", "device_type", "operate_name", "engine_type"});
         this.entityOptionManager.setOptionEntity(DeviceEntity.class.getSimpleName(), "tb_device", new String[]{"device_type", "device_name", "channel_type", "channel_name"});
-        this.entityOptionManager.setOptionEntity(TriggerEntity.class.getSimpleName(), "tb_trigger", new String[]{"model_name", "method_name"});
-        this.entityOptionManager.setOptionEntity(TriggerConfigEntity.class.getSimpleName(), "tb_trigger_config", new String[]{"trigger_config_name", "object_range"});
     }
 }

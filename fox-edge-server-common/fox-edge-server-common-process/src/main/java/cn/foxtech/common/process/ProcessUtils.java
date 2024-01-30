@@ -119,8 +119,14 @@ public class ProcessUtils {
                 continue;
             }
 
+            // 分拆IP:PORT
+            items = items[3].split(":");
+            if (items.length < 2) {
+                continue;
+            }
 
-            ports.add(Long.parseLong(items[2]));
+
+            ports.add(Long.parseLong(items[items.length-1]));
         }
 
         return ports;

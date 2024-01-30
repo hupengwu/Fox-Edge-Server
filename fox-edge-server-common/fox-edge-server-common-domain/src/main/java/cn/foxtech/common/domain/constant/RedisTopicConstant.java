@@ -29,7 +29,7 @@ public class RedisTopicConstant {
     /**
      * 代理模块
      */
-    public static final String model_proxy4http2topic = "proxy4http2topic";
+    public static final String model_api = "api";
 
     /**
      * 代理模块

@@ -57,10 +57,6 @@ public class JarMethodTask extends PeriodTask {
             Map<String, RepoCompEntity> fileNameMap = this.compScanner.scanRepoCompEntityByJarMethod();
             this.compScanner.scanRepoCompEntity(fileNameMap);
 
-            // 将TriggerMethodEntity实体同步到TriggerEntity实体
-            Method dstTriggerMethod = TriggerEntity.getInitMethod();
-            this.syncEntity(TriggerMethodEntity.class, TriggerEntity.class, dstTriggerMethod);
-
             // 将DeviceObjInfEntity实体同步到DeviceMapperEntity实体
             Method dstDeviceObjInfMethod = DeviceMapperEntity.getInitMethod();
             this.syncEntity(DeviceObjInfEntity.class, DeviceMapperEntity.class, dstDeviceObjInfMethod);
