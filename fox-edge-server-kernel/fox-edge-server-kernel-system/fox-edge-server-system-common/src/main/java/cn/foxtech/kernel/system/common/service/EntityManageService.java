@@ -162,7 +162,6 @@ public class EntityManageService extends EntityServiceManager {
         producer.add(OperateMonitorTaskEntity.class.getSimpleName());
         producer.add(OperateManualTaskEntity.class.getSimpleName());
         producer.add(OperateChannelTaskEntity.class.getSimpleName());
-        producer.add(DeviceTimeOutEntity.class.getSimpleName());
         producer.add(DeviceMapperEntity.class.getSimpleName());
         producer.add(DeviceModelEntity.class.getSimpleName());
         producer.add(RepoCompEntity.class.getSimpleName());
@@ -185,9 +184,6 @@ public class EntityManageService extends EntityServiceManager {
         this.getSourceMySQL().add(DeviceMapperEntity.class.getSimpleName());
         this.getSourceMySQL().add(DeviceModelEntity.class.getSimpleName());
         this.getSourceMySQL().add(RepoCompEntity.class.getSimpleName());
-
-        this.getSourceRedis().add(DeviceTimeOutEntity.class.getSimpleName());
-
 
         // 注册消费者
         consumer.add(DeviceObjInfEntity.class.getSimpleName());
@@ -217,7 +213,6 @@ public class EntityManageService extends EntityServiceManager {
         this.entityPublishManager.setPublishEntityUpdateTime(OperateMonitorTaskEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, OperateMonitorTaskEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(OperateManualTaskEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, OperateManualTaskEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(OperateChannelTaskEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, OperateChannelTaskEntity.class.getSimpleName());
-        this.entityPublishManager.setPublishEntityUpdateTime(DeviceTimeOutEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, DeviceTimeOutEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(DeviceMapperEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, DeviceMapperEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(DeviceModelEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, DeviceModelEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(RepoCompEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, RepoCompEntity.class.getSimpleName());

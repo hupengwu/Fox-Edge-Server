@@ -10,7 +10,6 @@ import cn.foxtech.kernel.system.service.mqtt.MqttProxyService;
 import cn.foxtech.kernel.system.service.redislist.RedisListRestfulHandler;
 import cn.foxtech.kernel.system.service.task.CleanCacheTask;
 import cn.foxtech.kernel.system.service.task.CleanLogFileTask;
-import cn.foxtech.kernel.system.service.task.CleanTimeOutTask;
 import cn.foxtech.kernel.system.service.task.ConfigEntityTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,10 +55,6 @@ public class Initialize implements CommandLineRunner {
     @Autowired
     private CleanLogFileTask cleanLogFileTask;
 
-
-    @Autowired
-    private CleanTimeOutTask cleanTimeOutTask;
-
     @Autowired
     private MqttProxyService mqttProxyService;
 
@@ -94,7 +89,6 @@ public class Initialize implements CommandLineRunner {
         this.periodTasksScheduler.insertPeriodTask(this.cleanCacheTask);
         this.periodTasksScheduler.insertPeriodTask(this.cleanLogFileTask);
         this.periodTasksScheduler.insertPeriodTask(this.configEntityTask);
-        this.periodTasksScheduler.insertPeriodTask(this.cleanTimeOutTask);
     }
 
 }

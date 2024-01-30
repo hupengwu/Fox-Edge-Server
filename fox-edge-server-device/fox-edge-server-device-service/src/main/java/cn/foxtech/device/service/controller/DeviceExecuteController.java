@@ -2,12 +2,8 @@ package cn.foxtech.device.service.controller;
 
 import cn.foxtech.common.domain.constant.RedisStatusConstant;
 import cn.foxtech.common.domain.constant.RedisTopicConstant;
-import cn.foxtech.common.domain.constant.RestFulManagerVOConstant;
-import cn.foxtech.common.domain.vo.RestFulRequestVO;
 import cn.foxtech.common.entity.entity.DeviceEntity;
-import cn.foxtech.common.entity.entity.DeviceTimeOutEntity;
 import cn.foxtech.common.entity.entity.OperateEntity;
-import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.status.ServiceStatus;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import cn.foxtech.common.utils.syncobject.SyncQueueObjectMap;
@@ -179,18 +175,6 @@ public class DeviceExecuteController extends PeriodTaskService {
         if (deviceEntity == null) {
             return;
         }
-
-        DeviceTimeOutEntity entity = new DeviceTimeOutEntity();
-        entity.setId(deviceEntity.getId());
-        entity.setRequest(requestVO);
-
-        RestFulRequestVO restFulRequestVO = new RestFulRequestVO();
-        restFulRequestVO.setUri(RestFulManagerVOConstant.uri_device_timeout);
-        restFulRequestVO.setMethod("post");
-        restFulRequestVO.setData(EntityVOBuilder.buildVO(entity));
-        restFulRequestVO.setUuid(requestVO.getUuid());
-
-        this.puberService.sendRestFulRequestVO(restFulRequestVO);
     }
 
     /**
