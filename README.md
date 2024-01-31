@@ -1,8 +1,3 @@
-<p align="center">
-	<img alt="logo" src="http://www.fox-tech.cn/images/favicon.png">
-</p>
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">灵狐技术</h1>
-
 # 介绍
 
 > **Fox-Edge** 和 **Fox-Cloud** 是[灵狐技术](http://www.fox-tech.cn/)
