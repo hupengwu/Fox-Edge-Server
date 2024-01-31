@@ -3,10 +3,6 @@
 > **Fox-Edge** 和 **Fox-Cloud** 是[灵狐技术](http://www.fox-tech.cn/)
 为物联网企业与开发者们提供的边缘计算方案以及配套产品
 
-![效果](https://gitee.com/endlesshh/red5-rtmp-push/raw/master/img/1.png)
-![效果](https://gitee.com/endlesshh/red5-rtmp-push/raw/master/img/4.png)
-![效果](https://gitee.com/endlesshh/red5-rtmp-push/raw/master/img/2.png)
-
 
 ## 背景
 当前物联网的现场设备，普遍有数据上企业数据中心/数据云的集中管理需求。
@@ -14,7 +10,7 @@
 所以，Fox-Edge提供另一种解决方案，来供中小企业解决数据如何上云的集中管理需求。
 
 
-![image](http://docs.fox-tech.cn/_images/networking.jpg)
+![image](https://gitee.com/fierce_wolf/fox-edge-server/raw/master/img/networking.jpg)
 
 Fox-Edge 边缘计算，致力于提供一种在线下管理智能设备的物联网解决方案，帮助各类中小型设备制造企业、系统集成商将现场的智能设备接入到边缘计算设备上后，一站式输送到客户的企业数据中心数据库或者是用户在云端的数据库，方便客户的IT业务团队专注数据的分析和处理。
 
@@ -23,9 +19,9 @@ Fox-Edge 边缘计算，致力于提供一种在线下管理智能设备的物�
 1.  **x86系列** 或者 **ARM系列** 的**小型工控机** 或者是 **软路由** 或者是 **小型工业网关** 这类小型物理设备
 2. 最低配置：4G物理内存（推荐8G内存），64G存储空间。
 
-<img src="http://docs.fox-tech.cn/_images/NanoPiR5C.jpg" style="width:50%;height:auto;">
-<img src="http://docs.fox-tech.cn/_images/device-router.jpg" alt="软路由" style="width:50%;height:auto;">
-<img src="http://docs.fox-tech.cn/_images/device.jpg" style="width:50%;height:auto;">
+<img src="https://gitee.com/fierce_wolf/fox-edge-server/raw/master/img/NanoPiR5C.jpg" style="width:50%;height:auto;">
+<img src="https://gitee.com/fierce_wolf/fox-edge-server/raw/master/img/device-router.jpg" alt="软路由" style="width:50%;height:auto;">
+<img src="https://gitee.com/fierce_wolf/fox-edge-server/raw/master/img/device.jpg" style="width:50%;height:auto;">
 
 
 
@@ -40,7 +36,7 @@ fox-edge 边缘计算 采用积木式的全开放式的架构，方便用户自�
 - 免费的产品，用户可以从官网免费下载产品，用于非商业用途。
 
 ## 软件架构
-![image](http://docs.fox-tech.cn/_images/system.jpg)
+![image](https://gitee.com/fierce_wolf/fox-edge-server/raw/master/img/system.jpg)
 
 - 可以通过自行开发通道服务部件和通信协议解码器插件，对接下行现场网络的智能设备
 - 可以自行调整或者替换系统自带控制器、触发器部件，实现项目需要的业务功能
@@ -105,9 +101,9 @@ EMAIL： 5389408@QQ.COM
 
 
 ## 微信技术交流群
-<img src="http://docs.fox-tech.cn/_images/weixinqun-01.jpg" style="width:25%;height:auto;">
+<img src="https://gitee.com/fierce_wolf/fox-edge-server/raw/master/img/weixinqun-01.jpg" style="width:25%;height:auto;">
 
-<img src="http://docs.fox-tech.cn/_images/weixin.png" style="width:25%;height:auto;">
+<img src="https://gitee.com/fierce_wolf/fox-edge-server/raw/master/img/weixin.png" style="width:25%;height:auto;">
 
 
 
