@@ -426,12 +426,16 @@
             "50232f34a97605a5",
             "0166ca63eee016df",
             "786ffd3c4e34d222",
-            "716b06719f56fab0"
+            "716b06719f56fab0",
+            "7178dc4423e32abb",
+            "2627c28da92c9332",
+            "8d71a1256832fd46",
+            "a2459385c87bcb0b"
         ],
         "x": 14,
         "y": 1179,
         "w": 912,
-        "h": 382
+        "h": 502
     },
     {
         "id": "7f7ae86bb2b1bd6d",
@@ -3662,7 +3666,8 @@
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "false",
+        "complete": "payload",
+        "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
         "x": 820,
@@ -3713,7 +3718,7 @@
         "server": "ecd447db8f3ecad4",
         "command": "subscribe",
         "name": "topic_manager_request_public（管理服务通过该Topic接收Restful风格的操作请求）",
-        "topic": "topic_manager_request_public1",
+        "topic": "topic_manager_request_public",
         "obj": true,
         "timeout": "0",
         "x": 330,
@@ -3883,6 +3888,86 @@
         "statusType": "auto",
         "x": 820,
         "y": 1460,
+        "wires": []
+    },
+    {
+        "id": "7178dc4423e32abb",
+        "type": "inject",
+        "z": "a73bac9ebd630aa1",
+        "g": "e19e0e915a4be564",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"uuid\":\"d6bf2bf6bd5a4178916531da04529bad\",\"uri\":\"/kernel/manager/channel/page\",\"method\":\"post\",\"data\":{\"pageNum\":1,\"pageSize\":10}}",
+        "payloadType": "json",
+        "x": 110,
+        "y": 1580,
+        "wires": [
+            [
+                "2627c28da92c9332"
+            ]
+        ]
+    },
+    {
+        "id": "2627c28da92c9332",
+        "type": "redis-out",
+        "z": "a73bac9ebd630aa1",
+        "g": "e19e0e915a4be564",
+        "server": "ecd447db8f3ecad4",
+        "command": "publish",
+        "name": "topic_manager_request_public",
+        "topic": "topic_manager_request_public",
+        "obj": true,
+        "x": 770,
+        "y": 1580,
+        "wires": []
+    },
+    {
+        "id": "8d71a1256832fd46",
+        "type": "redis-in",
+        "z": "a73bac9ebd630aa1",
+        "g": "e19e0e915a4be564",
+        "server": "ecd447db8f3ecad4",
+        "command": "subscribe",
+        "name": "topic_manager_respond_public（管理服务通过该Topic接收Restful风格的操作返回）",
+        "topic": "topic_manager_respond_public",
+        "obj": true,
+        "timeout": "0",
+        "x": 330,
+        "y": 1640,
+        "wires": [
+            [
+                "a2459385c87bcb0b"
+            ]
+        ]
+    },
+    {
+        "id": "a2459385c87bcb0b",
+        "type": "debug",
+        "z": "a73bac9ebd630aa1",
+        "g": "e19e0e915a4be564",
+        "name": "debug 93",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 1640,
         "wires": []
     }
 ]

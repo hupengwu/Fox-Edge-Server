@@ -18,7 +18,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/kernel/manager/proxy-redis-topic/proxy/redis/topic")
-public class RedisTopicController {
+public class OperateRedisTopicController {
     @Autowired
     RedisTopicService redisTopicService;
 

@@ -12,7 +12,7 @@ public class RedisTopicPublisher {
     @Autowired
     protected StringRedisTemplate stringRedisTemplate;
 
-    public void sendMessage(String channel, Object message) {
-        stringRedisTemplate.convertAndSend(channel, message);
+    public void sendMessage(String topic, Object message) {
+        this.stringRedisTemplate.convertAndSend(topic, message);
     }
 }

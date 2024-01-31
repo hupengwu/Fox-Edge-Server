@@ -36,7 +36,7 @@ cp -r $app_home/$cpdir .
 #复制一级目录
 cpdir=jar
 mkdir -p $cpdir
-cp -r $app_home/$cpdir .
+#cp -r $app_home/$cpdir .
 
 #创建一级目录
 cpdir=logs
