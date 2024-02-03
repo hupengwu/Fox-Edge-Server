@@ -47,12 +47,6 @@
         </dependency>
 
         <dependency>
-            <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-channel-http-client-domain</artifactId>
-            <version>${fox-edge-server.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
