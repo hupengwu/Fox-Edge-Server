@@ -11,6 +11,13 @@ spring:
     username: fox-edge
     password: 12345678
 
+    # 初始化时建立的物理连接数。初始化发生在显式调用init方法，或者第一次getConnection时.
+    initial-size: 1
+    # 连接池最大物理连接数量。
+    max-active: 5
+    # 连接池最小物理连接数量。
+    min-idle: 1
+
   fox-service: # 配置信息
     service: # 服务信息，指明这个服务的模块信息，用于识别进程，它跟shell和restful路由强相关
       type: "kernel"                # 服务类型：kernel/system/service

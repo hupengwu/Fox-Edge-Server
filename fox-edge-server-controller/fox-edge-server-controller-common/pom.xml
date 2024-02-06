@@ -32,6 +32,21 @@
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-entity-service</artifactId>
             <version>${fox-edge-server.version}</version>
+            <!-- Device服务不需要数据库，剔除不必要的数据库部件 -->
+            <exclusions>
+                <exclusion>
+                    <artifactId>mybatis-plus-boot-starter</artifactId>
+                    <groupId>com.baomidou</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>mybatis-plus</artifactId>
+                    <groupId>com.baomidou</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>mysql-connector-java</artifactId>
+                    <groupId>mysql</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
