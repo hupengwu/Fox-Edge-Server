@@ -101,7 +101,7 @@ public class PduEntity {
         entity.cmd = pdu[7] & 0xff;
 
         // 数据
-        System.arraycopy(pdu, 7, entity.data, 0, entity.data.length);
+        System.arraycopy(pdu, 8, entity.data, 0, entity.data.length);
 
         // 校验和
         if (pdu[length + 2] != getVerify(pdu)) {

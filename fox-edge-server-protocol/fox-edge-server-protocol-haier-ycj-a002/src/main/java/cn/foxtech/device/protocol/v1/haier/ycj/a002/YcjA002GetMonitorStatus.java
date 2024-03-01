@@ -15,7 +15,7 @@ import java.util.Map;
 public class YcjA002GetMonitorStatus {
     @FoxEdgeOperate(name = "查询系统监视状态", polling = true, type = FoxEdgeOperate.encoder, mode = FoxEdgeOperate.status, timeout = 2000)
     public static String encodePdu(Map<String, Object> param) {
-        Integer devAddr = (Integer) param.getOrDefault("devAddr", 0);
+        Integer devAddr = (Integer) param.get("devAddr");
 
         if (MethodUtils.hasEmpty(devAddr)) {
             throw new ProtocolException("参数缺失：devAddr");
@@ -58,19 +58,15 @@ public class YcjA002GetMonitorStatus {
         result.put("主机故障信息", fault.getName());
 
         // 主机开/关机检测
-        if ((dat0 & 0x20) != 0) {
-            result.put("主机开关机检测", true);
-        }
+        result.put("主机开关机检测", (dat0 & 0x20) != 0);
+
 
         // 检测器停电补偿检测
-        if ((dat0 & 0x40) != 0) {
-            result.put("检测器停电补偿检测", true);
-        }
+        result.put("检测器停电补偿检测", (dat0 & 0x40) != 0);
+
 
         // 空调器停电补偿检测
-        if ((dat0 & 0x80) != 0) {
-            result.put("空调器停电补偿检测", true);
-        }
+        result.put("空调器停电补偿检测", (dat0 & 0x80) != 0);
 
 
         byte dat1 = entity.getData()[1];
@@ -98,19 +94,13 @@ public class YcjA002GetMonitorStatus {
 
 
         // 从机开关机检测
-        if ((dat2 & 0x20) != 0) {
-            result.put("从机开关机检测", true);
-        }
+        result.put("从机开关机检测", (dat2 & 0x20) != 0);
 
         // 电子锁（取消--单/双机检测0：单机1：双机）
-        if ((dat2 & 0x40) != 0) {
-            result.put("电子锁", true);
-        }
+        result.put("电子锁", (dat2 & 0x40) != 0);
 
         // 控制信息重置标志
-        if ((dat2 & 0x80) != 0) {
-            result.put("控制信息重置标志", true);
-        }
+        result.put("控制信息重置标志", (dat2 & 0x80) != 0);
 
         byte dat3 = entity.getData()[3];
 

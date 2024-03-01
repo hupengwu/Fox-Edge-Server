@@ -16,7 +16,7 @@ import java.util.Map;
 public class YcjA002GetControlStatus {
     @FoxEdgeOperate(name = "查询控制状态监视", polling = true, type = FoxEdgeOperate.encoder, mode = FoxEdgeOperate.status, timeout = 2000)
     public static String encodePdu(Map<String, Object> param) {
-        Integer devAddr = (Integer) param.getOrDefault("devAddr", 0);
+        Integer devAddr = (Integer) param.get("devAddr");
 
         if (MethodUtils.hasEmpty(devAddr)) {
             throw new ProtocolException("参数缺失：devAddr");
@@ -62,9 +62,8 @@ public class YcjA002GetControlStatus {
         result.put("运行模式", mode.getName());
 
         // 主机开/关机检测
-        if ((dat0 & 0x80) != 0) {
-            result.put("开关机标志", true);
-        }
+        result.put("开关机标志", (dat0 & 0x80) != 0);
+
 
         // 主机室内温度传感器
         byte dat1 = entity.getData()[1];
@@ -74,12 +73,10 @@ public class YcjA002GetControlStatus {
         if (speed == null) {
             speed = Speed.value0;
         }
-        result.put("运行模式", mode.getName());
+        result.put("运行模式", speed.getName());
 
         // 风门摆动标志
-        if ((dat1 & 0x08) != 0) {
-            result.put("风门摆动标志", true);
-        }
+        result.put("风门摆动标志", (dat1 & 0x08) != 0);
 
 
         byte dat2 = entity.getData()[2];
@@ -113,24 +110,20 @@ public class YcjA002GetControlStatus {
         }
 
         // 加湿
-        if (((dat2 >> 4) & 0b1) == 1) {
-            result.put("加湿", true);
-        }
+        result.put("加湿", ((dat2 >> 4) & 0b1) == 1);
+
 
         // 辅助电加热
-        if (((dat2 >> 5) & 0b1) == 1) {
-            result.put("辅助电加热", true);
-        }
+        result.put("辅助电加热", ((dat2 >> 5) & 0b1) == 1);
+
 
         // 空气清新
-        if (((dat2 >> 6) & 0b1) == 1) {
-            result.put("空气清新", true);
-        }
+        result.put("空气清新", ((dat2 >> 6) & 0b1) == 1);
+
 
         // 健康
-        if (((dat2 >> 7) & 0b1) == 1) {
-            result.put("健康", true);
-        }
+        result.put("健康", ((dat2 >> 7) & 0b1) == 1);
+
 
         byte dat3 = entity.getData()[3];
 

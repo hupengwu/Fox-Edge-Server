@@ -16,12 +16,12 @@ import java.util.Map;
 public class YcjA002SetControlStatus {
     @FoxEdgeOperate(name = "控制", polling = true, type = FoxEdgeOperate.encoder, mode = FoxEdgeOperate.status, timeout = 2000)
     public static String encodePdu(Map<String, Object> param) {
-        String mode = (String) param.getOrDefault("mode", "自动模式");
-        Integer temp = (Integer) param.getOrDefault("temp", 0);
-        Boolean open = (Boolean) param.getOrDefault("open", false);
-        Boolean damper = (Boolean) param.getOrDefault("damper", false);
-        String speed = (String) param.getOrDefault("speed", "超高速");
-        Integer devAddr = (Integer) param.getOrDefault("devAddr", 0);
+        String mode = (String) param.get("mode");
+        Integer temp = (Integer) param.get("temp");
+        Boolean open = (Boolean) param.get("open");
+        Boolean damper = (Boolean) param.get("damper");
+        String speed = (String) param.get("speed");
+        Integer devAddr = (Integer) param.get("devAddr");
 
         if (MethodUtils.hasEmpty(mode, temp, open, damper, speed, devAddr)) {
             throw new ProtocolException("参数缺失：mode, temp, open, damper, speed, devAddr");
@@ -81,11 +81,8 @@ public class YcjA002SetControlStatus {
 
         result.put("devAddr", entity.getDevAddr());
 
-        if (entity.getCmd() == 0x10) {
-            result.put("success", true);
-        } else {
-            result.put("success", false);
-        }
+        result.put("success", entity.getCmd() == 0x10);
+
 
         return result;
     }
