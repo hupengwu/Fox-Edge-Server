@@ -17,7 +17,7 @@
 
 -- 导出 fox_edge 的数据库结构
 DROP DATABASE IF EXISTS `fox_edge`;
-CREATE DATABASE IF NOT EXISTS `fox_edge` /*!40100 DEFAULT  */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE IF NOT EXISTS `fox_edge`;
 USE `fox_edge`;
 
 -- 导出  表 fox_edge.tb_channel 结构

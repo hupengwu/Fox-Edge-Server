@@ -40,12 +40,8 @@ public class RedisConsoleService extends RedisLoggerService {
 
 
     private void out(String level, Object value) {
-        //  转换数据结构
-        List<Map<String, Object>> saveList = new ArrayList<>();
-        saveList.add(this.build(level, value, System.currentTimeMillis()));
-
         // 保存到redis
-        super.pushAll(saveList);
+        super.push(this.build(level, value, System.currentTimeMillis()));
     }
 
     private Map<String, Object> build(String level, Object value, Long time) {

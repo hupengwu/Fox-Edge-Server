@@ -19,16 +19,13 @@ import java.util.Set;
 @Component
 public class RepoLocalAppSysService {
     @Autowired
-    private RedisConsoleService redisConsoleService;
-
-
-    @Autowired
     private InitialConfigService configService;
 
 
     public List<Map<String, Object>> getSysProcessList() {
         Map<String, Object> valueConfig = this.configService.getConfigParam("systemProcessConfig");
         String mysqlServer = (String) valueConfig.getOrDefault("mysql-server", "/sbin/mysqld");
+        String mariaServer = (String) valueConfig.getOrDefault("maria-server", "/sbin/mariadbd");
         String redisServer = (String) valueConfig.getOrDefault("redis-server", "/bin/redis-server");
         String nodeRed = (String) valueConfig.getOrDefault("node-red", "node-red");
 
@@ -38,6 +35,12 @@ public class RepoLocalAppSysService {
 
         // 获得进程信息：mysqlServer
         appMap = this.getAppInfo(ServiceVOFieldConstant.field_type_kernel, "mysql-server", mysqlServer);
+        if (!MethodUtils.hasEmpty(appMap)) {
+            mapList.add(appMap);
+        }
+
+        // 获得进程信息：mysqlServer
+        appMap = this.getAppInfo(ServiceVOFieldConstant.field_type_kernel, "maria-server", mariaServer);
         if (!MethodUtils.hasEmpty(appMap)) {
             mapList.add(appMap);
         }
@@ -72,7 +75,8 @@ public class RepoLocalAppSysService {
             map.put(ServiceVOFieldConstant.field_app_port, port);
             return map;
         } catch (Exception e) {
-            this.redisConsoleService.error("获得" + appName + "进程信息失败:" + e.getMessage());
+            // 这是循环调用的方法，所以不打印信息
+            e.getMessage();
         }
 
         return null;

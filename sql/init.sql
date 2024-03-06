@@ -8,6 +8,7 @@ use mysql;
 select host, user, plugin from user;
 
 #创建用户:'admin'@'%'
+drop user if exists 'admin'@'%';
 create user 'admin'@'%' identified by '12345678';
 grant all privileges on *.* to 'admin'@'%';
 flush privileges;
@@ -15,7 +16,7 @@ flush privileges;
 
 #创建数据库fox_edge（注意，职能使用下划线，否则下面的授权会掉坑里去）
 use mysql;
-create database `fox_edge`;
+CREATE DATABASE IF NOT EXISTS `fox_edge`;
 
 #查看用户权限
 use mysql;

@@ -1,6 +1,7 @@
 {
   "configValue": {
     "mysql-server": "/sbin/mysqld",
+    "maria-server": "/sbin/mariadbd",
     "redis-server": "/bin/redis-server",
     "node-red": "node-red"
   },
