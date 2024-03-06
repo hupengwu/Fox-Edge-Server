@@ -1,6 +1,7 @@
 package cn.foxtech.common.utils.file;
 
-import sun.awt.OSInfo;
+
+import cn.foxtech.common.utils.osinfo.OSInfo;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,9 +29,9 @@ public class FileNameUtils {
     /**
      * 读取目录下的所有文件
      *
-     * @param dir 目录
-     * @param depth 深度扫描：也就是是否遍历下一级目录
-     * @param fullName 是否完整名
+     * @param dir       目录
+     * @param depth     深度扫描：也就是是否遍历下一级目录
+     * @param fullName  是否完整名
      * @param fileNames 保存文件名的集合
      */
     public static void findFileList(File dir, boolean depth, boolean fullName, List<String> fileNames) {
@@ -63,11 +64,12 @@ public class FileNameUtils {
      * @param filePath 用户输入的\或者/文件路径
      * @return 匹配操作系统的文件路径
      */
-    public static String getOsFilePath(String filePath){
-        if (OSInfo.getOSType().equals(OSInfo.OSType.WINDOWS)) {
+    public static String getOsFilePath(String filePath) {
+        if (OSInfo.isWindows()) {
             return filePath.replace("/", "\\");
-        }
-        else {
+        } else if (OSInfo.isLinux()) {
+            return filePath.replace("\\", "/");
+        } else {
             return filePath.replace("\\", "/");
         }
     }

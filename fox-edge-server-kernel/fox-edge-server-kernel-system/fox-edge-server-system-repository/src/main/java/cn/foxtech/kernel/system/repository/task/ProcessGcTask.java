@@ -5,11 +5,11 @@ import cn.foxtech.common.domain.constant.ServiceVOFieldConstant;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.process.ProcessUtils;
 import cn.foxtech.common.utils.Maps;
+import cn.foxtech.common.utils.osinfo.OSInfo;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTask;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTaskType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sun.awt.OSInfo;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -46,7 +46,7 @@ public class ProcessGcTask extends PeriodTask {
     public void execute() {
         try {
             // windows版本没有GC JAVA进程的操作
-            if (OSInfo.getOSType().equals(OSInfo.OSType.WINDOWS)){
+            if (OSInfo.isWindows()){
                 return;
             }
 

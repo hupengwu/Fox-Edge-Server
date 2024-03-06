@@ -1,10 +1,10 @@
 package cn.foxtech.kernel.system.repository.service;
 
+import cn.foxtech.common.utils.osinfo.OSInfo;
 import cn.foxtech.common.utils.shell.ShellUtils;
 import cn.foxtech.core.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sun.awt.OSInfo;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +16,7 @@ public class RepoLocalShellService {
     private RepoLocalPathNameService pathNameService;
 
     public void packCsvTemplate2TarFile11(String modelType, String filePath, String tarFileName, String jarFileName) throws IOException, InterruptedException {
-        if (OSInfo.getOSType().equals(OSInfo.OSType.WINDOWS)) {
+        if (OSInfo.isWindows()) {
             filePath = filePath.replace("/", "\\");
 
             // 打包成tar文件
@@ -26,7 +26,7 @@ public class RepoLocalShellService {
             ShellUtils.executeCmd("del /q " + filePath + "\\" + jarFileName);
             return;
         }
-        if (OSInfo.getOSType().equals(OSInfo.OSType.LINUX)) {
+        if (OSInfo.isLinux()) {
             filePath = filePath.replace("\\", "/");
 
             // 打包成tar文件
@@ -65,11 +65,11 @@ public class RepoLocalShellService {
     }
 
     public List<String> executeShell(String cmd) throws IOException, InterruptedException {
-        if (OSInfo.getOSType().equals(OSInfo.OSType.WINDOWS)) {
+        if (OSInfo.isWindows()) {
             String command = cmd.replace("/", "\\");
             return ShellUtils.executeCmd(command);
         }
-        if (OSInfo.getOSType().equals(OSInfo.OSType.LINUX)) {
+        if (OSInfo.isLinux()) {
             String command = cmd.replace("\\", "/");
             return ShellUtils.executeShell(command);
         }
