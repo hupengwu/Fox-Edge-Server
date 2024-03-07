@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>cn.fox-tech</groupId>
+        <artifactId>fox-edge-server-protocol</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>fox-edge-server-protocol-s3p-core</artifactId>
+    <name>${project.artifactId}</name>
+    <description>${project.artifactId}</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-protocol-core</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>

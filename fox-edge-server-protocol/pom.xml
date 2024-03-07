@@ -50,6 +50,7 @@
         <module>fox-edge-server-protocol-shmeter</module>
         <module>fox-edge-server-protocol-s7plc-core</module>
         <module>fox-edge-server-protocol-s7plc</module>
+        <module>fox-edge-server-protocol-s3p-core</module>
     </modules>
 
 
