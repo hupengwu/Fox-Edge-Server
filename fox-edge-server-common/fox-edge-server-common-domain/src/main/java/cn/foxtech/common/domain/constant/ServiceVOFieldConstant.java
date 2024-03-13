@@ -8,7 +8,7 @@ public class ServiceVOFieldConstant {
     public static final String field_loader_name = "loaderName";
 
     public static final String field_spring_param = "springParam";
-    public static final String field_python_param = "springParam";
+    public static final String field_python_param = "pythonParam";
     public static final String field_conf_files = "confFiles";
 
     public static final String field_app_load = "appLoad";
