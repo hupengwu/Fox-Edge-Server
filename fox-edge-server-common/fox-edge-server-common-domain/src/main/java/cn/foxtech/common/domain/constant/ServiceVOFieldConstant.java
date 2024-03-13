@@ -2,11 +2,13 @@ package cn.foxtech.common.domain.constant;
 
 
 public class ServiceVOFieldConstant {
+    public static final String field_app_engine = "appEngine";
     public static final String field_app_name = "appName";
     public static final String field_app_type = "appType";
     public static final String field_loader_name = "loaderName";
 
     public static final String field_spring_param = "springParam";
+    public static final String field_python_param = "springParam";
     public static final String field_conf_files = "confFiles";
 
     public static final String field_app_load = "appLoad";

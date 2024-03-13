@@ -42,28 +42,57 @@ public class RepoLocalAppConfService {
         }
 
         // 读取文件内容
+        String appEngine = getParam(lineList, "appEngine");
         String appType = getParam(lineList, "appType");
         String appName = getParam(lineList, "appName");
         String jarName = getParam(lineList, "jarName");
         String loaderName = getParam(lineList, "loaderName");
         String springParam = getParam(lineList, "springParam");
         String confFiles = getParam(lineList, "confFiles");
-
+        String pyName = getParam(lineList, "pyName");
+        String pyParam = getParam(lineList, "pyParam");
 
         // 验证数据
-        if (MethodUtils.hasEmpty(appType) || MethodUtils.hasEmpty(appName) || MethodUtils.hasEmpty(jarName)) {
-            throw new ServiceException("配置文件内容，缺失配置项: appType, appName, jarName ：");
+        if (MethodUtils.hasEmpty(appType) || MethodUtils.hasEmpty(appName)) {
+            throw new ServiceException("配置文件内容，缺失配置项: appType, appName");
         }
 
-        String pathName = this.pathNameService.getPathName4LocalBin2jarFile(appType, appName, jarName);
+        // 检测：如果没有填写，就是旧版本的conf文件，那么默认为java程序
+        if (MethodUtils.hasEmpty(appEngine)) {
+            appEngine = "java";
+        }
 
         Map<String, Object> data = new HashMap<>();
+        data.put(ServiceVOFieldConstant.field_app_engine, appEngine);
         data.put(ServiceVOFieldConstant.field_app_name, appName);
         data.put(ServiceVOFieldConstant.field_app_type, appType);
-        data.put(ServiceVOFieldConstant.field_file_name, jarName);
         data.put(ServiceVOFieldConstant.field_loader_name, loaderName);
-        data.put(ServiceVOFieldConstant.field_spring_param, springParam);
-        data.put(ServiceVOFieldConstant.field_path_name, pathName);
+
+
+        if (appEngine.equals("java")) {
+            // java程序：必填项目jarName
+            if (MethodUtils.hasEmpty(jarName)) {
+                throw new ServiceException("配置文件内容，缺失配置项: jarName");
+            }
+            String pathName = this.pathNameService.getPathName4LocalBin2MainFile(appType, appName, jarName);
+
+            data.put(ServiceVOFieldConstant.field_path_name, pathName);
+            data.put(ServiceVOFieldConstant.field_file_name, jarName);
+            data.put(ServiceVOFieldConstant.field_spring_param, springParam);
+        } else if (appEngine.equals("python") || appEngine.equals("python3")) {
+            // python程序：必填项目pyName
+            if (MethodUtils.hasEmpty(pyName)) {
+                throw new ServiceException("配置文件内容，缺失配置项: pyName");
+            }
+            String pathName = this.pathNameService.getPathName4LocalBin2MainFile(appType, appName, pyName);
+
+            data.put(ServiceVOFieldConstant.field_path_name, pathName);
+            data.put(ServiceVOFieldConstant.field_file_name, pyName);
+            data.put(ServiceVOFieldConstant.field_python_param, pyParam);
+        } else {
+            throw new ServiceException("配置文件内容，尚未支持的程序类型: " + appEngine);
+        }
+
 
         // conf文件列表
         List<String> list = new ArrayList<>();

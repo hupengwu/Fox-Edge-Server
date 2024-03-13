@@ -52,11 +52,16 @@ app_local_type=$(readINI $app_home/shell/fox-edge.ini environment type)
 #背景：采用sorce读取，是因为spring_param可能包含非shell格式允许的"="参数，spring参数基本上都是跟shell冲突的
 source $app_home/shell/$service_name/service.conf
 #从配置文件中读取配置项
+app_engine=$appEngine
 app_type=$appType
 app_name=$appName
+#java的参数
 jar_name=$jarName
 loader_name=$loaderName
 spring_param=$springParam
+#python的参数
+py_name=$pyName
+py_param=$pyParam
 
 
 #检查：配置参数是否读取成功
@@ -68,8 +73,25 @@ if [ -z ${app_name:1:1} ]; then
 	echo "读取$app_home/shell/$service_name/service.conf的appName配置参数失败！"
 	exit
 fi
-if [ -z ${jar_name:1:1} ]; then 
-	echo "读取$app_home/shell/$service_name/service.conf的jarName配置参数失败！"
+
+#检测：如果 app_engine没填写，那么就默认为java
+if [ -z ${app_engine:1:1} ]; then 
+	app_engine=java
+fi
+
+#检测：是否匹配了对应的程序文件参数
+if [[ $app_engine == java ]]; then
+	if [ -z ${jar_name:1:1} ]; then 
+		echo "读取$app_home/shell/$service_name/service.conf的jarName配置参数失败！"
+		exit
+	fi
+elif [[ $app_engine == python3 ]]; then
+	if [ -z ${py_name:1:1} ]; then 
+		echo "读取$app_home/shell/$service_name/service.conf的pyName配置参数失败！"
+		exit
+	fi
+else
+	echo "读取$app_home/shell/$service_name/service.conf的jarName配置参数失败：不支持的appEngine：$app_engine"
 	exit
 fi
 
@@ -159,22 +181,41 @@ done
 #设置当前工作目录
 cd $app_home
 
+#执行JAVA的JAR程序
+if [[ $app_engine == java ]]; then
 
-#启动进程
-nohup \
-java \
-$dubeg_param \
---add-opens java.base/java.net=ALL-UNNAMED  \
--jar \
-$app_home/bin/$app_type/$app_name/$jar_name \
---app_type=$app_type \
---app_name=$app_name \
---env_type=$app_local_type \
--Dspring.profiles.active=prod \
-$spring_param \
-$server_port \
---spring.redis.host=$app_param_redis_host --spring.redis.port=$app_param_redis_port --spring.redis.password=$app_param_redis_password \
---spring.datasource.username=$app_param_mysql_username --spring.datasource.password=$app_param_mysql_password  --spring.datasource.url=jdbc:mysql://$app_param_mysql_host:$app_param_mysql_port/fox_edge \
->$app_home/logs/start_$jar_name.out 2>&1 & \
+	#启动进程
+	nohup \
+	java \
+	$dubeg_param \
+	--add-opens java.base/java.net=ALL-UNNAMED  \
+	-jar \
+	$app_home/bin/$app_type/$app_name/$jar_name \
+	--app_type=$app_type \
+	--app_name=$app_name \
+	--env_type=$app_local_type \
+	-Dspring.profiles.active=prod \
+	$spring_param \
+	$server_port \
+	--spring.redis.host=$app_param_redis_host --spring.redis.port=$app_param_redis_port --spring.redis.password=$app_param_redis_password \
+	--spring.datasource.username=$app_param_mysql_username --spring.datasource.password=$app_param_mysql_password  --spring.datasource.url=jdbc:mysql://$app_param_mysql_host:$app_param_mysql_port/fox_edge \
+	>$app_home/logs/start_$jar_name.out 2>&1 & \
+	
+fi
+
+#执行Python3的PY程序
+if [[ $app_engine == python3  || $app_engine == python ]]; then
+	nohup \
+	$app_engine \
+	$app_home/bin/$app_type/$app_name/$py_name \
+	--app_type=$app_type \
+	--app_name=$app_name \
+	--env_type=$app_local_type \
+	server.port=$serverPort \
+	redis.host=$app_param_redis_host redis.port=$app_param_redis_port redis.password=$app_param_redis_password \
+	mysql.host=$app_param_mysql_host mysql.port=$app_param_mysql_port mysql.username=$app_param_mysql_username  mysql.password=$app_param_mysql_password mysql.database=fox_edge \
+	$py_param \
+	>$app_home/logs/start_$py_name.out 2>&1 & \
+fi
 
 #=========================================组织命令行参数，并重启业务进程==========================================#

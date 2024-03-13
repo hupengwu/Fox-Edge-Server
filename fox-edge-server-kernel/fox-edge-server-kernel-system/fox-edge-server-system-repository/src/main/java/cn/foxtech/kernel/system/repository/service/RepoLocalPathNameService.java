@@ -132,6 +132,19 @@ public class RepoLocalPathNameService {
     /**
      * 获得路径
      *
+     * @return \opt\fox-edge\bin\service\python-server-demo\python-server-demo-20240312.py
+     */
+    public String getPathName4LocalBin2pyFile(String appType, String appName, String pyFileName) {
+        return FileNameUtils.getOsFilePath(this.absolutePath + "/bin/" + appType + "/" + appName + "/" + pyFileName);
+    }
+
+    public String getPathName4LocalBin2MainFile(String appType, String appName, String mainFileName) {
+        return FileNameUtils.getOsFilePath(this.absolutePath + "/bin/" + appType + "/" + appName + "/" + mainFileName);
+    }
+
+    /**
+     * 获得路径
+     *
      * @return \opt\fox-edge\repository\decoder\fox-edge-server-protocol-s7plc
      */
     public String getPathName4LocalRepo2modelName(String modelType, String modelName) {

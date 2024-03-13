@@ -52,11 +52,16 @@ fi
 source $app_home/repository/service/$model_name/$model_version/$version/$stage/$component/tar/shell/$component/$model_name/service.conf
 
 #从配置文件中读取配置项
+app_engine=$appEngine
 app_type=$appType
 app_name=$appName
+#java的参数
 jar_name=$jarName
 loader_name=$loaderName
 spring_param=$springParam
+#python的参数
+py_name=$pyName
+py_param=$pyParam
 
 
 #检查：配置参数是否读取成功
@@ -68,8 +73,25 @@ if [ -z ${app_name:1:1} ]; then
 	echo "读取$app_home/shell/$service_name/service.conf的appName配置参数失败！"
 	exit
 fi
-if [ -z ${jar_name:1:1} ]; then 
-	echo "读取$app_home/shell/$service_name/service.conf的jarName配置参数失败！"
+
+#检测：如果 app_engine没填写，那么就默认为java
+if [ -z ${app_engine:1:1} ]; then 
+	app_engine=java
+fi
+
+#检测：是否匹配了对应的程序文件参数
+if [[ $app_engine == java ]]; then
+	if [ -z ${jar_name:1:1} ]; then 
+		echo "读取$app_home/shell/$service_name/service.conf的jarName配置参数失败！"
+		exit
+	fi
+elif [[ $app_engine == python3 ]]; then
+	if [ -z ${py_name:1:1} ]; then 
+		echo "读取$app_home/shell/$service_name/service.conf的pyName配置参数失败！"
+		exit
+	fi
+else
+	echo "读取$app_home/shell/$service_name/service.conf的jarName配置参数失败：不支持的appEngine：$app_engine"
 	exit
 fi
 
@@ -87,6 +109,14 @@ mkdir -p $app_home/bin/$component/$model_name
 if [[ -n ${jar_name:1:1} ]]; then 
 	cp -rf $app_home/repository/service/$model_name/$model_version/$version/$stage/$component/tar/bin/$component/$model_name/$jar_name $app_home/bin/$component/$model_name
 	chmod 755 $app_home/bin/$component/$model_name/$jar_name
+fi
+
+#复制py:if [[]],双中括号，处理空格的问题:python的项目，是多个py文件组成的，所以要复制目录
+if [[ -n ${py_name:1:1} ]]; then 
+	#删除旧的目录
+	rm -rf $app_home/bin/$component/$model_name
+	#复制新的目录
+	cp -rf $app_home/repository/service/$model_name/$model_version/$version/$stage/$component/tar/bin/$component/$model_name $app_home/bin/$component
 fi
  
 #复制loader:if [[]],双中括号，处理空格的问题
