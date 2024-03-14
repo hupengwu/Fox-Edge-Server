@@ -46,7 +46,7 @@ public class ProcessGcTask extends PeriodTask {
     public void execute() {
         try {
             // windows版本没有GC JAVA进程的操作
-            if (OSInfo.isWindows()){
+            if (OSInfo.isWindows()) {
                 return;
             }
 
@@ -58,6 +58,11 @@ public class ProcessGcTask extends PeriodTask {
                 try {
                     Long pid = (Long) map.get(ServiceVOFieldConstant.field_pid);
                     Long rss = (Long) map.get(ServiceVOFieldConstant.field_rss);
+
+                    String appEngine = (String) map.get(ServiceVOFieldConstant.field_app_engine);
+                    if (!"java".equals(appEngine)) {
+                        continue;
+                    }
 
                     // 取出上次保存的进程内存大小
                     Long rssLast = (Long) Maps.getOrDefault(this.statusMap, "Process GC", ServiceVOFieldConstant.field_rss, pid, 0L);

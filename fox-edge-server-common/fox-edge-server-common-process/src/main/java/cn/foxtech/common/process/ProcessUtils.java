@@ -81,6 +81,7 @@ public class ProcessUtils {
             map.putAll(foxParam);
 
             map.put(ServiceVOFieldConstant.field_app_type, appType);
+            map.put(ServiceVOFieldConstant.field_app_engine, appEngine);
 
             resultList.add(map);
         }
