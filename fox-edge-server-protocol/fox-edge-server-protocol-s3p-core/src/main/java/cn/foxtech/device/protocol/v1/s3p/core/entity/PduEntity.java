@@ -2,7 +2,7 @@ package cn.foxtech.device.protocol.v1.s3p.core.entity;
 
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.s3p.core.enums.Escape;
-import cn.foxtech.device.protocol.v1.s3p.core.utils.CRCUtil;
+import cn.foxtech.device.protocol.v1.utils.Crc16Utils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -241,10 +241,9 @@ public class PduEntity {
         }
 
         // CRC校验
-        if (CRCUtil.calculateCRC16XMODEM(pdu, length + 7) != 0x00) {
+        if (Crc16Utils.getCRC16(pdu, 0, length + 7, 0x1021, 0x0000, 0x0000, false) != 0x00) {
             throw new ProtocolException("CRC校验不正确");
         }
-
 
         // 数据域
         entity.data = new byte[length];
@@ -276,7 +275,7 @@ public class PduEntity {
         System.arraycopy(entity.data, 0, pdu, index, entity.data.length);
         index += entity.data.length;
         // 校验域
-        int crc = CRCUtil.calculateCRC16XMODEM(pdu, pdu.length - 2);
+        int crc = Crc16Utils.getCRC16(pdu, 0, pdu.length - 2, 0x1021, 0x0000, 0x0000, false);
         pdu[index++] = (byte) (crc >> 8 & 0xff);
         pdu[index++] = (byte) (crc >> 0 & 0xff);
 

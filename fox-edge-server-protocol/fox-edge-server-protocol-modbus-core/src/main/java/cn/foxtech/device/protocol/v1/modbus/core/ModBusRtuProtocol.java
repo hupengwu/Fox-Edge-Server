@@ -1,6 +1,9 @@
 package cn.foxtech.device.protocol.v1.modbus.core;
 
 
+import cn.foxtech.device.protocol.v1.utils.Crc16Utils;
+import cn.foxtech.device.protocol.v1.utils.enums.CrcType;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,68 +16,6 @@ import java.util.Map;
  * 2、ModBus设备有两种工作模式，一种是ASCII，一种是RTU，上位机要用相应的工作模式去对接
  */
 public class ModBusRtuProtocol extends ModBusProtocol {
-    /**
-     * 校验CRC16
-     *
-     * @param arrCmd
-     * @return
-     */
-    public static int getCRC16(byte[] arrCmd) {
-        int iSize = arrCmd.length - 2;
-
-        // 检查:帧长度
-        if (iSize < 2) {
-            return 0;
-        }
-
-        int wCrcMathematics = 0xA001;
-
-        int usCrc16 = 0x00;
-
-        //16位的CRC寄存器
-        int byteCrc16Lo = 0xFF;
-        int byteCrc16Hi = 0xFF;
-        //临时变量
-        int byteSaveHi = 0x00;
-        int byteSaveLo = 0x00;
-
-        //CRC多项式码的寄存器
-        int byteCl = wCrcMathematics % 0x100;
-        int byteCh = wCrcMathematics / 0x100;
-
-        for (int i = 0; i < iSize; i++) {
-            byteCrc16Lo &= 0xFF;
-            byteCrc16Hi &= 0xFF;
-            byteSaveHi &= 0xFF;
-            byteSaveLo &= 0xFF;
-
-            byteCrc16Lo ^= arrCmd[i];                    //每一个数据与CRC寄存器进行异或
-            for (int k = 0; k < 8; k++) {
-                byteCrc16Lo &= 0xFF;
-                byteCrc16Hi &= 0xFF;
-
-                byteSaveHi = byteCrc16Hi;
-                byteSaveLo = byteCrc16Lo;
-                byteCrc16Hi /= 2;                         //高位右移一位
-                byteCrc16Lo /= 2;                         //低位右移一位
-                if ((byteSaveHi & 0x01) == 0x01)         //如果高位字节最后一位为1
-                {
-                    byteCrc16Lo |= 0x80;                 //则低位字节右移后前面补1
-                }                                         //否则自动补0
-                if ((byteSaveLo & 0x01) == 0x01)         //如果高位字节最后一位为1，则与多项式码进行异或
-                {
-                    byteCrc16Hi ^= byteCh;
-                    byteCrc16Lo ^= byteCl;
-                }
-            }
-        }
-
-
-        usCrc16 = (byteCrc16Hi & 0xff) * 0x100 + (byteCrc16Lo & 0xff);
-
-        return usCrc16;
-    }
-
     /**
      * 包装成map参数格式
      *
@@ -127,7 +68,7 @@ public class ModBusRtuProtocol extends ModBusProtocol {
         System.arraycopy(arrCmd, 2, arrData, 0, iDataSize);
 
         // 校验CRC
-        int wCrc16OK = getCRC16(arrCmd);
+        int wCrc16OK = Crc16Utils.getCRC16(arrCmd, 0, arrCmd.length - 2, CrcType.CRC16MODBUS);
         byte crcH = (byte) (wCrc16OK & 0xff);
         byte crcL = (byte) ((wCrc16OK & 0xff00) >> 8);
         if (arrCmd[arrCmd.length - 1] == crcL && arrCmd[arrCmd.length - 2] == crcH) {
@@ -186,7 +127,7 @@ public class ModBusRtuProtocol extends ModBusProtocol {
         System.arraycopy(entity.getData(), 0, arrCmd, 2, iSize);
 
         // 校验CRC
-        int wCrc16 = getCRC16(arrCmd);
+        int wCrc16 = Crc16Utils.getCRC16(arrCmd, 0, arrCmd.length - 2, CrcType.CRC16MODBUS);
         arrCmd[arrCmd.length - 2] = (byte) (wCrc16 % 0x100);
         arrCmd[arrCmd.length - 1] = (byte) (wCrc16 / 0x100);
 
