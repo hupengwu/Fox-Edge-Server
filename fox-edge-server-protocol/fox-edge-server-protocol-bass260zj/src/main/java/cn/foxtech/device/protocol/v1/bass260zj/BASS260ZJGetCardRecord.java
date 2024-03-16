@@ -3,12 +3,12 @@ package cn.foxtech.device.protocol.v1.bass260zj;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeReport;
+import cn.foxtech.device.protocol.v1.core.constants.FoxEdgeConstant;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
-import cn.foxtech.device.protocol.v1.utils.BcdUtils;
-import cn.foxtech.device.protocol.v1.core.utils.FoxEdgeUtils;
-import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.telecom.core.TelecomEntity;
 import cn.foxtech.device.protocol.v1.telecom.core.TelecomProtocol;
+import cn.foxtech.device.protocol.v1.utils.BcdUtils;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,7 +98,22 @@ public class BASS260ZJGetCardRecord extends TelecomProtocol {
         dataList.add(record);
 
         // 打上刷卡记录的类型标识
-        return FoxEdgeUtils.makeRecordTypeTag("刷卡记录", dataList);
+        return makeRecordTypeTag("刷卡记录", dataList);
+    }
+
+    /**
+     * 为每条记录打上记录类型标记
+     *
+     * @param recordType 记录的类型
+     * @param recordList 记录的数据
+     * @return 记录的列表
+     */
+    public static List<Map<String, Object>> makeRecordTypeTag(String recordType, List<Map<String, Object>> recordList) {
+        for (Map<String, Object> record : recordList) {
+            record.put(FoxEdgeConstant.RECORD_TYPE_TAG, recordType);
+        }
+
+        return recordList;
     }
 
     private static String unPackRemark(byte dwStatus, byte dwRemark) {
