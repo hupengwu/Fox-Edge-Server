@@ -1,4 +1,4 @@
-package cn.foxtech.channel.iec104.master.demo;
+package cn.foxtech.common.utils.iec104.core.test;
 
 import cn.foxtech.common.utils.iec104.server.Iec104ClientLinkerManager;
 import cn.foxtech.common.utils.iec104.server.Iec104ClientLinkerScheduler;
@@ -12,7 +12,7 @@ import cn.foxtech.device.protocol.v1.iec104.core.enums.FrameTypeEnum;
 import cn.foxtech.device.protocol.v1.iec104.core.vo.ApduVO;
 import cn.foxtech.channel.iec104.master.handler.MasterLinkerHandler;
 
-public class Demo {
+public class Test1 {
 
     public static void main(String[] args) {
         test();
