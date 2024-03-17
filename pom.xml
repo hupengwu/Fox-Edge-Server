@@ -35,6 +35,8 @@
         <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
         <!-- graalvm version -->
         <graalvm.version>21.1.0</graalvm.version>
+        <!-- nashorn version -->
+        <nashorn.version>15.4</nashorn.version>
         <!-- other version -->
         <apache.commons.version>3.12.0</apache.commons.version>
         <jna.version>5.10.0</jna.version>

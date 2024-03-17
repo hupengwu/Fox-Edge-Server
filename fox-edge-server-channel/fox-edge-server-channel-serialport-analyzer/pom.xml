@@ -16,6 +16,7 @@
     <modules>
         <module>fox-edge-server-channel-analyzer-engine</module>
         <module>fox-edge-server-channel-analyzer-service</module>
+        <module>fox-edge-server-channel-analyzer-nashorn</module>
         <module>fox-edge-server-channel-analyzer-graalvm</module>
     </modules>
 
