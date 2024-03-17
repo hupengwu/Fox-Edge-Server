@@ -9,7 +9,7 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>fox-edge-server-channel-analyzer-common</artifactId>
+    <artifactId>fox-edge-server-channel-analyzer-engine</artifactId>
     <name>${project.artifactId}</name>
     <description>${project.artifactId}</description>
 
