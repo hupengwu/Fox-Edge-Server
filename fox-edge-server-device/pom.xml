@@ -19,7 +19,6 @@
         <module>fox-edge-server-device-scanner</module>
         <module>fox-edge-server-device-script</module>
         <module>fox-edge-server-device-service</module>
-        <module>fox-edge-server-device-simulator</module>
     </modules>
 
 
