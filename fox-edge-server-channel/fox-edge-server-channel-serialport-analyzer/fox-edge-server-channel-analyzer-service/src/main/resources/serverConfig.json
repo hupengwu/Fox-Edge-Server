@@ -1,0 +1,14 @@
+{
+  "configValue": {
+    "serialPort": {
+      "serialName": "COM1",
+      "baudRate": 9600,
+      "parity": "N",
+      "databits": 8,
+      "stopbits": 1
+    },
+    "logger": false
+  },
+  "configParam": {},
+  "remark": "串口分析通道服务\n\n全局参数配置范例：\n{\n     \"logger\": false,--------------------------------------是否打印日志\n     \"serialPort\": {----------------------------------------串口配置\n          \"parity\": \"N\",\n          \"baudRate\": 9600,\n          \"databits\": 8,\n          \"stopbits\": 1,\n          \"serialName\": \"COM1\"\n     }\n}\n\n通道参数配置：\n{\n     \"manufacturer\": \"海湾安全技术有限公司\",   ---------设备厂商\n     \"deviceType\": \"JB-QB-GST500\",---------------------设备型号\n     \"splitHandler\": \"splitHandler\",,----------------------操作方法：报文分拆\n     \"keyHandler\": \"keyHandler\",------------------------操作方法：设备身份识别\n     \"serviceKey\": \"1/5\",----------------------------------身份特征：配合设备的身份识别\n     \"returnText\": \"GB2312\",------------------------------是否文本返回：可选，对于TXT格式的HEX流，转为TXT文本返回，主要是后面设备那边的JSP不带字符库，搞不定字符集的处理问题\n}"
+}
