@@ -36,7 +36,7 @@
         <!-- graalvm version -->
         <graalvm.version>21.1.0</graalvm.version>
         <!-- nashorn version -->
-        <nashorn.version>15.4</nashorn.version>
+        <nashorn.version>15.0</nashorn.version>
         <!-- other version -->
         <apache.commons.version>3.12.0</apache.commons.version>
         <jna.version>5.10.0</jna.version>

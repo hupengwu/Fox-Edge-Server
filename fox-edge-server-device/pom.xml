@@ -20,7 +20,6 @@
         <module>fox-edge-server-device-script</module>
         <module>fox-edge-server-device-engine</module>
         <module>fox-edge-server-device-graalvm</module>
-        <module>fox-edge-server-device-nashorn</module>
         <module>fox-edge-server-device-service</module>
     </modules>
 

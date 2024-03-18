@@ -10,5 +10,4 @@ public class DeviceServiceGraalvmApplication {
     public static void main(String[] args) {
         SpringApplication.run(DeviceServiceGraalvmApplication.class, args);
     }
-
 }
