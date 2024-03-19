@@ -29,7 +29,6 @@
         <!-- spring version -->
         <springframework.version>5.3.20</springframework.version>
         <spring-data-redis.version>2.6.4</spring-data-redis.version>
-        <redis.clients.version>3.7.1</redis.clients.version>
         <spring-boot.version>2.6.8</spring-boot.version>
         <spring-cloud.version>2021.0.2</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
@@ -39,6 +38,9 @@
         <nashorn.version>15.0</nashorn.version>
         <!-- other version -->
         <apache.commons.version>3.12.0</apache.commons.version>
+        <mysql-connector.version>8.0.29</mysql-connector.version>
+        <mybatis-plus.version>3.5.0</mybatis-plus.version>
+        <redis.clients.version>3.7.1</redis.clients.version>
         <jna.version>5.10.0</jna.version>
         <jackson.version>2.9.0</jackson.version>
         <lombok.version>1.18.28</lombok.version>
