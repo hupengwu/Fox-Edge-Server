@@ -180,29 +180,37 @@ public class RepoLocalAppConfService {
         }
 
         String[] dirs = shellDir.list();
-        for (String s : dirs) {
-            try {
-                File dir = new File(shellDir, s);
-                if (dir.isFile()) {
-                    continue;
-                }
-                File file = new File(dir, "service.conf");
-                if (!file.isFile()) {
-                    continue;
-                }
-
-
-                Map<String, Object> data = this.readConfFile(file.getAbsolutePath());
-                if (!appType.equals(data.get("appType"))) {
-                    continue;
-                }
-
-                result.add(data);
-            } catch (Exception e) {
-                this.console.error("读取配置文件内容失败:" + e.getMessage());
+        for (String appName : dirs) {
+            // 读取模块的service.conf信息
+            Map<String, Object> data = this.readConfFile(absolutePath, appType, appName);
+            if (data == null) {
+                continue;
             }
+
+            result.add(data);
+
         }
 
         return result;
+    }
+
+    public Map<String, Object> readConfFile(String absolutePath, String appType, String appName) throws IOException {
+        try {
+            File file = new File(absolutePath + "/shell/" + appType + "/" + appName + "/service.conf");
+            if (!file.isFile()) {
+                throw new ServiceException("指定的文件不存在:" + file.getAbsolutePath());
+            }
+
+
+            Map<String, Object> data = this.readConfFile(file.getAbsolutePath());
+            if (!appType.equals(data.get("appType"))) {
+                throw new ServiceException("service.conf文件种的appType与模块的service不匹配！");
+            }
+
+            return data;
+        } catch (Exception e) {
+            this.console.error("读取配置文件内容失败:" + e.getMessage());
+            return null;
+        }
     }
 }

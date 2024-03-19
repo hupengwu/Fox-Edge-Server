@@ -42,7 +42,7 @@ public class RepoAppScanTask extends PeriodTask {
     @Override
     public void execute() {
         try {
-            this.service.syncRepoCompEntity4Application(appType);
+            this.service.updateRepoCompEntity(appType);
         } catch (Exception e) {
             this.logger.error("同步AppService到组件表出错:" + e.getMessage());
         }

@@ -74,6 +74,9 @@ public class RepoCloudInstallService {
     private RepoCloudInstallStatus installStatus;
 
     @Autowired
+    private RepoLocalApplicationService appService;
+
+    @Autowired
     private RepoCloudRemoteService cloudRemoteService;
 
     @Autowired
@@ -468,7 +471,11 @@ public class RepoCloudInstallService {
             }
             if (modelType.equals(RepoCompConstant.repository_type_service)) {
                 if (ServiceVOFieldConstant.field_type_kernel.equals(component) || ServiceVOFieldConstant.field_type_system.equals(component) || ServiceVOFieldConstant.field_type_service.equals(component)) {
+                    // 安装文件
                     this.installServiceFile(modelName, modelVersion, component, version, stage);
+
+                    // 扫描service.conf文件信息，并注册为组件信息
+                    this.appService.updateRepoCompEntity(component, modelName);
                 } else {
                     throw new ServiceException("component必须为service或者system或者kernel!");
                 }

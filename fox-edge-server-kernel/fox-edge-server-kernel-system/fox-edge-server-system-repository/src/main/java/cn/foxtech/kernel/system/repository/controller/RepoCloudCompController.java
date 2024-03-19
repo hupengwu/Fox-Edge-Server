@@ -216,6 +216,8 @@ public class RepoCloudCompController {
 
             // 安装文件组件
             this.installService.installFile(modelType, modelName, modelVersion, version, stage, component);
+
+
             return AjaxResult.success();
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());

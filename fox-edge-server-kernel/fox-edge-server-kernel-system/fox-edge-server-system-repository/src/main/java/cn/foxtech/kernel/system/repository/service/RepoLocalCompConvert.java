@@ -46,7 +46,6 @@ public class RepoLocalCompConvert {
 
         Map<String, Object> localMap = new HashMap<>();
 
-
         if (modelType.equals(RepoCompConstant.repository_type_decoder)) {
             localMap.put(RepoCompVOFieldConstant.field_comp_repo, RepoCompVOFieldConstant.value_comp_repo_local);
             localMap.put(RepoCompVOFieldConstant.field_comp_type, RepoCompVOFieldConstant.value_comp_type_jar_decoder);
