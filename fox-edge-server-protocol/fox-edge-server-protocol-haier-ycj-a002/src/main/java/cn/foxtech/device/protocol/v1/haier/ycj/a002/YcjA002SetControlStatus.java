@@ -38,12 +38,12 @@ public class YcjA002SetControlStatus {
         byte dat1 = 0;
 
         // 设定温度
-        dat0 = (byte) (temp & 0x0f);
+        dat0 = (byte) ((temp - 16) & 0x0f);
 
         // 模式
         Mode md = Mode.getEnum(mode);
         if (md != null) {
-            dat0 |= md.getCode();
+            dat0 |= md.getCode() << 4;
         }
 
         // 开关
