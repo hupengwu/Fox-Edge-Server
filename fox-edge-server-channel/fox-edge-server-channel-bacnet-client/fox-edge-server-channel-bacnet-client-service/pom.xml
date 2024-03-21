@@ -84,9 +84,9 @@
 
         <!-- https://maven.mangoautomation.net/#browse/browse:ias-release:com%2Finfiniteautomation%2Fbacnet4j%2F6.0.0 -->
         <dependency>
-            <groupId>com.serotonin</groupId>
-            <artifactId>bacnet4j</artifactId>
-            <version>${bacnet4j.version}</version>
+            <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-protocol-yy-wsd</artifactId>
+            <version>1.0.7</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/bacnet4j-${bacnet4j.version}.jar</systemPath>
         </dependency>

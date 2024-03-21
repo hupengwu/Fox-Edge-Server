@@ -30,27 +30,28 @@
         <module>fox-edge-server-protocol-hj212-2017</module>
         <module>fox-edge-server-protocol-haier-ycj-a002</module>
         <module>fox-edge-server-protocol-hikvision-fire-core</module>
+        <module>fox-edge-server-protocol-iec104-core</module>
+        <module>fox-edge-server-protocol-iec104-slaver</module>
         <module>fox-edge-server-protocol-modbus</module>
         <module>fox-edge-server-protocol-modbus-core</module>
         <module>fox-edge-server-protocol-mitsubishi-plc-fx-core</module>
         <module>fox-edge-server-protocol-mitsubishi-plc-fx</module>
         <module>fox-edge-server-protocol-omron-fins-core</module>
         <module>fox-edge-server-protocol-omron-fins</module>
+        <module>fox-edge-server-protocol-opc-ua</module>
         <module>fox-edge-server-protocol-zs-sht30-1t-1h</module>
         <module>fox-edge-server-protocol-zktl-air6in1</module>
         <module>fox-edge-server-protocol-zktl-air5in1</module>
         <module>fox-edge-server-protocol-zktl-electric</module>
         <module>fox-edge-server-protocol-zktl-ctrl4g</module>
-        <module>fox-edge-server-protocol-telecom-core</module>
         <module>fox-edge-server-protocol-snmp</module>
-        <module>fox-edge-server-protocol-opc-ua</module>
-        <module>fox-edge-server-protocol-iec104-core</module>
-        <module>fox-edge-server-protocol-iec104-slaver</module>
-        <module>fox-edge-server-protocol-zxdu58</module>
         <module>fox-edge-server-protocol-shmeter</module>
         <module>fox-edge-server-protocol-s7plc-core</module>
         <module>fox-edge-server-protocol-s7plc</module>
         <module>fox-edge-server-protocol-s3p-core</module>
+        <module>fox-edge-server-protocol-telecom-core</module>
+        <module>fox-edge-server-protocol-tcl-air-adapter</module>
+        <module>fox-edge-server-protocol-zxdu58</module>
     </modules>
 
 

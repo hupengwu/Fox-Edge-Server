@@ -14,6 +14,12 @@ import java.util.Map;
 
 @FoxEdgeDeviceType(value = "海尔空调-YCJ-A000", manufacturer = "海尔集团公司")
 public class YcjA002GetControlStatus {
+    /**
+     * 测试报文（发送）：f4 f5 06 00 ff 00 01 3d 43 fb
+     * 测试报文（接收）：f4 f5 0a 00 ff 00 01 3d 99 01 00 00 e1 fb
+     * @param param 参数
+     * @return 编码
+     */
     @FoxEdgeOperate(name = "查询控制状态监视", polling = true, type = FoxEdgeOperate.encoder, mode = FoxEdgeOperate.status, timeout = 2000)
     public static String encodePdu(Map<String, Object> param) {
         Integer devAddr = (Integer) param.get("devAddr");
