@@ -1,7 +1,7 @@
 package cn.foxtech.common.status;
 
-import cn.foxtech.common.utils.redis.status.RedisStatusConsumerService;
 import cn.foxtech.common.domain.constant.RedisStatusConstant;
+import cn.foxtech.common.utils.redis.status.RedisStatusConsumerService;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -104,6 +104,30 @@ public class ServiceStatus {
         }
 
         return maxActiveTime;
+    }
+
+    public Map<String, Object> getActiveService(String modelType, String modelName, int timeout) {
+        List<Map<String, Object>> dataList = this.getActiveServices(modelType, modelName, timeout);
+        if (dataList.isEmpty()) {
+            return null;
+        }
+
+        return dataList.get(0);
+    }
+
+    public List<Map<String, Object>> getActiveServices(String modelType, String modelName, int timeout) {
+        List<Map<String, Object>> resultList = new ArrayList<>();
+
+        List<Map<String, Object>> dataList = this.getDataList(timeout);
+        for (Map<String, Object> data : dataList) {
+            String type = (String) data.get(RedisStatusConstant.field_model_type);
+            String name = (String) data.get(RedisStatusConstant.field_model_name);
+            if (modelType.equals(type) && modelName.equals(name)) {
+                resultList.add(data);
+            }
+        }
+
+        return resultList;
     }
 
     public List<Map<String, Object>> getDataList() {

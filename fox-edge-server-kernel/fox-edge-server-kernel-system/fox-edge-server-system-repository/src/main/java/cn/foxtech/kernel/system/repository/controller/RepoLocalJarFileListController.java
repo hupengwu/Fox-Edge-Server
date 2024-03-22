@@ -1,8 +1,10 @@
 package cn.foxtech.kernel.system.repository.controller;
 
 
+import cn.foxtech.common.domain.constant.RedisStatusConstant;
 import cn.foxtech.common.entity.constant.DeviceDecoderVOFieldConstant;
 import cn.foxtech.common.entity.utils.PageUtils;
+import cn.foxtech.common.status.ServiceStatus;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
@@ -38,6 +40,9 @@ public class RepoLocalJarFileListController {
 
     @Autowired
     private RepoLocalJarFileConfigService configService;
+
+    @Autowired
+    private ServiceStatus serviceStatus;
 
 
     @PostMapping("entities")
@@ -131,7 +136,17 @@ public class RepoLocalJarFileListController {
         try {
             this.edgeService.disable4Docker();
 
-            this.repoLocalAppStartService.restartProcess("device-service", "system");
+            // 查找设备服务的业务名称：用户安装的可能是device-service或者device-graalvm
+            Map<String, Object> deviceService = this.serviceStatus.getActiveService(RedisStatusConstant.value_model_type_device, RedisStatusConstant.value_model_name_device, 60 * 1000);
+            if (deviceService == null) {
+                throw new ServiceException("Device服务尚未启动！");
+            }
+
+            String serviceType = (String) deviceService.get(RedisStatusConstant.field_service_type);
+            String serviceName = (String) deviceService.get(RedisStatusConstant.field_service_name);
+
+            // 重启服务
+            this.repoLocalAppStartService.restartProcess(serviceName, serviceType);
             return AjaxResult.success();
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());

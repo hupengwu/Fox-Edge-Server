@@ -19,25 +19,36 @@
             <artifactId>fox-edge-server-common-utils-scheduler</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
+
         <dependency>
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-utils-redis</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
+
         <dependency>
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-utils-redis-status</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
+
         <dependency>
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-domain</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
+
         <dependency>
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-utils-container</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-common-utils-number</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
     </dependencies>
 </project>

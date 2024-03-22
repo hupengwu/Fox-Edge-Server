@@ -10,7 +10,7 @@ import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-@FoxEdgeDeviceType(value = "柜式空调（KPRd）", manufacturer = "TCL科技集团股份有限公司")
+@FoxEdgeDeviceType(value = "柜式空调(KPRd)", manufacturer = "TCL科技集团股份有限公司")
 public class GetCurrentRunStatus {
     @FoxEdgeOperate(name = "查询运行状态", polling = true, type = FoxEdgeOperate.encoder, mode = FoxEdgeOperate.status, timeout = 4000)
     public static String encodePdu(Map<String, Object> param) {
