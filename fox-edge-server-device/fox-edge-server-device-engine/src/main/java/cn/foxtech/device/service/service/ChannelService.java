@@ -6,11 +6,17 @@ import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.common.constant.HttpStatus;
 import cn.foxtech.common.entity.entity.ChannelEntity;
 import cn.foxtech.common.entity.entity.DeviceEntity;
+import cn.foxtech.common.entity.manager.InitialConfigService;
+import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.device.protocol.v1.core.channel.FoxEdgeChannelService;
+import cn.foxtech.device.protocol.v1.core.enums.WorkerLoggerType;
+import cn.foxtech.device.protocol.v1.core.utils.JsonUtils;
 import cn.foxtech.device.service.redistopic.RedisTopicPuberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * 通道转发服务
@@ -22,6 +28,13 @@ public class ChannelService implements FoxEdgeChannelService {
 
     @Autowired
     private RedisTopicPuberService publisher;
+
+
+    /**
+     * 动态参数配置
+     */
+    @Autowired
+    private InitialConfigService configService;
 
     /**
      * 执行操作
@@ -113,5 +126,42 @@ public class ChannelService implements FoxEdgeChannelService {
 
         // 向非应答类型的设备发送请求
         return this.publisher.execute(request);
+    }
+
+    /**
+     * 打印日志
+     *
+     * @param deviceName   设备名称
+     * @param manufacturer 设备厂商
+     * @param deviceType   设备类型
+     * @param type         日志类型
+     * @param content      日志内容
+     */
+
+    public void printLogger(String deviceName, String manufacturer, String deviceType, WorkerLoggerType type, Object content) {
+        try {
+            Object isLogger = this.configService.getConfigValue("serverConfig", "logger");
+            if (!Boolean.TRUE.equals(isLogger)) {
+                return;
+            }
+
+            RedisConsoleService logger = this.configService.getLogger();
+
+            if (content == null) {
+                logger.debug("设备厂商：" + manufacturer + "\n设备类型：" + deviceType + "\n设备名称：" + deviceName + "\n" + type.getName() + "：" + null);
+                return;
+            }
+            if (content instanceof String) {
+                logger.debug("设备厂商：" + manufacturer + "\n设备类型：" + deviceType + "\n设备名称：" + deviceName + "\n" + type.getName() + "：" + content);
+                return;
+            }
+            if (content instanceof Map) {
+                logger.debug("设备厂商：" + manufacturer + "\n设备类型：" + deviceType + "\n设备名称：" + deviceName + "\n" + type.getName() + "：" + JsonUtils.buildJsonWithoutException(content));
+                return;
+            }
+        } catch (Exception e) {
+            e.getMessage();
+        }
+
     }
 }

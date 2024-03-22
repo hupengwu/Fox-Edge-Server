@@ -1,6 +1,7 @@
 package cn.foxtech.device.protocol.v1.core.worker;
 
 import cn.foxtech.device.protocol.v1.core.channel.FoxEdgeChannelService;
+import cn.foxtech.device.protocol.v1.core.enums.WorkerLoggerType;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.core.method.FoxEdgeMethodTemplate;
 import cn.foxtech.device.protocol.v1.core.method.FoxEdgePublishMethod;
@@ -57,6 +58,9 @@ public class FoxEdgePublishWorker {
 
             // 编码
             Object send = methodPair.getEncoderMethod().invoke(null, params);
+
+            // 打印日志
+            channelService.printLogger(deviceName, manufacturer, deviceType, WorkerLoggerType.send, send);
 
             try {
                 // 向设备发布数据

@@ -37,7 +37,7 @@
         <module>fox-edge-server-channel-socket-core</module>
         <module>fox-edge-server-channel-serialport</module>
         <module>fox-edge-server-channel-serialport-analyzer</module>
-        <module>fox-edge-server-channel-simulator-service</module>
+        <module>fox-edge-server-channel-simulator</module>
     </modules>
 
 

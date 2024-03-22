@@ -2,6 +2,7 @@ package cn.foxtech.device.protocol.v1.core.worker;
 
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.channel.FoxEdgeChannelService;
+import cn.foxtech.device.protocol.v1.core.enums.WorkerLoggerType;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.core.method.FoxEdgeExchangeMethod;
 import cn.foxtech.device.protocol.v1.core.method.FoxEdgeMethodTemplate;
@@ -61,11 +62,17 @@ public class FoxEdgeExchangeWorker {
             // 编码
             send = methodPair.getEncoderMethod().invoke(null, params);
 
+            // 打印日志
+            channelService.printLogger(deviceName, manufacturer, deviceType, WorkerLoggerType.send, send);
+
             try {
                 recv = channelService.exchange(deviceName, deviceType, send, timeout);
             } catch (Exception e) {
                 throw new CommunicationException(e.getMessage());
             }
+
+            // 打印日志
+            channelService.printLogger(deviceName, manufacturer, deviceType, WorkerLoggerType.recv, recv);
 
             // 将解码结果，根据模式，用各自的字段带回
             if (FoxEdgeOperate.record.equals(methodPair.getMode())) {

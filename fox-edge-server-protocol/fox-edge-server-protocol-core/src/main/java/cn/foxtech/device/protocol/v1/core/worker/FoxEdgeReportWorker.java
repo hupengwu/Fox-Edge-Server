@@ -28,7 +28,6 @@ public class FoxEdgeReportWorker {
             throw new ProtocolException("找不到对应设备类型的解码器：" + manufacturer + ":" + deviceType);
         }
 
-
         for (Map.Entry<String, Object> entry : methodPairs.entrySet()) {
             Map<String, Object> methodMap = (Map<String, Object>) entry.getValue();
 

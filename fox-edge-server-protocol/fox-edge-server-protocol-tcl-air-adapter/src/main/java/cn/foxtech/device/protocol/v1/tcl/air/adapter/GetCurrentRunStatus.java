@@ -15,11 +15,9 @@ public class GetCurrentRunStatus {
     @FoxEdgeOperate(name = "查询运行状态", polling = true, type = FoxEdgeOperate.encoder, mode = FoxEdgeOperate.status, timeout = 4000)
     public static String encodePdu(Map<String, Object> param) {
         Integer devAddr = (Integer) param.get("devAddr");
-        Boolean open = (Boolean) param.get("open");
 
-
-        if (MethodUtils.hasEmpty(devAddr, open)) {
-            throw new ProtocolException("参数缺失：devAddr, open");
+        if (MethodUtils.hasEmpty(devAddr)) {
+            throw new ProtocolException("参数缺失：devAddr");
         }
 
         PduEntity entity = new PduEntity();
@@ -47,7 +45,7 @@ public class GetCurrentRunStatus {
         result.put("devAddr", entity.getAddress());
         result.put("result", entity.getResult());
 
-        if (entity.getMessageData().length != 7) {
+        if (entity.getMessageData().length != 8) {
             throw new ProtocolException("返回的messageData长度不匹配!");
         }
 

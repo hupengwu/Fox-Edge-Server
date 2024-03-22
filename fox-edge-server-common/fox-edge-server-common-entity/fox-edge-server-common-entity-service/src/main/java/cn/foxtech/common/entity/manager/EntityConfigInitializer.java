@@ -59,6 +59,19 @@ public abstract class EntityConfigInitializer {
         return configValue;
     }
 
+    public Object getConfigValue(String configName, String configValueItem) {
+        // 取出管理服务提供的用户配置
+        ConfigEntity configEntity = this.getEntityManageService().getConfigEntity(this.getFoxServiceName(), this.getFoxServiceType(), configName);
+        if (configEntity != null) {
+            return configEntity.getConfigValue().get(configValueItem);
+        }
+
+        // 取出该配置的信息
+        Map<String, Object> defaultConfig = (Map<String, Object>) this.defaultConfigs.getOrDefault(configName, new HashMap<>());
+        Map<String, Object> configValue = (Map<String, Object>) defaultConfig.getOrDefault(ConfigVOFieldConstant.field_config_value, new HashMap<>());
+        return configValue.get(configValueItem);
+    }
+
     /**
      * 从resource下的json文件中装载缺省的配置参数，从管理服务中装载用户的配置参数，并合并成一个启动参数
      *

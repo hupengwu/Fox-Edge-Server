@@ -43,8 +43,8 @@ public class MethodEntityService {
      * 扫描解码器
      */
     public void scanJarFile() {
-        // 读取解码器配置信息
-        ConfigEntity configEntity = this.entityManageService.getConfigEntity(this.foxServiceName, this.foxServiceType, "decoderConfig");
+        // 读取解码器配置信息：这个配置是跟system服务约定的名称，尽管实际使用者，可能是device-service或者device-graavm
+        ConfigEntity configEntity = this.entityManageService.getConfigEntity("device-service", "system", "decoderConfig");
         if (configEntity == null) {
             logger.error("找不到decoderConfig的配置信息");
             return;

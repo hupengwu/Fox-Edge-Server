@@ -9,7 +9,7 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>fox-edge-server-channel-simulator-service</artifactId>
+    <artifactId>fox-edge-server-channel-simulator</artifactId>
     <version>${revision}</version>
     <name>${project.artifactId}</name>
     <description>${project.artifactId}</description>

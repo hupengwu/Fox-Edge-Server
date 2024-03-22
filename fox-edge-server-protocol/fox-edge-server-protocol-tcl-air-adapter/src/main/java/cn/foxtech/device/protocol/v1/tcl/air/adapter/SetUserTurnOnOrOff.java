@@ -15,11 +15,11 @@ public class SetUserTurnOnOrOff {
     @FoxEdgeOperate(name = "用户开关空调", polling = true, type = FoxEdgeOperate.encoder, mode = FoxEdgeOperate.status, timeout = 4000)
     public static String encodePdu(Map<String, Object> param) {
         Integer devAddr = (Integer) param.get("devAddr");
-        Boolean open = (Boolean) param.get("open");
+        Boolean open = (Boolean) param.get("运行");
 
 
         if (MethodUtils.hasEmpty(devAddr, open)) {
-            throw new ProtocolException("参数缺失：devAddr, open");
+            throw new ProtocolException("参数缺失：devAddr, 运行");
         }
 
         PduEntity entity = new PduEntity();
@@ -44,7 +44,7 @@ public class SetUserTurnOnOrOff {
         Map<String, Object> result = new HashMap<>();
 
         result.put("devAddr", entity.getAddress());
-        result.put("open", entity.getMessageSubType() == 1);
+        result.put("运行", entity.getMessageSubType() == 1);
         result.put("result", entity.getResult());
 
 

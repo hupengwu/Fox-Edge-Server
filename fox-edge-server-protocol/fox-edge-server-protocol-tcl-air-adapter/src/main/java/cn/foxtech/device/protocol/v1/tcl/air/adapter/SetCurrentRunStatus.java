@@ -15,15 +15,15 @@ public class SetCurrentRunStatus {
     @FoxEdgeOperate(name = "设置运行状态", polling = true, type = FoxEdgeOperate.encoder, mode = FoxEdgeOperate.status, timeout = 4000)
     public static String encodePdu(Map<String, Object> param) {
         Integer devAddr = (Integer) param.get("devAddr");
-        String airVolume = (String) param.get("airVolume");
-        Boolean open = (Boolean) param.get("open");
-        Integer tempComp = (Integer) param.get("tempComp");
-        Boolean windDirect = (Boolean) param.get("windDirect");
-        Integer mode = (Integer) param.get("mode");
-        Integer settingTemp = (Integer) param.get("settingTemp");
+        String airVolume = (String) param.get("风量");
+        Boolean open = (Boolean) param.get("运行");
+        Integer tempComp = (Integer) param.get("温度补偿");
+        Boolean windDirect = (Boolean) param.get("风向");
+        String mode = (String) param.get("模式");
+        Integer settingTemp = (Integer) param.get("设定温度");
 
         if (MethodUtils.hasEmpty(devAddr, airVolume, open, tempComp, windDirect, mode, settingTemp)) {
-            throw new ProtocolException("参数缺失：devAddr, airVolume, open, tempComp, windDirect, mode, settingTemp");
+            throw new ProtocolException("参数缺失：devAddr, 风量, 运行, 温度补偿, 风向, 模式, 设定温度");
         }
 
         PduEntity entity = new PduEntity();
