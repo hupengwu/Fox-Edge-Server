@@ -16,6 +16,7 @@ import cn.foxtech.device.service.redistopic.RedisTopicPuberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -140,8 +141,15 @@ public class ChannelService implements FoxEdgeChannelService {
 
     public void printLogger(String deviceName, String manufacturer, String deviceType, WorkerLoggerType type, Object content) {
         try {
+            // 检测：是否需要记录日志
             Object isLogger = this.configService.getConfigValue("serverConfig", "logger");
             if (!Boolean.TRUE.equals(isLogger)) {
+                return;
+            }
+
+            // 检测：设备名称是否相同
+            Object name = this.configService.getConfigValue("serverConfig", "deviceName");
+            if (!deviceName.equals(name)) {
                 return;
             }
 
@@ -155,7 +163,7 @@ public class ChannelService implements FoxEdgeChannelService {
                 logger.debug("设备厂商：" + manufacturer + "\n设备类型：" + deviceType + "\n设备名称：" + deviceName + "\n" + type.getName() + "：" + content);
                 return;
             }
-            if (content instanceof Map) {
+            if ((content instanceof Map) || (content instanceof List)) {
                 logger.debug("设备厂商：" + manufacturer + "\n设备类型：" + deviceType + "\n设备名称：" + deviceName + "\n" + type.getName() + "：" + JsonUtils.buildJsonWithoutException(content));
                 return;
             }

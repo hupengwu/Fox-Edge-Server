@@ -1,7 +1,8 @@
 {
   "configValue": {
-    "logger": false
+    "logger": false,
+    "deviceName": ""
   },
   "configParam": {},
-  "remark": ""
+  "remark": "配置说明：记录某个设备的通信日志\n{\n     \"logger\": true, -----------------------------------是否记录后台日志\n     \"deviceName\": \"范例：TCL柜式空调(KPRd)\"-----指定的设备名称\n}"
 }

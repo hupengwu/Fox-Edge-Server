@@ -1,6 +1,10 @@
 package cn.foxtech.device.protocol.v1.test;
 
 
+import cn.foxtech.device.protocol.v1.modbus.core.ModBusConstants;
+import cn.foxtech.device.protocol.v1.modbus.core.ModBusEntity;
+import cn.foxtech.device.protocol.v1.modbus.core.ModBusProtocol;
+import cn.foxtech.device.protocol.v1.modbus.core.ModBusProtocolFactory;
 import cn.foxtech.device.protocol.v1.utils.Crc16Utils;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.utils.enums.CrcType;
@@ -15,6 +19,13 @@ public class TestRTU {
         byte[] crcs = new byte[2];
         crcs[0] = (byte) (crc >> 8 & 0xff);
         crcs[1] = (byte) (crc >> 0 & 0xff);
+
+        pdu = HexUtils.hexStringToByteArray("01 03 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 E4 59");
+
+        ModBusProtocol modBusProtocol = ModBusProtocolFactory.createProtocol(ModBusConstants.MODE_RTU);
+        ModBusEntity modBusEntity = modBusProtocol.unPackCmd2Entity(pdu);
+
+
     }
 
 

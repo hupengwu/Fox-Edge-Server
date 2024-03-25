@@ -143,6 +143,9 @@ public class RepoLocalCsvFileService {
         }
 
         for (File childFile : templateDir.listFiles()) {
+            if (!childFile.isFile()){
+                continue;
+            }
             Map<String, Object> data = this.getFileNameInfo(childFile);
             result.add(data);
         }

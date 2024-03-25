@@ -3,7 +3,12 @@ package cn.foxtech.device.protocol.v1.test;
 import cn.foxtech.device.protocol.v1.modbus.ModBusProtocolReadRegisters;
 import cn.foxtech.device.protocol.v1.modbus.ModBusProtocolReadStatus;
 import cn.foxtech.device.protocol.v1.modbus.ModBusProtocolWriteRegisters;
+import cn.foxtech.device.protocol.v1.modbus.core.ModBusConstants;
+import cn.foxtech.device.protocol.v1.modbus.core.ModBusEntity;
+import cn.foxtech.device.protocol.v1.modbus.core.ModBusProtocol;
+import cn.foxtech.device.protocol.v1.modbus.core.ModBusProtocolFactory;
 import cn.foxtech.device.protocol.v1.utils.BitsUtils;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +16,13 @@ import java.util.Map;
 public class TestUtils {
     public static void main(String[] args) throws Exception {
         JHoldingRegistersTest2();
+    }
+
+    public static void test1(){
+        byte[] pdu = HexUtils.hexStringToByteArray("01 03 00 00 00 01 84 0A");
+
+        ModBusProtocol modBusProtocol = ModBusProtocolFactory.createProtocol(ModBusConstants.MODE_RTU);
+        ModBusEntity modBusEntity = modBusProtocol.unPackCmd2Entity(pdu);
     }
 
     public static void JHoldingRegistersTest2() {
