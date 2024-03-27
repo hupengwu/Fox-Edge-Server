@@ -22,8 +22,12 @@ public class TestRTU {
 
         pdu = HexUtils.hexStringToByteArray("01 03 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 E4 59");
 
+        pdu = HexUtils.hexStringToByteArray("01 03 00 06 45 21 45 23 45 34 36 21");
+
         ModBusProtocol modBusProtocol = ModBusProtocolFactory.createProtocol(ModBusConstants.MODE_RTU);
         ModBusEntity modBusEntity = modBusProtocol.unPackCmd2Entity(pdu);
+
+
 
 
     }

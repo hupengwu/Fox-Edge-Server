@@ -3,6 +3,7 @@ package cn.foxtech.device.protocol.v1.tcl.air.adapter;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
+import cn.foxtech.device.protocol.v1.tcl.air.adapter.entity.MsgEntity;
 import cn.foxtech.device.protocol.v1.tcl.air.adapter.entity.PduEntity;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.utils.MethodUtils;
@@ -22,10 +23,15 @@ public class SetUserTurnOnOrOff {
             throw new ProtocolException("参数缺失：devAddr, 运行");
         }
 
+        MsgEntity msgEntity = new MsgEntity();
+        msgEntity.setType(13);
+        msgEntity.setSubType(open ? 1 : 0);
+        msgEntity.setResult(0);
+
+
         PduEntity entity = new PduEntity();
         entity.setAddress(devAddr);
-        entity.setMessageType(13);
-        entity.setMessageSubType(open ? 1 : 0);
+        entity.setData(MsgEntity.encode(msgEntity));
 
         byte[] pdu = PduEntity.encodePdu(entity);
 
@@ -37,15 +43,18 @@ public class SetUserTurnOnOrOff {
         byte[] pdu = HexUtils.hexStringToByteArray(hexString);
 
         PduEntity entity = PduEntity.decodePdu(pdu);
-        if (entity.getMessageType() != 13) {
+
+        MsgEntity msgEntity = MsgEntity.decode(entity.getData());
+
+        if (msgEntity.getType() != 13) {
             throw new ProtocolException("返回的messageType不匹配!");
         }
 
         Map<String, Object> result = new HashMap<>();
 
         result.put("devAddr", entity.getAddress());
-        result.put("运行", entity.getMessageSubType() == 1);
-        result.put("result", entity.getResult());
+        result.put("运行", msgEntity.getSubType() == 1);
+        result.put("result", msgEntity.getResult());
 
 
         return result;

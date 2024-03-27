@@ -3,6 +3,7 @@ package cn.foxtech.device.protocol.v1.tcl.air.adapter;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
+import cn.foxtech.device.protocol.v1.tcl.air.adapter.entity.MsgEntity;
 import cn.foxtech.device.protocol.v1.tcl.air.adapter.entity.PduEntity;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.utils.MethodUtils;
@@ -20,11 +21,15 @@ public class GetCurrentRunStatus {
             throw new ProtocolException("参数缺失：devAddr");
         }
 
+        MsgEntity msgEntity = new MsgEntity();
+        msgEntity.setType(112);
+        msgEntity.setSubType(0);
+        msgEntity.setResult(0);
+
+
         PduEntity entity = new PduEntity();
         entity.setAddress(devAddr);
-        entity.setMessageType(112);
-        entity.setMessageSubType(0);
-        entity.setResult(0);
+        entity.setData(MsgEntity.encode(msgEntity));
 
         byte[] pdu = PduEntity.encodePdu(entity);
 
@@ -37,19 +42,21 @@ public class GetCurrentRunStatus {
 
         PduEntity entity = PduEntity.decodePdu(pdu);
 
-        if (entity.getMessageType() != 112) {
+        MsgEntity msgEntity = MsgEntity.decode(entity.getData());
+
+        if (msgEntity.getType() != 112) {
             throw new ProtocolException("返回的messageType不匹配!");
         }
 
         Map<String, Object> result = new HashMap<>();
         result.put("devAddr", entity.getAddress());
-        result.put("result", entity.getResult());
+        result.put("result", msgEntity.getResult());
 
-        if (entity.getMessageData().length != 8) {
+        if (msgEntity.getData().length != 8) {
             throw new ProtocolException("返回的messageData长度不匹配!");
         }
 
-        byte[] data = entity.getMessageData();
+        byte[] data = msgEntity.getData();
         int value = 0;
         String key = "";
 

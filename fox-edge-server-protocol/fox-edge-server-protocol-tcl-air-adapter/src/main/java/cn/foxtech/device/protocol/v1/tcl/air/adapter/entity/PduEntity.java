@@ -15,34 +15,14 @@ public class PduEntity {
      * 地址码
      */
     private int address = 0x0000;
-    /**
-     * 消息类型
-     */
-    private int messageType;
-    /**
-     * 消息的子类型
-     */
-    private int messageSubType;
-    /**
-     * 操作结果
-     */
-    private int result;
-    /**
-     * 总帧数
-     */
-    private int frame;
-    /**
-     * 帧序号
-     */
-    private int subFrame;
 
     /**
      * 消息内容
      */
-    private byte[] messageData = new byte[0];
+    private byte[] data = new byte[0];
 
     public static byte[] encodePdu(PduEntity entity) {
-        byte[] data = new byte[entity.messageData.length + 9];
+        byte[] data = new byte[entity.data.length + 4];
 
         int index = 0;
 
@@ -53,14 +33,9 @@ public class PduEntity {
         data[index++] = (byte) ((entity.address >> 8) & 0xff);
         data[index++] = (byte) ((entity.address >> 0) & 0xff);
 
-        // 消息（N+5）
-        data[index++] = (byte) entity.messageType;
-        data[index++] = (byte) entity.messageSubType;
-        data[index++] = (byte) entity.result;
-        data[index++] = (byte) entity.frame;
-        data[index++] = (byte) entity.subFrame;
-        System.arraycopy(entity.messageData, 0, data, index, entity.messageData.length);
-        index += entity.messageData.length;
+        // 数据（N）
+        System.arraycopy(entity.data, 0, data, index, entity.data.length);
+        index += entity.data.length;
 
         // 校验和（1）
         data[index++] = getVerify(data);
@@ -92,40 +67,35 @@ public class PduEntity {
         }
 
         // 寻找数据内容
-        byte[] data = searchData(pdu, headOffset, tailOffset);
+        byte[] dataArea = searchData(pdu, headOffset, tailOffset);
 
-        // 检测：数据长度
-        if (data.length < 9) {
-            throw new ProtocolException("消息的最小长度，不能小于9");
+        // 检测：数据区长度（1+2+N+1）
+        if (dataArea.length < 4) {
+            throw new ProtocolException("消息的最小长度，不能小于4");
         }
 
         int index = 0;
 
         // 字节数（1）
-        if (data[index++] != data.length - 2) {
+        if (dataArea[index++] != dataArea.length - 2) {
             throw new ProtocolException("数据长度不正确!");
         }
 
-        // 校验和
-        if (data[data.length - 1] != getVerify(data)) {
+        // 校验和（1）
+        if (dataArea[dataArea.length - 1] != getVerify(dataArea)) {
             throw new ProtocolException("校验和不正确!");
         }
 
         PduEntity entity = new PduEntity();
 
         // 地址码（2）
-        entity.address = (data[index++] & 0xff) * 0x100 + (data[index++] & 0xff);
+        entity.address = (dataArea[index++] & 0xff) * 0x100 + (dataArea[index++] & 0xff);
 
-        // 消息（N+5）
-        entity.messageType = data[index++] & 0xff;
-        entity.messageSubType = data[index++] & 0xff;
-        entity.result = data[index++] & 0xff;
-        entity.frame = data[index++] & 0xff;
-        entity.subFrame = data[index++] & 0xff;
-        entity.messageData = new byte[data.length - 9];
+        // 消息
+        entity.data = new byte[dataArea.length - 4];
 
         // 复制数据
-        System.arraycopy(data, index, entity.messageData, 0, entity.messageData.length);
+        System.arraycopy(dataArea, index, entity.data, 0, entity.data.length);
 
         return entity;
     }
