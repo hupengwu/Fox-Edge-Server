@@ -139,6 +139,17 @@ public class PduEntity {
      * @return 实体
      */
     public static PduEntity decodePdu(byte[] pdu) {
+        return decodePdu(pdu, (byte) 0x00);
+    }
+
+    /**
+     * 报文解码
+     *
+     * @param pdu 报文
+     * @param defaultValue 某些设备厂商对电信总局的数据编码理解不正确，会出现一些非法的数据，那么给一个缺省值进行替代
+     * @return 实体
+     */
+    public static PduEntity decodePdu(byte[] pdu, byte defaultValue) {
         int iSize = pdu.length;
         if (iSize < 18) {
             throw new ProtocolException("报文长度小于18");
@@ -164,33 +175,33 @@ public class PduEntity {
         // 版本号VER
         chHigh = pdu[index++];
         chLow = pdu[index++];
-        entity.ver = asciiToHex(chHigh, chLow);
+        entity.ver = asciiToHex(chHigh, chLow, defaultValue);
 
         // 设备地址ADR
         chHigh = pdu[index++];
         chLow = pdu[index++];
-        entity.addr = asciiToHex(chHigh, chLow);
+        entity.addr = asciiToHex(chHigh, chLow, defaultValue);
 
         // 标识码CID1
         chHigh = pdu[index++];
         chLow = pdu[index++];
-        entity.cid1 = asciiToHex(chHigh, chLow);
+        entity.cid1 = asciiToHex(chHigh, chLow, defaultValue);
 
         // 标识码CID2
         chHigh = pdu[index++];
         chLow = pdu[index++];
-        entity.cid2 = asciiToHex(chHigh, chLow);
+        entity.cid2 = asciiToHex(chHigh, chLow, defaultValue);
 
         // 长度LENGTH10f0
         int wLen = 0;
         chHigh = pdu[index++];
         chLow = pdu[index++];
-        byte value = asciiToHex(chHigh, chLow);
+        byte value = asciiToHex(chHigh, chLow, defaultValue);
 
         wLen = (value & 0xff) * 0x100;
         chHigh = pdu[index++];
         chLow = pdu[index++];
-        value = asciiToHex(chHigh, chLow);
+        value = asciiToHex(chHigh, chLow, defaultValue);
         wLen += (value & 0xff);
 
 
@@ -217,19 +228,19 @@ public class PduEntity {
             chHigh = pdu[index++];
             chLow = pdu[index++];
 
-            entity.data[i] = asciiToHex(chHigh, chLow);
+            entity.data[i] = asciiToHex(chHigh, chLow, defaultValue);
         }
 
         // 校验
         int wVfy = 0;
         chHigh = pdu[index++];
         chLow = pdu[index++];
-        value = asciiToHex(chHigh, chLow);
+        value = asciiToHex(chHigh, chLow, defaultValue);
         wVfy = (value & 0xff) * 0x100;
 
         chHigh = pdu[index++];
         chLow = pdu[index++];
-        value = asciiToHex(chHigh, chLow);
+        value = asciiToHex(chHigh, chLow, defaultValue);
         wVfy += (value & 0xff);
 
 
@@ -397,7 +408,7 @@ public class PduEntity {
         return wVfy;
     }
 
-    public static byte asciiToHex(byte chAsciiH, byte chAsciiL) {
+    private static byte asciiToHex(byte chAsciiH, byte chAsciiL, byte defaultValue) {
         byte byAtH = 0x00;
         byte byAtL = 0x00;
 
@@ -409,7 +420,7 @@ public class PduEntity {
             } else if ((chAsciiH >= 0x41) && (chAsciiH <= 0x46)) {
                 byAtH = (byte) (chAsciiH - 0x37);
             } else {
-                throw new ProtocolException("ASCII编码格式不正确");
+                return defaultValue;
             }
         }
 
@@ -421,7 +432,7 @@ public class PduEntity {
             } else if ((chAsciiL >= 0x41) && (chAsciiL <= 0x46)) {
                 byAtL = (byte) (chAsciiL - 0x37);
             } else {
-                throw new ProtocolException("ASCII编码格式不正确");
+                return defaultValue;
             }
         }
 

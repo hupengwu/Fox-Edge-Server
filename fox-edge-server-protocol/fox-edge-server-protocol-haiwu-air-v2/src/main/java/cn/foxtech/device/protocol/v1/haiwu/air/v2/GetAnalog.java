@@ -1,11 +1,8 @@
 package cn.foxtech.device.protocol.v1.haiwu.air.v2;
 
-
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
-import cn.foxtech.device.protocol.v1.haiwu.air.v2.enums.Type;
-import cn.foxtech.device.protocol.v1.haiwu.air.v2.uitls.TypeValueUtils;
 import cn.foxtech.device.protocol.v1.haiwu.air.v2.uitls.ValueUtils;
 import cn.foxtech.device.protocol.v1.telecom.core.entity.PduEntity;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
@@ -15,12 +12,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 发送范例：7e 31 30 30 31 36 30 34 37 30 30 30 30 46 44 41 44 0d
- * 返回范例：7e 31 30 30 31 36 30 30 30 41 30 34 32 32 30 32 30 32 30 32 30 30 30 32 33 30 30 30 30 30 30 35 41 32 30 32 30 30 30 31 39 30 39 30 30 30 31 30 30 30 33 32 30 32 30 30 30 30 30 30 30 31 38 30 30 32 32 30 30 30 30 30 30 30 32 30 30 30 32 46 30 45 45 0d
+ * 发送范例：7e 31 30 30 31 36 30 34 32 30 30 30 30 46 44 42 32 0d
+ * 返回范例：7e 31 30 30 31 36 30 30 30 32 30 34 41 30 30 45 38 32 30 32 30 32 30 32 30 30 30 30 30 32 30 32 30 32 30 32 30 32 30 32 30 30 30 31 42 32 30 32 30 32 30 32 30 32 30 32 30 32 30 32 30 30 36 2d 2d 2d 2d 30 30 31 41 32 30 32 30 30 30 31 42 30 35 39 46 32 42 31 30 45 46 31 31 0d
  */
 @FoxEdgeDeviceType(value = "海悟空调(V2.0)", manufacturer = "海悟空调有限公司")
-public class GetParam {
-    @FoxEdgeOperate(name = "获取系统参数（定点数）", polling = true, type = FoxEdgeOperate.encoder, timeout = 2000)
+public class GetAnalog {
+    @FoxEdgeOperate(name = "获取模拟量（定点数）", polling = true, type = FoxEdgeOperate.encoder, timeout = 2000)
     public static String encodePdu(Map<String, Object> param) {
         // 取出设备地址
         Integer devAddr = (Integer) param.get("devAddr");
@@ -34,7 +31,7 @@ public class GetParam {
         pduEntity.setAddr(devAddr);
         pduEntity.setVer(0x10);
         pduEntity.setCid1(0x60);
-        pduEntity.setCid2(0x47);
+        pduEntity.setCid2(0x42);
 
         byte[] pdu = PduEntity.encodePdu(pduEntity);
 
@@ -50,129 +47,141 @@ public class GetParam {
      * @param param     辅助参数
      * @return 解码内容
      */
-    @FoxEdgeOperate(name = "获取系统参数（定点数）", polling = true, type = FoxEdgeOperate.decoder, timeout = 2000)
+    @FoxEdgeOperate(name = "获取模拟量（定点数）", polling = true, type = FoxEdgeOperate.decoder, timeout = 2000)
     public static Map<String, Object> decodePdu(String hexString, Map<String, Object> param) {
         byte[] pdu = HexUtils.hexStringToByteArray(hexString);
 
-        PduEntity entity = PduEntity.decodePdu(pdu);
+        // 海悟对电信总局的数据编码，理解有偏差，引入一个编码0x2D表示无效数据场景，
+        // 传感器离线或故障时，返回“----”，传送字节为2DH，2DH，2DH，2DH。
+        PduEntity entity = PduEntity.decodePdu(pdu, (byte) 0x2D);
 
         if (entity.getCid1() != 0x60) {
             throw new ProtocolException("返回的CID1不正确!");
         }
 
+
         Map<String, Object> result = new HashMap<>();
         result.put("rtn", entity.getCid2());
 
         byte[] data = entity.getData();
-        if (data.length != 33) {
+        if (data.length != 37) {
             throw new ProtocolException("数据长度不正确");
         }
 
         int index = 0;
         int value;
 
-//        2020 空调开机温度
+
+//        00 e8 主机电源相电压A
         value = ValueUtils.decodeInteger(data, index);
         index += 2;
         if (value != 0x2020) {
-            result.put("空调开机温度", value);
+            result.put("主机电源相电压A", value);
         }
-//        2020 空调关机温度
+//        20 20 主机电源相电压B
         value = ValueUtils.decodeInteger(data, index);
         index += 2;
         if (value != 0x2020) {
-            result.put("空调关机温度", value);
+            result.put("主机电源相电压B", value);
         }
-//        0023 回风温度上限
+//        20 20 主机电源相电压C
         value = ValueUtils.decodeInteger(data, index);
         index += 2;
         if (value != 0x2020) {
-            result.put("回风温度上限", value);
+            result.put("主机电源相电压C", value);
         }
-//        0000 回风温度下限
+//        00 00 主机/压缩机工作电流A相
         value = ValueUtils.decodeInteger(data, index);
         index += 2;
         if (value != 0x2020) {
-            result.put("回风温度下限", value);
+            result.put("主机/压缩机工作电流A相", value);
         }
-//        005a 回风湿度上限
+//        20 20 主机/压缩机工作电流B相
         value = ValueUtils.decodeInteger(data, index);
         index += 2;
         if (value != 0x2020) {
-            result.put("回风湿度上限", value);
+            result.put("主机/压缩机工作电流B相", value);
         }
-//        2020 回风湿度下限
+//        20 20 主机/压缩机工作电流C相
         value = ValueUtils.decodeInteger(data, index);
         index += 2;
         if (value != 0x2020) {
-            result.put("回风湿度下限", value);
+            result.put("主机/压缩机工作电流C相", value);
         }
-//        0019 制冷模式温度设定值
+//        20 20 送风温度
         value = ValueUtils.decodeInteger(data, index);
         index += 2;
         if (value != 0x2020) {
-            result.put("制冷模式温度设定值", value);
+            result.put("送风温度", value);
         }
-//        09 用户自定义遥测数量
+//        00 1b 回风温度/室内环境温度
+        value = ValueUtils.decodeInteger(data, index);
+        index += 2;
+        if (value != 0x2020) {
+            result.put("回风温度/室内环境温度", value);
+        }
+//        20 20 送风湿度
+        value = ValueUtils.decodeInteger(data, index);
+        index += 2;
+        if (value != 0x2020) {
+            result.put("送风湿度", value);
+        }
+//        20 20 回风湿度/室内环境湿度
+        value = ValueUtils.decodeInteger(data, index);
+        index += 2;
+        if (value != 0x2020) {
+            result.put("回风湿度/室内环境湿度", value);
+        }
+//        20 20 压缩机吸气压力
+        value = ValueUtils.decodeInteger(data, index);
+        index += 2;
+        if (value != 0x2020) {
+            result.put("压缩机吸气压力", value);
+        }
+//        20 20 压缩机排气压力
+        value = ValueUtils.decodeInteger(data, index);
+        index += 2;
+        if (value != 0x2020) {
+            result.put("压缩机排气压力", value);
+        }
+//        06 用户自定义遥测数量
         result.put("用户自定义遥测数量", data[index]);
         index++;
-//        0001 运行模式设定
+//        2d 2d 室外环境温度
         value = ValueUtils.decodeInteger(data, index);
         index += 2;
-        if (value != 0x2020) {
-            result.put("运行模式设定", value);
-            result.put("运行模式设定-TEXT", TypeValueUtils.getTypeValueText(Type.EC0,value));
+        if (value != 0x2020 && value != 0x2d2d) {
+            result.put("室外环境温度", value);
         }
-//        0003 内风机风速设定
+//        00 1a 压缩机排气温度
         value = ValueUtils.decodeInteger(data, index);
         index += 2;
         if (value != 0x2020) {
-            result.put("内风机风速设定", value);
-            result.put("内风机风速设定-TEXT", TypeValueUtils.getTypeValueText(Type.EC1,value));
+            result.put("压缩机排气温度", value);
         }
-//        2020 摆风功能设定
+//        20 20 室外湿度
         value = ValueUtils.decodeInteger(data, index);
         index += 2;
         if (value != 0x2020) {
-            result.put("摆风功能设定", value);
-            result.put("摆风功能设定-TEXT", TypeValueUtils.getTypeValueText(Type.EC2,value));
+            result.put("室外湿度", value);
         }
-//        0000 屏蔽本地操作
+//        00 1b 室内盘管/蒸发器盘管温度
         value = ValueUtils.decodeInteger(data, index);
         index += 2;
         if (value != 0x2020) {
-            result.put("屏蔽本地操作", value);
-            result.put("屏蔽本地操作-TEXT", TypeValueUtils.getTypeValueText(Type.EC3,value));
+            result.put("室内盘管/蒸发器盘管温度", value);
         }
-//        0018 双机备份切换时间
+//        05 9f 压缩机运行时间
         value = ValueUtils.decodeInteger(data, index);
         index += 2;
         if (value != 0x2020) {
-            result.put("双机备份切换时间", value);
+            result.put("压缩机运行时间", value);
         }
-//        0022 高温同开温度设定
+//        2b 10 机组运行时间
         value = ValueUtils.decodeInteger(data, index);
         index += 2;
         if (value != 0x2020) {
-            result.put("高温同开温度设定", value);
-        }
-//        0000 制热模式温度设定值
-        value = ValueUtils.decodeInteger(data, index);
-        index += 2;
-        if (value != 0x2020) {
-            result.put("制热模式温度设定值", value);
-        }
-//        0002 制冷温控精度
-        value = ValueUtils.decodeInteger(data, index);
-        index += 2;
-        if (value != 0x2020) {
-            result.put("制冷温控精度", value);
-        }
-//        0002 制热温控精度
-        value = ValueUtils.decodeInteger(data, index);
-        index += 2;
-        if (value != 0x2020) {
-            result.put("制热温控精度", value);
+            result.put("机组运行时间", value);
         }
 
         return result;
