@@ -21,6 +21,7 @@
         <module>fox-edge-server-common-entity</module>
         <module>fox-edge-server-common-file</module>
         <module>fox-edge-server-common-mqtt</module>
+        <module>fox-edge-server-common-rpc</module>
         <module>fox-edge-server-common-process</module>
         <module>fox-edge-server-common-utils</module>
         <module>fox-edge-server-common-status</module>

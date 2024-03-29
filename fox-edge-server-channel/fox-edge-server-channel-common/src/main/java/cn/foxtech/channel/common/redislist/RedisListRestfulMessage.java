@@ -1,10 +1,9 @@
 package cn.foxtech.channel.common.redislist;
 
 import cn.foxtech.channel.common.properties.ChannelProperties;
-import cn.foxtech.common.domain.vo.RestFulRequestVO;
 import cn.foxtech.common.entity.entity.ChannelEntity;
 import cn.foxtech.common.entity.entity.DeviceEntity;
-import cn.foxtech.common.utils.redis.logger.RedisLoggerService;
+import cn.foxtech.common.rpc.redis.RedisListManagerRestfulMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,13 +16,12 @@ import java.util.Map;
  * 发送者： persist
  */
 @Component
-public class RedisListRestfulMessage extends RedisLoggerService {
+public class RedisListRestfulMessage {
     @Autowired
     private ChannelProperties channelProperties;
 
-    public RedisListRestfulMessage() {
-        this.setKey("fox.edge.list.manager.restful.message");
-    }
+    @Autowired
+    private RedisListManagerRestfulMessage managerRestfulMessage;
 
     /**
      * 向管理服务，发出一个创建一个通道的无响应消息
@@ -39,12 +37,7 @@ public class RedisListRestfulMessage extends RedisLoggerService {
             entity.setChannelParam(channelParam);
         }
 
-        RestFulRequestVO requestVO = new RestFulRequestVO();
-        requestVO.setUri("/kernel/manager/channel/entity");
-        requestVO.setMethod("post");
-        requestVO.setData(entity);
-
-        this.push(requestVO);
+        this.managerRestfulMessage.pushRequest("/kernel/manager/channel/entity", "post", entity);
     }
 
     public void createDevice(String manufacturer, String deviceType, String deviceName, String channelName, Map<String, Object> deviceParam) {
@@ -58,11 +51,6 @@ public class RedisListRestfulMessage extends RedisLoggerService {
             entity.setDeviceParam(deviceParam);
         }
 
-        RestFulRequestVO requestVO = new RestFulRequestVO();
-        requestVO.setUri("/kernel/manager/device/entity");
-        requestVO.setMethod("post");
-        requestVO.setData(entity);
-
-        this.push(requestVO);
+        this.managerRestfulMessage.pushRequest("/kernel/manager/device/entity", "post", entity);
     }
 }

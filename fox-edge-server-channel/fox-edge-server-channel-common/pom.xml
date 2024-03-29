@@ -42,6 +42,12 @@
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-common-rpc-redis</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-utils-method</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
