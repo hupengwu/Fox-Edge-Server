@@ -104,44 +104,10 @@ public class SerialPortLinux implements ISerialPort {
         API.cfmakeraw(this.ntm);
 
 
-        // <1> 设置波特率
-        switch (baudRate) {
-            case 300:
-                this.ntm.c_cflag |= LinuxMacro.B300;
-                break;
-            case 600:
-                this.ntm.c_cflag |= LinuxMacro.B600;
-                break;
-            case 1200:
-                this.ntm.c_cflag |= LinuxMacro.B1200;
-                break;
-            case 1800:
-                this.ntm.c_cflag |= LinuxMacro.B1800;
-                break;
-            case 2400:
-                this.ntm.c_cflag |= LinuxMacro.B2400;
-                break;
-            case 4800:
-                this.ntm.c_cflag |= LinuxMacro.B4800;
-                break;
-            case 9600:
-                this.ntm.c_cflag |= LinuxMacro.B9600;
-                break;
-            case 19200:
-                this.ntm.c_cflag |= LinuxMacro.B19200;
-                break;
-            case 38400:
-                this.ntm.c_cflag |= LinuxMacro.B38400;
-                break;
-            default:
-                this.ntm.c_cflag |= LinuxMacro.B9600;
-                break;
-        }
-        this.ntm.c_cflag = baudRate;
         this.ntm.c_cflag |= LinuxMacro.CLOCAL | LinuxMacro.CREAD;
-
-        // <2> 设置数据位
         this.ntm.c_cflag &= ~LinuxMacro.CSIZE;
+
+        // <1> 设置数据位
         switch (databits) {
             case 5:
                 this.ntm.c_cflag |= LinuxMacro.CS5;
@@ -160,7 +126,7 @@ public class SerialPortLinux implements ISerialPort {
                 break;
         }
 
-        // <3> 设置奇偶校验位数
+        // <2> 设置奇偶校验位数
         if ("N".equals(parity)) {
             this.ntm.c_cflag &= ~LinuxMacro.PARENB; /* Clear parity enable */
             this.ntm.c_iflag &= ~LinuxMacro.INPCK; /* Enable parity checking */
@@ -179,7 +145,7 @@ public class SerialPortLinux implements ISerialPort {
             this.ntm.c_iflag &= ~LinuxMacro.INPCK; /* Enable parity checking */
         }
 
-        // <4> 设置停止位
+        // <3> 设置停止位
         switch (stopbits) {
             case 1:
                 this.ntm.c_cflag &= ~LinuxMacro.CSTOPB;// 1位停止
@@ -192,9 +158,53 @@ public class SerialPortLinux implements ISerialPort {
                 break;
         }
 
-        // 设置控制字符
+        // <4> 设置控制字符
         this.ntm.c_cc[LinuxMacro.VTIME] = 1;  // 读取字符的最小数量
         this.ntm.c_cc[LinuxMacro.VMIN] = 1;   // 读取第一个字符的等待时间
+
+        // <5> 设置波特率
+        switch (baudRate) {
+            case 300:
+                API.cfsetispeed(this.ntm, LinuxMacro.B300);
+                API.cfsetospeed(this.ntm, LinuxMacro.B300);
+                break;
+            case 600:
+                API.cfsetispeed(this.ntm, LinuxMacro.B600);
+                API.cfsetospeed(this.ntm, LinuxMacro.B600);
+                break;
+            case 1200:
+                API.cfsetispeed(this.ntm, LinuxMacro.B1200);
+                API.cfsetospeed(this.ntm, LinuxMacro.B1200);
+                break;
+            case 1800:
+                API.cfsetispeed(this.ntm, LinuxMacro.B1800);
+                API.cfsetospeed(this.ntm, LinuxMacro.B1800);
+                break;
+            case 2400:
+                API.cfsetispeed(this.ntm, LinuxMacro.B2400);
+                API.cfsetospeed(this.ntm, LinuxMacro.B2400);
+                break;
+            case 4800:
+                API.cfsetispeed(this.ntm, LinuxMacro.B4800);
+                API.cfsetospeed(this.ntm, LinuxMacro.B4800);
+                break;
+            case 9600:
+                API.cfsetispeed(this.ntm, LinuxMacro.B9600);
+                API.cfsetospeed(this.ntm, LinuxMacro.B9600);
+                break;
+            case 19200:
+                API.cfsetispeed(this.ntm, LinuxMacro.B19200);
+                API.cfsetospeed(this.ntm, LinuxMacro.B19200);
+                break;
+            case 38400:
+                API.cfsetispeed(this.ntm, LinuxMacro.B38400);
+                API.cfsetospeed(this.ntm, LinuxMacro.B38400);
+                break;
+            default:
+                API.cfsetispeed(this.ntm, LinuxMacro.B9600);
+                API.cfsetospeed(this.ntm, LinuxMacro.B9600);
+                break;
+        }
 
         // 清除输入缓存
         int rtn = 0;

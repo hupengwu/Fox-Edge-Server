@@ -33,6 +33,16 @@ public interface LinuxAPI extends com.sun.jna.platform.unix.LibCAPI, Library {
             int size
     );
 
+    int cfsetispeed(
+            TERMIOS termios,
+            int speed
+    );
+
+    int cfsetospeed(
+            TERMIOS termios,
+            int speed
+    );
+
     void cfmakeraw(
             TERMIOS termios
     );
@@ -68,6 +78,5 @@ public interface LinuxAPI extends com.sun.jna.platform.unix.LibCAPI, Library {
             byte[] buf,
             long nbytes
     );
-
 }
 

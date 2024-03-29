@@ -1,0 +1,8 @@
+{
+  "configValue": {
+    "logger": false,
+    "channelName": ""
+  },
+  "configParam": {},
+  "remark": "配置说明：记录某个通道的通信日志\n{\n     \"logger\": true, -----------------------------------是否记录后台日志\n     \"channelName\": \"Linux COM1\"-----指定的通道名称\n}"
+}

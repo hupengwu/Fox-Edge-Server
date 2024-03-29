@@ -1,6 +1,7 @@
 package cn.foxtech.channel.serialport.service;
 
 import cn.foxtech.channel.common.properties.ChannelProperties;
+import cn.foxtech.channel.common.service.ConsoleLoggerPrinter;
 import cn.foxtech.channel.domain.ChannelBaseVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.channel.serialport.entity.SerialChannelEntity;
@@ -26,6 +27,10 @@ public class ReportService {
      */
     @Autowired
     private ChannelProperties channelProperties;
+
+    @Autowired
+    private ConsoleLoggerPrinter printer;
+
 
     public List<ChannelRespondVO> report(Map<String, SerialChannelEntity> channelEntityMap) throws ServiceException {
         List<ChannelRespondVO> respondVOList = new ArrayList<>();
@@ -72,6 +77,7 @@ public class ReportService {
                 respondVO.setType(this.channelProperties.getChannelType());
                 respondVO.setRecv(hex);
 
+                this.printer.printLogger(channelName, "接收", hex);
 
                 respondVOList.add(respondVO);
             }

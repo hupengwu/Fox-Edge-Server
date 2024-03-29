@@ -29,6 +29,7 @@
         <module>fox-edge-server-protocol-gdana-digester</module>
         <module>fox-edge-server-protocol-hj212-2017</module>
         <module>fox-edge-server-protocol-haier-ycj-a002</module>
+        <module>fox-edge-server-protocol-haiwu-air-v2</module>
         <module>fox-edge-server-protocol-hikvision-fire-core</module>
         <module>fox-edge-server-protocol-iec104-core</module>
         <module>fox-edge-server-protocol-iec104-slaver</module>

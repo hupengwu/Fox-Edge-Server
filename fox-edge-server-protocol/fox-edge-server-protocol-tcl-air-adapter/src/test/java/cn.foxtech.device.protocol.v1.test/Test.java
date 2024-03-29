@@ -22,5 +22,19 @@ public class Test {
         String txt = HexUtils.byteArrayToHexString(pdu, true).toUpperCase();
     }
 
+    private void ss(){
+//                "recv": "f4 f5 09 00 00 6f 00 00 84 61 00 00 5d f4 fb",
+//                "rspd": "f4 f5 09 00 00 6f 00 00 84 61 00 00 5d f4 fb"
+//
+//
+//                "recv": "F4 F5 05 00 00 0D 01 00 13 F4 FB",
+//                "rspd": "F4 F5 05 00 00 0D 01 00 13 F4 FB"
+//
+//                 "name": "tcl空调",
+//                "recv": "f4 f5 05 00 00 70 00 00 75 f4 fb",
+//                "rspd": "f4 f5 0d 00 00 70 00 00 00 00 00 00 00 00 00 00 7d f4 fb"
+
+    }
+
 
 }

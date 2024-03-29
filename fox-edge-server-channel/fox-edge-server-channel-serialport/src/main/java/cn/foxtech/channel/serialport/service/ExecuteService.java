@@ -1,10 +1,9 @@
 package cn.foxtech.channel.serialport.service;
 
-import cn.foxtech.channel.common.properties.ChannelProperties;
+import cn.foxtech.channel.common.service.ConsoleLoggerPrinter;
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.channel.serialport.entity.SerialChannelEntity;
-import cn.foxtech.common.domain.constant.RedisTopicConstant;
 import cn.foxtech.common.utils.hex.HexUtils;
 import cn.foxtech.common.utils.serialport.ISerialPort;
 import cn.foxtech.core.exception.ServiceException;
@@ -18,15 +17,8 @@ import java.util.Arrays;
  */
 @Component
 public class ExecuteService {
-    /**
-     * 主动上报的topic
-     */
-    private final String reportTopic = RedisTopicConstant.topic_channel_respond + RedisTopicConstant.model_manager;
-    /**
-     * 属性信息
-     */
     @Autowired
-    private ChannelProperties channelProperties;
+    private ConsoleLoggerPrinter printer;
 
     /**
      * 查询串口数据:增加同步锁，避免并发访问带来的多线程异常。
@@ -64,6 +56,8 @@ public class ExecuteService {
         serialPort.clearSendFlush();
         serialPort.clearRecvFlush();
 
+        this.printer.printLogger(requestVO.getName(), "发送", sendData);
+
         // 发送数据
         serialPort.sendData(send);
 
@@ -79,6 +73,8 @@ public class ExecuteService {
 
         // 格式转换
         String hexString = HexUtils.byteArrayToHexString(recv, true);
+
+        this.printer.printLogger(requestVO.getName(), "接收", hexString);
 
         ChannelRespondVO respondVO = new ChannelRespondVO();
         respondVO.bindBaseVO(requestVO);
@@ -117,6 +113,8 @@ public class ExecuteService {
         if (!channelEntity.getSerialPort().isOpen()) {
             throw new ServiceException("串口没有打开！");
         }
+
+        this.printer.printLogger(requestVO.getName(), "发送", sendData);
 
 
         // 格式转换
