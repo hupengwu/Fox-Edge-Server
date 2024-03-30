@@ -139,17 +139,18 @@ public class PduEntity {
      * @return 实体
      */
     public static PduEntity decodePdu(byte[] pdu) {
-        return decodePdu(pdu, (byte) 0x00);
+        return decodePdu(pdu, false, (byte) 0x00);
     }
 
     /**
      * 报文解码
      *
-     * @param pdu 报文
+     * @param pdu          报文
+     * @param rawData      是否为原始数据
      * @param defaultValue 某些设备厂商对电信总局的数据编码理解不正确，会出现一些非法的数据，那么给一个缺省值进行替代
-     * @return 实体
+     * @return
      */
-    public static PduEntity decodePdu(byte[] pdu, byte defaultValue) {
+    public static PduEntity decodePdu(byte[] pdu, boolean rawData, byte defaultValue) {
         int iSize = pdu.length;
         if (iSize < 18) {
             throw new ProtocolException("报文长度小于18");
@@ -218,17 +219,22 @@ public class PduEntity {
             throw new ProtocolException("帧长度校验不正确!");
         }
 
-        // 初始化数据域
-        int iDataSize = wLen / 2;
-        entity.data = new byte[iDataSize];
+        if (rawData) {
+            // 原始数据模式：某些设备厂家，没有按电信总局的要求，按原始数据格式进行编码
+            entity.data = new byte[wLen];
+            for (int i = 0; i < wLen; i++) {
+                entity.data[i] = pdu[index++];
+            }
+        } else {
+            // 电信总局的要求：数据双字节的编码
+            int iDataSize = wLen / 2;
+            entity.data = new byte[iDataSize];
+            for (int i = 0; i < iDataSize; i++) {
+                chHigh = pdu[index++];
+                chLow = pdu[index++];
 
-
-        // 数据INFO
-        for (int i = 0; i < iDataSize; i++) {
-            chHigh = pdu[index++];
-            chLow = pdu[index++];
-
-            entity.data[i] = asciiToHex(chHigh, chLow, defaultValue);
+                entity.data[i] = asciiToHex(chHigh, chLow, defaultValue);
+            }
         }
 
         // 校验
