@@ -17,18 +17,12 @@ public class SetTurnOn {
     public static String encodePdu(Map<String, Object> param) {
         // 取出设备地址
         Integer devAddr = (Integer) param.get("devAddr");
-        String type = (String) param.get("type");
-        Integer value = (Integer) param.get("value");
 
         // 检查输入参数
-        if (MethodUtils.hasEmpty(devAddr, type, value)) {
-            throw new ProtocolException("输入参数不能为空:devAddr, type, value");
+        if (MethodUtils.hasEmpty(devAddr)) {
+            throw new ProtocolException("输入参数不能为空:devAddr");
         }
 
-        Type typ = Type.getEnum(type);
-        if (typ == null) {
-            throw new ProtocolException("未定义的类型" + type);
-        }
 
         PduEntity pduEntity = new PduEntity();
         pduEntity.setAddr(devAddr);
