@@ -5,8 +5,7 @@ import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeReport;
 import cn.foxtech.device.protocol.v1.core.constants.FoxEdgeConstant;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
-import cn.foxtech.device.protocol.v1.telecom.core.TelecomEntity;
-import cn.foxtech.device.protocol.v1.telecom.core.TelecomProtocol;
+import cn.foxtech.device.protocol.v1.telecom.core.entity.PduEntity;
 import cn.foxtech.device.protocol.v1.utils.BcdUtils;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
 
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @FoxEdgeDeviceType(value = "BASS260ZJ", manufacturer = "广东高新兴")
-public class BASS260ZJGetCardRecord extends TelecomProtocol {
+public class BASS260ZJGetCardRecord {
     /**
      * 读取刷卡记录
      *
@@ -25,18 +24,18 @@ public class BASS260ZJGetCardRecord extends TelecomProtocol {
      */
     @FoxEdgeOperate(name = "读取刷卡记录", polling = true, type = FoxEdgeOperate.encoder, mode = FoxEdgeOperate.record, timeout = 2000)
     public static String packCmdGetCardRecord(Map<String, Object> param) {
-        TelecomEntity entity = new TelecomEntity();
+        PduEntity entity = new PduEntity();
         entity.setVer((byte) 0x10);
         entity.setAddr((byte) 0x01);
-        entity.setCID1((byte) 0x80);// 设备分类码 环境控制类=8 门禁暂时固定分组码=0
-        entity.setCID2((byte) 0x4A);// 读取信息
+        entity.setCid1((byte) 0x80);// 设备分类码 环境控制类=8 门禁暂时固定分组码=0
+        entity.setCid2((byte) 0x4A);// 读取信息
 
         byte[] data = new byte[3];
         data[0] = (byte) 0xF2;// COMMAND GROUP 读取命令
         data[1] = (byte) 0xE2;// COMMAND TYPE 顺序读取一条历史记录
         data[2] = (byte) 0x00;// DATAF 门禁从LOADP位置读取一条记录返给SU， 门禁自动将LOADP指向下一条记录
         entity.setData(data);
-        byte[] arrCmd = BASS260ZJGetCardRecord.packCmd4Entity(entity);
+        byte[] arrCmd = PduEntity.encodePdu(entity);
 
         return HexUtils.byteArrayToHexString(arrCmd);
     }
@@ -59,7 +58,7 @@ public class BASS260ZJGetCardRecord extends TelecomProtocol {
     public static List<Map<String, Object>> unPackCmdGetCardRecord(String hexString, Map<String, Object> param) {
         byte[] arrCmd = HexUtils.hexStringToByteArray(hexString);
 
-        TelecomEntity entity = BASS260ZJGetCardRecord.unPackCmd2Entity(arrCmd);
+        PduEntity entity = PduEntity.decodePdu(arrCmd);
         byte[] dat = entity.getData();
 
         // 检查:数据域长度

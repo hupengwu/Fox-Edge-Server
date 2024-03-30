@@ -2,7 +2,6 @@ package cn.foxtech.device.protocol.v1.zxdu58;
 
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
-import cn.foxtech.device.protocol.v1.telecom.core.TelecomProtocol;
 import cn.foxtech.device.protocol.v1.utils.BitsUtils;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
 
@@ -23,11 +22,11 @@ public class ZXDU58ProtocolGetRECData extends ZXDU58ProtocolFrame {
 
         byte[] arrData = new byte[0];
 
-        param.put(CID1, 0x41);
-        param.put(CID2, 0x41);
-        param.put(INFO, arrData);
+        param.put("CID1", 0x41);
+        param.put("CID2", 0x41);
+        param.put("INFO", arrData);
 
-        return HexUtils.byteArrayToHexString(TelecomProtocol.packCmd4Map(param));
+        return HexUtils.byteArrayToHexString(packCmd4Map(param));
     }
 
     /**
@@ -45,13 +44,13 @@ public class ZXDU58ProtocolGetRECData extends ZXDU58ProtocolFrame {
             return null;
         }
 
-        if (!value.get(CID1).equals((byte) 0x41)) {
+        if (!value.get("CID1").equals((byte) 0x41)) {
             return null;
         }
-        if (!value.get(CID2).equals((byte) 0x00)) {
+        if (!value.get("CID2").equals((byte) 0x00)) {
             return null;
         }
-        byte[] arrData = (byte[]) value.get(INFO);
+        byte[] arrData = (byte[]) value.get("INFO");
 
         if (arrData.length < 6) {
             return null;

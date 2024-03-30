@@ -23,9 +23,9 @@ public class ZXDU58ProtocolGetACSwitch extends ZXDU58ProtocolFrame {
         byte[] arrData = new byte[1];
         arrData[0] = 0x00;
 
-        param.put(CID1, 0x40);
-        param.put(CID2, 0x43);
-        param.put(INFO, arrData);
+        param.put("CID1", 0x40);
+        param.put("CID2", 0x43);
+        param.put("INFO", arrData);
 
         return HexUtils.byteArrayToHexString(packCmd4Map(param));
     }
@@ -45,13 +45,13 @@ public class ZXDU58ProtocolGetACSwitch extends ZXDU58ProtocolFrame {
             return null;
         }
 
-        if (!value.get(CID1).equals((byte) 0x40)) {
+        if (!value.get("CID1").equals((byte) 0x40)) {
             return null;
         }
-        if (!value.get(CID2).equals((byte) 0x00)) {
+        if (!value.get("CID2").equals((byte) 0x00)) {
             return null;
         }
-        byte[] arrData = (byte[]) value.get(INFO);
+        byte[] arrData = (byte[]) value.get("INFO");
 
         if (arrData.length < 4) {
             return null;

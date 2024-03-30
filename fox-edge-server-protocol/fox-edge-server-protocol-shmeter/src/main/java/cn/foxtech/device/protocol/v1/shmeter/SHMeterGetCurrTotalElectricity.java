@@ -4,7 +4,6 @@ package cn.foxtech.device.protocol.v1.shmeter;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
-import cn.foxtech.device.protocol.v1.telecom.core.TelecomProtocol;
 
 import java.util.Map;
 
@@ -29,8 +28,7 @@ public class SHMeterGetCurrTotalElectricity extends SHMeterProtocolFrame {
         param.put(FUN, 0x01);
         param.put(DAT, arrData);
 
-
-        return HexUtils.byteArrayToHexString(TelecomProtocol.packCmd4Map(param));
+        return HexUtils.byteArrayToHexString(SHMeterProtocolFrame.packCmd(param));
     }
 
     /**

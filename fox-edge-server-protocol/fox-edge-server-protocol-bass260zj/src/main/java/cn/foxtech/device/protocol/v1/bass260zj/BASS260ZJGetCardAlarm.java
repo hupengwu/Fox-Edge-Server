@@ -3,15 +3,14 @@ package cn.foxtech.device.protocol.v1.bass260zj;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
-import cn.foxtech.device.protocol.v1.telecom.core.TelecomEntity;
-import cn.foxtech.device.protocol.v1.telecom.core.TelecomProtocol;
+import cn.foxtech.device.protocol.v1.telecom.core.entity.PduEntity;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @FoxEdgeDeviceType(value = "BASS260ZJ", manufacturer = "广东高新兴")
-public class BASS260ZJGetCardAlarm extends TelecomProtocol {
+public class BASS260ZJGetCardAlarm {
     /**
      * 读取刷卡记录
      *
@@ -22,15 +21,15 @@ public class BASS260ZJGetCardAlarm extends TelecomProtocol {
     public static String packCmdGetAlarmStatus(Map<String, Object> param) {
         // 7E323030323431343430303030464441460D
 
-        TelecomEntity entity = new TelecomEntity();
+        PduEntity entity = new PduEntity();
         entity.setVer((byte) 0x20);
         entity.setAddr((byte) 0x02);
-        entity.setCID1((byte) 0x41);// 设备分类码 开关电源系统（整流器）
-        entity.setCID2((byte) 0x44);// 获取告警状态
+        entity.setCid1((byte) 0x41);// 设备分类码 开关电源系统（整流器）
+        entity.setCid2((byte) 0x44);// 获取告警状态
 
         byte[] data = new byte[0];
         entity.setData(data);
-        byte[] arrCmd = packCmd4Entity(entity);
+        byte[] arrCmd = PduEntity.encodePdu(entity);
 
         return HexUtils.byteArrayToHexString(arrCmd);
     }
@@ -41,7 +40,7 @@ public class BASS260ZJGetCardAlarm extends TelecomProtocol {
 
         byte[] arrCmd = HexUtils.hexStringToByteArray(hexString);
 
-        TelecomEntity entity = unPackCmd2Entity(arrCmd);
+        PduEntity entity = PduEntity.decodePdu(arrCmd);
         byte[] dat = entity.getData();
 
         // 检查:数据域长度
