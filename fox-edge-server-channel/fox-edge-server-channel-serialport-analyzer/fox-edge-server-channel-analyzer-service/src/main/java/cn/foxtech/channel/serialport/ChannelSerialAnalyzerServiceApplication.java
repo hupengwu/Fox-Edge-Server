@@ -5,10 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-public class ChannelSerialAnalyzerApplication {
+public class ChannelSerialAnalyzerServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ChannelSerialAnalyzerApplication.class, args);
+        SpringApplication.run(ChannelSerialAnalyzerServiceApplication.class, args);
     }
 
 }

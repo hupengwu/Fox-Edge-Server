@@ -5,9 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-public class DeviceServiceGraalvmApplication {
+public class DeviceGraalvmApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DeviceServiceGraalvmApplication.class, args);
+        SpringApplication.run(DeviceGraalvmApplication.class, args);
     }
 }

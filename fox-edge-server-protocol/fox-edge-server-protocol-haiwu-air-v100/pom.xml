@@ -9,7 +9,7 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>fox-edge-server-protocol-haiwu-air</artifactId>
+    <artifactId>fox-edge-server-protocol-haiwu-air-v100</artifactId>
     <name>${project.artifactId}</name>
     <description>${project.artifactId}</description>
 
