@@ -6,6 +6,7 @@ import cn.foxtech.kernel.system.common.initialize.CommonInitialize;
 import cn.foxtech.kernel.system.common.scheduler.PeriodTasksScheduler;
 import cn.foxtech.kernel.system.common.scheduler.RedisListRestfulScheduler;
 import cn.foxtech.kernel.system.repository.initialize.RepoInitialize;
+import cn.foxtech.kernel.system.service.controller.RestfulLikeController;
 import cn.foxtech.kernel.system.service.mqtt.MqttProxyService;
 import cn.foxtech.kernel.system.service.redislist.RedisListRestfulHandler;
 import cn.foxtech.kernel.system.service.redistopic.RedisTopicController;
@@ -68,6 +69,9 @@ public class Initialize implements CommandLineRunner {
     @Autowired
     private RedisTopicController redisTopicController;
 
+    @Autowired
+    private RestfulLikeController restfulController;
+
     public void run(String... args) {
         String message = "------------------------Initialize初始化开始！------------------------";
         console.info(message);
@@ -80,6 +84,8 @@ public class Initialize implements CommandLineRunner {
         this.mqttProxyService.initialize();
 
         this.redisTopicController.initialize();
+
+        this.restfulController.initialize();
 
         this.restfulScheduler.setHandler(this.restfulHandler);
         this.restfulScheduler.schedule();

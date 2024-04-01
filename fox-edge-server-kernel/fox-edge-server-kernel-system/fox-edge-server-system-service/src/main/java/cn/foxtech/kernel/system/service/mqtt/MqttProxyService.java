@@ -4,7 +4,6 @@ import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.mqtt.MqttClientService;
 import cn.foxtech.kernel.common.service.EdgeService;
 import lombok.Setter;
-import net.dreamlu.iot.mqtt.core.client.MqttClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -57,12 +56,5 @@ public class MqttProxyService {
         // 初始化MQTT
         this.mqttClientService.getMqttClientListener().setClientHandler(handler);
         this.mqttClientService.Initialize(this.mqttConfig);
-
-        // 初始化RestController的资源
-        this.controller.initialize();
-    }
-
-    public MqttClient getClient() {
-        return this.mqttClientService.getMqttClient();
     }
 }
