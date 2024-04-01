@@ -1,11 +1,13 @@
 package cn.foxtech.kernel.system.service.controller;
 
 import cn.foxtech.common.utils.Maps;
+import cn.foxtech.core.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -162,11 +164,40 @@ public class RestfulLikeController {
         return result;
     }
 
-    public Object getBean(String methodKey) {
-        return Maps.getValue(this.controllerMethod, methodKey, "bean");
-    }
 
-    public Object getMethod(String methodKey) {
-        return Maps.getValue(this.controllerMethod, methodKey, "method");
+    public Object execute(String reqUri, String reqMethod, Object data) throws InvocationTargetException, IllegalAccessException {
+        String resource = this.getResource(reqUri);
+        String methodName = reqMethod.toUpperCase();
+
+        String methodKey = resource + ":" + methodName;
+        Object bean = Maps.getValue(this.controllerMethod, methodKey, "bean");
+        Object method = Maps.getValue(this.controllerMethod, methodKey, "method");
+        if (method == null || bean == null) {
+            throw new ServiceException("尚未支持的方法");
+        }
+
+        // 执行controller的bean函数
+        Object value = null;
+        if (methodName.equals("POST") || methodName.equals("PUT")) {
+            value = ((Method) method).invoke(bean, data);
+        } else if (methodName.equals("GET") || methodName.equals("DELETE")) {
+            List<Object> params = this.getParams(reqUri, (Method) method);
+            if (params.size() == 0) {
+                value = ((Method) method).invoke(bean, params);
+            } else if (params.size() == 1) {
+                value = ((Method) method).invoke(bean, params.get(0));
+            } else if (params.size() == 2) {
+                value = ((Method) method).invoke(bean, params.get(0), params.get(1));
+            } else if (params.size() == 3) {
+                value = ((Method) method).invoke(bean, params.get(0), params.get(1), params.get(2));
+            } else {
+                throw new ServiceException("尚未支持的方法");
+            }
+        } else {
+            throw new ServiceException("尚未支持的方法");
+        }
+
+
+        return value;
     }
 }
