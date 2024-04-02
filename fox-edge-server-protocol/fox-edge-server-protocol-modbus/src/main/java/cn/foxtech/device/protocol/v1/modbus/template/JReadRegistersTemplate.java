@@ -4,7 +4,6 @@ import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.core.template.ITemplate;
 import cn.foxtech.device.protocol.v1.modbus.core.ModBusWriteRegistersRequest;
 import cn.foxtech.device.protocol.v1.utils.BitsUtils;
-import cn.foxtech.device.protocol.v1.utils.ByteUtils;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.csv.CsvReader;
 import cn.hutool.core.text.csv.CsvUtil;
@@ -100,119 +99,6 @@ public class JReadRegistersTemplate implements ITemplate {
         return request;
     }
 
-    private Map<String, Object> decodeValueTest(int address, int count, int[] statusList) {
-
-
-        Map<String, Object> result = new HashMap<>();
-        for (int i = 0; i < count; i++) {
-            for (Map.Entry<String, JDecoderValueParam> entry : this.operate.decoder_param.valueMap.entrySet()) {
-                String name = entry.getKey();
-                JDecoderValueParam jDecoderValueParam = entry.getValue();
-
-                // 寄存器地址的位置
-                int offsetStart = address + i;
-
-                // 检测：该寄存器地址
-                if (jDecoderValueParam.value_index != offsetStart) {
-                    continue;
-                }
-
-                int bitLength = jDecoderValueParam.bit_index + jDecoderValueParam.bit_length;
-                // 该变量占用1个寄存器
-                if ((bitLength > 1 && bitLength <= 16) && (i + 0 < statusList.length)) {
-                    byte[] data = new byte[2];
-                    data[0] = (byte) ((statusList[i] >> 8) & 0xff);
-                    data[1] = (byte) (statusList[i] & 0xff);
-
-                    // 解码
-                    this.decodeValue(jDecoderValueParam, data, result);
-                    continue;
-                }
-                // 该变量占用2个寄存器
-                if ((bitLength > 16 && bitLength <= 32) && (i + 1 < statusList.length)) {
-                    byte[] data = new byte[4];
-                    data[0] = (byte) ((statusList[i] >> 8) & 0xff);
-                    data[1] = (byte) (statusList[i] & 0xff);
-                    data[2] = (byte) ((statusList[i + 1] >> 8) & 0xff);
-                    data[3] = (byte) (statusList[i + 1] & 0xff);
-
-                    // 解码
-                    this.decodeValue(jDecoderValueParam, data, result);
-                    continue;
-                }
-                // 该变量占用3个寄存器
-                if ((bitLength > 32 && bitLength <= 48) && (i + 2 < statusList.length)) {
-                    byte[] data = new byte[6];
-                    data[0] = (byte) ((statusList[i] >> 8) & 0xff);
-                    data[1] = (byte) (statusList[i] & 0xff);
-                    data[2] = (byte) ((statusList[i + 1] >> 8) & 0xff);
-                    data[3] = (byte) (statusList[i + 1] & 0xff);
-                    data[4] = (byte) ((statusList[i + 2] >> 8) & 0xff);
-                    data[5] = (byte) (statusList[i + 2] & 0xff);
-
-                    // 解码
-                    this.decodeValue(jDecoderValueParam, data, result);
-                    continue;
-                }
-                // 该变量占用4个寄存器
-                if ((bitLength > 32 && bitLength <= 48) && (i + 3 < statusList.length)) {
-                    byte[] data = new byte[8];
-                    data[0] = (byte) ((statusList[i] >> 8) & 0xff);
-                    data[1] = (byte) (statusList[i] & 0xff);
-                    data[2] = (byte) ((statusList[i + 1] >> 8) & 0xff);
-                    data[3] = (byte) (statusList[i + 1] & 0xff);
-                    data[4] = (byte) ((statusList[i + 2] >> 8) & 0xff);
-                    data[5] = (byte) (statusList[i + 2] & 0xff);
-                    data[6] = (byte) ((statusList[i + 3] >> 8) & 0xff);
-                    data[7] = (byte) (statusList[i + 3] & 0xff);
-
-                    // 解码
-                    this.decodeValue(jDecoderValueParam, data, result);
-                    continue;
-                }
-
-            }
-        }
-
-        return result;
-    }
-
-    private void decodeValue(JDecoderValueParam jDecoderValueParam, byte[] data, Map<String, Object> result) {
-        // 整数：比如284，编码格式为int16，但实际上是放大10倍，变为2840
-        if (jDecoderValueParam.value_type.equals("int")) {
-            if (data.length == 2) {
-                int value = ByteUtils.decodeInt16(data);
-                result.put(jDecoderValueParam.value_name, (int) (value * jDecoderValueParam.magnification));
-            }
-            if (data.length == 4) {
-                long value = ByteUtils.decodeInt32(data);
-                result.put(jDecoderValueParam.value_name, (int) (value * jDecoderValueParam.magnification));
-            }
-
-            return;
-        }
-        // 定点小数：比如284，编码格式为int16，但实际上是缩小10倍，变为实28.4
-        if (jDecoderValueParam.value_type.equals("fix-float")) {
-            if (data.length == 2) {
-                int value = ByteUtils.decodeInt16(data);
-                result.put(jDecoderValueParam.value_name, value * jDecoderValueParam.magnification);
-            }
-            if (data.length == 4) {
-                long value = ByteUtils.decodeInt32(data);
-                result.put(jDecoderValueParam.value_name, value * jDecoderValueParam.magnification);
-            }
-            return;
-        }
-        // 浮点数：比如28.4，编码格式为float32，实际上是28.4
-        if (jDecoderValueParam.value_type.equals("float")) {
-            if (data.length == 4) {
-                float value = BitsUtils.bitsToFloat(data);
-                result.put(jDecoderValueParam.value_name, value * jDecoderValueParam.magnification);
-            }
-
-            return;
-        }
-    }
 
     private Map<String, Object> decodeValue(int address, int count, int[] statusList) {
         int offsetStart = address;
@@ -246,9 +132,18 @@ public class JReadRegistersTemplate implements ITemplate {
             if (jDecoderValueParam.value_type.equals("fix-float")) {
                 result.put(name, status * jDecoderValueParam.magnification);
             }
-            // 浮点数：比如28.4，编码格式为float32，实际上是28.4
+            // 浮点数
             if (jDecoderValueParam.value_type.equals("float")) {
-                result.put(name, status * jDecoderValueParam.magnification);
+                if (jDecoderValueParam.bit_length.equals(32)) {
+                    // 32位浮点（数默认格式：低位在前，高位在后）：例如，45 0f 60 00 数值位2294.0
+                    byte bit0 = (byte) (statusList[index + 1] >> 0 & 0xff);
+                    byte bit1 = (byte) (statusList[index + 1] >> 8 & 0xff);
+                    byte bit2 = (byte) (statusList[index + 0] >> 0 & 0xff);
+                    byte bit3 = (byte) (statusList[index + 0] >> 8 & 0xff);
+                    float fValue = BitsUtils.bitsToFloat(bit0, bit1, bit2, bit3);
+                    result.put(name, fValue * jDecoderValueParam.magnification);
+                }
+
             }
             if (jDecoderValueParam.value_type.equals("bool")) {
                 int value = 0;
@@ -334,7 +229,7 @@ public class JReadRegistersTemplate implements ITemplate {
         /**
          * 倍率：int和float的放大/缩小倍数
          */
-        private Float magnification;
+        private Double magnification;
         /**
          * bool判定true的条件
          */

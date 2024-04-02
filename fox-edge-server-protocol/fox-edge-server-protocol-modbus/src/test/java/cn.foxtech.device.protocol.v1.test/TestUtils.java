@@ -15,6 +15,10 @@ import java.util.Map;
 
 public class TestUtils {
     public static void main(String[] args) throws Exception {
+
+        // 45 0f 60 00
+       float ss =  BitsUtils.bitsToFloat((byte)0x00,(byte)0x60,  (byte)0x0f,(byte) 0x45);
+
         JHoldingRegistersTest2();
     }
 
@@ -27,7 +31,7 @@ public class TestUtils {
 
     public static void JHoldingRegistersTest2() {
         try {
-            String hexString = "01 04 0c 01 1a 01 ba 41 e1 fa 9c 42 30 ed cb ef ca ";
+            String hexString = "32 03 04 45 0f 60 00 f4 3f ";
 
             byte[] ttt = new byte[4];
             ttt[0] = (byte)0x41;
@@ -49,15 +53,14 @@ public class TestUtils {
 
             Map<String, Object> param = new HashMap<>();
             param.put("devAddr", 1);
-            param.put("regAddr", 0);
-            param.put("regCnt", 6);
+            param.put("regAddr", 8198);
+            param.put("regCnt", 18);
             param.put("modbusMode", "RTU");
             param.put("operateName", "Read Input Register");
-            param.put("templateName", "temperature-sensor-read-input-status-table");
-            param.put("tableName", "zhongshengkeji-temperature-sensor-modbus/1.0.0/1.temperature-sensor-read-input-status-table.csv");
+            param.put("templateName", "chint-dt-su666 Read Holding Registers");
+            param.put("tableName", "chint-dt-su666/v1/Holding Registers.csv");
             Map<String, Object> value = new HashMap<>();
-            value = ModBusProtocolReadRegisters.unpackReadHoldingRegister(hexString, param);
-            value = ModBusProtocolReadRegisters.unpackReadHoldingRegister(hexString, param);
+            value = ModBusProtocolReadRegisters.unpackReadHoldingRegister("32 04 24 45 66 30 00 45 71 f0 00 45 68 d0 00 44 ff 20 00 45 0a 30 00 45 0d 30 00 44 80 c0 00 42 3c 00 00 43 4d 00 00 44 20 ", param);
        //     value = ModBusProtocolReadHoldingRegisters.unpackReadHoldingRegister(hexString, param);
 
             String data = ModBusProtocolWriteRegisters.packWriteHoldingRegister(param);
