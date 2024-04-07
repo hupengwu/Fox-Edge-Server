@@ -56,6 +56,12 @@ public class RepoCloudInstallService {
     private RepoLocalJarFileInfoService jarFileService;
 
     /**
+     * jar文件的配置信息
+     */
+    @Autowired
+    private RepoLocalJarFileConfigService jarConfigService;
+
+    /**
      * app服务的conf配置文件
      */
     @Autowired
@@ -465,6 +471,10 @@ public class RepoCloudInstallService {
             // 备份目标文件，然后将解压文件复制复制到目标目录
             if (modelType.equals(RepoCompConstant.repository_type_decoder)) {
                 this.installDecoderFile(tarDir, file.getAbsolutePath() + "/jar/decoder", modelName, modelVersion);
+
+                // 注册为加载
+                String jarFileName = modelName + "." + modelVersion + ".jar";
+                this.jarConfigService.updateConfig(jarFileName, true);
             }
             if (modelType.equals(RepoCompConstant.repository_type_template)) {
                 this.installTemplateFile(tarDir, file.getAbsolutePath() + "/template/" + modelName + "/" + modelVersion);

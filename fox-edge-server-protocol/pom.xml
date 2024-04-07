@@ -39,6 +39,7 @@
         <module>fox-edge-server-protocol-modbus-core</module>
         <module>fox-edge-server-protocol-mitsubishi-plc-fx-core</module>
         <module>fox-edge-server-protocol-mitsubishi-plc-fx</module>
+        <module>fox-edge-server-protocol-midea-dcm9</module>
         <module>fox-edge-server-protocol-omron-fins-core</module>
         <module>fox-edge-server-protocol-omron-fins</module>
         <module>fox-edge-server-protocol-opc-ua</module>
