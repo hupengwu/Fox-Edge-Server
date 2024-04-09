@@ -55,6 +55,7 @@
         <module>fox-edge-server-protocol-s3p-core</module>
         <module>fox-edge-server-protocol-telecom-core</module>
         <module>fox-edge-server-protocol-tcl-air-adapter</module>
+        <module>fox-edge-server-protocol-telecom-air-qztt-2219-2020</module>
         <module>fox-edge-server-protocol-zxdu58</module>
     </modules>
 
