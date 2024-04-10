@@ -62,8 +62,7 @@ public class ReportService {
                     return this.engineOperator.decodeStatus(engine, operateEntity.getOperateName(), decodeMain, decodeScript);
                 }
             } catch (Exception e) {
-                this.printLogger("解码失败:" + operateEntity.toString() + "\r\n" + e.getMessage());
-                continue;
+               continue;
             }
         }
 

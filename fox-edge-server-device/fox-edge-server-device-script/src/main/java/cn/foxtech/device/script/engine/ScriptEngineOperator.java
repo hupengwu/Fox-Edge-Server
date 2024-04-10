@@ -6,6 +6,8 @@ import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.constants.FoxEdgeConstant;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -67,6 +69,9 @@ public class ScriptEngineOperator {
         try {
             // 记录格式
 
+            // 装载待执行的脚本
+            engine.eval(decodeScript);
+
             // 执行JSP脚本中的函数
             Object data = engine.eval(decodeMain + "();");
 
@@ -81,6 +86,12 @@ public class ScriptEngineOperator {
             result.put(FoxEdgeConstant.DATA_TAG, recordValue);
 
             return result;
+        } catch (InvalidFormatException ife) {
+            // 不打印JSON转换日志
+            throw new ProtocolException(ife.getMessage());
+        } catch (MismatchedInputException mie) {
+            // 不打印JSON转换日志
+            throw new ProtocolException(mie.getMessage());
         } catch (Exception e) {
             // 打印日志
             this.printLogger(e.getMessage());
@@ -92,6 +103,9 @@ public class ScriptEngineOperator {
     public Map<String, Object> decodeStatus(ScriptEngine engine, String operateName, String decodeMain, String decodeScript) {
         // 状态格式
         try {
+            // 装载待执行的脚本
+            engine.eval(decodeScript);
+
             // 执行JSP脚本中的函数
             Object data = engine.eval(decodeMain + "();");
 
@@ -105,6 +119,12 @@ public class ScriptEngineOperator {
             result.put(FoxEdgeConstant.OPERATE_NAME_TAG, operateName);
             result.put(FoxEdgeConstant.DATA_TAG, statusValue);
             return result;
+        } catch (InvalidFormatException ife) {
+            // 不打印JSON转换日志
+            throw new ProtocolException(ife.getMessage());
+        } catch (MismatchedInputException mie) {
+            // 不打印JSON转换日志
+            throw new ProtocolException(mie.getMessage());
         } catch (Exception e) {
             // 打印日志
             this.printLogger(e.getMessage());
@@ -115,6 +135,9 @@ public class ScriptEngineOperator {
 
     public Map<String, Object> decodeResult(ScriptEngine engine, String operateName, String decodeMain, String decodeScript) {
         try {
+            // 装载待执行的脚本
+            engine.eval(decodeScript);
+
             // 执行JSP脚本中的函数
             Object data = engine.eval(decodeMain + "();");
 
@@ -126,6 +149,12 @@ public class ScriptEngineOperator {
             result.put(FoxEdgeOperate.result, values);
             return result;
 
+        } catch (InvalidFormatException ife) {
+            // 不打印JSON转换日志
+            throw new ProtocolException(ife.getMessage());
+        } catch (MismatchedInputException mie) {
+            // 不打印JSON转换日志
+            throw new ProtocolException(mie.getMessage());
         } catch (Exception e) {
             // 打印日志
             this.printLogger(e.getMessage());
@@ -136,6 +165,9 @@ public class ScriptEngineOperator {
 
     public Object encode(ScriptEngine engine, String encodeMain, String encodeScript) {
         try {
+            // 装载待执行的脚本
+            engine.eval(encodeScript);
+
             // 执行JSP脚本中的函数
             String out = (String) engine.eval(encodeMain + "();");
             if (out == null) {

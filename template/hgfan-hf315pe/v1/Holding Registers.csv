@@ -1,0 +1,5 @@
+value_name,value_index,bit_index,bit_length,value_type,magnification,determine,remark
+风机速度,21,0,16,int,1,,16位有符号
+风机频率,30,0,16,int,1,,16位有符号
+NTC,31,0,16,int,1,,16位有符号
+风机温度,32,0,16,int,1,,16位有符号

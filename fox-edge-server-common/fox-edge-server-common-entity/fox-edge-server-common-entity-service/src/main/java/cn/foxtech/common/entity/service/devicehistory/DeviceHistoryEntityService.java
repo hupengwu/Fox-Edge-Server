@@ -66,7 +66,7 @@ public class DeviceHistoryEntityService extends LogEntityService {
         }
 
         // 删除旧记录
-        String sql = String.format("DELETE FROM  tb_device_history t order BY t.id LIMIT  %d", sumCount - retainCount);
+        String sql = String.format("DELETE FROM  tb_device_history order BY id LIMIT  %d", sumCount - retainCount);
         mapper.executeDelete(sql);
     }
 }

@@ -197,14 +197,14 @@ public class ServerInitializer {
                                 this.reportService.push(channelName, message);
 
                                 if (this.openLogger) {
-                                    this.console.info("上报报文:" + message);
+                                    this.console.info("上报报文:\n" + message);
                                 }
 
                             } else {
                                 this.reportService.push(channelName, data);
 
                                 if (this.openLogger) {
-                                    this.console.info("串口接收到数据:" + HexUtils.byteArrayToHexString(data));
+                                    this.console.info("串口接收到数据:\n" + HexUtils.byteArrayToHexString(data));
                                 }
                             }
 

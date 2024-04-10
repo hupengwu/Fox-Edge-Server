@@ -82,6 +82,9 @@ public class RepoLocalOperateService {
             if (RepoCompVOFieldConstant.value_comp_type_jsp_decoder.equals(compEntity.getCompType())) {
                 return entity.getEngineType().equals(OperateVOFieldConstant.value_engine_javascript);
             }
+            if (RepoCompVOFieldConstant.value_comp_type_jsn_decoder.equals(compEntity.getCompType())) {
+                return entity.getEngineType().equals(OperateVOFieldConstant.value_engine_jsonscript);
+            }
 
             return false;
 
