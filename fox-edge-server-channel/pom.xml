@@ -20,7 +20,6 @@
         <module>fox-edge-server-channel-common</module>
 
         <!-- 各类channel服务的实现 -->
-        <module>fox-edge-server-channel-bacnet-client</module>
         <module>fox-edge-server-channel-coap-client</module>
         <module>fox-edge-server-channel-opc-ua</module>
         <module>fox-edge-server-channel-tcp-server</module>
