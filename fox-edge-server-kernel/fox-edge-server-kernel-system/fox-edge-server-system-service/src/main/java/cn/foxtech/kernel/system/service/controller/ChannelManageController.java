@@ -117,17 +117,6 @@ public class ChannelManageController {
             channelTypes.add(modelName);
         }
 
-        // 到数据库中查找同类数据：历史上启动过，但现在停止运行的channel进程
-        List<Map<String, Object>> optionList = this.foxSqlService.selectOptionList("tb_channel", "channel_type", false);
-        for (Map<String, Object> process : optionList) {
-            String channelType = (String) process.get("channel_type");
-            if (channelType == null || channelType.isEmpty()) {
-                continue;
-            }
-
-            channelTypes.add(channelType);
-        }
-
         return AjaxResult.success(channelTypes);
     }
 

@@ -86,12 +86,12 @@ public class ScriptEngineOperator {
             result.put(FoxEdgeConstant.DATA_TAG, recordValue);
 
             return result;
-        } catch (InvalidFormatException ife) {
+        } catch (InvalidFormatException e) {
             // 不打印JSON转换日志
-            throw new ProtocolException(ife.getMessage());
-        } catch (MismatchedInputException mie) {
+            throw new ProtocolException(e.getMessage());
+        } catch (MismatchedInputException e) {
             // 不打印JSON转换日志
-            throw new ProtocolException(mie.getMessage());
+            throw new ProtocolException(e.getMessage());
         } catch (Exception e) {
             // 打印日志
             this.printLogger(e.getMessage());

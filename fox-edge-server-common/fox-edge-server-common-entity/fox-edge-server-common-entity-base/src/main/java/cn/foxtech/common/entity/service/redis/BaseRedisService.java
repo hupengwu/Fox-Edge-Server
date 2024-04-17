@@ -304,10 +304,10 @@ public abstract class BaseRedisService {
         }
 
         for (Map.Entry<String, Long> entry : newDatas.entrySet()) {
-            long newValue = entry.getValue();
-            long oldValue = oldDatas.get(entry.getKey());
+            Long newValue = entry.getValue();
+            Long oldValue = oldDatas.get(entry.getKey());
 
-            if (newValue != oldValue) {
+            if (!newValue.equals(oldValue)) {
                 diff.put(entry.getKey(), entry.getValue());
             }
         }
