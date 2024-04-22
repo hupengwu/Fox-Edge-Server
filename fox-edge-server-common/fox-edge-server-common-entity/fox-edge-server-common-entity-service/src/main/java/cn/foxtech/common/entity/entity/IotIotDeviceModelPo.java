@@ -9,17 +9,17 @@ import java.util.List;
 
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
-@TableName("tb_device_model")
-public class DeviceModelPo extends DeviceModelBase {
+@TableName("tb_iot_device_model")
+public class IotIotDeviceModelPo extends IotDeviceModelBase {
     /**
-     * 模板参数
+     * 业务参数（描述类的信息）：各厂家的各自定义，差异很大，所以用可变的json
      */
-    private String modelParam;
+    private String serviceParam;
 
     /**
-     * 扩展参数
+     * 模型结构（模型信息）:模型结构的描述信息
      */
-    private String extendParam;
+    private String modelSchema;
 
     /**
      * 获取业务值
@@ -28,8 +28,8 @@ public class DeviceModelPo extends DeviceModelBase {
      */
     public List<Object> makeServiceValueList() {
         List<Object> list = super.makeServiceValueList();
-        list.add(this.modelParam);
-        list.add(this.extendParam);
+        list.add(this.serviceParam);
+        list.add(this.modelSchema);
 
 
         return list;

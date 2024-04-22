@@ -8,6 +8,7 @@ import cn.foxtech.device.script.engine.ScriptEngineInitialize;
 import cn.foxtech.device.service.controller.DeviceExecuteController;
 import cn.foxtech.device.service.controller.DeviceReportController;
 import cn.foxtech.device.service.scheduler.EntityManageScheduler;
+import cn.foxtech.device.service.context.DeviceTemplateContext;
 import cn.foxtech.device.service.service.EntityManageService;
 import cn.foxtech.device.service.service.MethodEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class Initialize implements CommandLineRunner {
      */
     @Autowired
     private RedisConsoleService logger;
+
+    @Autowired
+    private DeviceTemplateContext deviceTemplateContext;
 
     @Autowired
     private EntityManageService entityManageService;
@@ -63,6 +67,10 @@ public class Initialize implements CommandLineRunner {
         // 从数据库和redis中，装载数据实体
         this.entityManageService.instance();
         this.entityManageService.initLoadEntity();
+
+        // 初始化上下文：为解码器提供设备服务的全局信息
+        this.deviceTemplateContext.initialize();
+
 
         // 初始化配置参数
         this.configService.initialize("serverConfig", "serverConfig.json");

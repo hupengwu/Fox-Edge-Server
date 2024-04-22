@@ -69,6 +69,40 @@ public class JDefaultTemplate implements ITemplate {
         this.operate.decoderParam.table = table;
     }
 
+    /**
+     * 从CSV文件中装载映射表
+     *
+     * @param table csv表名称
+     */
+    public void loadJsnModel(String table) {
+        File dir = new File("");
+
+        File file = new File(dir.getAbsolutePath() + "/template/" + table);
+        CsvReader csvReader = CsvUtil.getReader();
+        List<JDecoderValueParam> rows = csvReader.read(ResourceUtil.getReader(file.getPath(), CharsetUtil.CHARSET_GBK), JDecoderValueParam.class);
+
+        // 将文件记录组织到map中
+        Map<String, JDecoderValueParam> nameMap = new HashMap<>();
+        Map<OpcUaNodeId, JDecoderValueParam> nodeMap = new HashMap<>();
+        for (JDecoderValueParam jDecoderValueParam : rows) {
+            if (MethodUtils.hasEmpty(jDecoderValueParam.object_name, jDecoderValueParam.node_id_namespace, jDecoderValueParam.node_id_identifier)) {
+                continue;
+            }
+
+            // 构造出nodeId
+            OpcUaNodeId nodeId = new OpcUaNodeId();
+            nodeId.setNamespace(jDecoderValueParam.node_id_namespace);
+            nodeId.setIdentifier(jDecoderValueParam.node_id_identifier);
+
+            nameMap.put(jDecoderValueParam.getObject_name(), jDecoderValueParam);
+            nodeMap.put(nodeId, jDecoderValueParam);
+        }
+
+        this.operate.decoderParam.nameMap = nameMap;
+        this.operate.decoderParam.nodeMap = nodeMap;
+        this.operate.decoderParam.table = table;
+    }
+
     public OpcUaNodeId encodeNodeId(String objectName) {
         JDecoderValueParam jDecoderValueParam = this.operate.decoderParam.nameMap.get(objectName);
         if (jDecoderValueParam == null) {

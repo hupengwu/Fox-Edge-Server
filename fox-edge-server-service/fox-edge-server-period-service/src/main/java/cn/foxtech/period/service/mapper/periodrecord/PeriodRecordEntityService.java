@@ -71,7 +71,7 @@ public class PeriodRecordEntityService extends BaseEntityService {
         }
 
         // 删除旧记录
-        String sql = String.format("DELETE FROM  tb_period_record t WHERE task_name = '%s' order BY t.id LIMIT  %d", sumCount - retainCount);
+        String sql = String.format("DELETE FROM  tb_period_record WHERE task_name = '%s' order BY id LIMIT  %d", sumCount - retainCount);
         mapper.executeDelete(sql);
     }
 }

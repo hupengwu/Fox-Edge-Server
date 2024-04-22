@@ -276,7 +276,7 @@ public class PeriodRecordService extends PeriodTaskService {
         }
 
         // 删除旧记录
-        String sql = String.format("DELETE FROM  tb_period_record t WHERE task_id = %d order BY t.id LIMIT  %d", taskId, sumCount - maxBatch);
+        String sql = String.format("DELETE FROM  tb_period_record  WHERE task_id = %d order BY id LIMIT  %d", taskId, sumCount - maxBatch);
         this.mapper.executeDelete(sql);
     }
 

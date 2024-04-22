@@ -25,11 +25,22 @@ public class S7PLCWriteData {
         String templateName = (String) param.get("templateName");
 
         // 简单校验参数
-        if (MethodUtils.hasNull(objectValues, templateName, tableName)) {
-            throw new ProtocolException("参数不能为空:objectNames, templateName, tableName");
+        if (MethodUtils.hasNull(objectValues)) {
+            throw new ProtocolException("参数不能为空:objectNames");
         }
 
-        JDefaultTemplate template = TemplateFactory.getTemplate("fox-edge-server-protocol-s7plc").getTemplate(templateName, tableName, JDefaultTemplate.class);
+        // 简单校验参数
+        if (templateName == null && tableName == null) {
+            throw new ProtocolException("输入参数不能为空: templateName 或 tableName");
+        }
+        JDefaultTemplate template = null;
+        if (!MethodUtils.hasEmpty(tableName)) {
+            template = TemplateFactory.getTemplate("fox-edge-server-protocol-s7plc").getTemplate("csv", tableName, JDefaultTemplate.class);
+        } else if (!MethodUtils.hasEmpty(templateName)) {
+            template = TemplateFactory.getTemplate("fox-edge-server-protocol-s7plc").getTemplate("jsn", templateName, JDefaultTemplate.class);
+        }
+
+
         List<Map<String, Object>> params = template.encodeWriteObjects(objectValues);
 
         Map<String, Object> result = new HashMap<>();

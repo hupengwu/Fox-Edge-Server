@@ -13,7 +13,7 @@ public class Test {
         byte[] pdu = HexUtils.hexStringToByteArray("F4 F5 00 00 00 00 01 F4 F4 F4 FB");
         pdu = HexUtils.hexStringToByteArray("0A 1B 4A 01 1B 39");
 
-        print("31 35 32 B7 C2 D8 BB 31 32 30 FA BB F7 D6 31 30 53 11 25 10 22 B5 3E");
+        print("2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 0D 0A 32 30 32 34 C4 EA 30 34 D4 C2 31 37 C8 D5 20 31 31 CA B1 30 35 B7 D6 0D 0D 31 2F 33 20 0D CA D6 B6 AF B1 A8 BE AF B0 B4 C5 A5 B1 A8 BB F0 BE AF 0D \n ");
 
 //        PduEntity entity = new PduEntity();
 //        entity.setData(new byte[3]);

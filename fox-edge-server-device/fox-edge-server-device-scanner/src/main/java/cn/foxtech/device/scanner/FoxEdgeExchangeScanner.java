@@ -33,7 +33,7 @@ public class FoxEdgeExchangeScanner {
             for (Class<?> aClass : classSet) {
                 String name = aClass.getName();
 
-                logger.info("load class:" + name);
+            //    logger.info("load class:" + name);
 
                 // 是否为解码器类型
                 if (!aClass.isAnnotationPresent(FoxEdgeDeviceType.class)) {

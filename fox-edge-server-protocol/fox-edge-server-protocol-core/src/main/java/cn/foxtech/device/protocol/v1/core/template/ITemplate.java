@@ -17,4 +17,11 @@ public interface ITemplate {
      * @param table 表名称
      */
     void loadCsvFile(String table);
+
+    /**
+     * 装载JSON数据模型
+     *
+     * @param table 表名称
+     */
+    void loadJsnModel(String table);
 }

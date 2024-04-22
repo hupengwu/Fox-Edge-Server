@@ -3,7 +3,7 @@ package cn.foxtech.huawei.iotda.service.service;
 import cn.foxtech.common.entity.constant.DeviceValueVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.DeviceEntity;
-import cn.foxtech.common.entity.entity.DeviceModelEntity;
+import cn.foxtech.common.entity.entity.IotDeviceModelEntity;
 import cn.foxtech.common.entity.entity.DeviceValueEntity;
 import cn.foxtech.common.entity.service.redis.RedisReader;
 import cn.foxtech.common.utils.DifferUtils;
@@ -218,9 +218,9 @@ public class DevValueExecutor {
 
         // 从设备模型之中，取出模型数据
         Map<String, Map<String, Object>> modelMap = new HashMap<>();
-        List<BaseEntity> entityList = this.entityManageService.getEntityList(DeviceModelEntity.class);
+        List<BaseEntity> entityList = this.entityManageService.getEntityList(IotDeviceModelEntity.class);
         for (BaseEntity entity : entityList) {
-            DeviceModelEntity deviceModelEntity = (DeviceModelEntity) entity;
+            IotDeviceModelEntity deviceModelEntity = (IotDeviceModelEntity) entity;
             if (!deviceModelEntity.getModelType().equals(modelType)) {
                 continue;
             }

@@ -40,7 +40,7 @@ public class Initialize implements CommandLineRunner {
         Set<String> reader = new HashSet<>();
         consumer.add(ConfigEntity.class.getSimpleName());
         consumer.add(ExtendConfigEntity.class.getSimpleName());
-        consumer.add(DeviceModelEntity.class.getSimpleName());
+        consumer.add(IotDeviceModelEntity.class.getSimpleName());
         consumer.add(DeviceEntity.class.getSimpleName());
         consumer.add(DeviceStatusEntity.class.getSimpleName());
         reader.add(DeviceValueEntity.class.getSimpleName());

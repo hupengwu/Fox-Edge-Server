@@ -1,9 +1,9 @@
-package cn.foxtech.common.entity.service.devicemodel;
+package cn.foxtech.common.entity.service.iotdevicemodel;
 
 
 import cn.foxtech.common.entity.entity.BaseEntity;
-import cn.foxtech.common.entity.entity.DeviceModelEntity;
-import cn.foxtech.common.entity.entity.DeviceModelPo;
+import cn.foxtech.common.entity.entity.IotDeviceModelEntity;
+import cn.foxtech.common.entity.entity.IotIotDeviceModelPo;
 import cn.foxtech.common.entity.service.mybatis.BaseEntityService;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,9 +16,9 @@ import java.util.List;
 
 @Component
 @Getter(value = AccessLevel.PUBLIC)
-public class DeviceModelEntityService extends BaseEntityService {
+public class IotDeviceModelEntityService extends BaseEntityService {
     @Autowired(required = false)
-    private DeviceModelMapper mapper;
+    private IotDeviceModelEntityMapper mapper;
 
     /**
      * 子类将自己的mapper绑定到父类上
@@ -29,12 +29,12 @@ public class DeviceModelEntityService extends BaseEntityService {
 
     @Override
     public BaseEntity selectEntity(Long id) {
-        DeviceModelPo po = (DeviceModelPo) super.selectEntity(id);
+        IotIotDeviceModelPo po = (IotIotDeviceModelPo) super.selectEntity(id);
         if (po == null) {
             return null;
         }
 
-        return DeviceModelEntityMaker.makePo2Entity(po);
+        return IotDeviceModelEntityMaker.makePo2Entity(po);
     }
 
     @Override
@@ -43,9 +43,9 @@ public class DeviceModelEntityService extends BaseEntityService {
 
         List<BaseEntity> entityList = new ArrayList<>();
         for (BaseEntity entity : poList) {
-            DeviceModelPo po = (DeviceModelPo) entity;
+            IotIotDeviceModelPo po = (IotIotDeviceModelPo) entity;
 
-            DeviceModelEntity Device = DeviceModelEntityMaker.makePo2Entity(po);
+            IotDeviceModelEntity Device = IotDeviceModelEntityMaker.makePo2Entity(po);
             entityList.add(Device);
         }
 
@@ -62,9 +62,9 @@ public class DeviceModelEntityService extends BaseEntityService {
 
         List<BaseEntity> entityList = new ArrayList<>();
         for (BaseEntity entity : poList) {
-            DeviceModelPo po = (DeviceModelPo) entity;
+            IotIotDeviceModelPo po = (IotIotDeviceModelPo) entity;
 
-            DeviceModelEntity Device = DeviceModelEntityMaker.makePo2Entity(po);
+            IotDeviceModelEntity Device = IotDeviceModelEntityMaker.makePo2Entity(po);
             entityList.add(Device);
         }
 
@@ -78,27 +78,27 @@ public class DeviceModelEntityService extends BaseEntityService {
      */
     @Override
     public void insertEntity(BaseEntity entity) {
-        DeviceModelPo DeviceTemplatePo = DeviceModelEntityMaker.makeEntity2Po((DeviceModelEntity) entity);
-        super.insertEntity(DeviceTemplatePo);
+        IotIotDeviceModelPo IotDeviceModelPo = IotDeviceModelEntityMaker.makeEntity2Po((IotDeviceModelEntity) entity);
+        super.insertEntity(IotDeviceModelPo);
 
-        entity.setId(DeviceTemplatePo.getId());
-        entity.setCreateTime(DeviceTemplatePo.getCreateTime());
-        entity.setUpdateTime(DeviceTemplatePo.getUpdateTime());
+        entity.setId(IotDeviceModelPo.getId());
+        entity.setCreateTime(IotDeviceModelPo.getCreateTime());
+        entity.setUpdateTime(IotDeviceModelPo.getUpdateTime());
     }
 
     @Override
     public void updateEntity(BaseEntity entity) {
-        DeviceModelPo DeviceTemplatePo = DeviceModelEntityMaker.makeEntity2Po((DeviceModelEntity) entity);
-        super.updateEntity(DeviceTemplatePo);
+        IotIotDeviceModelPo IotDeviceModelPo = IotDeviceModelEntityMaker.makeEntity2Po((IotDeviceModelEntity) entity);
+        super.updateEntity(IotDeviceModelPo);
 
-        entity.setId(DeviceTemplatePo.getId());
-        entity.setCreateTime(DeviceTemplatePo.getCreateTime());
-        entity.setUpdateTime(DeviceTemplatePo.getUpdateTime());
+        entity.setId(IotDeviceModelPo.getId());
+        entity.setCreateTime(IotDeviceModelPo.getCreateTime());
+        entity.setUpdateTime(IotDeviceModelPo.getUpdateTime());
     }
 
     @Override
     public int deleteEntity(BaseEntity entity) {
-        DeviceModelPo DeviceTemplatePo = DeviceModelEntityMaker.makeEntity2Po((DeviceModelEntity) entity);
-        return super.deleteEntity(DeviceTemplatePo);
+        IotIotDeviceModelPo IotDeviceModelPo = IotDeviceModelEntityMaker.makeEntity2Po((IotDeviceModelEntity) entity);
+        return super.deleteEntity(IotDeviceModelPo);
     }
 }

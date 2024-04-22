@@ -79,15 +79,24 @@ public class ModBusProtocolReadRegisters {
         Integer regAddr = (Integer) param.get("regAddr");
         Integer regCnt = (Integer) (param.get("regCnt"));
         String modbusMode = (String) param.get("modbusMode");
-        String templateName = (String) param.get("templateName");
+        String modelName = (String) param.get("modelName");
         String tableName = (String) param.get("tableName");
 
         // 检查输入参数
-        if (MethodUtils.hasEmpty(devAddr, regAddr, regCnt, modbusMode, templateName, tableName)) {
-            throw new ProtocolException("输入参数不能为空:devAddr, regAddr, regCnd, modbusMode, templateName, tableName");
+        if (MethodUtils.hasEmpty(devAddr, regAddr, regCnt, modbusMode)) {
+            throw new ProtocolException("输入参数不能为空:devAddr, regAddr, regCnd, modbusMode");
         }
 
-        JReadRegistersTemplate template = TemplateFactory.getTemplate("fox-edge-server-protocol-modbus").getTemplate(templateName, tableName, JReadRegistersTemplate.class);
+        if (modelName == null && tableName == null) {
+            throw new ProtocolException("输入参数不能为空: templateName 或 tableName");
+        }
+        JReadRegistersTemplate template = null;
+        if (!MethodUtils.hasEmpty(tableName)) {
+            template = TemplateFactory.getTemplate("fox-edge-server-protocol-modbus").getTemplate("csv", tableName, JReadRegistersTemplate.class);
+        } else if (!MethodUtils.hasEmpty(modelName)) {
+            template = TemplateFactory.getTemplate("fox-edge-server-protocol-modbus").getTemplate("jsn", modelName, JReadRegistersTemplate.class);
+        }
+
 
         // 确定命令字
         Byte func = 0;

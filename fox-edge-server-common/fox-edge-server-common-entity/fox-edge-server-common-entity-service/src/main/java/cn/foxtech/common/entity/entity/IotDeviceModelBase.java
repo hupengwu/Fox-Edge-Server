@@ -10,21 +10,21 @@ import java.util.List;
 
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
-public class DeviceModelBase extends BaseEntity {
+public class IotDeviceModelBase extends BaseEntity {
     /**
-     * 模板名称
+     * 模型名称
      */
     private String modelName;
 
     /**
-     * 设备类型
+     * 模型类型：设备的属性、设备、操作、事件等模型分类，比如设备属性
      */
-    private String deviceType;
+    private String modelType;
 
     /**
-     * 设备厂商
+     * 提供商：定义这个模型的企业，比如华为、腾讯
      */
-    private String manufacturer;
+    private String provider;
 
     /**
      * 业务Key
@@ -57,18 +57,18 @@ public class DeviceModelBase extends BaseEntity {
      */
     public List<Object> makeServiceValueList() {
         List<Object> list = new ArrayList<>();
-        list.add(this.deviceType);
-        list.add(this.manufacturer);
+        list.add(this.modelType);
+        list.add(this.provider);
         return list;
     }
 
-    public void bind(DeviceModelBase other) {
+    public void bind(IotDeviceModelBase other) {
         this.setId(other.getId());
         this.setCreateTime(other.getCreateTime());
         this.setUpdateTime(other.getUpdateTime());
 
         this.modelName = other.modelName;
-        this.deviceType = other.deviceType;
-        this.manufacturer = other.manufacturer;
+        this.modelType = other.modelType;
+        this.provider = other.provider;
     }
 }

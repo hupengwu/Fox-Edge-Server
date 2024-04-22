@@ -1,5 +1,6 @@
 package cn.foxtech.device.protocol.v1.modbus.template;
 
+import cn.foxtech.device.protocol.v1.core.context.ApplicationContext;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.core.template.ITemplate;
 import cn.foxtech.device.protocol.v1.modbus.core.ModBusWriteRegistersRequest;
@@ -12,6 +13,7 @@ import lombok.Data;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,8 +57,86 @@ public class JReadRegistersTemplate implements ITemplate {
             map.put(jDecoderValueParam.getValue_name(), jDecoderValueParam);
         }
 
+
         this.operate.decoder_param.valueMap = map;
         this.operate.decoder_param.table = table;
+        this.operate.decoder_param.updateTime = 0;
+        this.operate.decoder_param.sourceType = "csv";
+    }
+
+    public void loadJsnModel(String modelName) {
+        // 从进程的上下文中，获得设备模型信息
+        Map<String, Object> deviceTemplateEntity = ApplicationContext.getDeviceModels(modelName);
+
+        // 检测：上下文侧的时间戳和当前模型的时间戳是否一致
+        Object updateTime = deviceTemplateEntity.getOrDefault("updateTime", 0L);
+        if (this.operate.decoder_param.updateTime.equals(updateTime)) {
+            return;
+        }
+
+        // 取出JSON模型的数据列表
+        Map<String, Object> modelParam = (Map<String, Object>) deviceTemplateEntity.getOrDefault("modelParam", new HashMap<>());
+        List<Map<String, Object>> rows = (List<Map<String, Object>>) modelParam.getOrDefault("list", new ArrayList<>());
+
+        // 转换成当前的JDecoderValueParam对象
+        Map<String, JDecoderValueParam> map = new HashMap<>();
+        for (Map<String, Object> row : rows) {
+            if (row.size() < 7) {
+                continue;
+            }
+
+            JDecoderValueParam jDecoderValueParam = new JDecoderValueParam();
+
+            jDecoderValueParam.value_name = (String) row.get("value_name");
+            jDecoderValueParam.value_index = getInteger(row.get("value_index"));
+            jDecoderValueParam.bit_index = getInteger(row.get("bit_index"));
+            jDecoderValueParam.bit_length = getInteger(row.get("bit_length"));
+            jDecoderValueParam.value_type = (String) row.get("value_type");
+            jDecoderValueParam.magnification = getDouble(row.get("magnification"));
+            jDecoderValueParam.determine = (String) row.get("determine");
+
+
+            map.put(jDecoderValueParam.getValue_name(), jDecoderValueParam);
+        }
+
+        // 保存信息
+        this.operate.decoder_param.valueMap = map;
+        this.operate.decoder_param.table = modelName;
+        this.operate.decoder_param.updateTime = updateTime;
+        this.operate.decoder_param.sourceType = "jsn";
+    }
+
+    private Integer getInteger(Object value) {
+        if (value == null) {
+            return null;
+        }
+
+        if (value instanceof String) {
+            return Integer.parseInt((String) value);
+        }
+        if (value instanceof Integer) {
+            return (Integer) value;
+        }
+
+        return null;
+    }
+
+    private Double getDouble(Object value) {
+        if (value == null) {
+            return null;
+        }
+
+        if (value instanceof String) {
+            return Double.parseDouble((String) value);
+        }
+        if (value instanceof Double) {
+            return (Double) value;
+        }
+        if (value instanceof Float) {
+            return ((Float) value).doubleValue();
+        }
+
+        return null;
     }
 
 
@@ -196,6 +276,8 @@ public class JReadRegistersTemplate implements ITemplate {
 
     @Data
     static public class JDecoderParam implements Serializable {
+        private Object updateTime = 0;
+        private String sourceType = "csv";
         private String table;
         private Map<String, JDecoderValueParam> valueMap = new HashMap<>();
     }

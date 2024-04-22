@@ -4,22 +4,21 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
-public class DeviceModelEntity extends DeviceModelBase {
+public class IotDeviceModelEntity extends IotDeviceModelBase {
     /**
-     * 模板参数
+     * 业务参数（描述类的信息）：各厂家的各自定义，差异很大，所以用可变的json
      */
-    private Map<String, Object> modelParam = new HashMap<>();
+    private Map<String, Object> serviceParam = new HashMap<>();
     /**
-     * 扩展参数
+     * 模型结构（模型信息）:模型结构的描述信息
      */
-    private Map<String, Object> extendParam = new HashMap<>();
+    private Map<String, Object> modelSchema = new HashMap<>();
 
     /**
      * 业务Key
@@ -40,16 +39,16 @@ public class DeviceModelEntity extends DeviceModelBase {
      */
     public List<Object> makeServiceValueList() {
         List<Object> list = super.makeServiceValueList();
-        list.add(this.modelParam);
-        list.add(this.extendParam);
+        list.add(this.serviceParam);
+        list.add(this.modelSchema);
 
         return list;
     }
 
-    public void bind(DeviceModelEntity other) {
+    public void bind(IotDeviceModelEntity other) {
         super.bind(other);
 
-        this.modelParam = other.modelParam;
-        this.extendParam = other.extendParam;
+        this.serviceParam = other.serviceParam;
+        this.modelSchema = other.modelSchema;
     }
 }

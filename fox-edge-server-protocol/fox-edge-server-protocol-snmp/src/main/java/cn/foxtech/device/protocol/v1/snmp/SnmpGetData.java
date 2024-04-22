@@ -4,8 +4,8 @@ import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.core.template.TemplateFactory;
-import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 import cn.foxtech.device.protocol.v1.snmp.template.JDefaultTemplate;
+import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,12 +30,21 @@ public class SnmpGetData {
         String templateName = (String) param.get("templateName");
 
         // 简单校验参数
-        if (MethodUtils.hasNull(objectNameList, templateName, tableName)) {
-            throw new ProtocolException("参数不能为空:objectNameList, templateName, tableName");
+        if (MethodUtils.hasNull(objectNameList)) {
+            throw new ProtocolException("参数不能为空:objectNameList");
         }
 
+        // 简单校验参数
+        if (templateName == null && tableName == null) {
+            throw new ProtocolException("输入参数不能为空: templateName 或 tableName");
+        }
+        JDefaultTemplate template = null;
+        if (!MethodUtils.hasEmpty(tableName)) {
+            template = TemplateFactory.getTemplate("fox-edge-server-protocol-snmp").getTemplate("csv", tableName, JDefaultTemplate.class);
+        } else if (!MethodUtils.hasEmpty(templateName)) {
+            template = TemplateFactory.getTemplate("fox-edge-server-protocol-snmp").getTemplate("jsn", templateName, JDefaultTemplate.class);
+        }
 
-        JDefaultTemplate template = TemplateFactory.getTemplate("fox-edge-server-protocol-snmp").getTemplate(templateName, tableName, JDefaultTemplate.class);
         List<String> oidList = template.encodeOIDList(objectNameList);
 
         Map<String, Object> result = new HashMap<>();
@@ -59,11 +68,16 @@ public class SnmpGetData {
 
 
         // 简单校验参数
-        if (MethodUtils.hasNull(templateName, tableName)) {
-            throw new ProtocolException("参数不能为空:templateName, tableName");
+        if (templateName == null && tableName == null) {
+            throw new ProtocolException("输入参数不能为空: templateName 或 tableName");
+        }
+        JDefaultTemplate template = null;
+        if (!MethodUtils.hasEmpty(templateName)) {
+            template = TemplateFactory.getTemplate("fox-edge-server-protocol-snmp").getTemplate("jsn", templateName, JDefaultTemplate.class);
+        } else if (!MethodUtils.hasEmpty(tableName)) {
+            template = TemplateFactory.getTemplate("fox-edge-server-protocol-snmp").getTemplate("csv", tableName, JDefaultTemplate.class);
         }
 
-        JDefaultTemplate template = TemplateFactory.getTemplate("fox-edge-server-protocol-snmp").getTemplate(templateName, tableName, JDefaultTemplate.class);
         return template.decodeValue(respond);
     }
 }

@@ -1,8 +1,8 @@
 package cn.foxtech.kernel.system.service.controller;
 
-import cn.foxtech.common.entity.constant.DeviceModelVOFieldConstant;
+import cn.foxtech.common.entity.constant.IotDeviceModelVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
-import cn.foxtech.common.entity.entity.DeviceModelEntity;
+import cn.foxtech.common.entity.entity.IotDeviceModelEntity;
 import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
@@ -29,7 +29,7 @@ public class DeviceModelManageController {
 
     @GetMapping("entities")
     public AjaxResult selectEntityList() {
-        List<BaseEntity> entityList = this.entityManageService.getEntityList(DeviceModelEntity.class);
+        List<BaseEntity> entityList = this.entityManageService.getEntityList(IotDeviceModelEntity.class);
         return AjaxResult.success(EntityVOBuilder.buildVOList(entityList));
     }
 
@@ -52,19 +52,19 @@ public class DeviceModelManageController {
      */
     private AjaxResult selectEntityList(Map<String, Object> body, boolean isPage) {
         try {
-            List<BaseEntity> entityList = this.entityManageService.getEntityList(DeviceModelEntity.class, (Object value) -> {
-                DeviceModelEntity entity = (DeviceModelEntity) value;
+            List<BaseEntity> entityList = this.entityManageService.getEntityList(IotDeviceModelEntity.class, (Object value) -> {
+                IotDeviceModelEntity entity = (IotDeviceModelEntity) value;
 
                 boolean result = true;
 
-                if (body.containsKey(DeviceModelVOFieldConstant.field_model_name)) {
-                    result = entity.getModelName().contains((String) body.get(DeviceModelVOFieldConstant.field_model_name));
+                if (body.containsKey(IotDeviceModelVOFieldConstant.field_model_name)) {
+                    result = entity.getModelName().contains((String) body.get(IotDeviceModelVOFieldConstant.field_model_name));
                 }
-                if (body.containsKey(DeviceModelVOFieldConstant.field_model_type)) {
-                    result &= entity.getModelType().equals(body.get(DeviceModelVOFieldConstant.field_model_type));
+                if (body.containsKey(IotDeviceModelVOFieldConstant.field_model_type)) {
+                    result &= entity.getModelType().equals(body.get(IotDeviceModelVOFieldConstant.field_model_type));
                 }
-                if (body.containsKey(DeviceModelVOFieldConstant.field_provider)) {
-                    result &= entity.getProvider().equals(body.get(DeviceModelVOFieldConstant.field_provider));
+                if (body.containsKey(IotDeviceModelVOFieldConstant.field_provider)) {
+                    result &= entity.getProvider().equals(body.get(IotDeviceModelVOFieldConstant.field_provider));
                 }
 
                 return result;
@@ -87,7 +87,7 @@ public class DeviceModelManageController {
         if (id == null) {
             return AjaxResult.error("输入的id为null!");
         }
-        DeviceModelEntity exist = this.entityManageService.getEntity(id, DeviceModelEntity.class);
+        IotDeviceModelEntity exist = this.entityManageService.getEntity(id, IotDeviceModelEntity.class);
         if (exist == null) {
             return AjaxResult.error("实体不存在");
         }
@@ -114,11 +114,11 @@ public class DeviceModelManageController {
     private AjaxResult insertOrUpdate(Map<String, Object> params) {
         try {
             // 提取业务参数
-            String modelType = (String) params.get(DeviceModelVOFieldConstant.field_model_type);
-            String modelName = (String) params.get(DeviceModelVOFieldConstant.field_model_name);
-            String provider = (String) params.get(DeviceModelVOFieldConstant.field_provider);
-            Map<String, Object> serviceParam = (Map<String, Object>) params.get(DeviceModelVOFieldConstant.field_service_param);
-            Map<String, Object> modelSchema = (Map<String, Object>) params.get(DeviceModelVOFieldConstant.field_model_schema);
+            String modelType = (String) params.get(IotDeviceModelVOFieldConstant.field_model_type);
+            String modelName = (String) params.get(IotDeviceModelVOFieldConstant.field_model_name);
+            String provider = (String) params.get(IotDeviceModelVOFieldConstant.field_provider);
+            Map<String, Object> serviceParam = (Map<String, Object>) params.get(IotDeviceModelVOFieldConstant.field_service_param);
+            Map<String, Object> modelSchema = (Map<String, Object>) params.get(IotDeviceModelVOFieldConstant.field_model_schema);
 
             // 简单校验参数
             if (MethodUtils.hasNull(modelType, modelName, provider, serviceParam, modelSchema)) {
@@ -126,7 +126,7 @@ public class DeviceModelManageController {
             }
 
             // 构造作为参数的实体
-            DeviceModelEntity entity = new DeviceModelEntity();
+            IotDeviceModelEntity entity = new IotDeviceModelEntity();
             entity.setModelName(modelName);
             entity.setModelType(modelType);
             entity.setProvider(provider);
@@ -141,7 +141,7 @@ public class DeviceModelManageController {
 
             // 新增/修改实体：参数不包含id为新增，包含为修改
             if (params.get("id") == null) {
-                DeviceModelEntity exist = this.entityManageService.getEntity(entity.makeServiceKey(), DeviceModelEntity.class);
+                IotDeviceModelEntity exist = this.entityManageService.getEntity(entity.makeServiceKey(), IotDeviceModelEntity.class);
                 if (exist != null) {
                     return AjaxResult.error("实体已存在");
                 }
@@ -150,7 +150,7 @@ public class DeviceModelManageController {
                 return AjaxResult.success();
             } else {
                 Long id = Long.parseLong(params.get("id").toString());
-                DeviceModelEntity exist = this.entityManageService.getEntity(id, DeviceModelEntity.class);
+                IotDeviceModelEntity exist = this.entityManageService.getEntity(id, IotDeviceModelEntity.class);
                 if (exist == null) {
                     return AjaxResult.error("实体不存在");
                 }
@@ -167,7 +167,7 @@ public class DeviceModelManageController {
 
     @DeleteMapping("entity")
     public AjaxResult deleteEntity(@QueryParam("id") Long id) {
-        DeviceModelEntity exist = this.entityManageService.getEntity(id, DeviceModelEntity.class);
+        IotDeviceModelEntity exist = this.entityManageService.getEntity(id, IotDeviceModelEntity.class);
         if (exist == null) {
             return AjaxResult.error("实体不存在");
         }
@@ -185,7 +185,7 @@ public class DeviceModelManageController {
                 continue;
             }
 
-            this.entityManageService.deleteEntity(Long.parseLong(id), DeviceModelEntity.class);
+            this.entityManageService.deleteEntity(Long.parseLong(id), IotDeviceModelEntity.class);
         }
 
         return AjaxResult.success();

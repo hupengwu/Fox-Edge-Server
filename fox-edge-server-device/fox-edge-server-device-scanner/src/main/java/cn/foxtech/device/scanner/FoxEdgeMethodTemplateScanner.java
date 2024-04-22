@@ -1,10 +1,7 @@
 package cn.foxtech.device.scanner;
 
 import cn.foxtech.common.utils.reflect.JarLoaderUtils;
-import cn.foxtech.device.protocol.v1.core.method.FoxEdgeExchangeMethod;
 import cn.foxtech.device.protocol.v1.core.method.FoxEdgeMethodTemplate;
-import cn.foxtech.device.protocol.v1.core.method.FoxEdgePublishMethod;
-import cn.foxtech.device.protocol.v1.core.method.FoxEdgeReportMethod;
 import org.apache.log4j.Logger;
 
 import java.util.List;

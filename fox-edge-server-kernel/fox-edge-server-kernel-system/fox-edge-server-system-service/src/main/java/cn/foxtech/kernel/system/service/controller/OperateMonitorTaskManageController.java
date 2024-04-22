@@ -178,7 +178,7 @@ public class OperateMonitorTaskManageController {
             String templateName = (String) params.get(OperateMonitorTaskVOFieldConstant.field_template_name);
             String manufacturer = (String) params.get(OperateMonitorTaskVOFieldConstant.field_manufacturer);
             String deviceType = (String) params.get(OperateMonitorTaskVOFieldConstant.field_device_type);
-            List<Map<String, Object>> operateParam = (List<Map<String, Object>>) params.get(OperateMonitorTaskVOFieldConstant.field_template_param);
+            List<Map<String, Object>> operateParam = (List<Map<String, Object>>) params.get(OperateMonitorTaskVOFieldConstant.field_model_param);
             List<Object> deviceIds = (List<Object>) params.get(OperateMonitorTaskVOFieldConstant.field_device_ids);
             // 简单校验参数
             if (MethodUtils.hasNull(templateName, manufacturer, deviceType, deviceIds, operateParam)) {

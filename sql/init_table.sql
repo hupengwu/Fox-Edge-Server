@@ -116,17 +116,18 @@ CREATE TABLE IF NOT EXISTS `tb_device_mapper` (
 DROP TABLE IF EXISTS `tb_device_model`;
 CREATE TABLE IF NOT EXISTS `tb_device_model` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '序号',
-  `model_name` varchar(50)  DEFAULT NULL COMMENT '模型名称',
-  `model_type` varchar(50)  DEFAULT NULL COMMENT '模型类型（设备属性/设备操作）',
-  `provider` varchar(50)  DEFAULT NULL COMMENT '模型提供方（平台厂商）',
-  `service_param` json DEFAULT NULL COMMENT '业务参数（描述类的信息）',
-  `model_schema` json DEFAULT NULL COMMENT '模型结构（模型信息）',
+  `model_name` varchar(50) NOT NULL COMMENT '设备模型名称',
+  `device_type` varchar(50) NOT NULL COMMENT '设备类型',
+  `manufacturer` varchar(50) NOT NULL COMMENT '制造商',
+  `model_param` json DEFAULT NULL COMMENT '引擎参数（JSON参数）',
+  `extend_param` json DEFAULT NULL COMMENT '扩展参数',
   `create_time` bigint DEFAULT NULL COMMENT '创建时间',
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `model_name` (`model_name`),
-  KEY `model_provider` (`provider`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=5  COMMENT='设备的物模型';
+  UNIQUE KEY `template_name` (`model_name`) USING BTREE,
+  KEY `device_type` (`device_type`),
+  KEY `manufacturer` (`manufacturer`)
+) ENGINE=InnoDB AUTO_INCREMENT=1322 COMMENT='将原来的CSV文件，进行JSON化，那么能够应用模板的解码器们，就有了动态配置的能力';
 
 -- 数据导出被取消选择。
 
@@ -195,6 +196,24 @@ CREATE TABLE IF NOT EXISTS `tb_extend` (
   UNIQUE KEY `extend_name` (`extend_name`),
   KEY `extend_type` (`extend_type`)
 ) ENGINE=InnoDB AUTO_INCREMENT=31 ;
+
+-- 数据导出被取消选择。
+
+-- 导出  表 fox_edge.tb_iot_device_model 结构
+DROP TABLE IF EXISTS `tb_iot_device_model`;
+CREATE TABLE IF NOT EXISTS `tb_iot_device_model` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '序号',
+  `model_name` varchar(50) DEFAULT NULL COMMENT '模型名称',
+  `model_type` varchar(50) DEFAULT NULL COMMENT '模型类型（设备属性/设备操作）',
+  `provider` varchar(50) DEFAULT NULL COMMENT '模型提供方（平台厂商）',
+  `service_param` json DEFAULT NULL COMMENT '业务参数（描述类的信息）',
+  `model_schema` json DEFAULT NULL COMMENT '模型结构（模型信息）',
+  `create_time` bigint DEFAULT NULL COMMENT '创建时间',
+  `update_time` bigint DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `model_name` (`model_name`),
+  KEY `model_provider` (`provider`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=5 COMMENT='云平台的设备的物模型';
 
 -- 数据导出被取消选择。
 

@@ -29,11 +29,15 @@ public class RepoLocalCompBuilder {
         }
 
         if (compRepo.equals(RepoCompVOFieldConstant.value_comp_repo_local) && compType.equals(RepoCompVOFieldConstant.value_comp_type_jar_decoder)) {
-           return this.buildJarDecoder(params);
+            return this.buildJarDecoder(params);
         }
 
         if (compRepo.equals(RepoCompVOFieldConstant.value_comp_repo_local) && compType.equals(RepoCompVOFieldConstant.value_comp_type_jsp_decoder)) {
             return this.buildJspDecoder(params);
+        }
+
+        if (compRepo.equals(RepoCompVOFieldConstant.value_comp_repo_local) && compType.equals(RepoCompVOFieldConstant.value_comp_type_jsn_decoder)) {
+            return this.buildJsnDecoder(params);
         }
 
         if (compRepo.equals(RepoCompVOFieldConstant.value_comp_repo_local) && compType.equals(RepoCompVOFieldConstant.value_comp_type_app_service)) {
@@ -77,6 +81,33 @@ public class RepoLocalCompBuilder {
     }
 
     private RepoCompEntity buildJspDecoder(Map<String, Object> params) {
+        // 提取业务参数
+        String compType = (String) params.get(RepoCompVOFieldConstant.field_comp_type);
+        String compRepo = (String) params.get(RepoCompVOFieldConstant.field_comp_repo);
+        Map<String, Object> compParam = (Map<String, Object>) params.get(RepoCompVOFieldConstant.field_comp_param);
+
+        // 简单校验参数
+        if (MethodUtils.hasNull(compType, compRepo, compParam)) {
+            throw new ServiceException("参数不能为空: compType, compRepo, compParam");
+        }
+
+        String manufacturer = (String) compParam.get(OperateVOFieldConstant.field_manufacturer);
+        String deviceType = (String) compParam.get(OperateVOFieldConstant.field_device_type);
+        if (MethodUtils.hasNull(manufacturer, deviceType)) {
+            throw new ServiceException("参数不能为空: manufacturer, deviceType");
+        }
+
+        // 构造作为参数的实体
+        RepoCompEntity entity = new RepoCompEntity();
+        entity.setCompRepo(compRepo);
+        entity.setCompType(compType);
+        entity.setCompName(manufacturer + ":" + deviceType);
+        entity.setCompParam(compParam);
+
+        return entity;
+    }
+
+    private RepoCompEntity buildJsnDecoder(Map<String, Object> params) {
         // 提取业务参数
         String compType = (String) params.get(RepoCompVOFieldConstant.field_comp_type);
         String compRepo = (String) params.get(RepoCompVOFieldConstant.field_comp_repo);

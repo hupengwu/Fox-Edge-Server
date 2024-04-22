@@ -4,9 +4,9 @@ import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.core.template.TemplateFactory;
-import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 import cn.foxtech.device.protocol.v1.opcua.entity.OpcUaNodeId;
 import cn.foxtech.device.protocol.v1.opcua.template.JDefaultTemplate;
+import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,12 +31,22 @@ public class OpcUaBrowseChildValue {
         String templateName = (String) param.get("templateName");
 
         // 简单校验参数
-        if (MethodUtils.hasNull(objectName, templateName, tableName)) {
-            throw new ProtocolException("参数不能为空:objectName, templateName, tableName");
+        if (MethodUtils.hasNull(objectName)) {
+            throw new ProtocolException("参数不能为空:objectName");
+        }
+
+        // 简单校验参数
+        if (templateName == null && tableName == null) {
+            throw new ProtocolException("输入参数不能为空: templateName 或 tableName");
+        }
+        JDefaultTemplate template = null;
+        if (!MethodUtils.hasEmpty(tableName)) {
+            template = TemplateFactory.getTemplate("fox-edge-server-protocol-opc-ua").getTemplate("csv", tableName, JDefaultTemplate.class);
+        } else if (!MethodUtils.hasEmpty(templateName)) {
+            template = TemplateFactory.getTemplate("fox-edge-server-protocol-opc-ua").getTemplate("jsn", templateName, JDefaultTemplate.class);
         }
 
 
-        JDefaultTemplate template = TemplateFactory.getTemplate("fox-edge-server-protocol-snmp").getTemplate(templateName, tableName, JDefaultTemplate.class);
         OpcUaNodeId nodeId = template.encodeNodeId(objectName);
 
         Map<String, Object> result = new HashMap<>();
@@ -60,11 +70,16 @@ public class OpcUaBrowseChildValue {
 
 
         // 简单校验参数
-        if (MethodUtils.hasNull(templateName, tableName)) {
-            throw new ProtocolException("参数不能为空:templateName, tableName");
+        // 简单校验参数
+        if (templateName == null && tableName == null) {
+            throw new ProtocolException("输入参数不能为空: templateName 或 tableName");
         }
-
-        JDefaultTemplate template = TemplateFactory.getTemplate("fox-edge-server-protocol-snmp").getTemplate(templateName, tableName, JDefaultTemplate.class);
+        JDefaultTemplate template = null;
+        if (!MethodUtils.hasEmpty(tableName)) {
+            template = TemplateFactory.getTemplate("fox-edge-server-protocol-opc-ua").getTemplate("csv", tableName, JDefaultTemplate.class);
+        } else if (!MethodUtils.hasEmpty(templateName)) {
+            template = TemplateFactory.getTemplate("fox-edge-server-protocol-opc-ua").getTemplate("jsn", templateName, JDefaultTemplate.class);
+        }
 
 
         Map<String, Object> result = new HashMap<>();
@@ -81,7 +96,7 @@ public class OpcUaBrowseChildValue {
                 continue;
             }
 
-            result.put(objectName,child.get("value"));
+            result.put(objectName, child.get("value"));
         }
 
         return result;

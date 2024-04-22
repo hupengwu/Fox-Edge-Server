@@ -101,6 +101,72 @@ public class JDefaultTemplate implements ITemplate {
         this.operate.decoderParam.table = table;
     }
 
+    /**
+     * 从CSV文件中装载映射表
+     *
+     * @param table csv表名称
+     */
+    public void loadJsnModel(String table) {
+        File dir = new File("");
+
+        File file = new File(dir.getAbsolutePath() + "/template/" + table);
+        CsvReader csvReader = CsvUtil.getReader();
+        List<JDecoderValueParam> rows = csvReader.read(ResourceUtil.getReader(file.getPath(), CharsetUtil.CHARSET_GBK), JDecoderValueParam.class);
+
+        // 将文件记录组织到map中
+        Map<String, JDecoderValueParam> nameMap = new HashMap<>();
+        Map<String, JDecoderValueParam> idMap = new HashMap<>();
+        for (JDecoderValueParam jDecoderValueParam : rows) {
+            // 检查：必填项目
+            if (MethodUtils.hasEmpty(jDecoderValueParam.value_name,// 对象名称
+                    jDecoderValueParam.data_area,// 数据区域
+                    jDecoderValueParam.byte_index,// 字节索引
+                    jDecoderValueParam.data_type// 数据类型
+            )) {
+                continue;
+            }
+
+            // 强制转大写
+            jDecoderValueParam.data_type = jDecoderValueParam.data_type.toUpperCase();
+
+            // 检查：字节索引是否为整数
+            if (NumberUtils.parseLong(jDecoderValueParam.byte_index) == null) {
+                continue;
+            }
+            // 检查：如果用户填写了参数，却不是整数
+            if (!MethodUtils.hasEmpty(jDecoderValueParam.byte_index) && NumberUtils.parseLong(jDecoderValueParam.byte_index) == null) {
+                continue;
+            }
+            if (!MethodUtils.hasEmpty(jDecoderValueParam.bit_index) && NumberUtils.parseLong(jDecoderValueParam.bit_index) == null) {
+                continue;
+            }
+
+            Long count = NumberUtils.parseLong(jDecoderValueParam.count);
+
+            if (jDecoderValueParam.data_type.equals("BYTE") || jDecoderValueParam.data_type.equals("STRING")) {
+                if (count == null) {
+                    continue;
+                }
+            } else {
+                count = 1L;
+            }
+            jDecoderValueParam.count = count.toString();
+
+            // 对象的ID
+            jDecoderValueParam.oid = jDecoderValueParam.data_area + "." + jDecoderValueParam.byte_index;
+            if (!MethodUtils.hasEmpty(jDecoderValueParam.bit_index)) {
+                jDecoderValueParam.oid += "." + jDecoderValueParam.bit_index;
+            }
+
+            nameMap.put(jDecoderValueParam.getValue_name(), jDecoderValueParam);
+            idMap.put(jDecoderValueParam.oid, jDecoderValueParam);
+        }
+
+        this.operate.decoderParam.nameMap = nameMap;
+        this.operate.decoderParam.idMap = idMap;
+        this.operate.decoderParam.table = table;
+    }
+
 
     public List<Map<String, Object>> encodeReadObjects(List<String> objectNameList) {
         List<Map<String, Object>> objects = new ArrayList<>();

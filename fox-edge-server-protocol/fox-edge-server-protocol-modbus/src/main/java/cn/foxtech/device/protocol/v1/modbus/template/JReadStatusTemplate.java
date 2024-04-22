@@ -1,16 +1,18 @@
 package cn.foxtech.device.protocol.v1.modbus.template;
 
+import cn.foxtech.device.protocol.v1.core.context.ApplicationContext;
+import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
+import cn.foxtech.device.protocol.v1.core.template.ITemplate;
+import cn.foxtech.device.protocol.v1.modbus.core.ModBusWriteStatusRequest;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.csv.CsvReader;
 import cn.hutool.core.text.csv.CsvUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
-import cn.foxtech.device.protocol.v1.core.template.ITemplate;
-import cn.foxtech.device.protocol.v1.modbus.core.ModBusWriteStatusRequest;
 import lombok.Data;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,15 +56,68 @@ public class JReadStatusTemplate implements ITemplate {
             map.put(jDecoderValueParam.getValue_name(), jDecoderValueParam);
         }
 
+
         this.operate.decoder_param.valueMap = map;
         this.operate.decoder_param.table = table;
+        this.operate.decoder_param.updateTime = 0;
+        this.operate.decoder_param.sourceType = "csv";
+    }
+
+    public void loadJsnModel(String modelName) {
+        // 从进程的上下文中，获得设备模型信息
+        Map<String, Object> deviceTemplateEntity = ApplicationContext.getDeviceModels(modelName);
+
+        // 检测：上下文侧的时间戳和当前模型的时间戳是否一致
+        Object updateTime = deviceTemplateEntity.getOrDefault("updateTime", 0L);
+        if (this.operate.decoder_param.updateTime.equals(updateTime)) {
+            return;
+        }
+
+        // 取出JSON模型的数据列表
+        List<Map<String, Object>> rows = (List<Map<String, Object>>) deviceTemplateEntity.getOrDefault("modelParam", new ArrayList<>());
+
+        // 转换成当前的JDecoderValueParam对象
+        Map<String, JDecoderValueParam> map = new HashMap<>();
+        for (Map<String, Object> row : rows) {
+            if (row.size() < 2) {
+                continue;
+            }
+
+            JDecoderValueParam jDecoderValueParam = new JDecoderValueParam();
+            jDecoderValueParam.value_name = (String) row.get("value_name");
+            jDecoderValueParam.value_index = getInteger(row.get("value_index"));
+
+
+            map.put(jDecoderValueParam.getValue_name(), jDecoderValueParam);
+        }
+
+        // 保存信息
+        this.operate.decoder_param.valueMap = map;
+        this.operate.decoder_param.table = modelName;
+        this.operate.decoder_param.updateTime = updateTime;
+        this.operate.decoder_param.sourceType = "jsn";
+    }
+
+    private Integer getInteger(Object value) {
+        if (value == null) {
+            return null;
+        }
+
+        if (value instanceof String) {
+            return Integer.parseInt((String) value);
+        }
+        if (value instanceof Integer) {
+            return (Integer) value;
+        }
+
+        return null;
     }
 
     /**
      * 对保持寄存器的数据进行处理
      *
-     * @param address 地址
-     * @param coilCount 数量
+     * @param address    地址
+     * @param coilCount  数量
      * @param statusList HoldingRegister状态
      * @return 数据表
      * @throws ProtocolException 异常信息
@@ -154,6 +209,8 @@ public class JReadStatusTemplate implements ITemplate {
 
     @Data
     static public class JDecoderParam implements Serializable {
+        private Object updateTime = 0;
+        private String sourceType = "csv";
         private String table;
         private Map<String, JDecoderValueParam> valueMap = new HashMap<>();
     }

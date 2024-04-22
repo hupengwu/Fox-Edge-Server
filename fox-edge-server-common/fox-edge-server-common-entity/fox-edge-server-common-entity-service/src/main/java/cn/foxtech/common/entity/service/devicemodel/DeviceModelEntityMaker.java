@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * DeviceModelPo是数据库格式的对象，DeviceModelEntity是内存格式的对象，两者需要进行转换
+ * DevicePo是数据库格式的对象，DeviceEntity是内存格式的对象，两者需要进行转换
  */
 public class DeviceModelEntityMaker {
     /**
@@ -36,8 +36,8 @@ public class DeviceModelEntityMaker {
         DeviceModelPo result = new DeviceModelPo();
         result.bind(entity);
 
-        result.setServiceParam(JsonUtils.buildJsonWithoutException(entity.getServiceParam()));
-        result.setModelSchema(JsonUtils.buildJsonWithoutException(entity.getModelSchema()));
+        result.setModelParam(JsonUtils.buildJsonWithoutException(entity.getModelParam()));
+        result.setExtendParam(JsonUtils.buildJsonWithoutException(entity.getExtendParam()));
         return result;
     }
 
@@ -46,26 +46,26 @@ public class DeviceModelEntityMaker {
         result.bind(entity);
 
         try {
-            Map<String, Object> params = JsonUtils.buildObject(entity.getServiceParam(), Map.class);
+            Map<String, Object> params = JsonUtils.buildObject(entity.getModelParam(), Map.class);
             if (params != null) {
-                result.setServiceParam(params);
+                result.setModelParam(params);
             } else {
-                System.out.println("设备配置参数转换Json对象失败：" + entity.getServiceParam() + ":" + entity.getServiceParam());
+                System.out.println("配置参数转换Json对象失败：" + entity.getModelName() + ":" + entity.getModelParam());
             }
         } catch (Exception e) {
-            System.out.println("设备配置参数转换Json对象失败：" + entity.getModelName() + ":" + entity.getServiceParam());
+            System.out.println("配置参数转换Json对象失败：" + entity.getModelName() + ":" + entity.getModelParam());
             e.printStackTrace();
         }
 
         try {
-            Map<String, Object> params = JsonUtils.buildObject(entity.getModelSchema(), Map.class);
+            Map<String, Object> params = JsonUtils.buildObject(entity.getExtendParam(), Map.class);
             if (params != null) {
-                result.setModelSchema(params);
+                result.setExtendParam(params);
             } else {
-                System.out.println("设备扩展参数转换Json对象失败：" + entity.getModelName() + ":" + entity.getModelSchema());
+                System.out.println("扩展参数转换Json对象失败：" + entity.getModelName() + ":" + entity.getExtendParam());
             }
         } catch (Exception e) {
-            System.out.println("设备扩展参数转换Json对象失败：" + entity.getModelName() + ":" + entity.getModelSchema());
+            System.out.println("扩展参数转换Json对象失败：" + entity.getModelName() + ":" + entity.getExtendParam());
             e.printStackTrace();
         }
 

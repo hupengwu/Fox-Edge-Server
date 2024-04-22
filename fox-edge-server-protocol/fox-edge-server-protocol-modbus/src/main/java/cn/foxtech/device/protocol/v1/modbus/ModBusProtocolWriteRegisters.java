@@ -4,12 +4,11 @@ import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.core.template.TemplateFactory;
-import cn.foxtech.device.protocol.v1.utils.HexUtils;
-import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 import cn.foxtech.device.protocol.v1.modbus.core.*;
 import cn.foxtech.device.protocol.v1.modbus.template.JReadRegistersTemplate;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
+import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -51,20 +50,26 @@ public class ModBusProtocolWriteRegisters {
         // 取出设备地址
         Integer devAddr = (Integer) param.get("devAddr");
         String modbusMode = (String) param.get("modbusMode");
-        String templateName = (String) param.get("templateName");
+        String modelName = (String) param.get("modelName");
         String tableName = (String) param.get("tableName");
         String objectName = (String) param.get("objectName");
         Object objectValue = param.get("objectValue");
 
         // 检查输入参数
-        if (MethodUtils.hasEmpty(devAddr, modbusMode, templateName, tableName, objectName, objectValue)) {
-            throw new ProtocolException("输入参数不能为空:devAddr, modbusMode, templateName, tableName, objectName, objectValue");
+        if (MethodUtils.hasEmpty(devAddr, modbusMode, objectName, objectValue)) {
+            throw new ProtocolException("输入参数不能为空:devAddr, modbusMode,  objectName, objectValue");
         }
 
-        JReadRegistersTemplate template = TemplateFactory.getTemplate("fox-edge-server-protocol-modbus").getTemplate(templateName, tableName, JReadRegistersTemplate.class);
-        if (template == null) {
-            throw new ProtocolException("找不到对应的模板");
+        if (modelName == null && tableName == null) {
+            throw new ProtocolException("输入参数不能为空: templateName 或 tableName");
         }
+        JReadRegistersTemplate template = null;
+        if (!MethodUtils.hasEmpty(tableName)) {
+            template = TemplateFactory.getTemplate("fox-edge-server-protocol-modbus").getTemplate("csv", tableName, JReadRegistersTemplate.class);
+        } else if (!MethodUtils.hasEmpty(modelName)) {
+            template = TemplateFactory.getTemplate("fox-edge-server-protocol-modbus").getTemplate("jsn", modelName, JReadRegistersTemplate.class);
+        }
+
 
         ModBusWriteRegistersRequest writeRegistersRequest = template.encode(objectName, objectValue);
         if (writeRegistersRequest == null) {

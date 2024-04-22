@@ -29,6 +29,9 @@ public class RepoLocalCompService {
     @Autowired
     private RepoLocalOperateService operateService;
 
+    @Autowired
+    private RepoLocalJsnModelService modelService;
+
     public List<BaseEntity> getCompEntityList(Map<String, Object> body) {
         String compRepo = (String) body.get(RepoCompVOFieldConstant.field_comp_repo);
         String compType = (String) body.get(RepoCompVOFieldConstant.field_comp_type);
@@ -104,6 +107,14 @@ public class RepoLocalCompService {
         // 检查：实体中的依赖关系，避免数据之间依赖关系失效
         if (RepoCompVOFieldConstant.value_comp_type_jsp_decoder.equals(compEntity.getCompType())) {
             List<BaseEntity> operateList = this.operateService.getOperateEntityList(compEntity);
+            if (!operateList.isEmpty()) {
+                throw new ServiceException("该组件下面，已经定义了操作方法，请先删除这些操作方法后，再删除组件!");
+            }
+        }
+
+        // 检查：实体中的依赖关系，避免数据之间依赖关系失效
+        if (RepoCompVOFieldConstant.value_comp_type_jsn_decoder.equals(compEntity.getCompType())) {
+            List<BaseEntity> operateList = this.modelService.getDeviceTemplateEntityList(compEntity);
             if (!operateList.isEmpty()) {
                 throw new ServiceException("该组件下面，已经定义了操作方法，请先删除这些操作方法后，再删除组件!");
             }

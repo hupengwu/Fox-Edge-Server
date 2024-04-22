@@ -58,6 +58,31 @@ public class JDefaultTemplate implements ITemplate {
         this.operate.decoderParam.table = table;
     }
 
+    /**
+     * 装载JSON数据模型
+     *
+     * @param table 表名称
+     */
+    public void loadJsnModel(String table){
+        File dir = new File("");
+
+        File file = new File(dir.getAbsolutePath() + "/template/" + table);
+        CsvReader csvReader = CsvUtil.getReader();
+        List<JDecoderValueParam> rows = csvReader.read(ResourceUtil.getReader(file.getPath(), CharsetUtil.CHARSET_GBK), JDecoderValueParam.class);
+
+        // 将文件记录组织到map中
+        Map<String, JDecoderValueParam> nameMap = new HashMap<>();
+        Map<String, JDecoderValueParam> oidMap = new HashMap<>();
+        for (JDecoderValueParam jDecoderValueParam : rows) {
+            nameMap.put(jDecoderValueParam.getValue_name(), jDecoderValueParam);
+            oidMap.put(jDecoderValueParam.getOid(), jDecoderValueParam);
+        }
+
+        this.operate.decoderParam.nameMap = nameMap;
+        this.operate.decoderParam.oidMap = oidMap;
+        this.operate.decoderParam.table = table;
+    }
+
 
     public List<String> encodeOIDList(List<String> objectNameList) {
         List<String> oidList = new ArrayList<>();

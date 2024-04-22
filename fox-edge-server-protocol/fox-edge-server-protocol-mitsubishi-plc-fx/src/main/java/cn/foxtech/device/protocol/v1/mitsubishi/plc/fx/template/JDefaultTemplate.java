@@ -57,6 +57,28 @@ public class JDefaultTemplate implements ITemplate {
     }
 
     /**
+     * 从CSV文件中装载映射表
+     *
+     * @param table csv表名称
+     */
+    public void loadJsnModel(String table) {
+        File dir = new File("");
+
+        File file = new File(dir.getAbsolutePath() + "/template/" + table);
+        CsvReader csvReader = CsvUtil.getReader();
+        List<JDecoderValueParam> rows = csvReader.read(ResourceUtil.getReader(file.getPath(), CharsetUtil.CHARSET_GBK), JDecoderValueParam.class);
+
+        // 将文件记录组织到map中
+        Map<String, JDecoderValueParam> map = new HashMap<>();
+        for (JDecoderValueParam jDecoderValueParam : rows) {
+            map.put(jDecoderValueParam.getValue_name(), jDecoderValueParam);
+        }
+
+        this.operate.decoder_param.valueMap = map;
+        this.operate.decoder_param.table = table;
+    }
+
+    /**
      * 对保持寄存器的数据进行处理
      * @param address 地址
      * @param count 数量
