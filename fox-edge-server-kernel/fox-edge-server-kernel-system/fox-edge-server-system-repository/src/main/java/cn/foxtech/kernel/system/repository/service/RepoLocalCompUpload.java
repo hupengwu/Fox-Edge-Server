@@ -3,6 +3,7 @@ package cn.foxtech.kernel.system.repository.service;
 import cn.foxtech.common.entity.constant.OperateVOFieldConstant;
 import cn.foxtech.common.entity.constant.RepoCompVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
+import cn.foxtech.common.entity.entity.DeviceModelEntity;
 import cn.foxtech.common.entity.entity.OperateEntity;
 import cn.foxtech.common.entity.entity.RepoCompEntity;
 import cn.foxtech.common.utils.json.JsonUtils;
@@ -50,6 +51,9 @@ public class RepoLocalCompUpload {
         }
         if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_jsp_decoder)) {
             return this.uploadJspDecoderEntity(entity.getCompParam(), commitKey, description);
+        }
+        if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_jsn_decoder)) {
+            return this.uploadJsnDecoderEntity(entity.getCompParam(), commitKey, description);
         }
 
 
@@ -115,6 +119,35 @@ public class RepoLocalCompUpload {
         body.put("operates", entityList);
 
         return this.remoteService.executePost("/manager/repository/component/script/version/entity", body);
+
+    }
+
+    private Map<String, Object> uploadJsnDecoderEntity(Map<String, Object> compParam, String commitKey, String description) throws IOException {
+        String compId = (String) compParam.get(RepoCompVOFieldConstant.field_comp_id);
+        String deviceType = (String) compParam.get(OperateVOFieldConstant.field_device_type);
+        String manufacturer = (String) compParam.get(OperateVOFieldConstant.field_manufacturer);
+        if (MethodUtils.hasEmpty(compId, deviceType, manufacturer)) {
+            throw new ServiceException("缺少参数： compId, deviceType, manufacturer");
+        }
+
+        List<BaseEntity> entityList = this.entityManageService.getEntityList(DeviceModelEntity.class, (Object value) -> {
+            DeviceModelEntity entity = (DeviceModelEntity) value;
+
+            if (!entity.getManufacturer().equals(manufacturer)) {
+                return false;
+            }
+
+            return entity.getDeviceType().equals(deviceType);
+        });
+
+
+        Map<String, Object> body = JsonUtils.clone(compParam);
+        body.put(RepoCompVOFieldConstant.field_comp_id, compId);
+        body.put(RepoCompVOFieldConstant.field_commit_key, commitKey);
+        body.put(RepoCompVOFieldConstant.field_description, description);
+        body.put("objects", entityList);
+
+        return this.remoteService.executePost("/manager/repository/component/model/version/entity", body);
 
     }
 

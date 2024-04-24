@@ -259,7 +259,7 @@ public class RepoCloudInstallStatus {
 
     public boolean verifyUpgradeStatus(String modelType, String modelName, String modelVersion, Map<String, Object> lastVersion, List<Map<String, Object>> versions) {
         // 检查最新版本
-        if (lastVersion == null) {
+        if (MethodUtils.hasEmpty(lastVersion)) {
             return false;
         }
 

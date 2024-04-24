@@ -143,35 +143,33 @@ public class RepoCloudInstallService {
 
 
     public void extendLocalStatus(Map<String, Object> entity) {
-        {
-            String modelType = (String) entity.getOrDefault(RepoCompConstant.filed_model_type, "");
-            String modelName = (String) entity.getOrDefault(RepoCompConstant.filed_model_name, "");
-            String modelVersion = (String) entity.getOrDefault(RepoCompConstant.filed_model_version, RepoCompConstant.filed_value_model_version_default);
-            Map<String, Object> lastVersion = (Map<String, Object>) entity.getOrDefault(RepoCompConstant.filed_last_version, new HashMap<>());
-            List<Map<String, Object>> versions = (List<Map<String, Object>>) entity.getOrDefault(RepoCompConstant.filed_versions, "");
-            String component = (String) entity.getOrDefault(RepoCompConstant.filed_component, "");
+        String modelType = (String) entity.getOrDefault(RepoCompConstant.filed_model_type, "");
+        String modelName = (String) entity.getOrDefault(RepoCompConstant.filed_model_name, "");
+        String modelVersion = (String) entity.getOrDefault(RepoCompConstant.filed_model_version, RepoCompConstant.filed_value_model_version_default);
+        Map<String, Object> lastVersion = (Map<String, Object>) entity.getOrDefault(RepoCompConstant.filed_last_version, new HashMap<>());
+        List<Map<String, Object>> versions = (List<Map<String, Object>>) entity.getOrDefault(RepoCompConstant.filed_versions, "");
+        String component = (String) entity.getOrDefault(RepoCompConstant.filed_component, "");
 
 
-            // 验证last版本的破损状态
-            int status = this.installStatus.verifyMd5Status(modelType, modelName, modelVersion, component, lastVersion);
-            if (RepoStatusConstant.status_damaged_package == status) {
-                lastVersion.put(RepoCompConstant.filed_status, status);
-            } else {
-                if (this.installStatus.verifyUpgradeStatus(modelType, modelName, modelVersion, lastVersion, versions)) {
-                    lastVersion.put(RepoCompConstant.filed_status, RepoStatusConstant.status_need_upgrade);
-                }
+        // 验证last版本的破损状态
+        int status = this.installStatus.verifyMd5Status(modelType, modelName, modelVersion, component, lastVersion);
+        if (RepoStatusConstant.status_damaged_package == status) {
+            lastVersion.put(RepoCompConstant.filed_status, status);
+        } else {
+            if (this.installStatus.verifyUpgradeStatus(modelType, modelName, modelVersion, lastVersion, versions)) {
+                lastVersion.put(RepoCompConstant.filed_status, RepoStatusConstant.status_need_upgrade);
             }
+        }
 
 
-            // 验证明细包的破损状态
-            for (Map<String, Object> verEntity : versions) {
-                status = this.installStatus.verifyMd5Status(modelType, modelName, modelVersion, component, verEntity);
-                verEntity.put(RepoCompConstant.filed_status, status);
+        // 验证明细包的破损状态
+        for (Map<String, Object> verEntity : versions) {
+            status = this.installStatus.verifyMd5Status(modelType, modelName, modelVersion, component, verEntity);
+            verEntity.put(RepoCompConstant.filed_status, status);
 
-                // 检查：该版本是否为【已安装】版本，如果是，则该版本为当前版本，因为【已安装】版本为正在使用的唯一版本
-                if (RepoStatusConstant.status_installed == status) {
-                    entity.put(RepoCompConstant.filed_used_version, verEntity);
-                }
+            // 检查：该版本是否为【已安装】版本，如果是，则该版本为当前版本，因为【已安装】版本为正在使用的唯一版本
+            if (RepoStatusConstant.status_installed == status) {
+                entity.put(RepoCompConstant.filed_used_version, verEntity);
             }
         }
     }

@@ -154,12 +154,12 @@ public class CloudRemoteService {
 
             // 如果失败，那就没啥好说的了，返回异常
             if (!HttpStatus.SUCCESS.equals(code)) {
-                throw new RuntimeException("发送数据到云端：" + this.host + "失败:code=" + code + "失败:message=" + message);
+                throw new RuntimeException("发送数据到云端：" + this.host + res + "失败:code=" + code + "失败:message=" + message);
             }
         }
 
         if (!HttpStatus.SUCCESS.equals(code)) {
-            throw new RuntimeException("发送数据到云端：" + this.host + "失败:" + respondVO);
+            throw new RuntimeException("发送数据到云端：" + this.host + res + "失败:" + respondVO);
         }
 
         return respondVO;
@@ -202,12 +202,12 @@ public class CloudRemoteService {
 
             // 如果失败，那就没啥好说的了，返回异常
             if (!HttpStatus.SUCCESS.equals(code)) {
-                throw new RuntimeException("发送数据到云端：" + this.host + "失败:" + respondVO);
+                throw new RuntimeException("发送数据到云端：" + this.host + res + "失败:" + respondVO);
             }
         }
 
         if (!HttpStatus.SUCCESS.equals(code)) {
-            throw new RuntimeException("发送数据到云端：" + this.host + "失败:" + respondVO);
+            throw new RuntimeException("发送数据到云端：" + this.host + res + "失败:" + respondVO);
         }
 
         return respondVO;
@@ -258,12 +258,12 @@ public class CloudRemoteService {
 
             // 如果失败，那就没啥好说的了，返回异常
             if (!HttpStatus.SUCCESS.equals(code)) {
-                throw new RuntimeException("发送数据到云端：" + this.host + "失败:" + respondVO);
+                throw new RuntimeException("发送数据到云端：" + this.host + res + "失败:" + respondVO);
             }
         }
 
         if (!HttpStatus.SUCCESS.equals(code)) {
-            throw new RuntimeException("发送数据到云端：" + this.host + "失败:code=" + respondVO);
+            throw new RuntimeException("发送数据到云端：" + this.host + res + "失败:code=" + respondVO);
         }
 
         return respondVO;

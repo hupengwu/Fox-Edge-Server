@@ -49,6 +49,9 @@ public class RepoLocalCompSync {
         if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_jsp_decoder)) {
             return this.syncJspDecoderEntity(entity);
         }
+        if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_jsn_decoder)) {
+            return this.syncJsnDecoderEntity(entity);
+        }
 
         throw new ServiceException("该组件类型，不支持从云端同步！");
     }
@@ -156,6 +159,48 @@ public class RepoLocalCompSync {
 
         // 获得云端的信息
         Map<String, Object> respond = this.remoteService.executePost("/manager/repository/component/script/title/list", body);
+        Object code = respond.get(AjaxResult.CODE_TAG);
+        Object data = respond.get(AjaxResult.DATA_TAG);
+        if (!HttpStatus.SUCCESS.equals(code) || data == null) {
+            throw new ServiceException("从云端查询信息失败！" + respond);
+        }
+
+        // 如果空列表：云端没有这个组件
+        List<Map<String, Object>> list = (List<Map<String, Object>>) data;
+        if (list.isEmpty()) {
+            throw new ServiceException("云端没有这个组件，请先去云端仓库为本账号:" + this.remoteService.getUsername() + "归属的群组，注册这个组件:" + deviceType);
+        }
+
+        // 找到了云端的组件信息
+        Map<String, Object> map = list.get(0);
+
+        // 克隆一个副本，防止修改影响到了原本
+        entity = JsonUtils.clone(entity);
+        entity.getCompParam().put(RepoCompVOFieldConstant.field_group_name, map.get("groupName"));
+        entity.getCompParam().put(RepoCompVOFieldConstant.field_comp_id, map.get("id"));
+
+        // 保存数据
+        this.entityManageService.updateEntity(entity);
+
+        return respond;
+    }
+
+    private Map<String, Object> syncJsnDecoderEntity(RepoCompEntity entity) throws IOException {
+        Map<String, Object> compParam = entity.getCompParam();
+
+        String deviceType = (String) compParam.get(OperateVOFieldConstant.field_device_type);
+        String manufacturer = (String) compParam.get(OperateVOFieldConstant.field_manufacturer);
+        if (MethodUtils.hasEmpty(deviceType, manufacturer)) {
+            throw new ServiceException("缺少参数： deviceType, manufacturer");
+        }
+
+
+        Map<String, Object> body = new HashMap<>();
+        body.put(OperateVOFieldConstant.field_manufacturer, manufacturer);
+        body.put(OperateVOFieldConstant.field_device_type, deviceType);
+
+        // 获得云端的信息
+        Map<String, Object> respond = this.remoteService.executePost("/manager/repository/component/model/title/list", body);
         Object code = respond.get(AjaxResult.CODE_TAG);
         Object data = respond.get(AjaxResult.DATA_TAG);
         if (!HttpStatus.SUCCESS.equals(code) || data == null) {

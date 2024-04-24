@@ -1,9 +1,11 @@
 package cn.foxtech.kernel.system.repository.service;
 
 import cn.foxtech.common.domain.constant.ServiceVOFieldConstant;
+import cn.foxtech.common.entity.constant.DeviceModelVOFieldConstant;
 import cn.foxtech.common.entity.constant.OperateVOFieldConstant;
 import cn.foxtech.common.entity.constant.RepoCompVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
+import cn.foxtech.common.entity.entity.DeviceModelEntity;
 import cn.foxtech.common.entity.entity.OperateEntity;
 import cn.foxtech.common.entity.entity.RepoCompEntity;
 import cn.foxtech.common.utils.ContainerUtils;
@@ -134,6 +136,9 @@ public class RepoLocalCompService {
         if (compType.equals(RepoCompVOFieldConstant.value_comp_type_jsp_decoder)) {
             return this.installJspDecoderEntity(data);
         }
+        if (compType.equals(RepoCompVOFieldConstant.value_comp_type_jsn_decoder)) {
+            return this.installJsnDecoderEntity(data);
+        }
 
         throw new ServiceException("该组件类型，不支持本地上传");
     }
@@ -207,6 +212,103 @@ public class RepoLocalCompService {
         for (String key : delList) {
             BaseEntity operateEntity = srcOperateMap.get(key);
             this.entityManageService.deleteEntity(operateEntity);
+        }
+        for (String key : eqlList) {
+            BaseEntity dstEntity = dstOperateMap.get(key);
+            BaseEntity srcEntity = srcOperateMap.get(key);
+            if (dstEntity.makeServiceValue().equals(srcEntity.makeServiceValue())) {
+                continue;
+            }
+
+            dstEntity.setId(srcEntity.getId());
+            this.entityManageService.updateEntity(dstEntity);
+        }
+
+        // 获得版本日期
+        Long updateTime = Long.valueOf(data.getOrDefault("updateTime", "0").toString());
+        String format = "yyyy-MM-dd HH:mm:ss";
+        SimpleDateFormat SDF = new SimpleDateFormat(format);
+        String timer = SDF.format(new Date(updateTime));
+
+        // 更新：安装版本的信息
+        Map<String, Object> install = new HashMap<>();
+        install.put("updateTime", timer);
+        install.put("description", data.get("description"));
+        install.put("id", data.get("id"));
+
+        // 更新版本信息
+        repoCompEntity.getCompParam().put("installVersion", install);
+        this.entityManageService.updateEntity(repoCompEntity);
+
+        return null;
+    }
+
+    private Map<String, Object> installJsnDecoderEntity(Map<String, Object> data) throws IOException {
+        String deviceType = (String) data.get(DeviceModelVOFieldConstant.field_device_type);
+        String manufacturer = (String) data.get(DeviceModelVOFieldConstant.field_manufacturer);
+        String modelId = (String) data.get(DeviceModelVOFieldConstant.field_model_id);
+        String groupName = (String) data.get(DeviceModelVOFieldConstant.field_group_name);
+        List<Map<String, Object>> objects = (List<Map<String, Object>>) data.get("objects");
+        if (MethodUtils.hasEmpty(deviceType, manufacturer, modelId, groupName, objects)) {
+            throw new ServiceException("缺少参数： deviceType, manufacturer, modelId, groupName, objects");
+        }
+
+        RepoCompEntity repoCompEntity = new RepoCompEntity();
+        repoCompEntity.setCompRepo(RepoCompVOFieldConstant.value_comp_repo_local);
+        repoCompEntity.setCompType(RepoCompVOFieldConstant.value_comp_type_jsn_decoder);
+        repoCompEntity.setCompName(manufacturer + ":" + deviceType);
+
+        // 如果组件对象不存在，那么就创建一个新的组件对象
+        RepoCompEntity existCompEntity = this.entityManageService.getEntity(repoCompEntity.makeServiceKey(), RepoCompEntity.class);
+        if (existCompEntity == null) {
+            Map<String, Object> compParam = repoCompEntity.getCompParam();
+            compParam.put(DeviceModelVOFieldConstant.field_comp_id, modelId);
+            compParam.put(DeviceModelVOFieldConstant.field_group_name, groupName);
+            compParam.put(DeviceModelVOFieldConstant.field_manufacturer, manufacturer);
+            compParam.put(DeviceModelVOFieldConstant.field_device_type, deviceType);
+
+            this.entityManageService.insertEntity(repoCompEntity);
+        } else {
+            repoCompEntity = existCompEntity;
+        }
+
+
+        // 获得已经存在的操作列表
+        List<BaseEntity> objectList = this.entityManageService.getEntityList(DeviceModelEntity.class, (Object value) -> {
+            DeviceModelEntity entity = (DeviceModelEntity) value;
+
+            if (!entity.getManufacturer().equals(manufacturer)) {
+                return false;
+            }
+            return entity.getDeviceType().equals(deviceType);
+        });
+
+        // 组织成天MAP关系
+        Map<String, DeviceModelEntity> dstOperateMap = new HashMap<>();
+        for (Map<String, Object> object : objects) {
+            DeviceModelEntity modelEntity = new DeviceModelEntity();
+            modelEntity.bind(object);
+            modelEntity.setManufacturer(manufacturer);
+            modelEntity.setDeviceType(deviceType);
+
+            dstOperateMap.put(modelEntity.getModelName(), modelEntity);
+        }
+
+        Map<String, BaseEntity> srcOperateMap = ContainerUtils.buildMapByKey(objectList, DeviceModelEntity::getModelName);
+
+        Set<String> addList = new HashSet<>();
+        Set<String> delList = new HashSet<>();
+        Set<String> eqlList = new HashSet<>();
+        DifferUtils.differByValue(srcOperateMap.keySet(), dstOperateMap.keySet(), addList, delList, eqlList);
+
+        for (String key : addList) {
+            DeviceModelEntity modelEntity = dstOperateMap.get(key);
+            modelEntity.setId(null);
+            this.entityManageService.insertEntity(modelEntity);
+        }
+        for (String key : delList) {
+            BaseEntity modelEntity = srcOperateMap.get(key);
+            this.entityManageService.deleteEntity(modelEntity);
         }
         for (String key : eqlList) {
             BaseEntity dstEntity = dstOperateMap.get(key);

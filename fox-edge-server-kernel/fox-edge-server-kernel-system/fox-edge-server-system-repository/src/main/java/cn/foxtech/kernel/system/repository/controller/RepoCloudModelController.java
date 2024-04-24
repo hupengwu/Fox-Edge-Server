@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/kernel/manager/repository/script")
-public class RepoCloudScriptController {
+@RequestMapping("/kernel/manager/repository/model")
+public class RepoCloudModelController {
     /**
      * 仓库服务
      */
@@ -29,17 +29,17 @@ public class RepoCloudScriptController {
     @PostMapping("/page")
     public Map<String, Object> selectCompPageList(@RequestBody Map<String, Object> body) {
         try {
-            Map<String, Object> result = this.remoteService.queryCloudCompScriptPage(body);
+            Map<String, Object> result = this.remoteService.queryCloudCompModelPage(body);
             return result;
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
         }
     }
 
-    @PostMapping("/version/operate/entities")
+    @PostMapping("/version/object/entities")
     public Map<String, Object> selectOperateList(@RequestBody Map<String, Object> body) {
         try {
-            Map<String, Object> result = this.remoteService.queryCloudScriptOperateList(body);
+            Map<String, Object> result = this.remoteService.queryCloudModelObjectList(body);
             return result;
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
@@ -50,7 +50,7 @@ public class RepoCloudScriptController {
     public Map<String, Object> installVersionEntity(@RequestBody Map<String, Object> body) {
         try {
             // 查询数据
-            Map<String, Object> result = this.remoteService.queryCloudScriptVersionList(body);
+            Map<String, Object> result = this.remoteService.queryCloudModelVersionList(body);
 
             // 检查状态
             if (!HttpStatus.SUCCESS.equals(result.get(AjaxResult.CODE_TAG))) {
@@ -66,7 +66,7 @@ public class RepoCloudScriptController {
             Map<String, Object> data = list.get(0);
 
             // 安装版本
-            this.compService.installVersion(RepoCompVOFieldConstant.value_comp_type_jsp_decoder, data);
+            this.compService.installVersion(RepoCompVOFieldConstant.value_comp_type_jsn_decoder, data);
             return result;
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
@@ -76,17 +76,17 @@ public class RepoCloudScriptController {
     @PostMapping("/version/page")
     public Map<String, Object> selectVersionPageList(@RequestBody Map<String, Object> body) {
         try {
-            Map<String, Object> result = this.remoteService.queryCloudScriptVersionPage(body);
+            Map<String, Object> result = this.remoteService.queryCloudModelVersionPage(body);
             return result;
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
         }
     }
 
-    @PostMapping("/version/operate/entity")
+    @PostMapping("/version/object/entity")
     public Map<String, Object> getVersionPageList(@RequestBody Map<String, Object> body) {
         try {
-            Map<String, Object> result = this.remoteService.queryCloudScriptOperateEntity(body);
+            Map<String, Object> result = this.remoteService.queryCloudModelObjectEntity(body);
             return result;
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());

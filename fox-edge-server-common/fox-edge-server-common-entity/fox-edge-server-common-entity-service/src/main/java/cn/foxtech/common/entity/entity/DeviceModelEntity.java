@@ -52,4 +52,11 @@ public class DeviceModelEntity extends DeviceModelBase {
         this.modelParam = other.modelParam;
         this.extendParam = other.extendParam;
     }
+
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.modelParam = (Map<String, Object>) map.get("modelParam");
+        this.extendParam = (Map<String, Object>) map.get("extendParam");
+    }
 }
