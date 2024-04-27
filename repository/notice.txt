@@ -1,0 +1,13 @@
+【提示】：当你看到这个信息，说明本地HTTP文件服务器的nginx配置已经成功。
+你后续可以下载本地仓库目录/opt/fox-edge/repository下的文件。
+
+【例如】：
+你有一个本地文件，所在位置如下
+/opt/fox-edge/repository/decoder/fox-edge-server-protocol-anno/v1/1.0.8/master/service/tar/fox-edge-server-protocol-anno-1.0.8.jar
+
+
+那么，你可以通过下载对应的链接，即可下载对应的文件
+http://192.168.1.23:8000/decoder/fox-edge-server-protocol-anno/v1/1.0.8/master/service/tar/fox-edge-server-protocol-anno-1.0.8.jar
+
+其中，http://192.168.1.23:8000，它是HTTP文件服务器nginx的配置；
+/decoder/fox-edge-server-protocol-anno/v1/1.0.8/master/service/tar/fox-edge-server-protocol-anno-1.0.8.jar，它是/opt/fox-edge/repository下的某个文件
