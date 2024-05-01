@@ -126,7 +126,7 @@ public class RepoLocalCompService {
         this.entityManageService.deleteEntity(compId, RepoCompEntity.class);
     }
 
-    public RepoCompEntity getRepoCompEntity(Integer compId) {
+    public RepoCompEntity getRepoCompEntity(Long compId) {
         return this.entityManageService.getEntity(Long.parseLong(compId.toString()), RepoCompEntity.class);
     }
 

@@ -151,6 +151,18 @@ public class RepoLocalCompListController {
         }
     }
 
+    @GetMapping("entity")
+    public AjaxResult queryEntity(@QueryParam("id") Long id) {
+        try {
+            // 删除对象
+            RepoCompEntity entity = this.compService.getRepoCompEntity(id);
+
+            return AjaxResult.success(entity);
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
+    }
+
     @PostMapping("upload")
     public AjaxResult uploadEntity(@RequestBody Map<String, Object> params) {
         try {

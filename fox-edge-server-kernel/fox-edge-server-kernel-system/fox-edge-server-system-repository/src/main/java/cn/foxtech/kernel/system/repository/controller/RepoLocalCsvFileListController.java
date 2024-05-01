@@ -55,7 +55,7 @@ public class RepoLocalCsvFileListController {
                 throw new ServiceException("参数不能为空: id, pageNum, pageSize");
             }
 
-            RepoCompEntity compEntity = this.compService.getRepoCompEntity(id);
+            RepoCompEntity compEntity = this.compService.getRepoCompEntity(Long.parseLong(id.toString()));
             if (compEntity == null) {
                 throw new ServiceException("找不到对应的组件：" + id);
             }

@@ -46,7 +46,7 @@ public class RepoLocalOperateListController {
             }
 
             // 获得组件信息
-            RepoCompEntity compEntity = this.componentService.getRepoCompEntity(id);
+            RepoCompEntity compEntity = this.componentService.getRepoCompEntity(Long.parseLong(id.toString()));
             if (compEntity == null) {
                 throw new ServiceException("找不到对应的组件：" + id);
             }
