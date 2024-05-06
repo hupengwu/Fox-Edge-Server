@@ -1,6 +1,6 @@
 package cn.foxtech.device.protocol.v1.test;
 
-import cn.foxtech.device.protocol.v1.dlt645.v1997.DLT645v1997ProtocolReadData;
+import cn.foxtech.device.protocol.v1.dlt645.v2007.DLT645v2007ProtocolReadData;
 import cn.foxtech.device.protocol.v1.dlt645.core.DLT645Define;
 import cn.foxtech.device.protocol.v1.dlt645.core.DLT645Protocol;
 import cn.foxtech.device.protocol.v1.dlt645.core.entity.DLT645DataEntity;
@@ -36,10 +36,10 @@ public class TestUtils97 {
         param.put("objectName", "(当前)正向有功总电能");
         param.put("operate_name", "读数据");
         param.put("tableName", "DLT645-v1997/v1/DLT645-1997.csv");
-        String r = DLT645v1997ProtocolReadData.packReadData(param);
+        String r = DLT645v2007ProtocolReadData.packReadData(param);
 
         String hex = "FE FE FE FE 68 11 11 11 53 12 35 68 81 07 43 C3 BC 76 46 33 34 0A 16  ";
-        Map<String, Object> param1 = DLT645v1997ProtocolReadData.unpackReadData(hex, param);
+        Map<String, Object> param1 = DLT645v2007ProtocolReadData.unpackReadData(hex, param);
 
         for (byte by : data) {
             int v = ((by & 0xff) - 0x33);

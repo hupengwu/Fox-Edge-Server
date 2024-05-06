@@ -1,4 +1,4 @@
-package cn.foxtech.device.protocol.v1.dlt645;
+package cn.foxtech.device.protocol.v1.dlt645.v1997;
 
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;

@@ -1,4 +1,4 @@
-package cn.foxtech.device.protocol.v1.dlt645;
+package cn.foxtech.device.protocol.v1.dlt645.v2007;
 
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
@@ -8,7 +8,7 @@ import cn.foxtech.device.protocol.v1.dlt645.core.DLT645Protocol;
 import cn.foxtech.device.protocol.v1.dlt645.core.DLT645Template;
 import cn.foxtech.device.protocol.v1.dlt645.core.entity.DLT645DataEntity;
 import cn.foxtech.device.protocol.v1.dlt645.core.entity.DLT645FunEntity;
-import cn.foxtech.device.protocol.v1.dlt645.core.entity.DLT645v1997DataEntity;
+import cn.foxtech.device.protocol.v1.dlt645.core.entity.DLT645v2007DataEntity;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 
@@ -18,8 +18,8 @@ import java.util.Map;
 /**
  * 读数据
  */
-@FoxEdgeDeviceType(value = "DLT645 v1997", manufacturer = "Fox Edge")
-public class DLT645v1997ProtocolReadData {
+@FoxEdgeDeviceType(value = "DLT645 v2007", manufacturer = "Fox Edge")
+public class DLT645v2007ProtocolReadData {
     /**
      * 读数据
      *
@@ -50,7 +50,7 @@ public class DLT645v1997ProtocolReadData {
         }
 
         // 根据对象名获取对象格式信息，这个格式信息，记录在CSV文件中
-        DLT645DataEntity dataEntity = DLT645Template.inst().getTemplateByName(DLT645Define.PRO_VER_1997, modelName).get(objectName);
+        DLT645DataEntity dataEntity = DLT645Template.inst().getTemplateByName(DLT645Define.PRO_VER_2007, modelName).get(objectName);
         if (dataEntity == null) {
             throw new ProtocolException("CSV模板文件: " + modelName + " 中未定义对象:" + objectName + " ，你需要在模板中添加该对象信息");
         }
@@ -101,8 +101,8 @@ public class DLT645v1997ProtocolReadData {
 
         // 对数据进行解码
         byte[] data = (byte[]) value.get(DLT645Protocol.DAT);
-        DLT645v1997DataEntity dataEntity = new DLT645v1997DataEntity();
-        dataEntity.decodeValue(data, DLT645Template.inst().getTemplateByDIn(DLT645Define.PRO_VER_1997, modelName));
+        DLT645v2007DataEntity dataEntity = new DLT645v2007DataEntity();
+        dataEntity.decodeValue(data, DLT645Template.inst().getTemplateByDIn(DLT645Define.PRO_VER_2007, modelName));
 
         //将解码出来的数字，按要求的Map<String, Object>格式返回
         Map<String, Object> result = new HashMap<>();
