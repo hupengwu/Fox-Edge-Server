@@ -2,13 +2,13 @@ package cn.foxtech.device.protocol.v1.dlt645;
 
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
+import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.dlt645.core.DLT645Define;
 import cn.foxtech.device.protocol.v1.dlt645.core.DLT645Protocol;
 import cn.foxtech.device.protocol.v1.dlt645.core.DLT645Template;
 import cn.foxtech.device.protocol.v1.dlt645.core.entity.DLT645DataEntity;
 import cn.foxtech.device.protocol.v1.dlt645.core.entity.DLT645FunEntity;
 import cn.foxtech.device.protocol.v1.dlt645.core.entity.DLT645v1997DataEntity;
-import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 
@@ -31,11 +31,11 @@ public class DLT645v1997ProtocolReadData {
         // 提取业务参数：设备地址/对象名称/CSV模板文件
         String deviceAddress = (String) param.get("deviceAddress");
         String objectName = (String) param.get("objectName");
-        String tableName = (String) param.get("tableName");
+        String modelName = (String) param.get("modelName");
 
         // 简单校验参数
-        if (MethodUtils.hasNull(deviceAddress, objectName, tableName)) {
-            throw new ProtocolException("参数不能为空:deviceAddress, objectName, tableName");
+        if (MethodUtils.hasNull(deviceAddress, objectName, modelName)) {
+            throw new ProtocolException("参数不能为空:deviceAddress, objectName, modelName");
         }
 
 
@@ -50,9 +50,9 @@ public class DLT645v1997ProtocolReadData {
         }
 
         // 根据对象名获取对象格式信息，这个格式信息，记录在CSV文件中
-        DLT645DataEntity dataEntity = DLT645Template.inst().getTemplateByName(DLT645Define.PRO_VER_1997, tableName).get(objectName);
+        DLT645DataEntity dataEntity = DLT645Template.inst().getTemplateByName(DLT645Define.PRO_VER_1997, modelName).get(objectName);
         if (dataEntity == null) {
-            throw new ProtocolException("CSV模板文件: " + tableName + " 中未定义对象:" + objectName + " ，你需要在模板中添加该对象信息");
+            throw new ProtocolException("CSV模板文件: " + modelName + " 中未定义对象:" + objectName + " ，你需要在模板中添加该对象信息");
         }
 
         // 组装成协议框架的三要素ADR/FUN/DAT
@@ -76,11 +76,11 @@ public class DLT645v1997ProtocolReadData {
      */
     @FoxEdgeOperate(name = "读数据", polling = true, type = FoxEdgeOperate.decoder, timeout = 2000)
     public static Map<String, Object> unpackReadData(String hexString, Map<String, Object> param) {
-        String tableName = (String) param.get("tableName");
+        String modelName = (String) param.get("modelName");
 
         // 简单校验参数
-        if (MethodUtils.hasNull(tableName)) {
-            throw new ProtocolException("参数不能为空:tableName");
+        if (MethodUtils.hasNull(modelName)) {
+            throw new ProtocolException("参数不能为空: modelName");
         }
 
         // 解码处理
@@ -102,7 +102,7 @@ public class DLT645v1997ProtocolReadData {
         // 对数据进行解码
         byte[] data = (byte[]) value.get(DLT645Protocol.DAT);
         DLT645v1997DataEntity dataEntity = new DLT645v1997DataEntity();
-        dataEntity.decodeValue(data, DLT645Template.inst().getTemplateByDIn(DLT645Define.PRO_VER_1997, tableName));
+        dataEntity.decodeValue(data, DLT645Template.inst().getTemplateByDIn(DLT645Define.PRO_VER_1997, modelName));
 
         //将解码出来的数字，按要求的Map<String, Object>格式返回
         Map<String, Object> result = new HashMap<>();

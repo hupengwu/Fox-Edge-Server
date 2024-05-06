@@ -74,7 +74,8 @@ public class JReadStatusTemplate implements ITemplate {
         }
 
         // 取出JSON模型的数据列表
-        List<Map<String, Object>> rows = (List<Map<String, Object>>) deviceTemplateEntity.getOrDefault("modelParam", new ArrayList<>());
+        Map<String, Object> modelParam = (Map<String, Object>) deviceTemplateEntity.getOrDefault("modelParam", new HashMap<>());
+        List<Map<String, Object>> rows = (List<Map<String, Object>>) modelParam.getOrDefault("list", new ArrayList<>());
 
         // 转换成当前的JDecoderValueParam对象
         Map<String, JDecoderValueParam> map = new HashMap<>();

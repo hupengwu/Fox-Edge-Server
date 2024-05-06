@@ -18,7 +18,7 @@ public class TestUtils97 {
     public static void main(String[] args) {
 
         DLT645v1997CsvLoader template = new DLT645v1997CsvLoader();
-        List<DLT645DataEntity> entityList = template.loadCsvFile("DLT645-1997.csv");
+        List<DLT645DataEntity> entityList = template.loadCsvFile("DLT645-v1997/v1/DLT645-1997.csv");
         Map<String, DLT645DataEntity> nameMap = ContainerUtils.buildMapByKey(entityList, DLT645v1997DataEntity::getDIn);
         Map<String, DLT645DataEntity> dinMap = ContainerUtils.buildMapByKey(entityList, DLT645v1997DataEntity::getKey);
 
@@ -32,10 +32,10 @@ public class TestUtils97 {
         dataEntity.decodeValue(data, dinMap);
 
         Map<String, Object> param = new HashMap<>();
-        param.put("device_addr", "351253111111");
-        param.put("object_name", "(当前)正向有功总电能");
+        param.put("deviceAddress", "351253111111");
+        param.put("objectName", "(当前)正向有功总电能");
         param.put("operate_name", "读数据");
-        param.put("table_name", "DLT645-1997.csv");
+        param.put("tableName", "DLT645-v1997/v1/DLT645-1997.csv");
         String r = DLT645v1997ProtocolReadData.packReadData(param);
 
         String hex = "FE FE FE FE 68 11 11 11 53 12 35 68 81 07 43 C3 BC 76 46 33 34 0A 16  ";
