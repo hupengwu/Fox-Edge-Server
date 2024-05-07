@@ -1,17 +1,14 @@
 package cn.foxtech.device.protocol.v1.mitsubishi.plc.fx.template;
 
-import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.text.csv.CsvReader;
-import cn.hutool.core.text.csv.CsvUtil;
-import cn.hutool.core.util.CharsetUtil;
+import cn.foxtech.device.protocol.v1.core.context.ApplicationContext;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.core.template.ITemplate;
 import cn.foxtech.device.protocol.v1.mitsubishi.plc.fx.entity.MitsubishiPlcFxDeviceReadEntity;
 import cn.foxtech.device.protocol.v1.modbus.core.ModBusWriteRegistersRequest;
 import lombok.Data;
 
-import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,65 +21,53 @@ import java.util.Map;
 public class JDefaultTemplate implements ITemplate {
     public static final String FORMAT_NAME = "default";
 
-    private JOperate operate = new JOperate();
+    private JDecoderParam decoderParam = new JDecoderParam();
 
     public String getSysTemplateName() {
         return FORMAT_NAME;
     }
 
-    public void setUserTemplateInfo(String userTemplateName, String tableName) {
+    public void loadJsnModel(String modelName) {
+        // 从进程的上下文中，获得设备模型信息
+        Map<String, Object> deviceTemplateEntity = ApplicationContext.getDeviceModels(modelName);
 
-    }
+        // 检测：上下文侧的时间戳和当前模型的时间戳是否一致
+        Object updateTime = deviceTemplateEntity.getOrDefault("updateTime", 0L);
+        if (this.decoderParam.updateTime.equals(updateTime)) {
+            return;
+        }
 
-    /**
-     * 从CSV文件中装载映射表
-     *
-     * @param table csv表名称
-     */
-    public void loadCsvFile(String table) {
-        File dir = new File("");
-
-        File file = new File(dir.getAbsolutePath() + "/template/" + table);
-        CsvReader csvReader = CsvUtil.getReader();
-        List<JDecoderValueParam> rows = csvReader.read(ResourceUtil.getReader(file.getPath(), CharsetUtil.CHARSET_GBK), JDecoderValueParam.class);
+        // 取出JSON模型的数据列表
+        Map<String, Object> modelParam = (Map<String, Object>) deviceTemplateEntity.getOrDefault("modelParam", new HashMap<>());
+        List<Map<String, Object>> rows = (List<Map<String, Object>>) modelParam.getOrDefault("list", new ArrayList<>());
 
         // 将文件记录组织到map中
         Map<String, JDecoderValueParam> map = new HashMap<>();
-        for (JDecoderValueParam jDecoderValueParam : rows) {
+        for (Map<String, Object> row : rows) {
+            JDecoderValueParam jDecoderValueParam = new JDecoderValueParam();
+            jDecoderValueParam.setValue_name((String) row.get("value_name"));
+            jDecoderValueParam.setValue_target((String) row.get("value_target"));
+            jDecoderValueParam.setValue_type((String) row.get("value_type"));
+            jDecoderValueParam.setDetermine((String) row.get("determine"));
+            jDecoderValueParam.setValue_index(Integer.parseInt(row.get("value_index").toString()));
+            jDecoderValueParam.setBit_index(Integer.parseInt(row.get("bit_index").toString()));
+            jDecoderValueParam.setBit_length(Integer.parseInt(row.get("bit_length").toString()));
+            jDecoderValueParam.setMagnification(Float.parseFloat(row.get("magnification").toString()));
+
             map.put(jDecoderValueParam.getValue_name(), jDecoderValueParam);
         }
 
-        this.operate.decoder_param.valueMap = map;
-        this.operate.decoder_param.table = table;
-    }
-
-    /**
-     * 从CSV文件中装载映射表
-     *
-     * @param table csv表名称
-     */
-    public void loadJsnModel(String table) {
-        File dir = new File("");
-
-        File file = new File(dir.getAbsolutePath() + "/template/" + table);
-        CsvReader csvReader = CsvUtil.getReader();
-        List<JDecoderValueParam> rows = csvReader.read(ResourceUtil.getReader(file.getPath(), CharsetUtil.CHARSET_GBK), JDecoderValueParam.class);
-
-        // 将文件记录组织到map中
-        Map<String, JDecoderValueParam> map = new HashMap<>();
-        for (JDecoderValueParam jDecoderValueParam : rows) {
-            map.put(jDecoderValueParam.getValue_name(), jDecoderValueParam);
-        }
-
-        this.operate.decoder_param.valueMap = map;
-        this.operate.decoder_param.table = table;
+        this.decoderParam.valueMap = map;
+        this.decoderParam.table = modelName;
+        this.decoderParam.updateTime = updateTime;
     }
 
     /**
      * 对保持寄存器的数据进行处理
+     *
      * @param address 地址
-     * @param count 数量
-     * @param entity HoldingRegister状态
+     * @param count   数量
+     * @param entity  HoldingRegister状态
      * @return 解码得到的数据
      * @throws ProtocolException 异常信息
      */
@@ -93,14 +78,15 @@ public class JDefaultTemplate implements ITemplate {
 
     /**
      * 编码
-     * @param objectName 对象名称
+     *
+     * @param objectName  对象名称
      * @param objectValue 对象数值
      * @return ModBusWriteRegistersRequest请求对象
      */
     public ModBusWriteRegistersRequest encode(String objectName, Object objectValue) {
         ModBusWriteRegistersRequest request = new ModBusWriteRegistersRequest();
 
-        JDecoderValueParam jDecoderValueParam = this.operate.decoder_param.valueMap.get(objectName);
+        JDecoderValueParam jDecoderValueParam = this.decoderParam.valueMap.get(objectName);
         if (jDecoderValueParam == null) {
             throw new ProtocolException("csv中未定义该对象的信息");
         }
@@ -126,7 +112,7 @@ public class JDefaultTemplate implements ITemplate {
         int offsetStart = address;
         int offsetEnd = address + count - 1;
         Map<String, Object> result = new HashMap<>();
-        for (Map.Entry<String, JDecoderValueParam> entry : this.operate.decoder_param.valueMap.entrySet()) {
+        for (Map.Entry<String, JDecoderValueParam> entry : this.decoderParam.valueMap.entrySet()) {
             String name = entry.getKey();
             JDecoderValueParam jDecoderValueParam = entry.getValue();
 
@@ -192,13 +178,6 @@ public class JDefaultTemplate implements ITemplate {
         return value / 2;
     }
 
-    @Data
-    static public class JOperate implements Serializable {
-        private String name = "";
-        private String operate_name = "";
-        private JEncoderParam encoder_param = new JEncoderParam();
-        private JDecoderParam decoder_param = new JDecoderParam();
-    }
 
     @Data
     static public class JEncoderParam implements Serializable {
@@ -209,6 +188,7 @@ public class JDefaultTemplate implements ITemplate {
     @Data
     static public class JDecoderParam implements Serializable {
         private String table;
+        private Object updateTime = 0L;
         private Map<String, JDecoderValueParam> valueMap = new HashMap<>();
     }
 

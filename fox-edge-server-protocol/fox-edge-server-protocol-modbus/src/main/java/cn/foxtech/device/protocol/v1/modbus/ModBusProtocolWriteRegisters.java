@@ -51,24 +51,15 @@ public class ModBusProtocolWriteRegisters {
         Integer devAddr = (Integer) param.get("devAddr");
         String modbusMode = (String) param.get("modbusMode");
         String modelName = (String) param.get("modelName");
-        String tableName = (String) param.get("tableName");
         String objectName = (String) param.get("objectName");
         Object objectValue = param.get("objectValue");
 
         // 检查输入参数
-        if (MethodUtils.hasEmpty(devAddr, modbusMode, objectName, objectValue)) {
-            throw new ProtocolException("输入参数不能为空:devAddr, modbusMode,  objectName, objectValue");
+        if (MethodUtils.hasEmpty(devAddr, modbusMode, objectName, objectValue, modelName)) {
+            throw new ProtocolException("输入参数不能为空: devAddr, modbusMode, objectName, objectValue, modelName");
         }
 
-        if (modelName == null && tableName == null) {
-            throw new ProtocolException("输入参数不能为空: templateName 或 tableName");
-        }
-        JReadRegistersTemplate template = null;
-        if (!MethodUtils.hasEmpty(tableName)) {
-            template = TemplateFactory.getTemplate("fox-edge-server-protocol-modbus").getTemplate("csv", tableName, JReadRegistersTemplate.class);
-        } else if (!MethodUtils.hasEmpty(modelName)) {
-            template = TemplateFactory.getTemplate("fox-edge-server-protocol-modbus").getTemplate("jsn", modelName, JReadRegistersTemplate.class);
-        }
+        JReadRegistersTemplate template = TemplateFactory.getTemplate("fox-edge-server-protocol-modbus").getTemplate("jsn", modelName, JReadRegistersTemplate.class);
 
 
         ModBusWriteRegistersRequest writeRegistersRequest = template.encode(objectName, objectValue);

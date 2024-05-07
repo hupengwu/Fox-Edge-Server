@@ -25,13 +25,6 @@
             <artifactId>fox-edge-server-common-utils-number</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-core</artifactId>
-            <version>${cn.hutool.version}</version>
-        </dependency>
-
     </dependencies>
 
 

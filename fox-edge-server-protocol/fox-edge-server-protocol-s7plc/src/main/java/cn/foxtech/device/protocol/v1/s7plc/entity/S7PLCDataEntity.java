@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
-public class SnmpDataEntity {
+public class S7PLCDataEntity {
 
     /**
      * 名称

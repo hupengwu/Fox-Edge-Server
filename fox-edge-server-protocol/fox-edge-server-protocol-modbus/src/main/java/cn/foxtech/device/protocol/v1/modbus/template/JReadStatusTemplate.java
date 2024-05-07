@@ -4,13 +4,8 @@ import cn.foxtech.device.protocol.v1.core.context.ApplicationContext;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.core.template.ITemplate;
 import cn.foxtech.device.protocol.v1.modbus.core.ModBusWriteStatusRequest;
-import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.text.csv.CsvReader;
-import cn.hutool.core.text.csv.CsvUtil;
-import cn.hutool.core.util.CharsetUtil;
 import lombok.Data;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,8 +21,7 @@ public class JReadStatusTemplate implements ITemplate {
     public static final String READ_DISCRETE_INPUT_STATUS = "Read Discrete Input Status";
     public static final String WRITE_SINGLE_STATUS = "Write Single Status";
 
-    private String template_name = "";
-    private JOperate operate = new JOperate();
+    private JDecoderParam decoderParam = new JDecoderParam();
 
     /**
      * 缺省的状态格式
@@ -38,38 +32,13 @@ public class JReadStatusTemplate implements ITemplate {
         return "status default";
     }
 
-    /**
-     * 从CSV文件中装载映射表
-     *
-     * @param table csv表名称
-     */
-    public void loadCsvFile(String table) {
-        File dir = new File("");
-
-        File file = new File(dir.getAbsolutePath() + "/template/" + table);
-        CsvReader csvReader = CsvUtil.getReader();
-        List<JDecoderValueParam> rows = csvReader.read(ResourceUtil.getReader(file.getPath(), CharsetUtil.CHARSET_GBK), JDecoderValueParam.class);
-
-        // 将文件记录组织到map中
-        Map<String, JDecoderValueParam> map = new HashMap<>();
-        for (JDecoderValueParam jDecoderValueParam : rows) {
-            map.put(jDecoderValueParam.getValue_name(), jDecoderValueParam);
-        }
-
-
-        this.operate.decoder_param.valueMap = map;
-        this.operate.decoder_param.table = table;
-        this.operate.decoder_param.updateTime = 0;
-        this.operate.decoder_param.sourceType = "csv";
-    }
-
     public void loadJsnModel(String modelName) {
         // 从进程的上下文中，获得设备模型信息
         Map<String, Object> deviceTemplateEntity = ApplicationContext.getDeviceModels(modelName);
 
         // 检测：上下文侧的时间戳和当前模型的时间戳是否一致
         Object updateTime = deviceTemplateEntity.getOrDefault("updateTime", 0L);
-        if (this.operate.decoder_param.updateTime.equals(updateTime)) {
+        if (this.decoderParam.updateTime.equals(updateTime)) {
             return;
         }
 
@@ -93,10 +62,10 @@ public class JReadStatusTemplate implements ITemplate {
         }
 
         // 保存信息
-        this.operate.decoder_param.valueMap = map;
-        this.operate.decoder_param.table = modelName;
-        this.operate.decoder_param.updateTime = updateTime;
-        this.operate.decoder_param.sourceType = "jsn";
+        this.decoderParam.valueMap = map;
+        this.decoderParam.table = modelName;
+        this.decoderParam.updateTime = updateTime;
+        this.decoderParam.sourceType = "jsn";
     }
 
     private Integer getInteger(Object value) {
@@ -130,7 +99,7 @@ public class JReadStatusTemplate implements ITemplate {
     public ModBusWriteStatusRequest encode(String objectName, Object objectValue) {
         ModBusWriteStatusRequest request = new ModBusWriteStatusRequest();
 
-        JDecoderValueParam jDecoderValueParam = this.operate.decoder_param.valueMap.get(objectName);
+        JDecoderValueParam jDecoderValueParam = this.decoderParam.valueMap.get(objectName);
         if (jDecoderValueParam == null) {
             throw new ProtocolException("csv中未定义该对象的信息");
         }
@@ -153,7 +122,7 @@ public class JReadStatusTemplate implements ITemplate {
         int offsetEnd = address + count - 1;
 
         Map<String, Object> result = new HashMap<>();
-        for (Map.Entry<String, JDecoderValueParam> entry : this.operate.decoder_param.valueMap.entrySet()) {
+        for (Map.Entry<String, JDecoderValueParam> entry : this.decoderParam.valueMap.entrySet()) {
             String name = entry.getKey();
             JDecoderValueParam jDecoderValueParam = entry.getValue();
 
@@ -191,21 +160,6 @@ public class JReadStatusTemplate implements ITemplate {
         }
 
         return value / 2;
-    }
-
-    @Data
-    static public class JOperate implements Serializable {
-        private String name = "";
-        private String operate_name = "";
-        private String modbus_mode = "";
-        private JEncoderParam encoder_param = new JEncoderParam();
-        private JDecoderParam decoder_param = new JDecoderParam();
-    }
-
-    @Data
-    static public class JEncoderParam implements Serializable {
-        private String reg_addr;
-        private Integer reg_cnt;
     }
 
     @Data

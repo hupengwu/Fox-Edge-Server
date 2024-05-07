@@ -3,10 +3,12 @@ package cn.foxtech.device.protocol.v1.mitsubishi.plc.fx;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
-import cn.foxtech.device.protocol.v1.utils.HexUtils;
-import cn.foxtech.device.protocol.v1.utils.MethodUtils;
+import cn.foxtech.device.protocol.v1.core.template.TemplateFactory;
 import cn.foxtech.device.protocol.v1.mitsubishi.plc.fx.entity.MitsubishiPlcFxDeviceReadEntity;
 import cn.foxtech.device.protocol.v1.mitsubishi.plc.fx.frame.MitsubishiPlcFxProtocolFrame;
+import cn.foxtech.device.protocol.v1.mitsubishi.plc.fx.template.JDefaultTemplate;
+import cn.foxtech.device.protocol.v1.utils.HexUtils;
+import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,11 +54,10 @@ public class PlcFxProtocolDeviceRead {
         Integer address = (Integer) param.get("address");
         Integer count = (Integer) param.get("count");
         String templateName = (String) param.get("templateName");
-        String tableName = (String) param.get("tableName");
 
         // 检查输入参数
-        if (MethodUtils.hasEmpty(target, address, count, templateName, tableName)) {
-            throw new ProtocolException("输入参数不能为空:operateName, target, address, count, templateName, tableName");
+        if (MethodUtils.hasEmpty(target, address, count, templateName)) {
+            throw new ProtocolException("输入参数不能为空:operateName, target, address, count, templateName");
         }
 
         MitsubishiPlcFxDeviceReadEntity entity = new MitsubishiPlcFxDeviceReadEntity();
@@ -78,8 +79,8 @@ public class PlcFxProtocolDeviceRead {
         // 报文解析
         MitsubishiPlcFxProtocolFrame.decodePack(pack, entity);
 
-//        JDefaultTemplate template = TemplateFactory.getTemplate("fox-edge-server-protocol-mitsubishi-plc-fx").getTemplate(templateName, tableName, JDefaultTemplate.class);
-//        template.decode(address,count,entity);
+        JDefaultTemplate template = TemplateFactory.getTemplate("fox-edge-server-protocol-mitsubishi-plc-fx").getTemplate("jsn", templateName, JDefaultTemplate.class);
+        template.decode(address, count, entity);
 
         // 使用模板拆解数据
         Map<String, Object> value = new HashMap<>();//template.decode(regAddr, regCnd, respond.getStatus());
