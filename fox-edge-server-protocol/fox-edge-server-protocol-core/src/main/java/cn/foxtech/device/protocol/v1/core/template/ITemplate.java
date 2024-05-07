@@ -12,13 +12,6 @@ public interface ITemplate {
     String getSysTemplateName();
 
     /**
-     * 转载CSV模板文件
-     *
-     * @param table 表名称
-     */
-    void loadCsvFile(String table);
-
-    /**
      * 装载JSON数据模型
      *
      * @param table 表名称

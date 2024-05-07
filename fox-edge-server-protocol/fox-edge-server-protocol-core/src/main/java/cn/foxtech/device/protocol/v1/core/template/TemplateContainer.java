@@ -56,49 +56,6 @@ public class TemplateContainer {
         }
     }
 
-    /**
-     * 获得模板
-     *
-     * @param templateName 模板名称，比如Read System Measures Table
-     * @param defaultTable CSV文件名称，比如101.CETUPS_Read System Measures Table.csv
-     * @param clazz        模板对象类型 比如JHoldingRegistersTemplate.class
-     * @param <T>          模板对象类型，比如JHoldingRegistersTemplate
-     * @return 模板对象 比如jHoldingRegistersTemplate
-     */
-    public <T> T getCsvTemplate1(String templateName, String defaultTable, Class<T> clazz) {
-        // 检查：是否为ITemplate的派生类
-        if (!ITemplate.class.isAssignableFrom(clazz)) {
-            throw new ProtocolException("这不是ITemplate的派生类型:" + clazz.getSimpleName());
-        }
-
-        // 获得class的信息
-        ITemplate sysTemplateInfo = this.getSysTemplateInfo(clazz);
-
-        // 获得该模板类型的多个用户级模板列表
-        Map<String, Object> template4operate = (Map<String, Object>) userTemplate.get(sysTemplateInfo.getSysTemplateName());
-        if (template4operate == null) {
-            template4operate = new ConcurrentHashMap<>();
-            userTemplate.put(sysTemplateInfo.getSysTemplateName(), template4operate);
-        }
-
-        // 获得该模板名称的模板
-        ITemplate template = (ITemplate) template4operate.get(templateName);
-        if (template == null) {
-            // 不存在的话，就根据表名称构造模板
-            template = this.newTemplateInstance(clazz);
-            template.loadCsvFile(defaultTable);
-
-            // 保存模板
-            template4operate.put(templateName, template);
-        }
-
-        // 转换对象类型
-        if (clazz.isInstance(template)) {
-            return (T) template;
-        }
-
-        return null;
-    }
 
     public <T> T getTemplate(String sourceType, String templateName, Class<T> clazz) {
         // 检查：是否为ITemplate的派生类
@@ -122,14 +79,7 @@ public class TemplateContainer {
             // 不存在的话，就根据表名称构造模板
             template = this.newTemplateInstance(clazz);
 
-            if (sourceType.equals("csv")) {
-                template.loadCsvFile(templateName);
-            } else if (sourceType.equals("jsn")) {
-                template.loadJsnModel(templateName);
-            } else {
-                template.loadCsvFile(templateName);
-            }
-
+            template.loadJsnModel(templateName);
 
             // 保存模板
             template4operate.put(templateName, template);

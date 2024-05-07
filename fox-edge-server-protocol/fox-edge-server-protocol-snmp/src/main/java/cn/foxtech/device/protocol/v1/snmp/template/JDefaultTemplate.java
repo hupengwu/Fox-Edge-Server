@@ -3,13 +3,8 @@ package cn.foxtech.device.protocol.v1.snmp.template;
 import cn.foxtech.device.protocol.v1.core.context.ApplicationContext;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.core.template.ITemplate;
-import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.text.csv.CsvReader;
-import cn.hutool.core.text.csv.CsvUtil;
-import cn.hutool.core.util.CharsetUtil;
 import lombok.Data;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,31 +23,6 @@ public class JDefaultTemplate implements ITemplate {
 
     public String getSysTemplateName() {
         return FORMAT_NAME;
-    }
-
-    /**
-     * 从CSV文件中装载映射表
-     *
-     * @param table csv表名称
-     */
-    public void loadCsvFile(String table) {
-        File dir = new File("");
-
-        File file = new File(dir.getAbsolutePath() + "/template/" + table);
-        CsvReader csvReader = CsvUtil.getReader();
-        List<JDecoderValueParam> rows = csvReader.read(ResourceUtil.getReader(file.getPath(), CharsetUtil.CHARSET_GBK), JDecoderValueParam.class);
-
-        // 将文件记录组织到map中
-        Map<String, JDecoderValueParam> nameMap = new HashMap<>();
-        Map<String, JDecoderValueParam> oidMap = new HashMap<>();
-        for (JDecoderValueParam jDecoderValueParam : rows) {
-            nameMap.put(jDecoderValueParam.getValue_name(), jDecoderValueParam);
-            oidMap.put(jDecoderValueParam.getOid(), jDecoderValueParam);
-        }
-
-        this.decoderParam.nameMap = nameMap;
-        this.decoderParam.oidMap = oidMap;
-        this.decoderParam.table = table;
     }
 
     public void loadJsnModel(String modelName) {
