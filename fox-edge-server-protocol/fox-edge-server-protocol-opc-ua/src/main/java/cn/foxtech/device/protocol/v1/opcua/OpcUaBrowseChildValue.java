@@ -27,24 +27,14 @@ public class OpcUaBrowseChildValue {
     public static Map<String, Object> packBrowseChildValue(Map<String, Object> param) {
         // 提取业务参数：设备地址/对象名称/CSV模板文件
         String objectName = (String) param.get("objectName");
-        String tableName = (String) param.get("tableName");
         String templateName = (String) param.get("templateName");
 
         // 简单校验参数
-        if (MethodUtils.hasNull(objectName)) {
-            throw new ProtocolException("参数不能为空:objectName");
+        if (MethodUtils.hasNull(objectName, templateName)) {
+            throw new ProtocolException("参数不能为空: objectName, templateName");
         }
 
-        // 简单校验参数
-        if (templateName == null && tableName == null) {
-            throw new ProtocolException("输入参数不能为空: templateName 或 tableName");
-        }
-        JDefaultTemplate template = null;
-        if (!MethodUtils.hasEmpty(tableName)) {
-            template = TemplateFactory.getTemplate("fox-edge-server-protocol-opc-ua").getTemplate("csv", tableName, JDefaultTemplate.class);
-        } else if (!MethodUtils.hasEmpty(templateName)) {
-            template = TemplateFactory.getTemplate("fox-edge-server-protocol-opc-ua").getTemplate("jsn", templateName, JDefaultTemplate.class);
-        }
+        JDefaultTemplate template = TemplateFactory.getTemplate("fox-edge-server-protocol-opc-ua").getTemplate("jsn", templateName, JDefaultTemplate.class);
 
 
         OpcUaNodeId nodeId = template.encodeNodeId(objectName);
@@ -65,21 +55,14 @@ public class OpcUaBrowseChildValue {
      */
     @FoxEdgeOperate(name = "读子节点数值", polling = true, type = FoxEdgeOperate.decoder, timeout = 2000)
     public static Map<String, Object> unpackReadData(Map<String, Object> respond, Map<String, Object> param) {
-        String tableName = (String) param.get("tableName");
         String templateName = (String) param.get("templateName");
 
+        // 简单校验参数
+        if (MethodUtils.hasNull(templateName)) {
+            throw new ProtocolException("参数不能为空: templateName");
+        }
 
-        // 简单校验参数
-        // 简单校验参数
-        if (templateName == null && tableName == null) {
-            throw new ProtocolException("输入参数不能为空: templateName 或 tableName");
-        }
-        JDefaultTemplate template = null;
-        if (!MethodUtils.hasEmpty(tableName)) {
-            template = TemplateFactory.getTemplate("fox-edge-server-protocol-opc-ua").getTemplate("csv", tableName, JDefaultTemplate.class);
-        } else if (!MethodUtils.hasEmpty(templateName)) {
-            template = TemplateFactory.getTemplate("fox-edge-server-protocol-opc-ua").getTemplate("jsn", templateName, JDefaultTemplate.class);
-        }
+        JDefaultTemplate template = TemplateFactory.getTemplate("fox-edge-server-protocol-opc-ua").getTemplate("jsn", templateName, JDefaultTemplate.class);
 
 
         Map<String, Object> result = new HashMap<>();

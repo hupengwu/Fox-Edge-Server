@@ -1,16 +1,12 @@
 package cn.foxtech.device.protocol.v1.opcua.template;
 
+import cn.foxtech.device.protocol.v1.core.context.ApplicationContext;
 import cn.foxtech.device.protocol.v1.core.exception.ProtocolException;
 import cn.foxtech.device.protocol.v1.core.template.ITemplate;
-import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 import cn.foxtech.device.protocol.v1.opcua.entity.OpcUaNodeId;
-import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.text.csv.CsvReader;
-import cn.hutool.core.text.csv.CsvUtil;
-import cn.hutool.core.util.CharsetUtil;
+import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 import lombok.Data;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,32 +21,37 @@ import java.util.Map;
 public class JDefaultTemplate implements ITemplate {
     public static final String FORMAT_NAME = "default";
 
-    private JOperate operate = new JOperate();
+    private JDecoderParam decoderParam = new JDecoderParam();
 
     public String getSysTemplateName() {
         return FORMAT_NAME;
     }
 
-    public void setUserTemplateInfo(String userTemplateName, String tableName) {
 
-    }
+    public void loadJsnModel(String modelName) {
+        // 从进程的上下文中，获得设备模型信息
+        Map<String, Object> deviceTemplateEntity = ApplicationContext.getDeviceModels(modelName);
 
-    /**
-     * 从CSV文件中装载映射表
-     *
-     * @param table csv表名称
-     */
-    public void loadCsvFile(String table) {
-        File dir = new File("");
+        // 检测：上下文侧的时间戳和当前模型的时间戳是否一致
+        Object updateTime = deviceTemplateEntity.getOrDefault("updateTime", 0L);
+        if (this.decoderParam.updateTime.equals(updateTime)) {
+            return;
+        }
 
-        File file = new File(dir.getAbsolutePath() + "/template/" + table);
-        CsvReader csvReader = CsvUtil.getReader();
-        List<JDecoderValueParam> rows = csvReader.read(ResourceUtil.getReader(file.getPath(), CharsetUtil.CHARSET_GBK), JDecoderValueParam.class);
+        // 取出JSON模型的数据列表
+        Map<String, Object> modelParam = (Map<String, Object>) deviceTemplateEntity.getOrDefault("modelParam", new HashMap<>());
+        List<Map<String, Object>> rows = (List<Map<String, Object>>) modelParam.getOrDefault("list", new ArrayList<>());
 
         // 将文件记录组织到map中
         Map<String, JDecoderValueParam> nameMap = new HashMap<>();
         Map<OpcUaNodeId, JDecoderValueParam> nodeMap = new HashMap<>();
-        for (JDecoderValueParam jDecoderValueParam : rows) {
+        for (Map<String, Object> row : rows) {
+            JDecoderValueParam jDecoderValueParam = new JDecoderValueParam();
+            jDecoderValueParam.setObject_name((String) row.get("object_name"));
+            jDecoderValueParam.setNode_id_identifier((String) row.get("node_id_identifier"));
+            jDecoderValueParam.setNode_id_namespace(Integer.parseInt(row.get("node_id_namespace").toString()));
+            jDecoderValueParam.setRemark((String) row.get("remark"));
+
             if (MethodUtils.hasEmpty(jDecoderValueParam.object_name, jDecoderValueParam.node_id_namespace, jDecoderValueParam.node_id_identifier)) {
                 continue;
             }
@@ -64,47 +65,14 @@ public class JDefaultTemplate implements ITemplate {
             nodeMap.put(nodeId, jDecoderValueParam);
         }
 
-        this.operate.decoderParam.nameMap = nameMap;
-        this.operate.decoderParam.nodeMap = nodeMap;
-        this.operate.decoderParam.table = table;
-    }
-
-    /**
-     * 从CSV文件中装载映射表
-     *
-     * @param table csv表名称
-     */
-    public void loadJsnModel(String table) {
-        File dir = new File("");
-
-        File file = new File(dir.getAbsolutePath() + "/template/" + table);
-        CsvReader csvReader = CsvUtil.getReader();
-        List<JDecoderValueParam> rows = csvReader.read(ResourceUtil.getReader(file.getPath(), CharsetUtil.CHARSET_GBK), JDecoderValueParam.class);
-
-        // 将文件记录组织到map中
-        Map<String, JDecoderValueParam> nameMap = new HashMap<>();
-        Map<OpcUaNodeId, JDecoderValueParam> nodeMap = new HashMap<>();
-        for (JDecoderValueParam jDecoderValueParam : rows) {
-            if (MethodUtils.hasEmpty(jDecoderValueParam.object_name, jDecoderValueParam.node_id_namespace, jDecoderValueParam.node_id_identifier)) {
-                continue;
-            }
-
-            // 构造出nodeId
-            OpcUaNodeId nodeId = new OpcUaNodeId();
-            nodeId.setNamespace(jDecoderValueParam.node_id_namespace);
-            nodeId.setIdentifier(jDecoderValueParam.node_id_identifier);
-
-            nameMap.put(jDecoderValueParam.getObject_name(), jDecoderValueParam);
-            nodeMap.put(nodeId, jDecoderValueParam);
-        }
-
-        this.operate.decoderParam.nameMap = nameMap;
-        this.operate.decoderParam.nodeMap = nodeMap;
-        this.operate.decoderParam.table = table;
+        this.decoderParam.nameMap = nameMap;
+        this.decoderParam.nodeMap = nodeMap;
+        this.decoderParam.table = modelName;
+        this.decoderParam.updateTime = updateTime;
     }
 
     public OpcUaNodeId encodeNodeId(String objectName) {
-        JDecoderValueParam jDecoderValueParam = this.operate.decoderParam.nameMap.get(objectName);
+        JDecoderValueParam jDecoderValueParam = this.decoderParam.nameMap.get(objectName);
         if (jDecoderValueParam == null) {
             throw new ProtocolException("csv中未定义该对象的信息:" + objectName);
         }
@@ -121,7 +89,7 @@ public class JDefaultTemplate implements ITemplate {
     public List<OpcUaNodeId> encodeNodeIdList(List<String> objectNameList) {
         List<OpcUaNodeId> nodeIdList = new ArrayList<>();
         for (String objectName : objectNameList) {
-            JDecoderValueParam jDecoderValueParam = this.operate.decoderParam.nameMap.get(objectName);
+            JDecoderValueParam jDecoderValueParam = this.decoderParam.nameMap.get(objectName);
             if (jDecoderValueParam == null) {
                 throw new ProtocolException("csv中未定义该对象的信息:" + objectName);
             }
@@ -139,7 +107,7 @@ public class JDefaultTemplate implements ITemplate {
     }
 
     public String getObjectName(OpcUaNodeId nodeId) {
-        JDecoderValueParam jDecoderValueParam = this.operate.decoderParam.nodeMap.get(nodeId);
+        JDecoderValueParam jDecoderValueParam = this.decoderParam.nodeMap.get(nodeId);
         if (jDecoderValueParam == null) {
             return null;
         }
@@ -153,7 +121,7 @@ public class JDefaultTemplate implements ITemplate {
         for (String nodeId : nodeId2Value.keySet()) {
             Object value = nodeId2Value.get(nodeId);
 
-            JDecoderValueParam jDecoderValueParam = this.operate.decoderParam.nodeMap.get(nodeId);
+            JDecoderValueParam jDecoderValueParam = this.decoderParam.nodeMap.get(nodeId);
             if (jDecoderValueParam == null) {
                 throw new ProtocolException("csv中未定义该对象的信息:" + nodeId);
             }
@@ -164,16 +132,6 @@ public class JDefaultTemplate implements ITemplate {
         return result;
     }
 
-    /**
-     * 代表一个交互操作
-     */
-    @Data
-    static public class JOperate implements Serializable {
-        private String name = "";
-        private String operateName = "";
-        private JEncoderParam encoderParam = new JEncoderParam();
-        private JDecoderParam decoderParam = new JDecoderParam();
-    }
 
     @Data
     static public class JEncoderParam implements Serializable {
@@ -186,6 +144,7 @@ public class JDefaultTemplate implements ITemplate {
     @Data
     static public class JDecoderParam implements Serializable {
         private String table;
+        private Object updateTime = 0L;
         private Map<String, JDecoderValueParam> nameMap = new HashMap<>();
         private Map<OpcUaNodeId, JDecoderValueParam> nodeMap = new HashMap<>();
     }
