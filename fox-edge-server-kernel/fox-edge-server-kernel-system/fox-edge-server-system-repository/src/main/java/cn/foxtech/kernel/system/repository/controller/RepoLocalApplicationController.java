@@ -292,10 +292,10 @@ public class RepoLocalApplicationController {
                 throw new ServiceException("kernel服务不允许修改!");
             }
 
-            String springParam = (String) compParam.getOrDefault(ServiceVOFieldConstant.field_spring_param, "");
+            String userParam = (String) compParam.getOrDefault(ServiceVOFieldConstant.field_user_param, "");
 
             // 修改内容
-            entity.getCompParam().put(ServiceVOFieldConstant.field_spring_param, springParam);
+            entity.getCompParam().put(ServiceVOFieldConstant.field_user_param, userParam);
 
             // 保存文件
             String pathName = this.pathNameService.getPathName4LocalShell2confFile(appType, appName);

@@ -50,7 +50,7 @@ public class RepoLocalAppConfService {
         String springParam = getParam(lineList, "springParam");
         String confFiles = getParam(lineList, "confFiles");
         String pyName = getParam(lineList, "pyName");
-        String pyParam = getParam(lineList, "pyParam");
+        String pythonParam = getParam(lineList, "pythonParam");
 
         // 验证数据
         if (MethodUtils.hasEmpty(appType) || MethodUtils.hasEmpty(appName)) {
@@ -78,7 +78,7 @@ public class RepoLocalAppConfService {
 
             data.put(ServiceVOFieldConstant.field_path_name, pathName);
             data.put(ServiceVOFieldConstant.field_file_name, jarName);
-            data.put(ServiceVOFieldConstant.field_spring_param, springParam);
+            data.put(ServiceVOFieldConstant.field_user_param, springParam);
         } else if (appEngine.equals("python") || appEngine.equals("python3")) {
             // python程序：必填项目pyName
             if (MethodUtils.hasEmpty(pyName)) {
@@ -88,7 +88,7 @@ public class RepoLocalAppConfService {
 
             data.put(ServiceVOFieldConstant.field_path_name, pathName);
             data.put(ServiceVOFieldConstant.field_file_name, pyName);
-            data.put(ServiceVOFieldConstant.field_python_param, pyParam);
+            data.put(ServiceVOFieldConstant.field_user_param, pythonParam);
         } else {
             throw new ServiceException("配置文件内容，尚未支持的程序类型: " + appEngine);
         }
@@ -112,24 +112,34 @@ public class RepoLocalAppConfService {
     }
 
     public void saveConf(String filePath, Map<String, Object> data) throws IOException {
+        String appEngine = (String) data.getOrDefault(ServiceVOFieldConstant.field_app_engine, "java");
         String appType = (String) data.getOrDefault(ServiceVOFieldConstant.field_app_type, "");
         String appName = (String) data.getOrDefault(ServiceVOFieldConstant.field_app_name, "");
-        String jarName = (String) data.getOrDefault(ServiceVOFieldConstant.field_file_name, "");
+        String fileName = (String) data.getOrDefault(ServiceVOFieldConstant.field_file_name, "");
         String loaderName = (String) data.getOrDefault(ServiceVOFieldConstant.field_loader_name, "");
-        String springParam = (String) data.getOrDefault(ServiceVOFieldConstant.field_spring_param, "");
-        String pathName = (String) data.getOrDefault(ServiceVOFieldConstant.field_path_name, "");
+        String userParam = (String) data.getOrDefault(ServiceVOFieldConstant.field_user_param, "");
         List<String> confFiles = (List<String>) data.getOrDefault(ServiceVOFieldConstant.field_conf_files, new ArrayList<>());
 
-        if (MethodUtils.hasEmpty(appType, appName, jarName)) {
-            throw new ServiceException("缺失配置参数：appType, appName, jarName");
+        if (MethodUtils.hasEmpty(appType, appName, fileName)) {
+            throw new ServiceException("缺失配置参数：appType, appName, fileName");
         }
 
+
         StringBuilder sb = new StringBuilder();
+        sb.append("appEngine=" + appEngine + "\r\n");
         sb.append("appType=" + appType + "\r\n");
         sb.append("appName=" + appName + "\r\n");
-        sb.append("jarName=" + jarName + "\r\n");
+
+        if (appEngine.equals("java")) {
+            sb.append("jarName=" + fileName + "\r\n");
+            sb.append("springParam=\"" + userParam + "\"" + "\r\n");
+        }
+        if (appEngine.equals("python") || appEngine.equals("python3")) {
+            sb.append("pyName=" + fileName + "\r\n");
+            sb.append("pythonParam=\"" + userParam + "\"" + "\r\n");
+        }
+
         sb.append("loaderName=" + loaderName + "\r\n");
-        sb.append("springParam=\"" + springParam + "\"" + "\r\n");
         sb.append("confFiles=\"");
         for (String line : confFiles) {
             sb.append(line + ";");

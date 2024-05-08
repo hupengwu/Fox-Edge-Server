@@ -112,13 +112,13 @@ public class RepoLocalCompConvert {
         }
 
         Map<String, Object> compParam = (Map<String, Object>) localMap.get(RepoCompVOFieldConstant.field_comp_param);
+        compParam.put(ServiceVOFieldConstant.field_app_engine, confMap.get(ServiceVOFieldConstant.field_app_engine));
         compParam.put(ServiceVOFieldConstant.field_app_name, confMap.get(ServiceVOFieldConstant.field_app_name));
         compParam.put(ServiceVOFieldConstant.field_app_type, confMap.get(ServiceVOFieldConstant.field_app_type));
         compParam.put(ServiceVOFieldConstant.field_file_name, confMap.get(ServiceVOFieldConstant.field_file_name));
         compParam.put(ServiceVOFieldConstant.field_loader_name, confMap.get(ServiceVOFieldConstant.field_loader_name));
-        compParam.put(ServiceVOFieldConstant.field_spring_param, confMap.get(ServiceVOFieldConstant.field_spring_param));
         compParam.put(ServiceVOFieldConstant.field_conf_files, confMap.get(ServiceVOFieldConstant.field_conf_files));
-
+        compParam.put(ServiceVOFieldConstant.field_user_param, confMap.get(ServiceVOFieldConstant.field_user_param));
         return localMap;
     }
 

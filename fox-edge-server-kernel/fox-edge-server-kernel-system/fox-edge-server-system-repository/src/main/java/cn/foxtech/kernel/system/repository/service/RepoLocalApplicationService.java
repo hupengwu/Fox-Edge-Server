@@ -95,19 +95,21 @@ public class RepoLocalApplicationService {
         RepoCompEntity dstEntity = existEntity;
 
         StringBuilder srcSB = new StringBuilder();
+        srcSB.append(srcEntity.getCompParam().getOrDefault(ServiceVOFieldConstant.field_app_engine, ""));
         srcSB.append(srcEntity.getCompParam().getOrDefault(ServiceVOFieldConstant.field_app_name, ""));
         srcSB.append(srcEntity.getCompParam().getOrDefault(ServiceVOFieldConstant.field_app_type, ""));
         srcSB.append(srcEntity.getCompParam().getOrDefault(ServiceVOFieldConstant.field_file_name, ""));
         srcSB.append(srcEntity.getCompParam().getOrDefault(ServiceVOFieldConstant.field_loader_name, ""));
-        srcSB.append(srcEntity.getCompParam().getOrDefault(ServiceVOFieldConstant.field_spring_param, ""));
+        srcSB.append(srcEntity.getCompParam().getOrDefault(ServiceVOFieldConstant.field_user_param, ""));
         srcSB.append(srcEntity.getCompParam().getOrDefault(ServiceVOFieldConstant.field_conf_files, new ArrayList<>()));
 
         StringBuilder dstSB = new StringBuilder();
+        dstSB.append(dstEntity.getCompParam().getOrDefault(ServiceVOFieldConstant.field_app_engine, ""));
         dstSB.append(dstEntity.getCompParam().getOrDefault(ServiceVOFieldConstant.field_app_name, ""));
         dstSB.append(dstEntity.getCompParam().getOrDefault(ServiceVOFieldConstant.field_app_type, ""));
         dstSB.append(dstEntity.getCompParam().getOrDefault(ServiceVOFieldConstant.field_file_name, ""));
         dstSB.append(dstEntity.getCompParam().getOrDefault(ServiceVOFieldConstant.field_loader_name, ""));
-        dstSB.append(dstEntity.getCompParam().getOrDefault(ServiceVOFieldConstant.field_spring_param, ""));
+        dstSB.append(dstEntity.getCompParam().getOrDefault(ServiceVOFieldConstant.field_user_param, ""));
         dstSB.append(dstEntity.getCompParam().getOrDefault(ServiceVOFieldConstant.field_conf_files, new ArrayList<>()));
 
         if (dstSB.toString().equals(srcSB.toString())) {
@@ -115,15 +117,22 @@ public class RepoLocalApplicationService {
         }
 
         // 修改内容
-        srcEntity.getCompParam().put(ServiceVOFieldConstant.field_app_name, dstEntity.getCompParam().get(ServiceVOFieldConstant.field_app_name));
-        srcEntity.getCompParam().put(ServiceVOFieldConstant.field_app_type, dstEntity.getCompParam().get(ServiceVOFieldConstant.field_app_type));
-        srcEntity.getCompParam().put(ServiceVOFieldConstant.field_file_name, dstEntity.getCompParam().get(ServiceVOFieldConstant.field_file_name));
-        srcEntity.getCompParam().put(ServiceVOFieldConstant.field_loader_name, dstEntity.getCompParam().get(ServiceVOFieldConstant.field_loader_name));
-        srcEntity.getCompParam().put(ServiceVOFieldConstant.field_spring_param, dstEntity.getCompParam().get(ServiceVOFieldConstant.field_spring_param));
-        srcEntity.getCompParam().put(ServiceVOFieldConstant.field_conf_files, dstEntity.getCompParam().get(ServiceVOFieldConstant.field_conf_files));
+        this.setDefault(srcEntity.getCompParam(), dstEntity.getCompParam(), ServiceVOFieldConstant.field_app_name);
+        this.setDefault(srcEntity.getCompParam(), dstEntity.getCompParam(), ServiceVOFieldConstant.field_app_engine);
+        this.setDefault(srcEntity.getCompParam(), dstEntity.getCompParam(), ServiceVOFieldConstant.field_app_type);
+        this.setDefault(srcEntity.getCompParam(), dstEntity.getCompParam(), ServiceVOFieldConstant.field_file_name);
+        this.setDefault(srcEntity.getCompParam(), dstEntity.getCompParam(), ServiceVOFieldConstant.field_loader_name);
+        this.setDefault(srcEntity.getCompParam(), dstEntity.getCompParam(), ServiceVOFieldConstant.field_user_param);
+        this.setDefault(srcEntity.getCompParam(), dstEntity.getCompParam(), ServiceVOFieldConstant.field_conf_files);
 
         this.entityManageService.updateEntity(srcEntity);
+    }
 
+    private void setDefault(Map<String, Object> update, Map<String, Object> exist, String key) {
+        if (update.containsKey(key)) {
+            return;
+        }
+        update.put(key, exist.get(key));
     }
 
 
