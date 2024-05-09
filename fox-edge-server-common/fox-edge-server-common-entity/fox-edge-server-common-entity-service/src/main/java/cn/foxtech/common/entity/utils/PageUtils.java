@@ -167,9 +167,8 @@ public class PageUtils {
     public static String makeSelectSQLPage(String tableName, List<String> vFields, List<String> cFields, String filter, String order, Integer total, Long pageNmu, Long pageSize) {
         StringBuilder sb = new StringBuilder();
 
-        Long pagePos = pageNmu * pageSize;
-        Long pageCount = (total / pageSize) >= pageNmu ? pageSize : total % pageSize;
 
+        Long pageIndex = (pageNmu - 1) * pageSize;
 
         String where = "";
         if (filter != null && !filter.isEmpty()) {
@@ -207,17 +206,11 @@ public class PageUtils {
         sb.append("        FROM " + tableName + " t4                ");
         sb.append("        RIGHT JOIN                               ");
         sb.append("        (                                        ");
-        sb.append("                SELECT t2.id                     ");
-        sb.append("                FROM                             ");
-        sb.append("        (                                        ");
         sb.append("                SELECT t1.id                     ");
         sb.append("        FROM " + tableName + " t1                ");
         sb.append(where);
         sb.append("        ORDER BY t1.id " + ASC + "               ");
-        sb.append("        LIMIT " + pagePos + "                    ");
-        sb.append("                     ) t2                        ");
-        sb.append("        ORDER BY t2.id " + DESC + "              ");
-        sb.append("        LIMIT " + pageCount + "                  ");
+        sb.append("        LIMIT " + pageIndex + "," + pageSize + " ");
         sb.append("             ) t3                                ");
         sb.append("        ON t4.id = t3.id                         ");
         sb.append("        ORDER BY t4.id " + ASC + "               ");
