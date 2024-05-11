@@ -4,20 +4,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>fox-edge-server</artifactId>
+        <artifactId>fox-edge-server-common-utils</artifactId>
         <groupId>cn.fox-tech</groupId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>fox-edge-server-persist</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>fox-edge-server-common-utils-iotdb</artifactId>
+    <name>${project.artifactId}</name>
     <description>${project.artifactId}</description>
 
-    <modules>
-        <module>fox-edge-server-persist-common</module>
-        <module>fox-edge-server-persist-service</module>
-        <module>fox-edge-server-persist-iotdb</module>
-    </modules>
-
-
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.iotdb</groupId>
+            <artifactId>iotdb-session</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+    </dependencies>
 </project>

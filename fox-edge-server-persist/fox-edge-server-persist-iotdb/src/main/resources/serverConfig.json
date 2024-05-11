@@ -1,0 +1,19 @@
+{
+  "configValue": {
+    "operateRecord": {
+      "period": 3600,
+      "maxCount": 10000
+    },
+    "deviceHistory": {
+      "host": "localhost",
+      "port": 6667,
+      "username": "root",
+      "password": "root",
+      "period": 3600,
+      "lifeCycle": 86400
+    }
+  },
+  "configParam": {
+  },
+  "remark": "这是持久化服务 persist-service 的配置参数\n\n配置参数说明：\n{\n     \"deviceHistory\": {------------------定期清理历史记录，防止数据库表过渡膨胀\n          \"period\": 3600,-----------------3600秒清理一次\n          \"maxCount\": 1000000----------最大保留1000000条记录\n     },\n     \"operateRecord\": {------------------定期清理历史记录，防止数据库表过渡膨胀\n          \"period\": 3600,------------------3600秒清理一次\n          \"maxCount\": 10000-------------最大保留10000条记录\n     }\n}"
+}

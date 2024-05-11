@@ -4,6 +4,7 @@ package cn.foxtech.persist.common.scheduler;
 import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.tags.RedisTagService;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
+import cn.foxtech.persist.common.history.IDeviceHistoryUpdater;
 import cn.foxtech.persist.common.service.DeviceObjectMapper;
 import cn.foxtech.persist.common.service.EntityManageService;
 import org.apache.log4j.Logger;
@@ -20,15 +21,17 @@ import java.util.Map;
 public class EntityManageScheduler extends PeriodTaskService {
     private static final Logger logger = Logger.getLogger(EntityManageScheduler.class);
 
-
     @Autowired
     private EntityManageService entityManageService;
+
+    @Autowired
+    private InitialConfigService configService;
 
     @Autowired
     private DeviceObjectMapper deviceObjectMapper;
 
     @Autowired
-    private InitialConfigService configService;
+    private IDeviceHistoryUpdater hisdoryEntityUpdater;
 
     @Autowired
     private RedisTagService redisTagService;
@@ -48,40 +51,15 @@ public class EntityManageScheduler extends PeriodTaskService {
         this.deviceObjectMapper.syncEntity();
 
         // 保存标记
-        this.redisTagService.save();;
+        this.redisTagService.save();
 
         // 删除设备历史记录
-        this.clearDeviceHistoryEntity();
+        this.hisdoryEntityUpdater.clearHistoryEntity();
 
         // 删除操作记录
         this.clearOperateRecord();
     }
 
-    private void clearDeviceHistoryEntity() {
-        try {
-            if (!this.entityManageService.isInitialized()) {
-                return;
-            }
-
-            Map<String, Object> configs = this.configService.getConfigParam("serverConfig");
-            Map<String, Object> params = (Map<String, Object>) configs.getOrDefault("deviceHistory", new HashMap<>());
-
-            Integer maxCount = (Integer) params.getOrDefault("maxCount", 1000000);
-            Integer period = (Integer) params.getOrDefault("period", 3600);
-
-            // 检查：执行周期是否到达
-            long currentTime = System.currentTimeMillis();
-            if ((currentTime - this.lastTime) < period * 1000) {
-                return;
-            }
-            this.lastTime = currentTime;
-
-            // 除了最近的maxCount条数据，旧数据全部删除
-            this.entityManageService.getDeviceHistoryEntityService().delete(maxCount);
-        } catch (Exception e) {
-            logger.error(e);
-        }
-    }
 
     private void clearOperateRecord() {
         try {

@@ -1,4 +1,4 @@
-package cn.foxtech.persist.service.config;
+package cn.foxtech.persist.mysql.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -8,5 +8,5 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan(basePackages = {"cn.foxtech.persist.common.*"})
-public class ControllerConfig {
+public class PersistServiceConfig {
 }

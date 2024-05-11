@@ -23,6 +23,7 @@
         <module>fox-edge-server-common-utils-http</module>
         <module>fox-edge-server-common-utils-hutool-http</module>
         <module>fox-edge-server-common-utils-influxdb</module>
+        <module>fox-edge-server-common-utils-iotdb</module>
         <module>fox-edge-server-common-utils-json</module>
         <module>fox-edge-server-common-utils-xml</module>
         <module>fox-edge-server-common-utils-jar-info</module>

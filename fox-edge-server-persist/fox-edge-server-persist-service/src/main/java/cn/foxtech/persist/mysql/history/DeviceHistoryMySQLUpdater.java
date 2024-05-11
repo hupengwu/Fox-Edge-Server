@@ -1,20 +1,24 @@
-package cn.foxtech.persist.common.service.updater;
+package cn.foxtech.persist.mysql.history;
 
-import cn.foxtech.persist.common.service.EntityManageService;
+
 import cn.foxtech.common.entity.entity.DeviceHistoryEntity;
 import cn.foxtech.common.entity.entity.DeviceHistoryPo;
 import cn.foxtech.common.entity.entity.DeviceObjectValue;
 import cn.foxtech.common.entity.entity.DeviceValueEntity;
+import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.service.devicehistory.DeviceHistoryEntityMaker;
+import cn.foxtech.persist.common.history.IDeviceHistoryUpdater;
+import cn.foxtech.persist.common.service.EntityManageService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class DeviceHistoryEntityUpdater {
-    private static final Logger logger = Logger.getLogger(DeviceHistoryEntityUpdater.class);
+public class DeviceHistoryMySQLUpdater implements IDeviceHistoryUpdater {
+    private static final Logger logger = Logger.getLogger(DeviceHistoryMySQLUpdater.class);
 
     /**
      * 实体管理
@@ -22,9 +26,15 @@ public class DeviceHistoryEntityUpdater {
     @Autowired
     private EntityManageService entityManageService;
 
+    @Autowired
+    private InitialConfigService configService;
+
     /**
-     * 保存历史记录
+     * 上次处理时间
      */
+    private long lastTime = 0;
+
+    @Override
     public void saveHistoryEntity(DeviceValueEntity existValueEntity, Map<String, Object> statusValues) {
         if (existValueEntity == null) {
             return;
@@ -98,5 +108,32 @@ public class DeviceHistoryEntityUpdater {
         }
 
         return !paramValue.equals(existValue.getValue());
+    }
+
+    @Override
+    public void clearHistoryEntity() {
+        try {
+            if (!this.entityManageService.isInitialized()) {
+                return;
+            }
+
+            Map<String, Object> configs = this.configService.getConfigParam("serverConfig");
+            Map<String, Object> params = (Map<String, Object>) configs.getOrDefault("deviceHistory", new HashMap<>());
+
+            Integer maxCount = (Integer) params.getOrDefault("maxCount", 1000000);
+            Integer period = (Integer) params.getOrDefault("period", 3600);
+
+            // 检查：执行周期是否到达
+            long currentTime = System.currentTimeMillis();
+            if ((currentTime - this.lastTime) < period * 1000) {
+                return;
+            }
+            this.lastTime = currentTime;
+
+            // 除了最近的maxCount条数据，旧数据全部删除
+            this.entityManageService.getDeviceHistoryEntityService().delete(maxCount);
+        } catch (Exception e) {
+            logger.error(e);
+        }
     }
 }

@@ -4,6 +4,7 @@ import cn.foxtech.common.entity.constant.DeviceMapperVOFieldConstant;
 import cn.foxtech.common.entity.entity.*;
 import cn.foxtech.common.entity.manager.EntityPublishManager;
 import cn.foxtech.common.utils.pair.Pair;
+import cn.foxtech.persist.common.history.IDeviceHistoryUpdater;
 import cn.foxtech.persist.common.service.DeviceObjectMapper;
 import cn.foxtech.persist.common.service.EntityManageService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -27,7 +28,7 @@ public class DeviceStatusValueUpdater {
     @Autowired
     private EntityManageService entityManageService;
     @Autowired
-    private DeviceHistoryEntityUpdater deviceHistoryEntityUpdater;
+    private IDeviceHistoryUpdater deviceHistoryEntityUpdater;
     @Autowired
     private DeviceObjectMapper deviceObjectMapper;
 

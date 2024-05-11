@@ -1,4 +1,4 @@
-package cn.foxtech.persist.service.scheduler;
+package cn.foxtech.persist.common.scheduler;
 
 import cn.foxtech.common.domain.constant.RestFulManagerVOConstant;
 import cn.foxtech.common.domain.vo.RestFulRequestVO;
@@ -24,8 +24,8 @@ import java.util.Map;
  * 记录队列：从topic改为采用list方式，是为了让记录数据更可靠
  */
 @Component
-public class PeriodTaskScheduler extends PeriodTaskService {
-    private static final Logger logger = Logger.getLogger(PeriodTaskScheduler.class);
+public class PersistTaskScheduler extends PeriodTaskService {
+    private static final Logger logger = Logger.getLogger(PersistTaskScheduler.class);
     @Autowired
     EntityManageService entityManageService;
     @Autowired
