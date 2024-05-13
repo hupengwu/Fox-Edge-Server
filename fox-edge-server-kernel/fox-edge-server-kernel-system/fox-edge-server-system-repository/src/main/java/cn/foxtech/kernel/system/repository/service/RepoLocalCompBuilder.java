@@ -187,7 +187,7 @@ public class RepoLocalCompBuilder {
         entity.setCompParam(compParam);
 
         // 填写固定参数
-        entity.getCompParam().put(RepoCompConstant.filed_model_version, "v1");
+        entity.getCompParam().put(RepoCompConstant.filed_model_version, RepoCompConstant.filed_value_model_version_default);
         entity.getCompParam().put(RepoCompConstant.filed_version, "1.0.0");
 
         return entity;

@@ -468,10 +468,10 @@ public class RepoCloudInstallService {
 
             // 备份目标文件，然后将解压文件复制复制到目标目录
             if (modelType.equals(RepoCompConstant.repository_type_decoder)) {
-                this.installDecoderFile(tarDir, file.getAbsolutePath() + "/jar/decoder", modelName, modelVersion);
+                this.installDecoderFile(tarDir, file.getAbsolutePath() + "/jar/decoder", modelName);
 
                 // 注册为加载
-                String jarFileName = modelName + "." + modelVersion + ".jar";
+                String jarFileName = modelName + ".jar";
                 this.jarConfigService.updateConfig(jarFileName, true);
             }
             if (modelType.equals(RepoCompConstant.repository_type_template)) {
@@ -568,7 +568,7 @@ public class RepoCloudInstallService {
      * @throws IOException          异常信息
      * @throws InterruptedException 异常信息
      */
-    private void installDecoderFile(String installFileDir, String destFileDir, String modelName, String modelVersion) throws IOException, InterruptedException {
+    private void installDecoderFile(String installFileDir, String destFileDir, String modelName) throws IOException, InterruptedException {
         // 获得repository目录下所有下的可安装所有文件名
         List<String> fileList = FileNameUtils.findFileList(installFileDir, false, false);
         if (fileList.isEmpty()) {
@@ -585,7 +585,7 @@ public class RepoCloudInstallService {
                 continue;
             }
 
-            String destFileName = modelName + "." + modelVersion + ".jar";
+            String destFileName = modelName + ".jar";
 
             // 检查：该文件是否已经存在，如果存在，那么就检查文件内容是否相同
             File exist = new File(destFileDir + "/" + destFileName);

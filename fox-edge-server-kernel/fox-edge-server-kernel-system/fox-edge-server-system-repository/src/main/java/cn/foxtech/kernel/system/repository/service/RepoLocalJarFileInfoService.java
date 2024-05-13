@@ -11,7 +11,6 @@ import cn.foxtech.common.utils.file.FileNameUtils;
 import cn.foxtech.common.utils.jar.info.JarInfoEntity;
 import cn.foxtech.common.utils.jar.info.JarInfoReader;
 import cn.foxtech.common.utils.method.MethodUtils;
-import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.device.protocol.RootLocation;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,8 +98,8 @@ public class RepoLocalJarFileInfoService {
         Map<String, Object> result = new HashMap<>();
         for (String jarFileName : jarNameList) {
             // 读取jar文件信息
-            Map<String, String> jarNameInfo = this.fileNameService.splitJarFileName(jarFileName);
-            if (jarNameInfo == null) {
+            String modelName = this.fileNameService.getModelName(jarFileName);
+            if (MethodUtils.hasEmpty(modelName)) {
                 continue;
             }
 
@@ -109,7 +108,7 @@ public class RepoLocalJarFileInfoService {
                 continue;
             }
 
-            MapUtils.setValue(result, jarNameInfo.get(RepoCompConstant.filed_model_name), jarFileInfo.get("jarVer"), jarFileInfo);
+            MapUtils.setValue(result, modelName, jarFileInfo.get("jarVer"), jarFileInfo);
         }
 
 
@@ -118,8 +117,8 @@ public class RepoLocalJarFileInfoService {
 
     public Map<String, Object> readJarFiles(String jarFileName) {
         // 读取jar文件信息
-        Map<String, String> jarNameInfo = this.fileNameService.splitJarFileName(jarFileName);
-        if (jarNameInfo == null) {
+        String modelName = this.fileNameService.getModelName(jarFileName);
+        if (MethodUtils.hasEmpty(modelName)) {
             return null;
         }
 
@@ -129,8 +128,8 @@ public class RepoLocalJarFileInfoService {
         }
 
         Map<String, Object> result = new HashMap<>();
-        result.putAll(jarNameInfo);
         result.putAll(jarFileInfo);
+        result.put(RepoCompConstant.filed_model_name, modelName);
 
         return result;
     }
@@ -156,24 +155,11 @@ public class RepoLocalJarFileInfoService {
             // 从jar文件中，读取jar信息
             JarInfoEntity jarInfoEntity = JarInfoReader.readJarInfoEntity(jarFile.getAbsolutePath());
 
-
-            // 获得版本名称
-            String jarVer = getJarVer(jarInfoEntity.getClassFileName());
-            if (MethodUtils.hasEmpty(jarVer)) {
-                jarVer = "v1";
-            }
-            // 剔除掉非规范化命名的解码器
-            if (!jarVer.startsWith("v") || NumberUtils.parseLong(jarVer.substring(1)) == null) {
-                return null;
-            }
-
-
             // 获得名空间信息
             String jarSpace = getJarSpace(jarInfoEntity.getClassFileName());
 
             Map<String, Object> jarInfo = new HashMap<>();
             jarInfo.put("jarSpace", jarSpace);
-            jarInfo.put("jarVer", jarVer);
             jarInfo.put("groupId", jarInfoEntity.getProperties().getGroupId());
             jarInfo.put("artifactId", jarInfoEntity.getProperties().getArtifactId());
             jarInfo.put("version", jarInfoEntity.getProperties().getVersion());
@@ -244,31 +230,6 @@ public class RepoLocalJarFileInfoService {
         return "";
     }
 
-    private String getJarVer(List<String> classNames) {
-        String pack = RootLocation.class.getPackage().getName();
-        String rootLocationName = RootLocation.class.getName();
-
-        String first = tryGetJarVer(classNames);
-        if (first.isEmpty()) {
-            return first;
-        }
-
-        for (String className : classNames) {
-            // 检查：是否为RootLocation类
-            if (className.equals(rootLocationName)) {
-                continue;
-            }
-
-
-            String subName = className.substring(pack.length() + 1);
-            String[] items = subName.split("\\.");
-            if (!items[0].equals(first)) {
-                return "";
-            }
-        }
-
-        return first;
-    }
 
     private String getJarSpace(List<String> classNames) {
         try {
@@ -352,16 +313,13 @@ public class RepoLocalJarFileInfoService {
         List<Map<String, Object>> mapList = new ArrayList<>();
         List<String> jarFileNameList = this.findLocalJarFiles();
         for (String jarFileName : jarFileNameList) {
-            Map<String, String> jarInfo = this.fileNameService.splitJarFileName(jarFileName);
-            if (MethodUtils.hasEmpty(jarInfo)) {
+            String modelName = this.fileNameService.getModelName(jarFileName);
+            if (MethodUtils.hasEmpty(modelName)) {
                 continue;
             }
 
             Map<String, Object> map = new HashMap<>();
-            for (String key : jarInfo.keySet()) {
-                map.put(key, jarInfo.get(key));
-            }
-
+            map.put(RepoCompConstant.filed_model_name, modelName);
             map.put(RepoCompConstant.filed_file_name, jarFileName);
             mapList.add(map);
         }

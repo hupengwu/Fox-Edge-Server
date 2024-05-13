@@ -163,10 +163,10 @@ public class RepoLocalPathNameService {
     /**
      * 获得路径
      *
-     * @return \opt\fox-edge\jar\decoder\service\fox-edge-server-protocol-cjt188.v1.jar
+     * @return \opt\fox-edge\jar\decoder\service\fox-edge-server-protocol-cjt188.jar
      */
-    public String getPathName4LocalJarDecoder2file(String modelName, String modelVersion) {
-        return FileNameUtils.getOsFilePath(this.absolutePath + "/jar/decoder/" + modelName + "." + modelVersion + ".jar");
+    public String getPathName4LocalJarDecoder2file(String modelName) {
+        return FileNameUtils.getOsFilePath(this.absolutePath + "/jar/decoder/" + modelName + ".jar");
     }
 
     /**

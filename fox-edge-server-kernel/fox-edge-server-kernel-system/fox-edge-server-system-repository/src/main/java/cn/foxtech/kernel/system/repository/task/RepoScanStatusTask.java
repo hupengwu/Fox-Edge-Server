@@ -9,7 +9,6 @@ import cn.foxtech.kernel.system.repository.service.RepoCloudCacheService;
 import cn.foxtech.kernel.system.repository.service.RepoCloudInstallService;
 import cn.foxtech.kernel.system.repository.service.RepoCloudInstallStatus;
 import cn.foxtech.kernel.system.repository.service.RepoLocalPathNameService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 
@@ -22,15 +21,12 @@ public class RepoScanStatusTask extends PeriodTask {
     private final RepoCloudInstallStatus installStatus;
 
     private final RepoLocalPathNameService pathNameService;
-
-    private RepoCloudCacheService cacheService;
-
     private final String modelType;
+    private final RepoCloudCacheService cacheService;
+    private final RedisConsoleService logger;
 
-    private RedisConsoleService logger;
 
-
-    public RepoScanStatusTask(RepoCloudInstallService installService, RepoCloudInstallStatus installStatus,RepoCloudCacheService cacheService, RepoLocalPathNameService pathNameService,RedisConsoleService logger, String modelType) {
+    public RepoScanStatusTask(RepoCloudInstallService installService, RepoCloudInstallStatus installStatus, RepoCloudCacheService cacheService, RepoLocalPathNameService pathNameService, RedisConsoleService logger, String modelType) {
         this.installService = installService;
         this.installStatus = installStatus;
         this.cacheService = cacheService;
@@ -100,7 +96,7 @@ public class RepoScanStatusTask extends PeriodTask {
             List<Map<String, Object>> modelList = this.pathNameService.findRepoLocalModel(modelType);
             for (Map<String, Object> map : modelList) {
                 String modelName = (String) map.getOrDefault(RepoCompConstant.filed_model_name, "");
-                String modelVersion = (String) map.getOrDefault(RepoCompConstant.filed_model_version, "v1");
+                String modelVersion = (String) map.getOrDefault(RepoCompConstant.filed_model_version, RepoCompConstant.filed_value_model_version_default);
                 String component = (String) map.getOrDefault(RepoCompConstant.filed_component, "");
                 String version = (String) map.getOrDefault(RepoCompConstant.filed_version, "");
                 String stage = (String) map.getOrDefault(RepoCompConstant.filed_stage, "");

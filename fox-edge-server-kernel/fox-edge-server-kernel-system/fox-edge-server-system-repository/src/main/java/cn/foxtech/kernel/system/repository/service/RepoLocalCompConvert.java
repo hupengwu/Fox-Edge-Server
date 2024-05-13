@@ -146,22 +146,15 @@ public class RepoLocalCompConvert {
         }
 
         // 从结构化的文件名中，取出信息
-        Map<String, String> map = this.jarFileNameService.splitJarFileName(fileName);
-        if (map == null) {
-            throw new ServiceException("文件名称格式不正确!");
-        }
-
-        String modelName = map.get(RepoCompConstant.filed_model_name);
-        String modelVersion = map.get(RepoCompConstant.filed_model_version);
-        if (MethodUtils.hasEmpty(modelName, modelVersion)) {
-            throw new ServiceException("参数不能为空： modelName, modelVersion");
+        String modelName = this.jarFileNameService.getModelName(fileName);
+        if (MethodUtils.hasEmpty(modelName)) {
+            throw new ServiceException("参数不能为空：modelName");
         }
 
         Map<String, Object> compParam = (Map<String, Object>) localMap.get(RepoCompVOFieldConstant.field_comp_param);
         compParam.put(OperateVOFieldConstant.field_manufacturer, manufacturer);
         compParam.put(OperateVOFieldConstant.field_device_type, deviceType);
         compParam.put(RepoCompConstant.filed_model_name, modelName);
-        compParam.put(RepoCompConstant.filed_model_version, modelVersion);
         compParam.put(RepoCompConstant.filed_file_name, fileName);
 
         return localMap;
@@ -184,15 +177,9 @@ public class RepoLocalCompConvert {
         String fileName = (String) operateEntity.getEngineParam().getOrDefault(DeviceMethodVOFieldConstant.field_file, "");
 
         // 从结构化的文件名中，取出信息
-        Map<String, String> map = this.jarFileNameService.splitJarFileName(fileName);
-        if (map == null) {
-            throw new ServiceException("文件名称格式不正确!");
-        }
-
-        String modelName = map.get(RepoCompConstant.filed_model_name);
-        String modelVersion = map.get(RepoCompConstant.filed_model_version);
-        if (MethodUtils.hasEmpty(modelName, modelVersion)) {
-            throw new ServiceException("参数不能为空： modelName, modelVersion");
+        String modelName = this.jarFileNameService.getModelName(fileName);
+        if (MethodUtils.hasEmpty(modelName)) {
+            throw new ServiceException("参数不能为空： modelName");
         }
 
 
@@ -200,7 +187,6 @@ public class RepoLocalCompConvert {
         compParam.put(OperateVOFieldConstant.field_manufacturer, operateEntity.getManufacturer());
         compParam.put(OperateVOFieldConstant.field_device_type, operateEntity.getDeviceType());
         compParam.put(RepoCompConstant.filed_model_name, modelName);
-        compParam.put(RepoCompConstant.filed_model_version, modelVersion);
         compParam.put(RepoCompConstant.filed_file_name, fileName);
 
         return localMap;

@@ -62,15 +62,14 @@ public class RepoLocalCompUpload {
 
     private Map<String, Object> uploadJarDecoderEntity(Map<String, Object> compParam, String commitKey) throws IOException {
         String modelName = (String) compParam.get(RepoCompConstant.filed_model_name);
-        String modelVersion = (String) compParam.get(RepoCompConstant.filed_model_version);
         String deviceType = (String) compParam.get(OperateVOFieldConstant.field_device_type);
         String manufacturer = (String) compParam.get(OperateVOFieldConstant.field_manufacturer);
         String fileName = (String) compParam.get("fileName");
-        if (MethodUtils.hasEmpty(modelName, modelVersion, deviceType, manufacturer, fileName, commitKey)) {
+        if (MethodUtils.hasEmpty(modelName, deviceType, manufacturer, fileName, commitKey)) {
             throw new ServiceException("缺少参数： modelName, modelVersion, deviceType, manufacturer, fileName, commitKey");
         }
 
-        String filePath = this.pathNameService.getPathName4LocalJarDecoder2file(modelName, modelVersion);
+        String filePath = this.pathNameService.getPathName4LocalJarDecoder2file(modelName);
         File file = new File(filePath);
         if (!file.exists() || !file.isFile()) {
             throw new ServiceException("文件不存在！");
@@ -80,7 +79,7 @@ public class RepoLocalCompUpload {
         Map<String, Object> formData = new HashMap<>();
         formData.put(RepoCompConstant.filed_model_type, RepoCompConstant.repository_type_decoder);
         formData.put(RepoCompConstant.filed_model_name, modelName);
-        formData.put(RepoCompConstant.filed_model_version, modelVersion);
+        formData.put(RepoCompConstant.filed_model_version, RepoCompConstant.filed_value_model_version_default);
         formData.put(RepoCompConstant.filed_component, "service");
         formData.put("file", file);
         formData.put(RepoCompConstant.filed_commit_key, commitKey);
