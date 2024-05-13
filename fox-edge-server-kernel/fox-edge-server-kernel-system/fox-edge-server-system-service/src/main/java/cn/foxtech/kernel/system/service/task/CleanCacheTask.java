@@ -2,7 +2,7 @@ package cn.foxtech.kernel.system.service.task;
 
 
 import cn.foxtech.common.entity.manager.RedisConsoleService;
-import cn.foxtech.common.utils.Maps;
+import cn.foxtech.common.utils.MapUtils;
 import cn.foxtech.common.utils.osinfo.OSInfo;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTask;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTaskType;
@@ -49,7 +49,7 @@ public class CleanCacheTask extends PeriodTask {
             }
 
             // 取出上次保存的进程内存大小
-            Double buffCacheLast = (Double) Maps.getOrDefault(this.statusMap, "OS buff/cache", 0.0d);
+            Double buffCacheLast = (Double) MapUtils.getOrDefault(this.statusMap, "OS buff/cache", 0.0d);
 
             // 检查：内存的膨胀状况，是否缓超过了512M
             if (buffCacheLast > 5.12E8) {
@@ -63,7 +63,7 @@ public class CleanCacheTask extends PeriodTask {
             Double buffCacheNew = (Double) OSInfoUtils.getMemInfo().get("ramBuffCache");
 
             // 将本次占用状况保存下来
-            Maps.setValue(this.statusMap, "OS buff/cache", buffCacheNew);
+            MapUtils.setValue(this.statusMap, "OS buff/cache", buffCacheNew);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

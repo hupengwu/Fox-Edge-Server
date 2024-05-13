@@ -1,10 +1,14 @@
 package cn.foxtech.common.entity.entity;
 
 
+import cn.foxtech.common.utils.MapUtils;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +24,12 @@ public class OperateMonitorTaskEntity extends OperateMonitorTaskBase {
      * JSON参数
      */
     private List<Object> deviceIds = new ArrayList<>();
+
+    /**
+     * JSON参数
+     */
+    private Map<String, Object> taskParam = new HashMap<>();
+
 
     /**
      * 业务Key：这个可能不是唯一的，不要用它查找唯一性数据，可以用它来筛选数据
@@ -48,7 +58,18 @@ public class OperateMonitorTaskEntity extends OperateMonitorTaskBase {
         List<Object> list = super.makeServiceValueList();
         list.add(this.templateParam);
         list.add(this.deviceIds);
+        list.add(this.taskParam);
 
         return list;
     }
+
+    /**
+     * 填充缺省值
+     */
+    public void setDefaultValue() {
+        MapUtils.setDefaultValue(this.taskParam, "timeMode", String.class, "interval");
+        MapUtils.setDefaultValue(this.taskParam, "timeUnit", String.class, "second");
+        MapUtils.setDefaultValue(this.taskParam, "timeInterval", Integer.class, 1);
+    }
+
 }

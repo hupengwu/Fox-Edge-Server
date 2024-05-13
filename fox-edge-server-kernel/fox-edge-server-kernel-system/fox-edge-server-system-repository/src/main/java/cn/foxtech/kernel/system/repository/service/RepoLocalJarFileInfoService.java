@@ -4,7 +4,7 @@ import cn.foxtech.common.entity.constant.DeviceDecoderVOFieldConstant;
 import cn.foxtech.common.entity.constant.RepoCompVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.RepoCompEntity;
-import cn.foxtech.common.utils.Maps;
+import cn.foxtech.common.utils.MapUtils;
 import cn.foxtech.common.utils.bean.BeanMapUtils;
 import cn.foxtech.common.utils.file.FileAttributesUtils;
 import cn.foxtech.common.utils.file.FileNameUtils;
@@ -109,7 +109,7 @@ public class RepoLocalJarFileInfoService {
                 continue;
             }
 
-            Maps.setValue(result, jarNameInfo.get(RepoCompConstant.filed_model_name), jarFileInfo.get("jarVer"), jarFileInfo);
+            MapUtils.setValue(result, jarNameInfo.get(RepoCompConstant.filed_model_name), jarFileInfo.get("jarVer"), jarFileInfo);
         }
 
 

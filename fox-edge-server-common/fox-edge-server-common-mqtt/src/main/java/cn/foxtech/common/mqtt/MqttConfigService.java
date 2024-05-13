@@ -1,6 +1,6 @@
 package cn.foxtech.common.mqtt;
 
-import cn.foxtech.common.utils.Maps;
+import cn.foxtech.common.utils.MapUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,15 +39,15 @@ public class MqttConfigService {
 
     public void initialize(Map<String, Object> configs) {
         // 从redis中装载配置：如果redis没有，则默认采用application.yml的配置数据
-        this.host = Maps.getOrDefault(configs, String.class, "host", this.host);
-        this.port = Maps.getOrDefault(configs, Integer.class, "port", this.port);
-        this.clientId = Maps.getOrDefault(configs, String.class, "clientId", this.clientId);
-        this.userName = Maps.getOrDefault(configs, String.class, "user-name", this.userName);
-        this.password = Maps.getOrDefault(configs, String.class, "password", this.password);
-        this.name = Maps.getOrDefault(configs, String.class, "name", this.name);
-        this.version = Maps.getOrDefault(configs, String.class, "version", this.version);
-        this.keepAliveSecs = Maps.getOrDefault(configs, Integer.class, "keep-alive-secs", this.keepAliveSecs);
-        this.reInterval = Maps.getOrDefault(configs, Integer.class, "re-interval", this.reInterval);
+        this.host = MapUtils.getOrDefault(configs, String.class, "host", this.host);
+        this.port = MapUtils.getOrDefault(configs, Integer.class, "port", this.port);
+        this.clientId = MapUtils.getOrDefault(configs, String.class, "clientId", this.clientId);
+        this.userName = MapUtils.getOrDefault(configs, String.class, "user-name", this.userName);
+        this.password = MapUtils.getOrDefault(configs, String.class, "password", this.password);
+        this.name = MapUtils.getOrDefault(configs, String.class, "name", this.name);
+        this.version = MapUtils.getOrDefault(configs, String.class, "version", this.version);
+        this.keepAliveSecs = MapUtils.getOrDefault(configs, Integer.class, "keep-alive-secs", this.keepAliveSecs);
+        this.reInterval = MapUtils.getOrDefault(configs, Integer.class, "re-interval", this.reInterval);
 
         if (this.clientId == null || this.clientId.isEmpty()) {
             this.clientId = "clientId:" + UUID.randomUUID();

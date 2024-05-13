@@ -1,6 +1,6 @@
 package cn.foxtech.device.scanner;
 
-import cn.foxtech.common.utils.Maps;
+import cn.foxtech.common.utils.MapUtils;
 import cn.foxtech.common.utils.reflect.JarLoaderUtils;
 import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
 import cn.foxtech.device.protocol.RootLocation;
@@ -44,8 +44,8 @@ public class FoxEdgeReportScanner {
 
                 Map<String, FoxEdgeReportMethod> methodMap = scanMethodPair(manufacturer, deviceType, aClass);
                 for (String method : methodMap.keySet()) {
-                    Maps.setValue(manufacturerMap, manufacturer, deviceType, method, DeviceMethodVOFieldConstant.field_method, methodMap.get(method));
-                    Maps.setValue(manufacturerMap, manufacturer, deviceType, method, DeviceMethodVOFieldConstant.field_file, filePath);
+                    MapUtils.setValue(manufacturerMap, manufacturer, deviceType, method, DeviceMethodVOFieldConstant.field_method, methodMap.get(method));
+                    MapUtils.setValue(manufacturerMap, manufacturer, deviceType, method, DeviceMethodVOFieldConstant.field_file, filePath);
 
                 }
 

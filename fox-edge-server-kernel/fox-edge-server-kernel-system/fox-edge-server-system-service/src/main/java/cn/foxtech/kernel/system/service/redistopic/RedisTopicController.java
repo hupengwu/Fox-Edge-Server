@@ -2,7 +2,7 @@ package cn.foxtech.kernel.system.service.redistopic;
 
 import cn.foxtech.common.domain.vo.RestFulRequestVO;
 import cn.foxtech.common.domain.vo.RestFulRespondVO;
-import cn.foxtech.common.utils.Maps;
+import cn.foxtech.common.utils.MapUtils;
 import cn.foxtech.common.utils.redis.topic.service.RedisTopicPublisher;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.system.common.redistopic.IRedisTopicController;
@@ -65,8 +65,8 @@ public class RedisTopicController implements IRedisTopicController {
 
                     String res = classPath + "/" + methodPaths[0];
                     String methodKey = res + ":" + "POST";
-                    Maps.setValue(this.controllerMethod, methodKey, "bean", bean);
-                    Maps.setValue(this.controllerMethod, methodKey, "method", method);
+                    MapUtils.setValue(this.controllerMethod, methodKey, "bean", bean);
+                    MapUtils.setValue(this.controllerMethod, methodKey, "method", method);
                     continue;
                 }
                 if (method.isAnnotationPresent(PutMapping.class)) {
@@ -78,8 +78,8 @@ public class RedisTopicController implements IRedisTopicController {
 
                     String res = classPath + "/" + methodPaths[0];
                     String methodKey = res + ":" + "PUT";
-                    Maps.setValue(this.controllerMethod, methodKey, "bean", bean);
-                    Maps.setValue(this.controllerMethod, methodKey, "method", method);
+                    MapUtils.setValue(this.controllerMethod, methodKey, "bean", bean);
+                    MapUtils.setValue(this.controllerMethod, methodKey, "method", method);
                     continue;
                 }
                 if (method.isAnnotationPresent(GetMapping.class)) {
@@ -91,8 +91,8 @@ public class RedisTopicController implements IRedisTopicController {
 
                     String res = classPath + "/" + methodPaths[0];
                     String methodKey = res + ":" + "GET";
-                    Maps.setValue(this.controllerMethod, methodKey, "bean", bean);
-                    Maps.setValue(this.controllerMethod, methodKey, "method", method);
+                    MapUtils.setValue(this.controllerMethod, methodKey, "bean", bean);
+                    MapUtils.setValue(this.controllerMethod, methodKey, "method", method);
                     continue;
                 }
                 if (method.isAnnotationPresent(DeleteMapping.class)) {
@@ -104,8 +104,8 @@ public class RedisTopicController implements IRedisTopicController {
 
                     String res = classPath + "/" + methodPaths[0];
                     String methodKey = res + ":" + "DELETE";
-                    Maps.setValue(this.controllerMethod, methodKey, "bean", bean);
-                    Maps.setValue(this.controllerMethod, methodKey, "method", method);
+                    MapUtils.setValue(this.controllerMethod, methodKey, "bean", bean);
+                    MapUtils.setValue(this.controllerMethod, methodKey, "method", method);
                     continue;
                 }
             }
@@ -119,8 +119,8 @@ public class RedisTopicController implements IRedisTopicController {
             String methodName = requestVO.getMethod().toUpperCase();
 
             String methodKey = resource + ":" + methodName;
-            Object bean = Maps.getValue(this.controllerMethod, methodKey, "bean");
-            Object method = Maps.getValue(this.controllerMethod, methodKey, "method");
+            Object bean = MapUtils.getValue(this.controllerMethod, methodKey, "bean");
+            Object method = MapUtils.getValue(this.controllerMethod, methodKey, "method");
             if (method == null || bean == null) {
                 throw new ServiceException("尚未支持的方法");
             }

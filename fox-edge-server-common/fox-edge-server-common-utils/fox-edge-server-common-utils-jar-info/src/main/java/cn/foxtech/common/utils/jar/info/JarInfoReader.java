@@ -1,6 +1,6 @@
 package cn.foxtech.common.utils.jar.info;
 
-import cn.foxtech.common.utils.Maps;
+import cn.foxtech.common.utils.MapUtils;
 import cn.foxtech.common.utils.xml.XmlReader;
 
 import java.io.*;
@@ -44,7 +44,7 @@ public class JarInfoReader {
         // 读取POM.XML文件信息
         String xml = readPomXml(jarFilePath, (String) jarInfo.get("pom.xml"));
         Map<String, Object> jarXml = XmlReader.parse(xml);
-        Object xmlEl = Maps.getValue(jarXml, "project", "dependencies", "dependency");
+        Object xmlEl = MapUtils.getValue(jarXml, "project", "dependencies", "dependency");
 
         // XML解释器，在单个元素的时候会返回MAP，在多个数据的时候，会返回LIST
         List<Map<String, Object>> dependencies = new ArrayList<>();

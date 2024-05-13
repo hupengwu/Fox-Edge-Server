@@ -2,7 +2,7 @@ package cn.foxtech.common.process;
 
 import cn.foxtech.common.domain.constant.ServiceVOFieldConstant;
 import cn.foxtech.common.utils.ContainerUtils;
-import cn.foxtech.common.utils.Maps;
+import cn.foxtech.common.utils.MapUtils;
 import cn.foxtech.common.utils.shell.ShellUtils;
 
 import java.io.File;
@@ -168,13 +168,13 @@ public class ProcessUtils {
         for (String shellLine : shellLineList) {
             Map<String, Object> javaInf = findJavaInf(shellLine);
             if (javaInf != null) {
-                Maps.setValue(infMap, javaInf.get(ServiceVOFieldConstant.field_path_name), ServiceVOFieldConstant.field_file_name, javaInf.get(ServiceVOFieldConstant.field_pid));
+                MapUtils.setValue(infMap, javaInf.get(ServiceVOFieldConstant.field_path_name), ServiceVOFieldConstant.field_file_name, javaInf.get(ServiceVOFieldConstant.field_pid));
                 continue;
             }
 
             Map<String, Object> loadInf = findLoaderInf(shellLine);
             if (loadInf != null) {
-                Maps.setValue(infMap, loadInf.get(ServiceVOFieldConstant.field_path_name), ServiceVOFieldConstant.field_loader_name, loadInf.get(ServiceVOFieldConstant.field_pid));
+                MapUtils.setValue(infMap, loadInf.get(ServiceVOFieldConstant.field_path_name), ServiceVOFieldConstant.field_loader_name, loadInf.get(ServiceVOFieldConstant.field_pid));
                 continue;
             }
         }
@@ -182,8 +182,8 @@ public class ProcessUtils {
         Map<Long, Long> result = new HashMap<>();
         for (String key : infMap.keySet()) {
             Map<String, Object> map = (Map<String, Object>) infMap.get(key);
-            Long javaPid = (Long) Maps.getValue(map, ServiceVOFieldConstant.field_file_name);
-            Long loadPid = (Long) Maps.getValue(map, ServiceVOFieldConstant.field_loader_name);
+            Long javaPid = (Long) MapUtils.getValue(map, ServiceVOFieldConstant.field_file_name);
+            Long loadPid = (Long) MapUtils.getValue(map, ServiceVOFieldConstant.field_loader_name);
             if (javaPid != null && loadPid != null) {
                 result.put(javaPid, loadPid);
             }

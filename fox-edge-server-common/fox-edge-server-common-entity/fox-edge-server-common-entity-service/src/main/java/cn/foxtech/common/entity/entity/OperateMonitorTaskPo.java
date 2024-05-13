@@ -20,6 +20,11 @@ public class OperateMonitorTaskPo extends OperateMonitorTaskBase {
      */
     private String deviceIds;
 
+    /**
+     * JSON参数
+     */
+    private String taskParam;
+
 
     /**
      * 业务Key：这个可能不是唯一的，不要用它查找唯一性数据，可以用它来筛选数据
@@ -48,6 +53,8 @@ public class OperateMonitorTaskPo extends OperateMonitorTaskBase {
         List<Object> list = this.makeServiceValueList();
         list.add(this.templateParam);
         list.add(this.deviceIds);
+        list.add(this.taskParam);
+
 
         return list;
     }

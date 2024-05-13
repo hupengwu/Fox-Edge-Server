@@ -3,7 +3,7 @@ package cn.foxtech.common.entity.service.config;
 import cn.foxtech.common.entity.constant.ConfigParamVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.ConfigEntity;
-import cn.foxtech.common.utils.Maps;
+import cn.foxtech.common.utils.MapUtils;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import lombok.AccessLevel;
@@ -113,7 +113,7 @@ public class ConfigVOMaker {
             Object[] fields = fieldName.split("\\.");
 
             // 取出输入的新数值
-            Object newValue = Maps.getValue(configValue, fields);
+            Object newValue = MapUtils.getValue(configValue, fields);
             if (newValue == null) {
                 newValue = defaultValue;
             }
@@ -121,7 +121,7 @@ public class ConfigVOMaker {
             // 取出已经存在的旧数值
             Object oldValue = null;
             if (existValue != null) {
-                oldValue = Maps.getValue(existValue, fields);
+                oldValue = MapUtils.getValue(existValue, fields);
                 if (oldValue == null) {
                     oldValue = defaultValue;
                 }
@@ -148,7 +148,7 @@ public class ConfigVOMaker {
 
                 // 场景1：密码的安全显示
                 if ("Security".equals(showMode)) {
-                    Maps.setValue(configValue, fields, hideString);
+                    MapUtils.setValue(configValue, fields, hideString);
                 }
             } else {
                 // 前期处理
@@ -160,7 +160,7 @@ public class ConfigVOMaker {
                         realValue = oldValue.toString();
                     }
                     // 将真实的数据，更新到用户的输入数据之中
-                    Maps.setValue(configValue, fields, realValue);
+                    MapUtils.setValue(configValue, fields, realValue);
                 }
             }
 

@@ -1,7 +1,7 @@
 package cn.foxtech.channel.socket.core.script;
 
 import cn.foxtech.common.entity.entity.OperateEntity;
-import cn.foxtech.common.utils.Maps;
+import cn.foxtech.common.utils.MapUtils;
 import cn.foxtech.common.utils.hex.HexUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.exception.ServiceException;
@@ -20,10 +20,10 @@ public class ScriptEngineService {
     private final Map<String, Object> engineMap = new ConcurrentHashMap<>();
 
     public ScriptEngine getScriptEngine(String manufacturer, String deviceType, String operateName) {
-        ScriptEngine engine = (ScriptEngine) Maps.getValue(this.engineMap, manufacturer, deviceType, operateName);
+        ScriptEngine engine = (ScriptEngine) MapUtils.getValue(this.engineMap, manufacturer, deviceType, operateName);
         if (engine == null) {
             engine = this.manager.getEngineByName("JavaScript");
-            Maps.setValue(this.engineMap, manufacturer, deviceType, operateName, engine);
+            MapUtils.setValue(this.engineMap, manufacturer, deviceType, operateName, engine);
         }
 
         return engine;

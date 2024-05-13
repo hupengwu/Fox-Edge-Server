@@ -178,11 +178,13 @@ public class OperateMonitorTaskManageController {
             String templateName = (String) params.get(OperateMonitorTaskVOFieldConstant.field_template_name);
             String manufacturer = (String) params.get(OperateMonitorTaskVOFieldConstant.field_manufacturer);
             String deviceType = (String) params.get(OperateMonitorTaskVOFieldConstant.field_device_type);
-            List<Map<String, Object>> operateParam = (List<Map<String, Object>>) params.get(OperateMonitorTaskVOFieldConstant.field_model_param);
+            List<Map<String, Object>> templateParam = (List<Map<String, Object>>) params.get(OperateMonitorTaskVOFieldConstant.field_template_param);
             List<Object> deviceIds = (List<Object>) params.get(OperateMonitorTaskVOFieldConstant.field_device_ids);
+            Map<String, Object> taskParam = (Map<String, Object>) params.get(OperateMonitorTaskVOFieldConstant.field_task_param);
+
             // 简单校验参数
-            if (MethodUtils.hasNull(templateName, manufacturer, deviceType, deviceIds, operateParam)) {
-                return AjaxResult.error("参数不能为空: templateName, manufacturer, deviceType, deviceIds, operateParam ");
+            if (MethodUtils.hasNull(templateName, manufacturer, deviceType, deviceIds, templateParam, taskParam)) {
+                return AjaxResult.error("参数不能为空: templateName, manufacturer, deviceType, deviceIds, templateParam, taskParam) ");
             }
 
             // 构造作为参数的实体
@@ -190,8 +192,10 @@ public class OperateMonitorTaskManageController {
             entity.setTemplateName(templateName);
             entity.setManufacturer(manufacturer);
             entity.setDeviceType(deviceType);
-            entity.setTemplateParam(operateParam);
+            entity.setTemplateParam(templateParam);
+            entity.setTaskParam(taskParam);
             entity.getDeviceIds().addAll(this.makeLongList(manufacturer, deviceType, deviceIds));
+            entity.setDefaultValue();
 
             // 简单验证实体的合法性
             if (entity.hasNullServiceKey()) {

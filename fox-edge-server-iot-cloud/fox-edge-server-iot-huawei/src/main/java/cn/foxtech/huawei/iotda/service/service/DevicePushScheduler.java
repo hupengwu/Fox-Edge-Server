@@ -1,6 +1,6 @@
 package cn.foxtech.huawei.iotda.service.service;
 
-import cn.foxtech.common.utils.Maps;
+import cn.foxtech.common.utils.MapUtils;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,9 +36,9 @@ public class DevicePushScheduler extends PeriodTaskService {
         Long time = System.currentTimeMillis();
 
         // 注册全体设备
-        Long registerAllDevice = (Long) Maps.getOrDefault(this.timeMap, "registerAllDevice", 0L);
+        Long registerAllDevice = (Long) MapUtils.getOrDefault(this.timeMap, "registerAllDevice", 0L);
         if (time > registerAllDevice + 3600 * 1000) {
-            Maps.setValue(this.timeMap, time, "registerAllDevice", time);
+            MapUtils.setValue(this.timeMap, time, "registerAllDevice", time);
 
             // 强制推送全量设备
             this.deviceRegisterExecutor.registerDevice(true);
@@ -47,9 +47,9 @@ public class DevicePushScheduler extends PeriodTaskService {
             this.deviceRegisterExecutor.registerDevice(false);
         }
 
-        Long pushDeviceStatus = (Long) Maps.getOrDefault(this.timeMap, "pushDeviceStatus", 0L);
+        Long pushDeviceStatus = (Long) MapUtils.getOrDefault(this.timeMap, "pushDeviceStatus", 0L);
         if (time > pushDeviceStatus + 3600 * 1000) {
-            Maps.setValue(this.timeMap, time, "pushDeviceStatus", time);
+            MapUtils.setValue(this.timeMap, time, "pushDeviceStatus", time);
 
             // 强制推送全量设备
             this.deviceOnlineExecutor.pushDeviceStatus(true);

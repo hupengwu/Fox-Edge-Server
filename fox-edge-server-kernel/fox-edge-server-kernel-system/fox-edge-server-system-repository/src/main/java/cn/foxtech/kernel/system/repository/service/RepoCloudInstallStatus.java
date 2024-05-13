@@ -1,7 +1,7 @@
 package cn.foxtech.kernel.system.repository.service;
 
 import cn.foxtech.common.entity.manager.RedisConsoleService;
-import cn.foxtech.common.utils.Maps;
+import cn.foxtech.common.utils.MapUtils;
 import cn.foxtech.common.utils.file.FileCompareUtils;
 import cn.foxtech.common.utils.file.FileNameUtils;
 import cn.foxtech.common.utils.md5.MD5Utils;
@@ -44,7 +44,7 @@ public class RepoCloudInstallStatus {
             List<Map<String, Object>> localList = this.pathNameService.findRepoLocalModel(modelType);
 
             // 清空原有的数据
-            Maps.setValue(this.statusMap, modelType, new ConcurrentHashMap<>());
+            MapUtils.setValue(this.statusMap, modelType, new ConcurrentHashMap<>());
 
             // 扫描本地组件的完整状态，扫描出组件的状态
             this.scanLocalStatus(modelType, localList);
@@ -98,7 +98,7 @@ public class RepoCloudInstallStatus {
                     }
 
                     // 标识为未下载状态
-                    Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_status, RepoStatusConstant.status_not_downloaded);
+                    MapUtils.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_status, RepoStatusConstant.status_not_downloaded);
                 }
             }
 
@@ -128,14 +128,14 @@ public class RepoCloudInstallStatus {
         String tarFile = this.pathNameService.getPathName4LocalRepo2tarFile(modelType, modelName, modelVersion, version, stage, component);
         File check = new File(tarFile);
         if (!check.exists()) {
-            Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_local_md5, md5);
+            MapUtils.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_local_md5, md5);
             return;
         }
 
         // 计算MD5
         md5 = MD5Utils.getMD5Txt(check);
 
-        Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_local_md5, md5);
+        MapUtils.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_local_md5, md5);
     }
 
     /**
@@ -162,7 +162,7 @@ public class RepoCloudInstallStatus {
         String tarFile = this.pathNameService.getPathName4LocalRepo2tarFile(modelType, modelName, modelVersion, version, stage, component);
         File check = new File(tarFile);
         if (!check.exists()) {
-            Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_status, status);
+            MapUtils.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_status, status);
             return;
         }
         // 阶段2："已经下载，待安装!
@@ -172,7 +172,7 @@ public class RepoCloudInstallStatus {
         String tarDir = this.pathNameService.getPathName4LocalRepo2tar(modelType, modelName, modelVersion, version, stage, component);
         List<String> tarFileNames = FileNameUtils.findFileList(tarDir, true, true);
         if (tarFileNames.isEmpty()) {
-            Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_status, status);
+            MapUtils.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_status, status);
             return;
         }
 
@@ -224,7 +224,7 @@ public class RepoCloudInstallStatus {
             status = RepoStatusConstant.status_installed;
         }
 
-        Maps.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_status, status);
+        MapUtils.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_status, status);
     }
 
     /**
@@ -268,7 +268,7 @@ public class RepoCloudInstallStatus {
         String lastComponent = (String) lastVersion.get(RepoCompConstant.filed_component);
 
         // 如果最新版本就是安装版本，那么不需要升级
-        Integer lastStatus = (Integer) Maps.getOrDefault(this.statusMap, modelType, modelName, modelVersion, lastVer, lastStage, lastComponent, RepoCompConstant.filed_status, RepoStatusConstant.status_not_scanned);
+        Integer lastStatus = (Integer) MapUtils.getOrDefault(this.statusMap, modelType, modelName, modelVersion, lastVer, lastStage, lastComponent, RepoCompConstant.filed_status, RepoStatusConstant.status_not_scanned);
         if (RepoStatusConstant.status_installed == lastStatus) {
             return false;
         }
@@ -285,7 +285,7 @@ public class RepoCloudInstallStatus {
             }
 
             // 检查：低版本是否处于安装状态，如果是安装状态，那么就是需要用最新版本来升级
-            Integer status = (Integer) Maps.getOrDefault(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_status, RepoStatusConstant.status_not_scanned);
+            Integer status = (Integer) MapUtils.getOrDefault(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_status, RepoStatusConstant.status_not_scanned);
             if (RepoStatusConstant.status_installed == status) {
                 return true;
             }
@@ -310,8 +310,8 @@ public class RepoCloudInstallStatus {
             return -1;
         }
 
-        Integer status = (Integer) Maps.getOrDefault(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_status, RepoStatusConstant.status_not_scanned);
-        String localMd5 = (String) Maps.getOrDefault(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_local_md5, "");
+        Integer status = (Integer) MapUtils.getOrDefault(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_status, RepoStatusConstant.status_not_scanned);
+        String localMd5 = (String) MapUtils.getOrDefault(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_local_md5, "");
         verEntity.put(RepoCompConstant.filed_status, status);
         verEntity.put(RepoCompConstant.filed_local_md5, localMd5);
 
@@ -352,7 +352,7 @@ public class RepoCloudInstallStatus {
      * @return
      */
     public Map<String, Object> getModelStatus(String modelType, String modelName) {
-        return (Map<String, Object>) Maps.getOrDefault(this.statusMap, modelType, modelName, new HashMap<>());
+        return (Map<String, Object>) MapUtils.getOrDefault(this.statusMap, modelType, modelName, new HashMap<>());
     }
 
 }

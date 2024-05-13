@@ -3,7 +3,7 @@ package cn.foxtech.common.status;
 import cn.foxtech.common.domain.constant.ServiceVOFieldConstant;
 import cn.foxtech.common.utils.redis.status.RedisStatusConsumerService;
 import cn.foxtech.common.domain.constant.RedisStatusConstant;
-import cn.foxtech.common.utils.Maps;
+import cn.foxtech.common.utils.MapUtils;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.AbstractEnvironment;
@@ -50,7 +50,7 @@ public class ServiceStatusScheduler extends PeriodTaskService {
 
     private void initProducer() {
         // 在初始化阶段，从redis的数据中，继承原有数据，防止删除/添加造成的抖动现象
-        RedisStatusConsumerService.Status status = (RedisStatusConsumerService.Status) Maps.getValue(this.consumerService.getStatus(), this.serviceStatus.getServiceKey());
+        RedisStatusConsumerService.Status status = (RedisStatusConsumerService.Status) MapUtils.getValue(this.consumerService.getStatus(), this.serviceStatus.getServiceKey());
         if (status != null && status.getData() != null) {
             this.serviceStatus.getProducerData().putAll((Map<String, Object>) status.getData());
         }

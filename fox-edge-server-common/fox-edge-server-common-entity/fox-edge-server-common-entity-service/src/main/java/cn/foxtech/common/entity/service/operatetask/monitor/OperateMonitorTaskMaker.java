@@ -40,6 +40,8 @@ public class OperateMonitorTaskMaker {
 
         result.setDeviceIds(JsonUtils.buildJsonWithoutException(entity.getDeviceIds()));
         result.setTemplateParam(JsonUtils.buildJsonWithoutException(entity.getTemplateParam()));
+        result.setTaskParam(JsonUtils.buildJsonWithoutException(entity.getTaskParam()));
+
         return result;
     }
 
@@ -63,11 +65,25 @@ public class OperateMonitorTaskMaker {
             if (deviceIds != null) {
                 result.getDeviceIds().addAll(deviceIds);
             } else {
-                logger.error("设备配置参数转换Json对象失败：" + entity.getDeviceIds() + ":" + entity.getDeviceIds());
+                logger.error("设备配置参数转换Json对象失败：" + entity.getTemplateName() + ":" + entity.getDeviceIds());
             }
         } catch (Exception e) {
-            logger.error("设备配置参数转换Json对象失败：" + entity.getDeviceIds() + ":" + entity.getDeviceIds());
+            logger.error("设备配置参数转换Json对象失败：" + entity.getTemplateName() + ":" + entity.getDeviceIds());
         }
+
+        try {
+            Map<String, Object> taskParam = JsonUtils.buildObject(entity.getTaskParam(), Map.class);
+            if (taskParam != null) {
+                result.getTaskParam().putAll(taskParam);
+            } else {
+                logger.error("设备配置参数转换Json对象失败：" + entity.getTemplateName() + ":" + entity.getTaskParam());
+            }
+        } catch (Exception e) {
+            logger.error("设备配置参数转换Json对象失败：" + entity.getTemplateName() + ":" + entity.getTaskParam());
+        }
+
+        // 补充缺省值
+        result.setDefaultValue();
 
         return result;
     }

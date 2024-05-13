@@ -3,7 +3,7 @@ package cn.foxtech.iot.fox.cloud.common.service.proxy;
 import cn.foxtech.common.constant.HttpStatus;
 import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
-import cn.foxtech.common.utils.Maps;
+import cn.foxtech.common.utils.MapUtils;
 import cn.foxtech.common.utils.http.HttpClientUtils;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.core.domain.AjaxResult;
@@ -116,7 +116,7 @@ public class CloudHttpProxyService {
         }
 
         // 提取token
-        String token = (String) Maps.getValue(respond, AjaxResult.DATA_TAG, "access_token");
+        String token = (String) MapUtils.getValue(respond, AjaxResult.DATA_TAG, "access_token");
         if (token == null || token.isEmpty()) {
             this.loginLastTime = System.currentTimeMillis();
             throw new RuntimeException("云端返回的token异常");

@@ -1,6 +1,6 @@
 package cn.foxtech.device.script.engine;
 
-import cn.foxtech.common.utils.Maps;
+import cn.foxtech.common.utils.MapUtils;
 import org.springframework.stereotype.Component;
 
 import javax.script.ScriptEngine;
@@ -15,10 +15,10 @@ public class ScriptEngineService {
 
 
     public ScriptEngine getScriptEngine(String manufacturer, String deviceType) {
-        ScriptEngine engine = (ScriptEngine) Maps.getValue(this.engineMap, manufacturer, deviceType);
+        ScriptEngine engine = (ScriptEngine) MapUtils.getValue(this.engineMap, manufacturer, deviceType);
         if (engine == null) {
             engine = this.manager.getEngineByName("JavaScript");
-            Maps.setValue(this.engineMap, manufacturer, deviceType, engine);
+            MapUtils.setValue(this.engineMap, manufacturer, deviceType, engine);
         }
 
         return engine;

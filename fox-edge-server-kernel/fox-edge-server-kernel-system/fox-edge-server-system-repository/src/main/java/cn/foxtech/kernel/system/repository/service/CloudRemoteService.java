@@ -3,7 +3,7 @@ package cn.foxtech.kernel.system.repository.service;
 import cn.foxtech.common.constant.HttpStatus;
 import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
-import cn.foxtech.common.utils.Maps;
+import cn.foxtech.common.utils.MapUtils;
 import cn.foxtech.common.utils.http.HttpClientUtil;
 import cn.foxtech.common.utils.http.UploadUtil;
 import cn.foxtech.core.domain.AjaxResult;
@@ -113,7 +113,7 @@ public class CloudRemoteService {
         }
 
         // 提取token
-        String token = (String) Maps.getValue(respond, AjaxResult.DATA_TAG, "access_token");
+        String token = (String) MapUtils.getValue(respond, AjaxResult.DATA_TAG, "access_token");
         if (token == null || token.isEmpty()) {
             this.loginLastTime = System.currentTimeMillis();
             throw new RuntimeException("云端返回的token异常");

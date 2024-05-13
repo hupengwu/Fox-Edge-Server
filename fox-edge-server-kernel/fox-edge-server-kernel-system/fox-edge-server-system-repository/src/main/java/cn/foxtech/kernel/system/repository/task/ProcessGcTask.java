@@ -4,7 +4,7 @@ package cn.foxtech.kernel.system.repository.task;
 import cn.foxtech.common.domain.constant.ServiceVOFieldConstant;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.process.ProcessUtils;
-import cn.foxtech.common.utils.Maps;
+import cn.foxtech.common.utils.MapUtils;
 import cn.foxtech.common.utils.osinfo.OSInfo;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTask;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTaskType;
@@ -65,7 +65,7 @@ public class ProcessGcTask extends PeriodTask {
                     }
 
                     // 取出上次保存的进程内存大小
-                    Long rssLast = (Long) Maps.getOrDefault(this.statusMap, "Process GC", ServiceVOFieldConstant.field_rss, pid, 0L);
+                    Long rssLast = (Long) MapUtils.getOrDefault(this.statusMap, "Process GC", ServiceVOFieldConstant.field_rss, pid, 0L);
 
                     // 检查：内存的膨胀状况，是否超过50M内存
                     if (rss < rssLast + 50 * 1000) {
@@ -82,7 +82,7 @@ public class ProcessGcTask extends PeriodTask {
                     }
 
                     // 将本次内存大小保存下来
-                    Maps.setValue(this.statusMap, "Process GC", ServiceVOFieldConstant.field_rss, pid, rssNew);
+                    MapUtils.setValue(this.statusMap, "Process GC", ServiceVOFieldConstant.field_rss, pid, rssNew);
                 } catch (Exception e) {
                     logger.error("GC进程失败：" + e.getMessage());
                 }

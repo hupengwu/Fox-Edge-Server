@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 多级MAP：用于简化多级MAP设置和查询操作，对于不存在的树干节点，自动补齐
  */
-public class Maps {
+public class MapUtils {
     /**
      * 获取多级路径的数据
      *
@@ -189,10 +189,19 @@ public class Maps {
         }
     }
 
-    public static void main(String[] args) {
-        Map<String, Object> map = new ConcurrentHashMap<>();
-        Maps.setValue(map, "1", "2", "3");
-        Maps.setValue(map, "1", "2", "3");
-        map = null;
+    public static void setDefaultValue(Map map, Object key, Object defaultValue) {
+        Object value = map.get(key);
+        if (value == null) {
+            map.put(key, defaultValue);
+            return;
+        }
+    }
+
+    public static void setDefaultValue(Map map, Object key, Class type, Object defaultValue) {
+        Object value = map.get(key);
+        if (value == null || !type.isInstance(value)) {
+            map.put(key, defaultValue);
+            return;
+        }
     }
 }

@@ -7,6 +7,7 @@ import cn.foxtech.common.entity.entity.OperateMonitorTaskEntity;
 import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.status.ServiceStatus;
 import cn.foxtech.common.utils.json.JsonUtils;
+import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import cn.foxtech.controller.common.redislist.PersistValueService;
@@ -34,23 +35,21 @@ import java.util.UUID;
 @Component
 public class CollectorExchangeService extends PeriodTaskService {
     private static final Logger logger = Logger.getLogger(CollectorExchangeService.class);
+    /**
+     * 任务最近执行时间
+     */
+    private final Map<String, Long> lastTimeMap = new HashMap<>();
 
     @Autowired
     private EntityManageService entityManageService;
-
     @Autowired
     private PersistValueService valueService;
-
     @Autowired
     private DeviceOperateService deviceOperateService;
-
     @Value("${spring.redis_topic.controller_model}")
     private String controllerModel = "system_controller";
-
     @Autowired
     private ServiceStatus serviceStatus;
-
-
     @Autowired
     private InitialConfigService configService;
 
@@ -75,8 +74,18 @@ public class CollectorExchangeService extends PeriodTaskService {
         for (BaseEntity entity : taskList) {
             OperateMonitorTaskEntity taskEntity = (OperateMonitorTaskEntity) entity;
 
+            // 检查：是否到了执行周期
+            long lastTime = this.lastTimeMap.getOrDefault(taskEntity.getTemplateName(), 0L);
+            if (!this.testLastTime(taskEntity, lastTime)) {
+                continue;
+            }
+            this.lastTimeMap.put(taskEntity.getTemplateName(), System.currentTimeMillis());
+
             // 组织跟该任务相关的设备ID
             List<Object> deviceIds = taskEntity.getDeviceIds();
+            if (deviceIds.isEmpty()) {
+                continue;
+            }
 
             for (Object objectId : deviceIds) {
                 Long deviceId = NumberUtils.makeLong(objectId);
@@ -175,5 +184,39 @@ public class CollectorExchangeService extends PeriodTaskService {
         taskRequestVO.setTimeout(totalTimeout);
 
         return taskRequestVO;
+    }
+
+    private boolean testLastTime(OperateMonitorTaskEntity taskEntity, long lastTime) {
+        try {
+            String timeMode = (String) taskEntity.getTaskParam().get("timeMode");
+            String timeUnit = (String) taskEntity.getTaskParam().get("timeUnit");
+            Integer timeInterval = (Integer) taskEntity.getTaskParam().get("timeInterval");
+
+            if (MethodUtils.hasEmpty(timeMode, timeUnit, timeInterval)) {
+                return false;
+            }
+
+            long currentTime = System.currentTimeMillis();
+
+            if (timeMode.equals("interval")) {
+                if (timeUnit.equals("second")) {
+                    return currentTime - lastTime > timeInterval * 1000;
+                }
+                if (timeUnit.equals("minute")) {
+                    return currentTime - lastTime > timeInterval * 1000 * 60;
+                }
+                if (timeUnit.equals("hour")) {
+                    return currentTime - lastTime > timeInterval * 1000 * 3600;
+                }
+                if (timeUnit.equals("day")) {
+                    return currentTime - lastTime > timeInterval * 1000 * 3600 * 24;
+                }
+            }
+
+            return false;
+
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

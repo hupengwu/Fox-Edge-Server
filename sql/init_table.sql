@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- 主机:                           192.168.1.23
--- 服务器版本:                        8.0.35-0ubuntu0.20.04.1 - (Ubuntu)
+-- 服务器版本:                        8.0.36-0ubuntu0.20.04.1 - (Ubuntu)
 -- 服务器操作系统:                      Linux
 -- HeidiSQL 版本:                  12.2.0.6576
 -- --------------------------------------------------------
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_history` (
   PRIMARY KEY (`id`),
   KEY `device_id` (`device_id`),
   KEY `object_name` (`object_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=284830734 ;
+) ENGINE=MyISAM AUTO_INCREMENT=1 ;
 
 -- 数据导出被取消选择。
 
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_mapper` (
 DROP TABLE IF EXISTS `tb_device_model`;
 CREATE TABLE IF NOT EXISTS `tb_device_model` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '序号',
-  `model_name` varchar(50) NOT NULL COMMENT '设备模型名称',
+  `model_name` varchar(128) NOT NULL COMMENT '设备模型名称',
   `device_type` varchar(50) NOT NULL COMMENT '设备类型',
   `manufacturer` varchar(50) NOT NULL COMMENT '制造商',
   `model_param` json DEFAULT NULL COMMENT '引擎参数（JSON参数）',
@@ -312,6 +312,7 @@ CREATE TABLE IF NOT EXISTS `tb_operate_monitor_task` (
   `manufacturer` varchar(50) DEFAULT NULL COMMENT '设备厂商',
   `template_param` json DEFAULT NULL COMMENT '模板参数',
   `device_ids` json DEFAULT NULL COMMENT '设备列表',
+  `task_param` json DEFAULT NULL COMMENT '任务参数',
   `create_time` bigint DEFAULT NULL COMMENT '创建时间',
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),

@@ -188,4 +188,11 @@ public class MapUtils {
             self.put(key, value);
         }
     }
+
+    public static void setDefaultValue(Map map, Object key, Object defaultValue) {
+        Object value = map.get(key);
+        if (value == null) {
+            map.put(key, defaultValue);
+        }
+    }
 }

@@ -2,7 +2,7 @@ package cn.foxtech.persist.common.service;
 
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.DeviceMapperEntity;
-import cn.foxtech.common.utils.Maps;
+import cn.foxtech.common.utils.MapUtils;
 import cn.foxtech.common.utils.pair.Pair;
 import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +23,11 @@ public class DeviceObjectMapper {
     private Map<String, Object> mapperEntityMap;
 
     public Pair<String, Integer> getValue(String manufacturer, String deviceType, String objectName) {
-        return (Pair<String, Integer>) Maps.getValue(this.mapperEntityMap, manufacturer, deviceType, objectName);
+        return (Pair<String, Integer>) MapUtils.getValue(this.mapperEntityMap, manufacturer, deviceType, objectName);
     }
 
     public Map<String, Object> getValue(String manufacturer, String deviceType) {
-        return (Map<String, Object>) Maps.getValue(this.mapperEntityMap, manufacturer, deviceType);
+        return (Map<String, Object>) MapUtils.getValue(this.mapperEntityMap, manufacturer, deviceType);
     }
 
     /**
@@ -54,7 +54,7 @@ public class DeviceObjectMapper {
 
             // 构造数据
             Pair<String, Integer> pair = new Pair(mapperEntity.getMapperName(), mapperEntity.getMapperMode());
-            Maps.setValue(map, mapperEntity.getManufacturer(), mapperEntity.getDeviceType(), mapperEntity.getObjectName(), pair);
+            MapUtils.setValue(map, mapperEntity.getManufacturer(), mapperEntity.getDeviceType(), mapperEntity.getObjectName(), pair);
         }
 
         this.mapperEntityMap = map;
