@@ -1,6 +1,7 @@
 package cn.foxtech.value.ex.task.service.service;
 
 import cn.foxtech.common.entity.entity.*;
+import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.entity.service.redis.RedisWriter;
 import cn.foxtech.value.ex.task.service.entity.DataObject;
 import cn.foxtech.value.ex.task.service.entity.DataTask;
@@ -15,6 +16,12 @@ import java.util.Map;
 
 @Component
 public class TaskEngineService {
+    /**
+     * 日志
+     */
+    @Autowired
+    private RedisConsoleService logger;
+
     @Autowired
     private EntityManageService entityManageService;
 
@@ -28,8 +35,14 @@ public class TaskEngineService {
     @Getter
     private boolean needReset = true;
 
+    @Getter
+    private boolean initialized = false;
+
     public void reset() {
         Map<String, DataTask> dataTaskMap = this.dataTaskManager.getDataTaskMap();
+        if (dataTaskMap.isEmpty()) {
+            return;
+        }
 
         for (String key : dataTaskMap.keySet()) {
             DataTask dataTask = dataTaskMap.get(key);
@@ -38,6 +51,7 @@ public class TaskEngineService {
         }
 
         this.needReset = false;
+        this.initialized = true;
     }
 
 
@@ -59,6 +73,7 @@ public class TaskEngineService {
             engine.eval(jsp);
         } catch (Exception e) {
             String message = "初始化脚本引擎异常：" + dataTask.getTaskName() + "; " + e.getMessage();
+            this.logger.error(message);
         }
     }
 
@@ -66,7 +81,7 @@ public class TaskEngineService {
         try {
             ScriptEngine scriptEngine = this.engineService.getScriptEngine(dataTask.getTaskName());
             scriptEngine.put("values", values);
-            scriptEngine.put("param", param);
+            scriptEngine.put("params", param);
 
             // 执行脚本
             Object data = scriptEngine.eval("main();");
@@ -87,6 +102,10 @@ public class TaskEngineService {
     }
 
     public void evalScript(DeviceValueEntity deviceValueEntity, Map<String, DeviceValueExObjectValue> deviceMap) {
+        if (!this.initialized) {
+            return;
+        }
+
         DeviceEntity deviceEntity = this.entityManageService.getDeviceEntity(deviceValueEntity.getDeviceName());
         if (deviceEntity == null) {
             return;

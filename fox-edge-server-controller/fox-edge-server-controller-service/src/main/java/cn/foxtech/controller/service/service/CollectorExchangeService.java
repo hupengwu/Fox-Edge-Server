@@ -63,7 +63,7 @@ public class CollectorExchangeService extends PeriodTaskService {
      * @throws Exception 异常情况
      */
     public void execute(long threadId) throws Exception {
-        Thread.sleep(1000);
+        Thread.sleep(100);
 
         // 检查：是否装载完毕
         if (!this.entityManageService.isInitialized()) {
@@ -97,13 +97,6 @@ public class CollectorExchangeService extends PeriodTaskService {
                 if (deviceEntity == null) {
                     continue;
                 }
-
-                // 获得时间间隔配置:如果没有配置，那么默认100毫秒
-                Map<String, Object> configValue = this.configService.getConfigParam("serverConfig");
-                Integer sleep = (Integer) configValue.getOrDefault("sleep", 100);
-
-                // 不能访问太快，否则CPU占用率都受不了
-                Thread.sleep(sleep);
 
                 this.executeTask(deviceEntity, taskEntity);
             }
