@@ -33,6 +33,7 @@ public class DeviceValueExManageController {
             // 提取业务参数
             Integer pageNum = (Integer) body.get(DeviceValueExVOFieldConstant.field_page_num);
             Integer pageSize = (Integer) body.get(DeviceValueExVOFieldConstant.field_page_size);
+            String deviceName = (String) body.get(DeviceValueExVOFieldConstant.field_device_name);
             String objectName = (String) body.get(DeviceValueExVOFieldConstant.field_object_name);
 
 
@@ -43,7 +44,20 @@ public class DeviceValueExManageController {
 
             // 从redis读取缓存数据
             RedisReader redisReader = this.entityManageService.getRedisReader(DeviceValueExEntity.class);
-            List<Map<String, Object>> mapList = redisReader.readHashMapList();
+
+            // 如果输入了设备名称，那么查询该设备的对象，否则是全量对象
+            List<Map<String, Object>> mapList = new ArrayList<>();
+            if (!MethodUtils.hasEmpty(deviceName)) {
+                DeviceValueExEntity entity = new DeviceValueExEntity();
+                entity.setDeviceName(deviceName);
+
+                Map<String, Object> map = redisReader.readHashMap(entity.makeServiceKey());
+                if (map != null) {
+                    mapList.add(map);
+                }
+            } else {
+                mapList = redisReader.readHashMapList();
+            }
 
             // 筛选数据
             mapList = this.selectEntityList(mapList, body);
