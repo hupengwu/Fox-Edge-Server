@@ -158,6 +158,24 @@ public class MapUtils {
         self.put(keys[keys.length - 2], keys[keys.length - 1]);
     }
 
+    public static void remove(Map map, Object... keys) throws ClassCastException {
+        Map self = map;
+
+        for (int i = 0; i < keys.length - 1; i++) {
+            Object key = keys[i];
+
+            // 初始化子节点
+            Map child = (Map) self.get(key);
+            if (child == null) {
+                return;
+            }
+            // 切换到下一级
+            self = child;
+        }
+
+        self.remove(keys[keys.length - 1]);
+    }
+
     public static void setValue(Map map, Object[] path, Object value) throws ClassCastException {
         Map self = map;
 
@@ -203,5 +221,14 @@ public class MapUtils {
             map.put(key, defaultValue);
             return;
         }
+    }
+
+    public static void copyValue(Map<String, Object> data, String keyData, Map<String, Object> param, String keyParam, Object defaultValue) {
+        Object value = param.get(keyParam);
+        if (value == null) {
+            value = defaultValue;
+        }
+
+        data.put(keyData, value);
     }
 }

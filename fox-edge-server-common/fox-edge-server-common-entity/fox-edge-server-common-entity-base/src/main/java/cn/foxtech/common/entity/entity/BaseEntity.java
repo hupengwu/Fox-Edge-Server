@@ -1,13 +1,17 @@
 package cn.foxtech.common.entity.entity;
 
+import cn.foxtech.core.exception.ServiceException;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 基本实体：ID/创建时间/修改时间
@@ -90,30 +94,8 @@ public abstract class BaseEntity implements Serializable {
      */
     public abstract Object makeWrapperKey();
 
-    /**
-     * 比较数值部分
-     *
-     * @param other
-     * @return
-     */
-    public boolean equalsValue(BaseEntity other) {
-        if (other == null) {
-            return false;
-        }
-
-        if (!this.equals(this.id, other.id)) {
-            return false;
-        }
-        if (!this.equals(this.createTime, other.createTime)) {
-            return false;
-        }
-        if (!this.equals(this.updateTime, other.updateTime)) {
-            return false;
-        }
-
-        String thisKey = this.makeServiceValue();
-        String otherKey = other.makeServiceValue();
-        return otherKey.equals(thisKey);
+    public BaseEntity build(Map<String, Object> map) {
+        throw new ServiceException("未重载BaseEntity build(Map<String,Object> map)函数");
     }
 
     private boolean equals(Object a, Object b) {

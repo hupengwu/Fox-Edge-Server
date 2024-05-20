@@ -80,6 +80,7 @@ public class DeviceValueEntity extends BaseEntity {
 
     /**
      * 将带时间戳的params结构，转换为没有时间戳的value
+     *
      * @param params 带时间戳的数值对象
      * @return 不带时间戳的数值
      */
@@ -140,5 +141,40 @@ public class DeviceValueEntity extends BaseEntity {
         this.deviceType = other.deviceType;
         this.manufacturer = other.manufacturer;
         this.params = other.params;
+    }
+
+    public BaseEntity build(Map<String, Object> map) {
+        try {
+            if (map == null || map.isEmpty()) {
+                return null;
+            }
+
+            DeviceValueEntity entity = new DeviceValueEntity();
+            entity.setId(NumberUtils.makeLong(map.get("id")));
+            entity.setCreateTime(NumberUtils.makeLong(map.get("createTime")));
+            entity.setUpdateTime(NumberUtils.makeLong(map.get("updateTime")));
+
+
+            entity.setDeviceName((String) map.get("deviceName"));
+            entity.setDeviceType((String) map.get("deviceType"));
+            entity.setManufacturer((String) map.get("manufacturer"));
+
+            Map<String, Object> values = (Map<String, Object>) map.get("params");
+            for (String key : values.keySet()) {
+                Map<String, Object> value = (Map<String, Object>) values.get(key);
+                if (value == null) {
+                    continue;
+                }
+
+                DeviceObjectValue objectValue = new DeviceObjectValue();
+                objectValue.setTime(NumberUtils.makeLong(value.get("time")));
+                objectValue.setValue(value.get("value"));
+                entity.getParams().put(key, objectValue);
+            }
+
+            return entity;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

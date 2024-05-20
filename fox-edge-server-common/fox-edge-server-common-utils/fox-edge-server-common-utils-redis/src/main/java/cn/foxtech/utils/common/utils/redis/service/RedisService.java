@@ -275,8 +275,12 @@ public class RedisService {
         return redisTemplate.opsForHash().entries(key);
     }
 
+    public <T> List<T> getCacheMap(final String key, final Collection<String> hashKeys) {
+        return redisTemplate.opsForHash().multiGet(key, hashKeys);
+    }
+
     public <T> Long deleteCacheMap(final String key, final String hashKey) {
-        return redisTemplate.opsForHash().delete(key,hashKey);
+        return redisTemplate.opsForHash().delete(key, hashKey);
     }
 
     /**

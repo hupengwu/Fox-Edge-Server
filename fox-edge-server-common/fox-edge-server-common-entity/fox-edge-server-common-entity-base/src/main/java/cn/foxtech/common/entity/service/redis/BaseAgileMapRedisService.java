@@ -1,5 +1,6 @@
 package cn.foxtech.common.entity.service.redis;
 
+import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.utils.DifferUtils;
 import cn.foxtech.utils.common.utils.redis.service.RedisService;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -23,6 +24,11 @@ public abstract class BaseAgileMapRedisService {
      * 是否已经完成初始化
      */
     private boolean inited = false;
+
+    /**
+     * 更新通知
+     */
+    private AgileMapRedisNotify notify = null;
 
 
     /**
@@ -62,6 +68,14 @@ public abstract class BaseAgileMapRedisService {
         return updateTime;
     }
 
+    /**
+     * 绑定通知
+     *
+     * @param notify
+     */
+    protected void bind(AgileMapRedisNotify notify) {
+        this.notify = notify;
+    }
 
     protected String getHead() {
         return "fox.edge.entity." + this.getEntityType() + ".";
@@ -90,8 +104,13 @@ public abstract class BaseAgileMapRedisService {
 
     /**
      * 消费者：初始化从redis敏捷装载数据
+     * 注意：触发器模式下，该函数才会工作
      */
     public void loadAgileEntities() {
+        if (this.notify == null) {
+            return;
+        }
+
         // 读取时间戳
         Long sync = this.getRedisService().getCacheObject(this.getHead() + "sync");
         if (sync == null) {
@@ -110,16 +129,38 @@ public abstract class BaseAgileMapRedisService {
         this.agileMap.putAll(newUpdateTimes);
     }
 
+    /**
+     * 消费者：初始化从redis敏捷装载数据
+     * 注意：独立线程轮询模式，该函数才会工作
+     */
     public List<Map<String, Object>> loadAllEntities() {
-        // 装载sync和agile
-        this.loadAgileEntities();
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        if (this.notify != null) {
+            return resultList;
+        }
+
+        // 读取时间戳
+        Long sync = this.getRedisService().getCacheObject(this.getHead() + "sync");
+        if (sync == null) {
+            return resultList;
+        } else {
+            this.updateTime = sync;
+        }
+
+        // 读取敏捷数据：带有每个Entity的UpdateTime
+        Map<String, Long> newUpdateTimes = this.getRedisService().getCacheMap(this.getHead() + "agile");
+        if (newUpdateTimes == null) {
+            newUpdateTimes = new HashMap<>();
+        }
+
+        this.agileMap.clear();
+        this.agileMap.putAll(newUpdateTimes);
 
         // 读取data，并返回给外部
-        List<Map<String, Object>> resultList = new ArrayList<>();
         Map<String, Object> jsonMap = this.getRedisService().getCacheMap(this.getHead() + "data");
         for (Object data : jsonMap.values()) {
-            if (data != null && data instanceof Map){
-                resultList.add((Map<String, Object>)data);
+            if (data != null && data instanceof Map) {
+                resultList.add((Map<String, Object>) data);
             }
         }
 
@@ -129,6 +170,7 @@ public abstract class BaseAgileMapRedisService {
 
     /**
      * 装载变化的数据
+     * 注意：独立线程轮询模式，该函数才会工作
      *
      * @param addMap 新增
      * @param delSet 删除
@@ -136,6 +178,10 @@ public abstract class BaseAgileMapRedisService {
      * @throws IOException 异常
      */
     public void loadChangeEntities(Map<String, Object> addMap, Set<String> delSet, Map<String, Object> mdyMap) throws IOException {
+        if (this.notify != null) {
+            return;
+        }
+
         // 读取时间戳
         Long sync = this.getRedisService().getCacheObject(this.getHead() + "sync");
         if (sync == null) {
@@ -203,6 +249,100 @@ public abstract class BaseAgileMapRedisService {
 
         // 删除的数据
         delSet.addAll(delList);
+    }
+
+    public void loadChangeEntities(Map<String, BaseEntity> addMap, Set<String> delSet, Map<String, BaseEntity> mdyMap, BaseEntity builder) throws IOException {
+        if (this.notify != null) {
+            return;
+        }
+        
+        // 读取时间戳
+        Long sync = this.getRedisService().getCacheObject(this.getHead() + "sync");
+        if (sync == null) {
+            return;
+        } else {
+            this.updateTime = sync;
+        }
+
+        // 读取敏捷数据：带有每个Entity的UpdateTime
+        Map<String, Long> newUpdateTimes = this.getRedisService().getCacheMap(this.getHead() + "agile");
+        if (newUpdateTimes == null) {
+            newUpdateTimes = new HashMap<>();
+        }
+
+        // 根据时间戳，判定变化的数据
+        Set<String> addList = new HashSet<>();
+        Set<String> delList = new HashSet<>();
+        Set<String> eqlList = new HashSet<>();
+        DifferUtils.differByValue(this.agileMap.keySet(), newUpdateTimes.keySet(), addList, delList, eqlList);
+
+        Set<String> mdfList = new HashSet<>();
+        for (String key : eqlList) {
+            Long newUpdateTime = newUpdateTimes.get(key);
+            Long oldUpdateTime = this.agileMap.get(key);
+            if (newUpdateTime.equals(oldUpdateTime)) {
+                continue;
+            }
+
+            mdfList.add(key);
+        }
+
+        if (addList.isEmpty() && delList.isEmpty() && mdfList.isEmpty()) {
+            return;
+        }
+
+        Set<String> loads = new HashSet<>();
+        loads.addAll(addList);
+        loads.addAll(mdfList);
+
+        // 读取全量的date：redis基础组件，没有读取指定数据的Map接口
+        List<Map<String, Object>> mapList = this.getRedisService().getCacheMap(this.getHead() + "data", loads);
+
+        // 转换数据
+        Map<String, BaseEntity> dataMap = this.makeEntityMap(mapList, builder);
+
+        // 新增的数据
+        for (String key : addList) {
+            BaseEntity data = dataMap.get(key);
+            if (data == null) {
+                continue;
+            }
+
+            Long newUpdateTime = newUpdateTimes.get(key);
+            this.agileMap.put(key, newUpdateTime);
+
+            addMap.put(key, data);
+        }
+
+        // 修改的数据
+        for (String key : mdfList) {
+            BaseEntity data = dataMap.get(key);
+            if (data == null) {
+                continue;
+            }
+
+            Long newUpdateTime = newUpdateTimes.get(key);
+            this.agileMap.put(key, newUpdateTime);
+
+            mdyMap.put(key, data);
+        }
+
+        // 删除的数据
+        delSet.addAll(delList);
+    }
+
+    private Map<String, BaseEntity> makeEntityMap(List<Map<String, Object>> mapList, BaseEntity builder) throws JsonParseException {
+        Map<String, BaseEntity> result = new ConcurrentHashMap<>();
+        for (Map<String, Object> map : mapList) {
+            BaseEntity entity = builder.build(map);
+            if (entity == null) {
+                continue;
+            }
+
+            result.put(entity.makeServiceKey(), entity);
+        }
+
+        return result;
     }
 
     /**

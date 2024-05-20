@@ -60,6 +60,7 @@
         <module>fox-edge-server-channel</module>
         <module>fox-edge-server-link</module>
         <module>fox-edge-server-device</module>
+        <module>fox-edge-server-value</module>
         <module>fox-edge-server-controller</module>
         <module>fox-edge-server-persist</module>
         <module>fox-edge-server-service</module>

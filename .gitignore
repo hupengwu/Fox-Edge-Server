@@ -30,3 +30,4 @@ buildNumber.properties
 /temp
 /repository/product
 /shell/kernel
+/repository/*.bat

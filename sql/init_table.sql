@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `tb_channel` (
   UNIQUE KEY `channel_name_channel_type` (`channel_name`,`channel_type`),
   KEY `channel_name` (`channel_name`),
   KEY `channel_type` (`channel_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=84 ;
+) ENGINE=InnoDB AUTO_INCREMENT=1 ;
 
 -- 数据导出被取消选择。
 
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `tb_config` (
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `service_name_service_type_config_name` (`service_name`,`service_type`,`config_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=267  COMMENT='该参数是由manage服务来配置，再给各个服务消费';
+) ENGINE=InnoDB AUTO_INCREMENT=1  COMMENT='该参数是由manage服务来配置，再给各个服务消费';
 
 -- 数据导出被取消选择。
 
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `tb_device` (
   UNIQUE KEY `device_name` (`device_name`),
   KEY `device_type` (`device_type`),
   KEY `manufacturer` (`manufacturer`)
-) ENGINE=InnoDB AUTO_INCREMENT=2239 ;
+) ENGINE=InnoDB AUTO_INCREMENT=1 ;
 
 -- 数据导出被取消选择。
 
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_mapper` (
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `device_type_manufacturer_object_name` (`device_type`,`manufacturer`,`object_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=500  COMMENT='对象重命名';
+) ENGINE=InnoDB AUTO_INCREMENT=1  COMMENT='对象重命名';
 
 -- 数据导出被取消选择。
 
@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_model` (
   UNIQUE KEY `template_name` (`model_name`) USING BTREE,
   KEY `device_type` (`device_type`),
   KEY `manufacturer` (`manufacturer`)
-) ENGINE=InnoDB AUTO_INCREMENT=1322 COMMENT='将原来的CSV文件，进行JSON化，那么能够应用模板的解码器们，就有了动态配置的能力';
+) ENGINE=InnoDB AUTO_INCREMENT=1 COMMENT='将原来的CSV文件，进行JSON化，那么能够应用模板的解码器们，就有了动态配置的能力';
 
 -- 数据导出被取消选择。
 
@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_object` (
   KEY `device_name` (`device_name`),
   KEY `object_name` (`object_name`),
   KEY `manufacturer` (`manufacturer`)
-) ENGINE=InnoDB AUTO_INCREMENT=1423689  COMMENT='设备的一个个数据对象信息';
+) ENGINE=InnoDB AUTO_INCREMENT=1  COMMENT='设备的一个个数据对象信息';
 
 -- 数据导出被取消选择。
 
@@ -183,6 +183,20 @@ CREATE TABLE IF NOT EXISTS `tb_device_status` (
 
 -- 数据导出被取消选择。
 
+-- 导出  表 fox_edge.tb_device_value_task 结构
+DROP TABLE IF EXISTS `tb_device_value_task`;
+CREATE TABLE IF NOT EXISTS `tb_device_value_task` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '序号',
+  `task_name` varchar(50) NOT NULL COMMENT '任务名称',
+  `task_param` json NOT NULL COMMENT '任务参数',
+  `create_time` bigint NOT NULL COMMENT '创建时间',
+  `update_time` bigint DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `tark_name` (`task_name`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 COMMENT='设备数值二次加工任务';
+
+-- 数据导出被取消选择。
+
 -- 导出  表 fox_edge.tb_extend 结构
 DROP TABLE IF EXISTS `tb_extend`;
 CREATE TABLE IF NOT EXISTS `tb_extend` (
@@ -195,7 +209,7 @@ CREATE TABLE IF NOT EXISTS `tb_extend` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `extend_name` (`extend_name`),
   KEY `extend_type` (`extend_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 ;
+) ENGINE=InnoDB AUTO_INCREMENT=1 ;
 
 -- 数据导出被取消选择。
 
@@ -259,7 +273,7 @@ CREATE TABLE IF NOT EXISTS `tb_operate` (
   KEY `manufacturer` (`manufacturer`),
   KEY `engine_type` (`engine_type`),
   KEY `service_type` (`service_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=1109 ;
+) ENGINE=InnoDB AUTO_INCREMENT=1 ;
 
 -- 数据导出被取消选择。
 
@@ -279,7 +293,7 @@ CREATE TABLE IF NOT EXISTS `tb_operate_channel_task` (
   UNIQUE KEY `task_name` (`task_name`),
   KEY `channel_name` (`channel_name`),
   KEY `channel_type` (`channel_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=41  COMMENT='操作实例：用户手动操作设备时，提交的任务';
+) ENGINE=InnoDB AUTO_INCREMENT=1  COMMENT='操作实例：用户手动操作设备时，提交的任务';
 
 -- 数据导出被取消选择。
 
@@ -299,7 +313,7 @@ CREATE TABLE IF NOT EXISTS `tb_operate_manual_task` (
   KEY `device_name` (`device_name`),
   KEY `device_type` (`device_type`),
   KEY `manufacturer` (`manufacturer`)
-) ENGINE=InnoDB AUTO_INCREMENT=65  COMMENT='操作实例：用户手动操作设备时，提交的任务';
+) ENGINE=InnoDB AUTO_INCREMENT=1  COMMENT='操作实例：用户手动操作设备时，提交的任务';
 
 -- 数据导出被取消选择。
 
@@ -319,7 +333,7 @@ CREATE TABLE IF NOT EXISTS `tb_operate_monitor_task` (
   UNIQUE KEY `template_name` (`template_name`),
   KEY `device_type` (`device_type`),
   KEY `manufacturer` (`manufacturer`)
-) ENGINE=InnoDB AUTO_INCREMENT=23  COMMENT='控制器监控模板，控制器会以操作参数为缺省参数，自动填入。当设备参数有同名参数的时候，设备参数覆盖相同的数据。';
+) ENGINE=InnoDB AUTO_INCREMENT=1  COMMENT='控制器监控模板，控制器会以操作参数为缺省参数，自动填入。当设备参数有同名参数的时候，设备参数覆盖相同的数据。';
 
 -- 数据导出被取消选择。
 
@@ -342,7 +356,7 @@ CREATE TABLE IF NOT EXISTS `tb_operate_record` (
   KEY `device_type` (`device_type`) USING BTREE,
   KEY `event_name` (`record_name`) USING BTREE,
   KEY `manufacturer` (`manufacturer`)
-) ENGINE=InnoDB AUTO_INCREMENT=23360 ;
+) ENGINE=InnoDB AUTO_INCREMENT=1 ;
 
 -- 数据导出被取消选择。
 
@@ -361,7 +375,7 @@ CREATE TABLE IF NOT EXISTS `tb_period_record` (
   KEY `device_id` (`device_id`) USING BTREE,
   KEY `object_name` (`object_name`) USING BTREE,
   KEY `record_batch` (`record_batch`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=201977462  COMMENT='设备数值的周期记录';
+) ENGINE=InnoDB AUTO_INCREMENT=1  COMMENT='设备数值的周期记录';
 
 -- 数据导出被取消选择。
 
@@ -419,65 +433,7 @@ CREATE TABLE IF NOT EXISTS `tb_repo_comp` (
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `comp_repo_comp_type_comp_name` (`comp_repo`,`comp_type`,`comp_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=320  COMMENT='仓库组件信息';
-
--- 数据导出被取消选择。
-
--- 导出  表 fox_edge.tb_trigger 结构
-DROP TABLE IF EXISTS `tb_trigger`;
-CREATE TABLE IF NOT EXISTS `tb_trigger` (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '序号',
-  `model_name` varchar(64) DEFAULT NULL COMMENT '触发器模块',
-  `method_name` varchar(64) DEFAULT NULL COMMENT '触发器的名称',
-  `manufacturer` varchar(64) DEFAULT NULL COMMENT '开发者',
-  `create_time` bigint DEFAULT NULL COMMENT '创建时间',
-  `update_time` bigint DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `model_name_method_name_manufacturer` (`model_name`,`method_name`,`manufacturer`)
-) ENGINE=InnoDB AUTO_INCREMENT=5  COMMENT='判定告警的逻辑代码，这是告警框架扫描触发器代码，而自动生成的';
-
--- 数据导出被取消选择。
-
--- 导出  表 fox_edge.tb_trigger_config 结构
-DROP TABLE IF EXISTS `tb_trigger_config`;
-CREATE TABLE IF NOT EXISTS `tb_trigger_config` (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '序号',
-  `trigger_config_name` varchar(50) NOT NULL COMMENT '配置名称',
-  `object_range` varchar(50) NOT NULL COMMENT '告警范围(全局/设备/对象)',
-  `device_name` varchar(50) DEFAULT NULL COMMENT '设备名称',
-  `device_type` varchar(50) NOT NULL COMMENT '设备类型',
-  `manufacturer` varchar(50) NOT NULL COMMENT '设备厂商',
-  `objects_name` json NOT NULL COMMENT '对象列表',
-  `trigger_model_name` varchar(64) NOT NULL COMMENT '触发器模块名称',
-  `trigger_method_name` varchar(64) NOT NULL COMMENT '触发器方法名称',
-  `queue_deep` int NOT NULL DEFAULT '1' COMMENT '队列深度',
-  `trigger_param` json NOT NULL COMMENT '触发器参数',
-  `create_time` bigint NOT NULL COMMENT '创建时间',
-  `update_time` bigint DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=436376  COMMENT='设备告警配置';
-
--- 数据导出被取消选择。
-
--- 导出  表 fox_edge.tb_trigger_object 结构
-DROP TABLE IF EXISTS `tb_trigger_object`;
-CREATE TABLE IF NOT EXISTS `tb_trigger_object` (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '序号',
-  `device_name` varchar(50) DEFAULT NULL COMMENT '设备名称',
-  `device_type` varchar(50) NOT NULL COMMENT '设备类型',
-  `manufacturer` varchar(50) NOT NULL COMMENT '设备参数',
-  `trigger_config_name` varchar(50) NOT NULL COMMENT '配置名称',
-  `object_name` varchar(50)  NOT NULL COMMENT '告警范围(全局/设备/对象)',
-  `create_time` bigint NOT NULL COMMENT '创建时间',
-  `update_time` bigint DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `device_name_trigger_config_name_object_name` (`device_name`,`trigger_config_name`,`object_name`),
-  KEY `device_type` (`device_type`),
-  KEY `device_name` (`device_name`),
-  KEY `trigger_config_name` (`trigger_config_name`),
-  KEY `object_name` (`object_name`),
-  KEY `manufacturer` (`manufacturer`)
-) ENGINE=InnoDB AUTO_INCREMENT=635870  COMMENT='触发值对象';
+) ENGINE=InnoDB AUTO_INCREMENT=1  COMMENT='仓库组件信息';
 
 -- 数据导出被取消选择。
 

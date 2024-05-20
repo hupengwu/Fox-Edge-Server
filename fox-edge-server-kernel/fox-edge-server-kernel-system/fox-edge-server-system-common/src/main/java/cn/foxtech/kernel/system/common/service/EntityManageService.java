@@ -9,11 +9,12 @@ import cn.foxtech.common.entity.service.channel.ChannelEntityService;
 import cn.foxtech.common.entity.service.config.ConfigEntityService;
 import cn.foxtech.common.entity.service.device.DeviceEntityService;
 import cn.foxtech.common.entity.service.devicemapping.DeviceMapperEntityService;
-import cn.foxtech.common.entity.service.iotdevicemodel.IotDeviceModelEntityService;
+import cn.foxtech.common.entity.service.devicemodel.DeviceModelEntityService;
 import cn.foxtech.common.entity.service.deviceobject.DeviceObjectEntityService;
 import cn.foxtech.common.entity.service.devicerecord.DeviceRecordEntityService;
-import cn.foxtech.common.entity.service.devicemodel.DeviceModelEntityService;
+import cn.foxtech.common.entity.service.devicevalue.task.DeviceValueExTaskEntityService;
 import cn.foxtech.common.entity.service.extendconfig.ExtendConfigEntityService;
+import cn.foxtech.common.entity.service.iotdevicemodel.IotDeviceModelEntityService;
 import cn.foxtech.common.entity.service.link.LinkEntityService;
 import cn.foxtech.common.entity.service.mybatis.BaseEntityService;
 import cn.foxtech.common.entity.service.operate.OperateEntityService;
@@ -101,6 +102,9 @@ public class EntityManageService extends EntityServiceManager {
 
 
     @Autowired
+    protected DeviceValueExTaskEntityService deviceValueExTaskEntityService;
+
+    @Autowired
     protected RepoCompEntityService repoCompEntityService;
 
     @Autowired
@@ -144,6 +148,7 @@ public class EntityManageService extends EntityServiceManager {
         dBService.put(ExtendConfigEntity.class.getSimpleName(), this.extendConfigEntityService);
         dBService.put(DeviceRecordEntity.class.getSimpleName(), this.deviceRecordEntityService);
         dBService.put(ProbeEntity.class.getSimpleName(), this.probeEntityService);
+        dBService.put(DeviceValueExTaskEntity.class.getSimpleName(), this.deviceValueExTaskEntityService);
         dBService.put(OperateRecordEntity.class.getSimpleName(), this.operateRecordEntityService);
         dBService.put(OperateMonitorTaskEntity.class.getSimpleName(), this.operateMonitorTaskEntityService);
         dBService.put(OperateManualTaskEntity.class.getSimpleName(), this.operateManualTaskEntityService);
@@ -163,6 +168,7 @@ public class EntityManageService extends EntityServiceManager {
         producer.add(UserPermissionEntity.class.getSimpleName());
         producer.add(ExtendConfigEntity.class.getSimpleName());
         producer.add(ProbeEntity.class.getSimpleName());
+        producer.add(DeviceValueExTaskEntity.class.getSimpleName());
         producer.add(OperateEntity.class.getSimpleName());
         producer.add(OperateMonitorTaskEntity.class.getSimpleName());
         producer.add(OperateManualTaskEntity.class.getSimpleName());
@@ -183,6 +189,7 @@ public class EntityManageService extends EntityServiceManager {
         this.getSourceMySQL().add(UserPermissionEntity.class.getSimpleName());
         this.getSourceMySQL().add(ExtendConfigEntity.class.getSimpleName());
         this.getSourceMySQL().add(ProbeEntity.class.getSimpleName());
+        this.getSourceMySQL().add(DeviceValueExTaskEntity.class.getSimpleName());
         this.getSourceMySQL().add(OperateEntity.class.getSimpleName());
         this.getSourceMySQL().add(OperateMonitorTaskEntity.class.getSimpleName());
         this.getSourceMySQL().add(OperateManualTaskEntity.class.getSimpleName());
@@ -198,6 +205,7 @@ public class EntityManageService extends EntityServiceManager {
 
         // 注册redis读数据
         reader.add(DeviceValueEntity.class.getSimpleName());
+        reader.add(DeviceValueExEntity.class.getSimpleName());
         reader.add(DeviceStatusEntity.class.getSimpleName());
 
         reader.add(DeviceEntity.class.getSimpleName());
