@@ -204,6 +204,7 @@ public class EntityManageService extends EntityServiceManager {
         consumer.add(OperateMethodEntity.class.getSimpleName());
 
         // 注册redis读数据
+        reader.add(ChannelStatusEntity.class.getSimpleName());
         reader.add(DeviceValueEntity.class.getSimpleName());
         reader.add(DeviceValueExEntity.class.getSimpleName());
         reader.add(DeviceStatusEntity.class.getSimpleName());

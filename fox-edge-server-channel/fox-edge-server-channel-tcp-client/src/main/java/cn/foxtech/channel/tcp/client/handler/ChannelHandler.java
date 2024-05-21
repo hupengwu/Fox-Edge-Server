@@ -1,5 +1,6 @@
 package cn.foxtech.channel.tcp.client.handler;
 
+import cn.foxtech.channel.common.service.ChannelStatusUpdater;
 import cn.foxtech.channel.socket.core.service.ChannelManager;
 import cn.foxtech.channel.tcp.client.entity.TcpClientEntity;
 import cn.foxtech.channel.tcp.client.service.ReportService;
@@ -24,6 +25,9 @@ public class ChannelHandler extends SocketChannelHandler {
 
     @Setter
     private ReportService reportService;
+
+    @Setter
+    private ChannelStatusUpdater statusUpdater;
 
     /**
      * 双工模式：全双工/半双工
@@ -51,6 +55,9 @@ public class ChannelHandler extends SocketChannelHandler {
 
         this.channelManager.insert(ctx);
         this.channelManager.setServiceKey(ctx, this.entity.getChannelName());
+
+        // 通知其他服务：建立连接
+        this.statusUpdater.updateParamStatus(this.entity.getChannelName(), "connected", true);
     }
 
     /**
@@ -89,6 +96,9 @@ public class ChannelHandler extends SocketChannelHandler {
         this.consoleService.info(message);
 
         this.channelManager.remove(ctx.channel().remoteAddress());
+
+        // 通知其他服务：断开连接
+        this.statusUpdater.updateParamStatus(this.entity.getChannelName(), "connected", false);
     }
 
     /**

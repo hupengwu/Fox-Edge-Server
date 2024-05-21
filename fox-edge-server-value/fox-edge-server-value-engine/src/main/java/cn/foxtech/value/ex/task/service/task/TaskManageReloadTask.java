@@ -4,6 +4,7 @@ import cn.foxtech.common.utils.scheduler.multitask.PeriodTask;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTaskType;
 import cn.foxtech.value.ex.task.service.service.DataCacheManager;
 import cn.foxtech.value.ex.task.service.service.DataTaskManager;
+import cn.foxtech.value.ex.task.service.service.ScriptEngineManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,9 @@ public class TaskManageReloadTask extends PeriodTask {
 
     @Autowired
     private DataCacheManager dataCacheManager;
+
+    @Autowired
+    private ScriptEngineManager scriptEngineManager;
 
 
     @Override
@@ -38,12 +42,12 @@ public class TaskManageReloadTask extends PeriodTask {
      */
     @Override
     public void execute() {
-        if (this.dataTaskManager.isNeedReset()) {
-            this.dataTaskManager.reset();
+        if (!this.dataTaskManager.isNeedReset()) {
+            return;
         }
 
-        if (this.dataCacheManager.isNeedReset()) {
-            this.dataCacheManager.reset();
-        }
+        this.dataTaskManager.reset();
+        this.dataCacheManager.reset();
+        this.scriptEngineManager.reset();
     }
 }

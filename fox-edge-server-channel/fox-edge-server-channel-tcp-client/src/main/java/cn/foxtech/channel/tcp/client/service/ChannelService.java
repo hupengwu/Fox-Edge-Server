@@ -1,6 +1,7 @@
 package cn.foxtech.channel.tcp.client.service;
 
 import cn.foxtech.channel.common.api.ChannelServerAPI;
+import cn.foxtech.channel.common.service.ChannelStatusUpdater;
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.channel.socket.core.service.ChannelManager;
@@ -44,6 +45,9 @@ public class ChannelService extends ChannelServerAPI {
     @Autowired
     private RedisConsoleService consoleService;
 
+    @Autowired
+    private ChannelStatusUpdater statusUpdater;
+
     @Override
     public Object getReportLock() {
         return this.reportService;
@@ -61,6 +65,8 @@ public class ChannelService extends ChannelServerAPI {
         Integer port = (Integer) channelParam.get("port");
         String mode = (String) channelParam.get("mode");
         Map<String, Object> handler = (Map<String, Object>) channelParam.get("handler");
+
+        this.statusUpdater.updateParamStatus(channelName,"connected",false);
 
         // 检查：参数是否为空
         if (MethodUtils.hasEmpty(host, port)) {
@@ -122,7 +128,9 @@ public class ChannelService extends ChannelServerAPI {
         channelHandler.setReportService(this.reportService);
         channelHandler.setChannelManager(this.channelManager);
         channelHandler.setConsoleService(this.consoleService);
+        channelHandler.setStatusUpdater(this.statusUpdater);
         channelHandler.setEntity(entity);
+
 
         // 分配一个NettyTcpClientFactory
         NettyTcpClientFactory factory = NettyTcpClientFactory.newInstance();
@@ -158,6 +166,7 @@ public class ChannelService extends ChannelServerAPI {
         channelHandler.setReportService(this.reportService);
         channelHandler.setChannelManager(this.channelManager);
         channelHandler.setConsoleService(this.consoleService);
+        channelHandler.setStatusUpdater(this.statusUpdater);
         channelHandler.setEntity(entity);
 
         // 分配一个NettyTcpClientFactory

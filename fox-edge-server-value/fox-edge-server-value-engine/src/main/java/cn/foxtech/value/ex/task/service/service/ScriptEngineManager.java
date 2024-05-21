@@ -6,7 +6,6 @@ import cn.foxtech.common.entity.service.redis.RedisWriter;
 import cn.foxtech.value.ex.task.service.entity.DataObject;
 import cn.foxtech.value.ex.task.service.entity.DataTask;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class TaskEngineService {
+public class ScriptEngineManager {
     /**
      * 日志
      */
@@ -30,10 +29,6 @@ public class TaskEngineService {
 
     @Autowired
     private DataTaskManager dataTaskManager;
-
-    @Setter
-    @Getter
-    private boolean needReset = true;
 
     @Getter
     private boolean initialized = false;
@@ -50,7 +45,6 @@ public class TaskEngineService {
             this.reset(dataTask);
         }
 
-        this.needReset = false;
         this.initialized = true;
     }
 

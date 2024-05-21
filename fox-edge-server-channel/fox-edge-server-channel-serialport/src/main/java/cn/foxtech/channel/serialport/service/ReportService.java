@@ -1,6 +1,7 @@
 package cn.foxtech.channel.serialport.service;
 
 import cn.foxtech.channel.common.properties.ChannelProperties;
+import cn.foxtech.channel.common.service.ChannelStatusUpdater;
 import cn.foxtech.channel.common.service.ConsoleLoggerPrinter;
 import cn.foxtech.channel.domain.ChannelBaseVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
@@ -30,6 +31,9 @@ public class ReportService {
 
     @Autowired
     private ConsoleLoggerPrinter printer;
+
+    @Autowired
+    private ChannelStatusUpdater statusUpdater;
 
 
     public List<ChannelRespondVO> report(Map<String, SerialChannelEntity> channelEntityMap) throws ServiceException {
@@ -78,6 +82,10 @@ public class ReportService {
                 respondVO.setRecv(hex);
 
                 this.printer.printLogger(channelName, "接收", hex);
+
+                // 通知第三方服务：接收到数据
+                this.statusUpdater.updateParamStatus(respondVO.getName(), "recvTime", System.currentTimeMillis());
+
 
                 respondVOList.add(respondVO);
             }

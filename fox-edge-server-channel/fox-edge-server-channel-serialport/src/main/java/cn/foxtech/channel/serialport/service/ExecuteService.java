@@ -1,5 +1,6 @@
 package cn.foxtech.channel.serialport.service;
 
+import cn.foxtech.channel.common.service.ChannelStatusUpdater;
 import cn.foxtech.channel.common.service.ConsoleLoggerPrinter;
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
@@ -19,6 +20,9 @@ import java.util.Arrays;
 public class ExecuteService {
     @Autowired
     private ConsoleLoggerPrinter printer;
+
+    @Autowired
+    private ChannelStatusUpdater statusUpdater;
 
     /**
      * 查询串口数据:增加同步锁，避免并发访问带来的多线程异常。
@@ -51,7 +55,6 @@ public class ExecuteService {
         // 格式转换
         byte[] send = HexUtils.hexStringToByteArray(sendData);
 
-
         // 清空串口上的发送/接收缓冲区
         serialPort.clearSendFlush();
         serialPort.clearRecvFlush();
@@ -74,7 +77,11 @@ public class ExecuteService {
         // 格式转换
         String hexString = HexUtils.byteArrayToHexString(recv, true);
 
+        // 打印日志
         this.printer.printLogger(requestVO.getName(), "接收", hexString);
+
+        // 通知第三方服务：接收到数据
+        this.statusUpdater.updateParamStatus(requestVO.getName(), "recvTime", System.currentTimeMillis());
 
         ChannelRespondVO respondVO = new ChannelRespondVO();
         respondVO.bindBaseVO(requestVO);

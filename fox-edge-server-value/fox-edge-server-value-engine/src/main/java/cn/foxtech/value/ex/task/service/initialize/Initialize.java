@@ -8,7 +8,7 @@ import cn.foxtech.common.entity.service.redis.ConsumerRedisService;
 import cn.foxtech.common.status.ServiceStatusScheduler;
 import cn.foxtech.value.ex.task.service.notify.DeviceEntityTypeNotify;
 import cn.foxtech.value.ex.task.service.notify.DeviceMapperTypeNotify;
-import cn.foxtech.value.ex.task.service.notify.VauleTaskTypeNodify;
+import cn.foxtech.value.ex.task.service.notify.ValueTaskTypeNodify;
 import cn.foxtech.value.ex.task.service.scheduler.EntityManageScheduler;
 import cn.foxtech.value.ex.task.service.scheduler.PeriodTasksScheduler;
 import cn.foxtech.value.ex.task.service.service.EntityManageService;
@@ -42,7 +42,7 @@ public class Initialize implements CommandLineRunner {
     private DeviceEntityTypeNotify deviceEntityNotify;
 
     @Autowired
-    private VauleTaskTypeNodify valueTaskNodify;
+    private ValueTaskTypeNodify valueTaskNodify;
 
 
     @Autowired

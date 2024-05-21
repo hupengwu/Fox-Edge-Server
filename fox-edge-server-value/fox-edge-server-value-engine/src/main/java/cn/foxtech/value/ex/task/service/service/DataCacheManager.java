@@ -4,8 +4,6 @@ import cn.foxtech.common.entity.entity.*;
 import cn.foxtech.common.entity.service.redis.RedisReader;
 import cn.foxtech.common.entity.service.redis.RedisWriter;
 import cn.foxtech.value.ex.task.service.entity.DataTask;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,10 +19,6 @@ public class DataCacheManager {
 
     @Autowired
     private DataTaskManager dataTaskManager;
-
-    @Setter
-    @Getter
-    private boolean needReset = true;
 
     public Map<String, DeviceValueExObjectValue> append(DeviceValueEntity deviceValueEntity) {
         RedisReader redisReader = this.entityManageService.getRedisReader(DeviceValueExCacheEntity.class);
@@ -97,8 +91,6 @@ public class DataCacheManager {
             // 为每一个设备，根据类型进行初始化缓存
             this.restCache(deviceList, objectNames);
         }
-
-        this.needReset = false;
     }
 
     private void restCache(List<DeviceEntity> deviceList, List<String> objectNames) {

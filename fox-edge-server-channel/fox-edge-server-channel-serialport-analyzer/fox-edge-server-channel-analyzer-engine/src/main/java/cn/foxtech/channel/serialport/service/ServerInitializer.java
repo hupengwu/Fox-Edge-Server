@@ -1,5 +1,6 @@
 package cn.foxtech.channel.serialport.service;
 
+import cn.foxtech.channel.common.service.ChannelStatusUpdater;
 import cn.foxtech.channel.serialport.entity.SerialChannelEntity;
 import cn.foxtech.channel.serialport.entity.SerialPortEntity;
 import cn.foxtech.channel.serialport.entity.SerialStreamEntity;
@@ -39,6 +40,8 @@ public class ServerInitializer {
     @Autowired
     private ReportService reportService;
 
+    @Autowired
+    private ChannelStatusUpdater channelStatusUpdater;
 
     @Autowired
     private RedisConsoleService console;
@@ -189,6 +192,9 @@ public class ServerInitializer {
                             if (!this.checkKey(channelEntity, data)) {
                                 continue;
                             }
+
+                            // 最近接收数据的更新时间
+                            this.channelStatusUpdater.updateParamStatus(channelName, "receiveTime", System.currentTimeMillis());
 
                             // 返回格式：是否进行文本转码
                             String returnText = (String) channelEntity.getChannelParam().get("returnText");

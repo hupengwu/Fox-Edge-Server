@@ -3,6 +3,7 @@ package cn.foxtech.channel.common.scheduler;
 
 import cn.foxtech.channel.common.api.ChannelClientAPI;
 import cn.foxtech.channel.common.properties.ChannelProperties;
+import cn.foxtech.channel.common.service.ChannelStatusUpdater;
 import cn.foxtech.channel.common.service.EntityManageService;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.ChannelEntity;
@@ -39,6 +40,9 @@ public class ChannelRedisScheduler extends PeriodTaskService {
      */
     @Autowired
     private ChannelProperties channelProperties;
+
+    @Autowired
+    private ChannelStatusUpdater channelStatusUpdater;
 
     /**
      * 通道配置
@@ -92,9 +96,13 @@ public class ChannelRedisScheduler extends PeriodTaskService {
         // 打开通道
         for (String key : addList) {
             try {
+                // 打开通道的南向
                 ChannelEntity channelEntity = map.get(key);
                 this.channelService.openChannel(channelEntity.getChannelName(), channelEntity.getChannelParam());
                 this.channelEntityMap.put(key, channelEntity);
+
+                // 更新通道的南向打开状态
+                this.channelStatusUpdater.updateOpenStatus(key, true);
 
                 String message = "通道打开成功:" + key;
                 this.console.info(message);
@@ -103,6 +111,8 @@ public class ChannelRedisScheduler extends PeriodTaskService {
                 String message = "通道打开失败:" + key + ":" + e.getMessage();
                 this.console.error(message);
                 logger.error(message);
+
+                this.channelStatusUpdater.updateOpenStatus(key, false);
             }
         }
 
@@ -113,6 +123,10 @@ public class ChannelRedisScheduler extends PeriodTaskService {
 
                 this.channelService.closeChannel(channelEntity.getChannelName(), channelEntity.getChannelParam());
                 this.channelEntityMap.remove(key);
+
+                // 更新通道的南向打开状态
+                this.channelStatusUpdater.updateOpenStatus(key, false);
+
 
                 String message = "通道关闭成功:" + key;
                 this.console.info(message);
@@ -141,9 +155,15 @@ public class ChannelRedisScheduler extends PeriodTaskService {
                 this.channelService.closeChannel(oldEntity.getChannelName(), oldEntity.getChannelParam());
                 this.channelEntityMap.remove(key);
 
+                // 更新通道的南向打开状态
+                this.channelStatusUpdater.updateOpenStatus(key, false);
+
                 // 重新打开通道
                 this.channelService.openChannel(newEntity.getChannelName(), newEntity.getChannelParam());
                 this.channelEntityMap.put(key, newEntity);
+
+                // 更新通道的南向打开状态
+                this.channelStatusUpdater.updateOpenStatus(key, true);
 
                 String message = "通道重置成功:" + key;
                 this.console.info(message);

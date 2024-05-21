@@ -10,7 +10,7 @@ import cn.foxtech.common.utils.scheduler.multitask.PeriodTask;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTaskType;
 import cn.foxtech.value.ex.task.service.service.DataCacheManager;
 import cn.foxtech.value.ex.task.service.service.EntityManageService;
-import cn.foxtech.value.ex.task.service.service.TaskEngineService;
+import cn.foxtech.value.ex.task.service.service.ScriptEngineManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +34,7 @@ public class DeviceValueNotifyTask extends PeriodTask {
     private DataCacheManager dataTaskManager;
 
     @Autowired
-    private TaskEngineService taskEngineService;
+    private ScriptEngineManager scriptEngineManager;
 
 
     @Override
@@ -73,12 +73,12 @@ public class DeviceValueNotifyTask extends PeriodTask {
             for (String key : addMap.keySet()) {
                 DeviceValueEntity valueEntity = (DeviceValueEntity) addMap.get(key);
                 Map<String, DeviceValueExObjectValue> deviceMap = this.dataTaskManager.append(valueEntity);
-                this.taskEngineService.evalScript(valueEntity, deviceMap);
+                this.scriptEngineManager.evalScript(valueEntity, deviceMap);
             }
             for (String key : mdyMap.keySet()) {
                 DeviceValueEntity valueEntity = (DeviceValueEntity) mdyMap.get(key);
                 Map<String, DeviceValueExObjectValue> deviceMap = this.dataTaskManager.append(valueEntity);
-                this.taskEngineService.evalScript(valueEntity, deviceMap);
+                this.scriptEngineManager.evalScript(valueEntity, deviceMap);
             }
         } catch (Exception e) {
             logger.error(e.getMessage());

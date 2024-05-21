@@ -1,11 +1,6 @@
 package cn.foxtech.kernel.system.service.controller;
 
-import cn.foxtech.channel.domain.ChannelRequestVO;
-import cn.foxtech.channel.domain.ChannelRespondVO;
-import cn.foxtech.channel.domain.ChannelVOConstant;
-import cn.foxtech.common.constant.HttpStatus;
 import cn.foxtech.common.domain.constant.RedisStatusConstant;
-import cn.foxtech.common.domain.constant.RedisTopicConstant;
 import cn.foxtech.common.entity.constant.ChannelVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.ChannelEntity;
@@ -13,18 +8,17 @@ import cn.foxtech.common.entity.service.foxsql.FoxSqlService;
 import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.common.status.ServiceStatus;
-import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
-import cn.foxtech.common.utils.redis.topic.service.RedisTopicPublisher;
-import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.kernel.system.common.service.EntityManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.QueryParam;
-import java.io.IOException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 数据的来源：channel数据是由channel服务启动阶段，根据自己的配置文件保存在内存中的。
@@ -42,9 +36,6 @@ public class ChannelManageController {
 
     @Autowired
     private FoxSqlService foxSqlService;
-
-    @Autowired
-    private RedisTopicPublisher publisher;
 
     @GetMapping("entities")
     public AjaxResult selectEntityList() {
@@ -239,87 +230,4 @@ public class ChannelManageController {
         return AjaxResult.success();
     }
 
-    @PostMapping("status")
-    public AjaxResult queryChannelStatus(@RequestBody Map<String, Object> body) {
-        // 提取业务参数
-        List<Map<String, Object>> channelKeyList = (List<Map<String, Object>>) body.get(ChannelVOFieldConstant.field_channel_keys);
-
-        // 简单校验参数
-        if (MethodUtils.hasEmpty(channelKeyList)) {
-            return AjaxResult.error("参数不能为空:channelKey");
-        }
-
-        try {
-            // 按channelType进行分类组织
-            Map<String, Set<String>> type2names = new HashMap<>();
-            for (Map<String, Object> channelKey : channelKeyList) {
-                String channelType = (String) channelKey.get(ChannelVOFieldConstant.field_channel_type);
-                String channelName = (String) channelKey.get(ChannelVOFieldConstant.field_channel_name);
-                if (MethodUtils.hasEmpty(channelType, channelName)) {
-                    continue;
-                }
-
-                Set<String> channelNames = type2names.computeIfAbsent(channelType, k -> new HashSet<>());
-                channelNames.add(channelName);
-            }
-
-            List<Map<String, Object>> result = new ArrayList<>();
-
-            // 按channelType分批发送请求到各自的channel服务上进行查询
-            for (String channelType : type2names.keySet()) {
-                Set<String> channelNames = type2names.get(channelType);
-
-                // 按channelType，分批查询数据
-                ChannelRespondVO respondVO = this.queryChannelStatus(channelType, channelNames);
-                if (!HttpStatus.SUCCESS.equals(respondVO.getCode())) {
-                    continue;
-                }
-
-                Map<String, Object> channelStatusMap = (Map<String, Object>) respondVO.getRecv();
-                if (MethodUtils.hasEmpty(channelStatusMap)) {
-                    continue;
-                }
-
-                for (String channelName : channelNames) {
-                    Map<String, Object> status = (Map<String, Object>) channelStatusMap.getOrDefault(channelName, new HashMap<>());
-                    status.put(ChannelVOConstant.value_channel_name, channelName);
-                    result.add(status);
-                }
-            }
-
-
-            return AjaxResult.success(result);
-        } catch (Exception e) {
-            return AjaxResult.error(e.getMessage());
-        }
-    }
-
-    private ChannelRespondVO queryChannelStatus(String channelType, Collection<String> channelNameList) throws IOException, InterruptedException {
-        Map<String, Object> param = new HashMap<>();
-        param.put(ChannelVOConstant.filed_operate, ChannelVOConstant.value_operate_get_status);
-        param.put(ChannelVOConstant.filed_param, channelNameList);
-
-        ChannelRequestVO requestVO = new ChannelRequestVO();
-        requestVO.setUuid(UUID.randomUUID().toString());
-        requestVO.setType(channelType);
-        requestVO.setMode(ChannelRequestVO.MODE_MANAGE);
-        requestVO.setSend(param);
-
-
-        String body = JsonUtils.buildJson(requestVO);
-
-        // 重置信号
-        SyncFlagObjectMap.inst().reset(requestVO.getUuid());
-
-        // 发送数据
-        this.publisher.sendMessage(RedisTopicConstant.topic_channel_request + channelType, body);
-
-        // 等待消息的到达：根据动态key
-        ChannelRespondVO respond = (ChannelRespondVO) SyncFlagObjectMap.inst().waitDynamic(requestVO.getUuid(), 2 * 1000);
-        if (respond == null) {
-            return ChannelRespondVO.error("服务响应超时！");
-        }
-
-        return respond;
-    }
 }
