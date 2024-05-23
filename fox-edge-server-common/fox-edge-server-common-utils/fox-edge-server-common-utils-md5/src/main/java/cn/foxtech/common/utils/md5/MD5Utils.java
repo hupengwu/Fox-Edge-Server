@@ -49,6 +49,11 @@ public class MD5Utils {
          * 转化为十六进制的 32 位长度的字符串来使用，可以利用 BigInteger 类来做这个转化：
          */
         BigInteger bigInt = new BigInteger(1, md5.digest());
+
+        // 通过重置，释放缓存，防止内存泄漏
+        md5.reset();
+
+        
         return bigInt;
     }
 
@@ -75,7 +80,7 @@ public class MD5Utils {
         }
     }
 
-    public static byte[] getMD5(InputStream data) throws IOException, NoSuchAlgorithmException {
+    private static byte[] getMD5(InputStream data) throws IOException, NoSuchAlgorithmException {
         MessageDigest md5 = MessageDigest.getInstance("MD5");
         byte[] buffer = new byte[8192];
 
@@ -84,6 +89,11 @@ public class MD5Utils {
             md5.update(buffer, 0, read);
         }
 
-        return md5.digest();
+        byte[] result = md5.digest();
+
+        // 通过reset，释放缓存，防止内存泄漏
+        md5.reset();
+
+        return result;
     }
 }

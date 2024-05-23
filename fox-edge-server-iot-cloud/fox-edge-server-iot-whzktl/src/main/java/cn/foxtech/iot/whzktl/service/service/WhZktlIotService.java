@@ -1,12 +1,8 @@
 package cn.foxtech.iot.whzktl.service.service;
 
-import cn.foxtech.common.entity.entity.DeviceValueEntity;
 import cn.foxtech.common.entity.manager.LocalConfigService;
-import cn.foxtech.common.entity.service.redis.ConsumerRedisService;
 import cn.foxtech.common.utils.osinfo.OSInfoUtils;
 import cn.foxtech.iot.common.remote.RemoteMqttService;
-import cn.foxtech.iot.common.service.EntityManageService;
-import cn.foxtech.iot.whzktl.service.notify.DeviceValueTypeNotify;
 import cn.foxtech.iot.whzktl.service.remote.MqttHandler;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,18 +24,12 @@ public class WhZktlIotService {
     private String publish = "";
     @Getter
     private String subscribe = "";
-    @Getter
-    private String extendField = "";
+
     @Autowired
     private RemoteMqttService remoteMqttService;
     @Autowired
     private LocalConfigService localConfigService;
 
-    @Autowired
-    private EntityManageService entityManageService;
-
-    @Autowired
-    private DeviceValueTypeNotify deviceValueTypeNotify;
 
     public void initialize() {
         // 取出全局配置参数
@@ -49,14 +39,6 @@ public class WhZktlIotService {
         String subscribe = (String) whzktl.getOrDefault("subscribe", "");
         this.publish = publish.replace("{edgeId}", OSInfoUtils.getCPUID());
         this.subscribe = subscribe.replace("{edgeId}", OSInfoUtils.getCPUID());
-
-
-        Map<String, Object> extend = (Map<String, Object>) this.localConfigService.getConfig().getOrDefault("extend", new HashMap<>());
-        this.extendField = (String) extend.getOrDefault("extendField", "huaweiIotDA");
-
-        // 绑定一个类型级别的数据变更通知
-        ConsumerRedisService consumerRedisService = (ConsumerRedisService) this.entityManageService.getBaseRedisService(DeviceValueEntity.class);
-        consumerRedisService.bind(this.deviceValueTypeNotify);
 
         // 初始化MQTT组件
         MqttHandler mqttHandler = new MqttHandler();

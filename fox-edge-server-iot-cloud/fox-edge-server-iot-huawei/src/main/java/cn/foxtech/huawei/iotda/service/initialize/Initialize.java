@@ -10,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * 初始化
  */
@@ -35,18 +32,14 @@ public class Initialize implements CommandLineRunner {
     public void run(String... args) {
         logger.info("------------------------初始化开始！------------------------");
 
-        // 指明要装载的数据和方式：对ConfigEntity/ExtendConfigEntity/DeviceEntity会使用到本地缓存，对DeviceValueEntity直读redis
-        Set<String> consumer = new HashSet<>();
-        Set<String> reader = new HashSet<>();
-        consumer.add(ConfigEntity.class.getSimpleName());
-        consumer.add(ExtendConfigEntity.class.getSimpleName());
-        consumer.add(IotDeviceModelEntity.class.getSimpleName());
-        consumer.add(DeviceEntity.class.getSimpleName());
-        consumer.add(DeviceStatusEntity.class.getSimpleName());
-        reader.add(DeviceValueEntity.class.getSimpleName());
-
         // 初始化公共组件
-        this.initializeCommon.initialize(consumer, reader);
+        this.initializeCommon.getEntityManageService().addConsumer(ConfigEntity.class.getSimpleName());
+        this.initializeCommon.getEntityManageService().addConsumer(ExtendConfigEntity.class.getSimpleName());
+        this.initializeCommon.getEntityManageService().addConsumer(IotDeviceModelEntity.class.getSimpleName());
+        this.initializeCommon.getEntityManageService().addConsumer(DeviceEntity.class.getSimpleName());
+        this.initializeCommon.getEntityManageService().addConsumer(DeviceStatusEntity.class.getSimpleName());
+        this.initializeCommon.getEntityManageService().addReader(DeviceValueEntity.class.getSimpleName());
+        this.initializeCommon.initialize();
 
         // 初始化华为组件
         this.huaweiIoTDAService.initialize();

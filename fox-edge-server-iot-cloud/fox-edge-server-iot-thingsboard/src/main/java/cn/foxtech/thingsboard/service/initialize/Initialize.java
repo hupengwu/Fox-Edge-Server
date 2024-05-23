@@ -12,9 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * 初始化
  */
@@ -33,16 +30,12 @@ public class Initialize implements CommandLineRunner {
     public void run(String... args) {
         logger.info("------------------------初始化开始！------------------------");
 
-        // 指明要装载的数据和方式
-        Set<String> consumer = new HashSet<>();
-        Set<String> reader = new HashSet<>();
-        consumer.add(ConfigEntity.class.getSimpleName());
-        consumer.add(ExtendConfigEntity.class.getSimpleName());
-        consumer.add(DeviceEntity.class.getSimpleName());
-        reader.add(DeviceValueEntity.class.getSimpleName());
-
         // 开始进行数据装载
-        this.initializeCommon.initialize(consumer, reader);
+        this.initializeCommon.getEntityManageService().addConsumer(ConfigEntity.class.getSimpleName());
+        this.initializeCommon.getEntityManageService().addConsumer(ExtendConfigEntity.class.getSimpleName());
+        this.initializeCommon.getEntityManageService().addConsumer(DeviceEntity.class.getSimpleName());
+        this.initializeCommon.getEntityManageService().addReader(DeviceValueEntity.class.getSimpleName());
+        this.initializeCommon.initialize();
 
         this.deviceValueEntityScheduler.initialize();
         this.deviceValueEntityScheduler.schedule();

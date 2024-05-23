@@ -98,6 +98,9 @@ public class CollectorExchangeService extends PeriodTaskService {
                     continue;
                 }
 
+                // 均摊CPU的损耗
+                //Thread.sleep(1);
+
                 this.executeTask(deviceEntity, taskEntity);
             }
 
