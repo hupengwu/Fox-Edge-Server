@@ -30,7 +30,7 @@ import java.util.*;
  * 云端组件的安装
  */
 @Component
-public class RepoCloudInstallService {
+public class RepoCloudFIleInstallService {
     private final String siteUri = "http://www.fox-tech.cn";
 
     /**
@@ -77,7 +77,7 @@ public class RepoCloudInstallService {
      * 组件安装状态
      */
     @Autowired
-    private RepoCloudInstallStatus installStatus;
+    private RepoCloudFileInstallStatus installStatus;
 
     @Autowired
     private RepoLocalApplicationService appService;

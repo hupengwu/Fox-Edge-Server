@@ -5,7 +5,7 @@ import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
-import cn.foxtech.kernel.system.repository.service.RepoCloudInstallStatus;
+import cn.foxtech.kernel.system.repository.service.RepoCloudFileInstallStatus;
 import cn.foxtech.kernel.system.repository.service.RepoLocalCsvFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +28,7 @@ import java.util.Map;
 @RequestMapping("/kernel/manager/device/template")
 public class DeviceTemplateManageController {
     @Autowired
-    private RepoCloudInstallStatus installStatus;
+    private RepoCloudFileInstallStatus installStatus;
 
     @Autowired
     private RepoLocalCsvFileService templateService;

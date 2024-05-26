@@ -8,6 +8,7 @@ import cn.foxtech.common.entity.entity.OperateEntity;
 import cn.foxtech.common.entity.entity.RepoCompEntity;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
+import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.system.common.service.EntityManageService;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
@@ -50,10 +51,10 @@ public class RepoLocalCompUpload {
             return this.uploadJarDecoderEntity(entity.getCompParam(), commitKey);
         }
         if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_jsp_decoder)) {
-            return this.uploadJspDecoderEntity(entity.getCompParam(), commitKey, description);
+            return this.uploadJspDecoderEntity(entity, commitKey, description);
         }
         if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_jsn_decoder)) {
-            return this.uploadJsnDecoderEntity(entity.getCompParam(), commitKey, description);
+            return this.uploadJsnDecoderEntity(entity, commitKey, description);
         }
 
 
@@ -88,7 +89,9 @@ public class RepoLocalCompUpload {
 
     }
 
-    private Map<String, Object> uploadJspDecoderEntity(Map<String, Object> compParam, String commitKey, String description) throws IOException {
+    private Map<String, Object> uploadJspDecoderEntity(RepoCompEntity repoCompEntity, String commitKey, String description) throws IOException {
+        Map<String, Object> compParam = repoCompEntity.getCompParam();
+
         String compId = (String) compParam.get(RepoCompVOFieldConstant.field_comp_id);
         String deviceType = (String) compParam.get(OperateVOFieldConstant.field_device_type);
         String manufacturer = (String) compParam.get(OperateVOFieldConstant.field_manufacturer);
@@ -117,11 +120,18 @@ public class RepoLocalCompUpload {
         body.put(RepoCompVOFieldConstant.field_description, description);
         body.put("operates", entityList);
 
-        return this.remoteService.executePost("/manager/repository/component/script/version/entity", body);
+        Map<String, Object> respond = this.remoteService.executePost("/manager/repository/component/script/version/entity", body);
 
+        // 更新版本信息
+        this.updateVersion(repoCompEntity, respond);
+
+        return respond;
     }
 
-    private Map<String, Object> uploadJsnDecoderEntity(Map<String, Object> compParam, String commitKey, String description) throws IOException {
+
+    private Map<String, Object> uploadJsnDecoderEntity(RepoCompEntity repoCompEntity, String commitKey, String description) throws IOException {
+        Map<String, Object> compParam = repoCompEntity.getCompParam();
+
         String compId = (String) compParam.get(RepoCompVOFieldConstant.field_comp_id);
         String deviceType = (String) compParam.get(OperateVOFieldConstant.field_device_type);
         String manufacturer = (String) compParam.get(OperateVOFieldConstant.field_manufacturer);
@@ -146,8 +156,12 @@ public class RepoLocalCompUpload {
         body.put(RepoCompVOFieldConstant.field_description, description);
         body.put("objects", entityList);
 
-        return this.remoteService.executePost("/manager/repository/component/model/version/entity", body);
+        Map<String, Object> respond = this.remoteService.executePost("/manager/repository/component/model/version/entity", body);
 
+        // 更新版本信息
+        this.updateVersion(repoCompEntity, respond);
+
+        return respond;
     }
 
     private Map<String, Object> uploadCsvTemplateEntity(Map<String, Object> compParam, String commitKey) throws IOException, InterruptedException {
@@ -189,5 +203,26 @@ public class RepoLocalCompUpload {
             }
 
         }
+    }
+
+    private void updateVersion(RepoCompEntity repoCompEntity, Map<String, Object> respond) {
+        // 读取对象信息
+        RepoCompEntity entity = this.entityManageService.getEntity(repoCompEntity.getId(), RepoCompEntity.class);
+        if (entity == null) {
+            return;
+        }
+
+        Map<String, Object> data = (Map<String, Object>) respond.get(AjaxResult.DATA_TAG);
+
+        Map<String, Object> installVersion = new HashMap<>();
+        installVersion.put("id", data.get("id"));
+        installVersion.put("updateTime", data.get("updateTime"));
+        installVersion.put("description", data.get("description"));
+
+        Map<String, Object> compParam = entity.getCompParam();
+        compParam.put("installVersion", installVersion);
+
+        // 保存修改
+        this.entityManageService.updateEntity(entity);
     }
 }

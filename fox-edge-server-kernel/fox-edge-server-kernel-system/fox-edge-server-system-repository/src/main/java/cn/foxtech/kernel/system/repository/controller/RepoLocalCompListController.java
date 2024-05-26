@@ -52,6 +52,9 @@ public class RepoLocalCompListController {
     @Autowired
     private RepoLocalJarFileInfoService jarFileService;
 
+    @Autowired
+    private RepoLocalScriptService jspModelService;
+
 
     @PostMapping("page")
     public Map<String, Object> selectCompPage(@RequestBody Map<String, Object> body) {
@@ -76,6 +79,8 @@ public class RepoLocalCompListController {
                 mapList = this.csvFileService.extendCompFileCount(entityList);
             } else if (compType.equals(RepoCompVOFieldConstant.value_comp_type_jar_decoder)) {
                 mapList = this.jarFileService.extendCompJarInfo(entityList);
+            }else if (compType.equals(RepoCompVOFieldConstant.value_comp_type_jsp_decoder)) {
+                mapList = this.jspModelService.extendCompOperateInfo(entityList);
             } else {
                 mapList = BeanMapUtils.objectToMap(entityList);
             }

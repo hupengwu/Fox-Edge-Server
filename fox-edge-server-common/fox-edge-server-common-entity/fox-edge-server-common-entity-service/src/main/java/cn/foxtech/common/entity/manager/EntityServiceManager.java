@@ -164,7 +164,6 @@ public abstract class EntityServiceManager extends EntityObjectManager {
         entityRedisService.foreachFinder(finder);
     }
 
-
     public <T> List<BaseEntity> getEntityList(Class<T> clazz, IBaseFinder finder) {
         BaseRedisService entityRedisService = super.getBaseRedisService(clazz);
         return entityRedisService.getEntityList(finder);

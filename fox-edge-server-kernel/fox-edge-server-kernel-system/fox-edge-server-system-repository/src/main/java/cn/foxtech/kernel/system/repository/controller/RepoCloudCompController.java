@@ -10,8 +10,8 @@ import cn.foxtech.kernel.common.service.EdgeService;
 import cn.foxtech.kernel.system.common.scheduler.PeriodTasksScheduler;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
 import cn.foxtech.kernel.system.repository.service.RepoCloudCacheService;
-import cn.foxtech.kernel.system.repository.service.RepoCloudInstallService;
-import cn.foxtech.kernel.system.repository.service.RepoCloudInstallStatus;
+import cn.foxtech.kernel.system.repository.service.RepoCloudFIleInstallService;
+import cn.foxtech.kernel.system.repository.service.RepoCloudFileInstallStatus;
 import cn.foxtech.kernel.system.repository.service.RepoLocalPathNameService;
 import cn.foxtech.kernel.system.repository.task.RepoDownLoadTask;
 import cn.foxtech.kernel.system.repository.task.RepoScanStatusTask;
@@ -36,13 +36,13 @@ public class RepoCloudCompController {
      * 仓库服务
      */
     @Autowired
-    private RepoCloudInstallService installService;
+    private RepoCloudFIleInstallService installService;
 
     @Autowired
     private RepoCloudCacheService cacheService;
 
     @Autowired
-    private RepoCloudInstallStatus installStatus;
+    private RepoCloudFileInstallStatus installStatus;
 
     @Autowired
     private RepoLocalPathNameService pathNameService;

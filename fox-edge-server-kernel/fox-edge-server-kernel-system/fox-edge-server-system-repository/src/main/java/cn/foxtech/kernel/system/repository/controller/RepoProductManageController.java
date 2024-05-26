@@ -5,7 +5,7 @@ import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
 import cn.foxtech.kernel.system.repository.constants.RepoStatusConstant;
-import cn.foxtech.kernel.system.repository.service.RepoCloudInstallService;
+import cn.foxtech.kernel.system.repository.service.RepoCloudFIleInstallService;
 import cn.foxtech.kernel.system.repository.service.RepoLocalAppLoadService;
 import cn.foxtech.kernel.system.repository.service.RepoLocalJarFileConfigService;
 import cn.foxtech.kernel.system.repository.service.RepoProductService;
@@ -26,7 +26,7 @@ public class RepoProductManageController {
      * 仓库服务
      */
     @Autowired
-    private RepoCloudInstallService installService;
+    private RepoCloudFIleInstallService installService;
 
 
     @Autowired

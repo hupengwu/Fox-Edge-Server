@@ -6,8 +6,8 @@ import cn.foxtech.common.utils.scheduler.multitask.PeriodTask;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTaskType;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
 import cn.foxtech.kernel.system.repository.service.RepoCloudCacheService;
-import cn.foxtech.kernel.system.repository.service.RepoCloudInstallService;
-import cn.foxtech.kernel.system.repository.service.RepoCloudInstallStatus;
+import cn.foxtech.kernel.system.repository.service.RepoCloudFIleInstallService;
+import cn.foxtech.kernel.system.repository.service.RepoCloudFileInstallStatus;
 import cn.foxtech.kernel.system.repository.service.RepoLocalPathNameService;
 
 import java.util.*;
@@ -16,9 +16,9 @@ import java.util.*;
  * 启动其他进程的一次性任务
  */
 public class RepoScanStatusTask extends PeriodTask {
-    private final RepoCloudInstallService installService;
+    private final RepoCloudFIleInstallService installService;
 
-    private final RepoCloudInstallStatus installStatus;
+    private final RepoCloudFileInstallStatus installStatus;
 
     private final RepoLocalPathNameService pathNameService;
     private final String modelType;
@@ -26,7 +26,7 @@ public class RepoScanStatusTask extends PeriodTask {
     private final RedisConsoleService logger;
 
 
-    public RepoScanStatusTask(RepoCloudInstallService installService, RepoCloudInstallStatus installStatus, RepoCloudCacheService cacheService, RepoLocalPathNameService pathNameService, RedisConsoleService logger, String modelType) {
+    public RepoScanStatusTask(RepoCloudFIleInstallService installService, RepoCloudFileInstallStatus installStatus, RepoCloudCacheService cacheService, RepoLocalPathNameService pathNameService, RedisConsoleService logger, String modelType) {
         this.installService = installService;
         this.installStatus = installStatus;
         this.cacheService = cacheService;

@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 安装状态的管理
  */
 @Component
-public class RepoCloudInstallStatus {
+public class RepoCloudFileInstallStatus {
     /**
      * 本地组件的安装状态列表：通过缓存安装状态，用于优化磁盘扫描安装包的长时间卡顿问题
      */

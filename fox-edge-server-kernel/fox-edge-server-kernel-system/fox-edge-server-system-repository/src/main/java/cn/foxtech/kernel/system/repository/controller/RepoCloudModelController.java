@@ -3,6 +3,7 @@ package cn.foxtech.kernel.system.repository.controller;
 import cn.foxtech.common.constant.HttpStatus;
 import cn.foxtech.common.entity.constant.RepoCompVOFieldConstant;
 import cn.foxtech.core.domain.AjaxResult;
+import cn.foxtech.kernel.system.repository.service.RepoCloudModelInstallStatus;
 import cn.foxtech.kernel.system.repository.service.RepoCloudRemoteService;
 import cn.foxtech.kernel.system.repository.service.RepoLocalCompService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +27,20 @@ public class RepoCloudModelController {
     @Autowired
     private RepoLocalCompService compService;
 
+    @Autowired
+    private RepoCloudModelInstallStatus installStatus;
+
     @PostMapping("/page")
     public Map<String, Object> selectCompPageList(@RequestBody Map<String, Object> body) {
         try {
             Map<String, Object> result = this.remoteService.queryCloudCompModelPage(body);
+
+            Map<String, Object> data = (Map<String, Object>) result.get(AjaxResult.DATA_TAG);
+            List<Map<String, Object>> list = (List<Map<String, Object>> )data.get("list");
+
+            // 扩展安装状态信息
+            this.installStatus.extend(list);
+
             return result;
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());

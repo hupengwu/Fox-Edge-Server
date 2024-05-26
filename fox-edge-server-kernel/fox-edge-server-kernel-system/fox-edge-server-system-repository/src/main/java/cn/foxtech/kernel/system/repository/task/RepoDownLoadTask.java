@@ -6,8 +6,8 @@ import cn.foxtech.common.utils.scheduler.multitask.PeriodTask;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTaskType;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
-import cn.foxtech.kernel.system.repository.service.RepoCloudInstallService;
-import cn.foxtech.kernel.system.repository.service.RepoCloudInstallStatus;
+import cn.foxtech.kernel.system.repository.service.RepoCloudFIleInstallService;
+import cn.foxtech.kernel.system.repository.service.RepoCloudFileInstallStatus;
 import lombok.AccessLevel;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +29,11 @@ public class RepoDownLoadTask extends PeriodTask {
     private String pathName;
     private String component;
 
-    private RepoCloudInstallService installService;
+    private RepoCloudFIleInstallService installService;
 
-    private RepoCloudInstallStatus installStatus;
+    private RepoCloudFileInstallStatus installStatus;
 
-    public RepoDownLoadTask(RepoCloudInstallService installService, RepoCloudInstallStatus installStatus,String modelType, String modelName, String modelVersion, String version, String stage, String pathName, String component) {
+    public RepoDownLoadTask(RepoCloudFIleInstallService installService, RepoCloudFileInstallStatus installStatus, String modelType, String modelName, String modelVersion, String version, String stage, String pathName, String component) {
         this.installService = installService;
         this.installStatus = installStatus;
         this.modelType = modelType;

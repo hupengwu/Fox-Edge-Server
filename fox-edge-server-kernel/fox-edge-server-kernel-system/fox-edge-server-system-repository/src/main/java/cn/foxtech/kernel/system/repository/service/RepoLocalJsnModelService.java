@@ -1,12 +1,14 @@
 package cn.foxtech.kernel.system.repository.service;
 
 import cn.foxtech.common.entity.constant.DeviceModelVOFieldConstant;
+import cn.foxtech.common.entity.constant.RepoCompVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.DeviceModelEntity;
 import cn.foxtech.common.entity.entity.RepoCompEntity;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.system.common.service.EntityManageService;
+import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -157,5 +159,23 @@ public class RepoLocalJsnModelService {
 
     public DeviceModelEntity queryEntity(Long id) {
         return this.entityManageService.getEntity(id, DeviceModelEntity.class);
+    }
+
+    public RepoCompEntity getCompEntity(String manufacturer,String deviceType){
+        RepoCompEntity compEntity = this.entityManageService.getEntity(RepoCompEntity.class, (Object value) -> {
+            RepoCompEntity entity = (RepoCompEntity) value;
+
+            if (!entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_jsn_decoder)) {
+                return false;
+            }
+
+            if (!manufacturer.equals(entity.getCompParam().get(RepoCompConstant.filed_manufacturer))) {
+                return false;
+            }
+
+            return deviceType.equals(entity.getCompParam().get(RepoCompConstant.filed_device_type));
+        });
+
+        return compEntity;
     }
 }

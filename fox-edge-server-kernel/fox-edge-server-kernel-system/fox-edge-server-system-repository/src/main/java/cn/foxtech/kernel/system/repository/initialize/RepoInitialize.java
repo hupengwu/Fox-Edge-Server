@@ -29,10 +29,10 @@ public class RepoInitialize {
     private ProcessGcTask processGcTask;
 
     @Autowired
-    private RepoCloudInstallService installService;
+    private RepoCloudFIleInstallService installService;
 
     @Autowired
-    private RepoCloudInstallStatus installStatus;
+    private RepoCloudFileInstallStatus installStatus;
 
     @Autowired
     private RepoCloudCacheService cacheService;
