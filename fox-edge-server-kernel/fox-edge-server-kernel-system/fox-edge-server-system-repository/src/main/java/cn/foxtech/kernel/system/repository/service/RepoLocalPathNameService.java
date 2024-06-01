@@ -41,27 +41,21 @@ public class RepoLocalPathNameService {
                 continue;
             }
 
-            // \opt\fox-edge\repository\decoder\fox-edge-server-protocol-bass260zj\v1\1.0.0\
-            String[] modelVersionFiles = modelDir.list();
-            for (String modelVersionFile : modelVersionFiles) {
-                // 查找一个版本级别的信息
-                List<Map<String, Object>> versions = this.findRepoLocalModel(modelType, modelFile, modelVersionFile);
-                resultList.addAll(versions);
-            }
-
+            List<Map<String, Object>> versions = this.findRepoLocalModel(modelType, modelFile);
+            resultList.addAll(versions);
         }
 
         return resultList;
     }
 
-    public List<Map<String, Object>> findRepoLocalModel(String modelType, String modelName, String modelVersion) {
+    public List<Map<String, Object>> findRepoLocalModel(String modelType, String modelName) {
         List<Map<String, Object>> resultList = new ArrayList<>();
 
         // 程序目录
         File file = new File("");
 
         // 组件级别的目录：\opt\fox-edge\repository\decoder\fox-edge-server-protocol-dlt645-1997\v1
-        File modelVersionDir = new File(file.getAbsolutePath() + "/repository/" + modelType + "/" + modelName + "/" + modelVersion);
+        File modelVersionDir = new File(file.getAbsolutePath() + "/repository/" + modelType + "/" + modelName);
         if (!modelVersionDir.exists() || !modelVersionDir.isDirectory()) {
             return resultList;
         }
@@ -97,7 +91,6 @@ public class RepoLocalPathNameService {
                     Map<String, Object> map = new HashMap<>();
                     map.put(RepoCompConstant.filed_model_type, modelType);
                     map.put(RepoCompConstant.filed_model_name, modelName);
-                    map.put(RepoCompConstant.filed_model_version, modelVersion);
                     map.put(RepoCompConstant.filed_version, version);
                     map.put(RepoCompConstant.filed_stage, stage);
                     map.put(RepoCompConstant.filed_component, component);
@@ -174,8 +167,8 @@ public class RepoLocalPathNameService {
      *
      * @return \opt\fox-edge\repository\decoder\fox-edge-server-protocol-s7plc\v1\1.0.4\master\service
      */
-    public String getPathName4LocalRepo2component(String modelType, String modelName, String modelVersion, String version, String stage, String component) {
-        return FileNameUtils.getOsFilePath(this.absolutePath + "/repository/" + modelType + "/" + modelName + "/" + modelVersion + "/" + version + "/" + stage + "/" + component);
+    public String getPathName4LocalRepo2component(String modelType, String modelName, String version, String stage, String component) {
+        return FileNameUtils.getOsFilePath(this.absolutePath + "/repository/" + modelType + "/" + modelName + "/" + version + "/" + stage + "/" + component);
     }
 
     /**
@@ -183,8 +176,8 @@ public class RepoLocalPathNameService {
      *
      * @return \opt\fox-edge\repository\decoder\fox-edge-server-protocol-s7plc\v1\1.0.4\master\service\fox-edge-server-protocol-s7plc-v1-1.0.4.tar
      */
-    public String getPathName4LocalRepo2tarFile(String modelType, String modelName, String modelVersion, String version, String stage, String component) {
-        return FileNameUtils.getOsFilePath(this.getPathName4LocalRepo2component(modelType, modelName, modelVersion, version, stage, component) + "/" + this.getFileName4LocalRepoTarFile(modelName, modelVersion, version));
+    public String getPathName4LocalRepo2tarFile(String modelType, String modelName, String version, String stage, String component) {
+        return FileNameUtils.getOsFilePath(this.getPathName4LocalRepo2component(modelType, modelName, version, stage, component) + "/" + this.getFileName4LocalRepoTarFile(modelName, version));
     }
 
 
@@ -193,8 +186,8 @@ public class RepoLocalPathNameService {
      *
      * @return fox-edge-server-protocol-s7plc-v1-1.0.4.tar
      */
-    public String getFileName4LocalRepoTarFile(String modelName, String modelVersion, String version) {
-        return modelName + "-" + modelVersion + "-" + version + ".tar";
+    public String getFileName4LocalRepoTarFile(String modelName, String version) {
+        return modelName + "-" + version + ".tar";
     }
 
     /**
@@ -202,25 +195,17 @@ public class RepoLocalPathNameService {
      *
      * @return \opt\fox-edge\repository\decoder\fox-edge-server-protocol-cjt188-core\v1\1.0.4\master\service\tar
      */
-    public String getPathName4LocalRepo2tar(String modelType, String modelName, String modelVersion, String version, String stage, String component) {
-        return FileNameUtils.getOsFilePath(this.absolutePath + "/repository/" + modelType + "/" + modelName + "/" + modelVersion + "/" + version + "/" + stage + "/" + component + "/" + "tar");
+    public String getPathName4LocalRepo2tar(String modelType, String modelName, String version, String stage, String component) {
+        return FileNameUtils.getOsFilePath(this.absolutePath + "/repository/" + modelType + "/" + modelName + "/" + version + "/" + stage + "/" + component + "/" + "tar");
     }
+
 
     /**
      * 获得路径
      *
-     * @return \opt\fox-edge\template\dobot-mg400\v1
+     * @return \opt\fox-edge\template\dobot-mg400\1.0.0
      */
-    public String getPathName4LocalTemplate2modelVersion(String modelName, String modelVersion) {
-        return FileNameUtils.getOsFilePath(this.absolutePath + "/template/" + modelName + "/" + modelVersion);
-    }
-
-    /**
-     * 获得路径
-     *
-     * @return \opt\fox-edge\template\dobot-mg400\v1\1.0.0
-     */
-    public String getPathName4LocalTemplate2version(String modelName, String modelVersion) {
-        return FileNameUtils.getOsFilePath(this.absolutePath + "/template/" + modelName + "/" + modelVersion);
+    public String getPathName4LocalTemplate2version(String modelName) {
+        return FileNameUtils.getOsFilePath(this.absolutePath + "/template/" + modelName);
     }
 }

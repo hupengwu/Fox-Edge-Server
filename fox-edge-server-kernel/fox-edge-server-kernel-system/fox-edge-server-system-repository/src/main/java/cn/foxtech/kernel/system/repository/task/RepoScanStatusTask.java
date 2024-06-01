@@ -70,7 +70,6 @@ public class RepoScanStatusTask extends PeriodTask {
             Set<String> tables = new HashSet<>();
             for (Map<String, Object> map : localList) {
                 String modelName = (String) map.getOrDefault(RepoCompConstant.filed_model_name, "");
-                String modelVersion = (String) map.getOrDefault(RepoCompConstant.filed_model_version, RepoCompConstant.filed_value_model_version_default);
                 String component = (String) map.getOrDefault(RepoCompConstant.filed_component, "");
                 List<Map<String, Object>> versions = (List<Map<String, Object>>) map.getOrDefault(RepoCompConstant.filed_versions, new ArrayList<>());
 
@@ -82,7 +81,6 @@ public class RepoScanStatusTask extends PeriodTask {
                     }
                     StringBuilder sb = new StringBuilder();
                     sb.append(modelName);
-                    sb.append(modelVersion);
                     sb.append(component);
                     sb.append(version);
                     sb.append(stage);
@@ -96,14 +94,12 @@ public class RepoScanStatusTask extends PeriodTask {
             List<Map<String, Object>> modelList = this.pathNameService.findRepoLocalModel(modelType);
             for (Map<String, Object> map : modelList) {
                 String modelName = (String) map.getOrDefault(RepoCompConstant.filed_model_name, "");
-                String modelVersion = (String) map.getOrDefault(RepoCompConstant.filed_model_version, RepoCompConstant.filed_value_model_version_default);
                 String component = (String) map.getOrDefault(RepoCompConstant.filed_component, "");
                 String version = (String) map.getOrDefault(RepoCompConstant.filed_version, "");
                 String stage = (String) map.getOrDefault(RepoCompConstant.filed_stage, "");
 
                 StringBuilder sb = new StringBuilder();
                 sb.append(modelName);
-                sb.append(modelVersion);
                 sb.append(component);
                 sb.append(version);
                 sb.append(stage);
@@ -114,7 +110,7 @@ public class RepoScanStatusTask extends PeriodTask {
                 }
 
                 // 删除本地垃圾文件
-                this.installService.deletePackageFile(modelType, modelName, modelVersion, version, stage, component);
+                this.installService.deletePackageFile(modelType, modelName, version, stage, component);
             }
         } catch (Exception e) {
             logger.error(e.getMessage());

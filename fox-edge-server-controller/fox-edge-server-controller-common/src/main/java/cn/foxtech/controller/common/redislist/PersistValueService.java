@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 public class PersistValueService extends RedisLoggerService {
     public PersistValueService() {
         this.setKey("fox.edge.list.persist.value");
+
+        // 作为生产者，将Redis的日志队列大小填为4096个消息，毕竟数值数据还是非常多的
+        this.setMaxSize(4096);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package cn.foxtech.common.entity.entity;
 
+import cn.foxtech.common.utils.number.NumberUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -80,5 +81,28 @@ public class ChannelStatusEntity extends BaseEntity {
 
         this.channelType = channelEntity.getChannelType();
         this.channelName = channelEntity.getChannelName();
+    }
+
+    public BaseEntity build(Map<String, Object> map) {
+        try {
+            if (map == null || map.isEmpty()) {
+                return null;
+            }
+
+            ChannelStatusEntity entity = new ChannelStatusEntity();
+            entity.setId(NumberUtils.makeLong(map.get("id")));
+            entity.setCreateTime(NumberUtils.makeLong(map.get("createTime")));
+            entity.setUpdateTime(NumberUtils.makeLong(map.get("updateTime")));
+
+
+            entity.setChannelName((String) map.get("channelName"));
+            entity.setChannelType((String) map.get("channelType"));
+            entity.setOpen((Boolean) map.getOrDefault("open", false));
+            entity.setChannelParam((Map<String, Object>) map.getOrDefault("channelParam", new HashMap<>()));
+
+            return entity;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

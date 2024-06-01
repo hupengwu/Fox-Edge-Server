@@ -53,12 +53,10 @@ public class RepoCloudFileInstallStatus {
             Set<String> localKeys = new HashSet<>();
             for (Map<String, Object> map : localList) {
                 String modelName = (String) map.get(RepoCompConstant.filed_model_name);
-                String modelVersion = (String) map.get(RepoCompConstant.filed_model_version);
                 String version = (String) map.get(RepoCompConstant.filed_version);
                 String stage = (String) map.get(RepoCompConstant.filed_stage);
                 String component = (String) map.get(RepoCompConstant.filed_component);
-                localKeys.add(modelType + ":" + modelName + ":" + modelVersion + ":" + version + ":" + stage + ":" + component);
-
+                localKeys.add(modelType + ":" + modelName + ":" + version + ":" + stage + ":" + component);
             }
 
             // 获得云端组件列表
@@ -67,7 +65,6 @@ public class RepoCloudFileInstallStatus {
             // 尚未下载云端组件，标识未未下载状态
             for (Map<String, Object> map : cloudList) {
                 String modelName = (String) map.get(RepoCompConstant.filed_model_name);
-                String modelVersion = (String) map.get(RepoCompConstant.filed_model_version);
                 Map<String, Object> lastVersion = (Map<String, Object>) map.get(RepoCompConstant.filed_last_version);
                 List<Map<String, Object>> versions = (List<Map<String, Object>>) map.get(RepoCompConstant.filed_versions);
 
@@ -86,19 +83,19 @@ public class RepoCloudFileInstallStatus {
                     String version = (String) verEntity.get(RepoCompConstant.filed_version);
                     String stage = (String) verEntity.get(RepoCompConstant.filed_stage);
                     String component = (String) verEntity.get(RepoCompConstant.filed_component);
-                    if (MethodUtils.hasEmpty(modelName, modelVersion, version, component)) {
+                    if (MethodUtils.hasEmpty(modelName, version, component)) {
                         continue;
                     }
 
 
                     // 检查：该组件是否存在本地
-                    String key = modelType + ":" + modelName + ":" + modelVersion + ":" + version + ":" + stage + ":" + component;
+                    String key = modelType + ":" + modelName + ":" + version + ":" + stage + ":" + component;
                     if (localKeys.contains(key)) {
                         continue;
                     }
 
                     // 标识为未下载状态
-                    MapUtils.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_status, RepoStatusConstant.status_not_downloaded);
+                    MapUtils.setValue(this.statusMap, modelType, modelName, version, stage, component, RepoCompConstant.filed_status, RepoStatusConstant.status_not_downloaded);
                 }
             }
 
@@ -115,27 +112,27 @@ public class RepoCloudFileInstallStatus {
      * @param version
      * @param component
      */
-    public void scanLocalMd5(String modelType, String modelName, String modelVersion, String version, String stage, String component) {
+    public void scanLocalMd5(String modelType, String modelName, String version, String stage, String component) {
         // 简单验证
-        if (MethodUtils.hasEmpty(modelName, modelVersion, version, component)) {
-            throw new ServiceException("参数不能为空: modelName, modelVersion, version, component");
+        if (MethodUtils.hasEmpty(modelName, version, component)) {
+            throw new ServiceException("参数不能为空: modelName, version, component");
         }
 
 
         String md5 = "";
 
         // 检查：是否已经下载
-        String tarFile = this.pathNameService.getPathName4LocalRepo2tarFile(modelType, modelName, modelVersion, version, stage, component);
+        String tarFile = this.pathNameService.getPathName4LocalRepo2tarFile(modelType, modelName, version, stage, component);
         File check = new File(tarFile);
         if (!check.exists()) {
-            MapUtils.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_local_md5, md5);
+            MapUtils.setValue(this.statusMap, modelType, modelName, version, stage, component, RepoCompConstant.filed_local_md5, md5);
             return;
         }
 
         // 计算MD5
         md5 = MD5Utils.getMD5Txt(check);
 
-        MapUtils.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_local_md5, md5);
+        MapUtils.setValue(this.statusMap, modelType, modelName, version, stage, component, RepoCompConstant.filed_local_md5, md5);
     }
 
     /**
@@ -146,10 +143,10 @@ public class RepoCloudFileInstallStatus {
      * @param version   模块版本
      * @param component 组件
      */
-    public void scanLocalStatus(String modelType, String modelName, String modelVersion, String version, String stage, String component) {
+    public void scanLocalStatus(String modelType, String modelName, String version, String stage, String component) {
         // 简单验证
-        if (MethodUtils.hasEmpty(modelType, modelName, modelVersion, version, stage, component)) {
-            throw new ServiceException("参数不能为空: modelType, modelName, modelVersion, version, stage, component");
+        if (MethodUtils.hasEmpty(modelType, modelName, version, stage, component)) {
+            throw new ServiceException("参数不能为空: modelType, modelName, version, stage, component");
         }
 
 
@@ -159,20 +156,20 @@ public class RepoCloudFileInstallStatus {
         // 检查：是否已经下载
         File file = new File("");
         String absolutePath = file.getAbsolutePath();
-        String tarFile = this.pathNameService.getPathName4LocalRepo2tarFile(modelType, modelName, modelVersion, version, stage, component);
+        String tarFile = this.pathNameService.getPathName4LocalRepo2tarFile(modelType, modelName, version, stage, component);
         File check = new File(tarFile);
         if (!check.exists()) {
-            MapUtils.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_status, status);
+            MapUtils.setValue(this.statusMap, modelType, modelName, version, stage, component, RepoCompConstant.filed_status, status);
             return;
         }
         // 阶段2："已经下载，待安装!
         status = RepoStatusConstant.status_downloaded;
 
         // 检查：解压后的目录是否存在，至少包含一个文件
-        String tarDir = this.pathNameService.getPathName4LocalRepo2tar(modelType, modelName, modelVersion, version, stage, component);
+        String tarDir = this.pathNameService.getPathName4LocalRepo2tar(modelType, modelName, version, stage, component);
         List<String> tarFileNames = FileNameUtils.findFileList(tarDir, true, true);
         if (tarFileNames.isEmpty()) {
-            MapUtils.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_status, status);
+            MapUtils.setValue(this.statusMap, modelType, modelName, version, stage, component, RepoCompConstant.filed_status, status);
             return;
         }
 
@@ -192,7 +189,7 @@ public class RepoCloudFileInstallStatus {
             }
             if (RepoCompConstant.repository_type_template.equals(modelType)) {
                 srcFileName = tarDir + "/" + tarFileName;
-                jarFileName = absolutePath + "/template/" + modelName + "/" + modelVersion + "/" + tarFileName;
+                jarFileName = absolutePath + "/template/" + modelName + "/" + tarFileName;
             }
             if (RepoCompConstant.repository_type_service.equals(modelType)) {
                 srcFileName = tarDir + "/" + tarFileName;
@@ -224,7 +221,7 @@ public class RepoCloudFileInstallStatus {
             status = RepoStatusConstant.status_installed;
         }
 
-        MapUtils.setValue(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_status, status);
+        MapUtils.setValue(this.statusMap, modelType, modelName, version, stage, component, RepoCompConstant.filed_status, status);
     }
 
     /**
@@ -247,17 +244,16 @@ public class RepoCloudFileInstallStatus {
         // 提取业务参数
         String modelName = (String) comp.get(RepoCompConstant.filed_model_name);
         String modelType = (String) comp.get(RepoCompConstant.filed_model_type);
-        String modelVersion = (String) comp.get(RepoCompConstant.filed_model_version);
         String version = (String) comp.get(RepoCompConstant.filed_version);
         String stage = (String) comp.get(RepoCompConstant.filed_stage);
         String component = (String) comp.get(RepoCompConstant.filed_component);
 
         // 本地的状态
-        this.scanLocalStatus(modelType, modelName, modelVersion, version, stage, component);
-        this.scanLocalMd5(modelType, modelName, modelVersion, version, stage, component);
+        this.scanLocalStatus(modelType, modelName, version, stage, component);
+        this.scanLocalMd5(modelType, modelName, version, stage, component);
     }
 
-    public boolean verifyUpgradeStatus(String modelType, String modelName, String modelVersion, Map<String, Object> lastVersion, List<Map<String, Object>> versions) {
+    public boolean verifyUpgradeStatus(String modelType, String modelName, Map<String, Object> lastVersion, List<Map<String, Object>> versions) {
         // 检查最新版本
         if (MethodUtils.hasEmpty(lastVersion)) {
             return false;
@@ -268,7 +264,7 @@ public class RepoCloudFileInstallStatus {
         String lastComponent = (String) lastVersion.get(RepoCompConstant.filed_component);
 
         // 如果最新版本就是安装版本，那么不需要升级
-        Integer lastStatus = (Integer) MapUtils.getOrDefault(this.statusMap, modelType, modelName, modelVersion, lastVer, lastStage, lastComponent, RepoCompConstant.filed_status, RepoStatusConstant.status_not_scanned);
+        Integer lastStatus = (Integer) MapUtils.getOrDefault(this.statusMap, modelType, modelName, lastVer, lastStage, lastComponent, RepoCompConstant.filed_status, RepoStatusConstant.status_not_scanned);
         if (RepoStatusConstant.status_installed == lastStatus) {
             return false;
         }
@@ -285,7 +281,7 @@ public class RepoCloudFileInstallStatus {
             }
 
             // 检查：低版本是否处于安装状态，如果是安装状态，那么就是需要用最新版本来升级
-            Integer status = (Integer) MapUtils.getOrDefault(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_status, RepoStatusConstant.status_not_scanned);
+            Integer status = (Integer) MapUtils.getOrDefault(this.statusMap, modelType, modelName, version, stage, component, RepoCompConstant.filed_status, RepoStatusConstant.status_not_scanned);
             if (RepoStatusConstant.status_installed == status) {
                 return true;
             }
@@ -303,15 +299,15 @@ public class RepoCloudFileInstallStatus {
      * @param component
      * @param verEntity
      */
-    public int verifyMd5Status(String modelType, String modelName, String modelVersion, String component, Map<String, Object> verEntity) {
+    public int verifyMd5Status(String modelType, String modelName, String component, Map<String, Object> verEntity) {
         String version = (String) verEntity.get(RepoCompConstant.filed_version);
         String stage = (String) verEntity.get(RepoCompConstant.filed_stage);
         if (MethodUtils.hasEmpty(version, stage)) {
             return -1;
         }
 
-        Integer status = (Integer) MapUtils.getOrDefault(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_status, RepoStatusConstant.status_not_scanned);
-        String localMd5 = (String) MapUtils.getOrDefault(this.statusMap, modelType, modelName, modelVersion, version, stage, component, RepoCompConstant.filed_local_md5, "");
+        Integer status = (Integer) MapUtils.getOrDefault(this.statusMap, modelType, modelName, version, stage, component, RepoCompConstant.filed_status, RepoStatusConstant.status_not_scanned);
+        String localMd5 = (String) MapUtils.getOrDefault(this.statusMap, modelType, modelName, version, stage, component, RepoCompConstant.filed_local_md5, "");
         verEntity.put(RepoCompConstant.filed_status, status);
         verEntity.put(RepoCompConstant.filed_local_md5, localMd5);
 

@@ -2,6 +2,7 @@ package cn.foxtech.controller.service.service;
 
 import cn.foxtech.common.domain.constant.RedisStatusConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
+import cn.foxtech.common.entity.entity.ConfigEntity;
 import cn.foxtech.common.entity.entity.DeviceEntity;
 import cn.foxtech.common.entity.entity.OperateMonitorTaskEntity;
 import cn.foxtech.common.entity.manager.InitialConfigService;
@@ -50,8 +51,15 @@ public class CollectorExchangeService extends PeriodTaskService {
     private String controllerModel = "system_controller";
     @Autowired
     private ServiceStatus serviceStatus;
+
     @Autowired
     private InitialConfigService configService;
+
+    @Value("${spring.fox-service.service.type}")
+    private String foxServiceType = "undefinedServiceType";
+
+    @Value("${spring.fox-service.service.name}")
+    private String foxServiceName = "undefinedServiceName";
 
     /**
      * 执行任务
@@ -70,13 +78,20 @@ public class CollectorExchangeService extends PeriodTaskService {
             return;
         }
 
+        // 检测：持久化服务接收队列是否堵塞了
+        if (this.valueService.isBlock()) {
+            return;
+        }
+
         List<BaseEntity> taskList = this.entityManageService.getEntityList(OperateMonitorTaskEntity.class);
         for (BaseEntity entity : taskList) {
             OperateMonitorTaskEntity taskEntity = (OperateMonitorTaskEntity) entity;
 
+            long timeInterval = this.getTimeInterval(taskEntity);
+
             // 检查：是否到了执行周期
             long lastTime = this.lastTimeMap.getOrDefault(taskEntity.getTemplateName(), 0L);
-            if (!this.testLastTime(taskEntity, lastTime)) {
+            if (!this.testLastTime(timeInterval, lastTime)) {
                 continue;
             }
             this.lastTimeMap.put(taskEntity.getTemplateName(), System.currentTimeMillis());
@@ -99,8 +114,9 @@ public class CollectorExchangeService extends PeriodTaskService {
                 }
 
                 // 均摊CPU的损耗
-                //Thread.sleep(1);
+                this.sleep(timeInterval, deviceIds.size());
 
+                // 执行任务
                 this.executeTask(deviceEntity, taskEntity);
             }
 
@@ -182,37 +198,72 @@ public class CollectorExchangeService extends PeriodTaskService {
         return taskRequestVO;
     }
 
-    private boolean testLastTime(OperateMonitorTaskEntity taskEntity, long lastTime) {
+    /**
+     * 均摊CPU利用率的算法
+     *
+     * @param timeInterval
+     * @param deviceCount
+     * @throws InterruptedException
+     */
+    private void sleep(long timeInterval, int deviceCount) throws InterruptedException {
+        boolean average = false;
+        ConfigEntity configEntity = this.entityManageService.getConfigEntity(this.foxServiceName, this.foxServiceType, "devicePollingConfig");
+        if (configEntity != null && configEntity.getConfigValue().containsKey("average")) {
+            average = (Boolean) configEntity.getConfigValue().get("average");
+        }
+
+        if (!average) {
+            return;
+        }
+
+        // 太短的sleep，没啥意义
+        long sleep = timeInterval / deviceCount - 1;
+        if (sleep < 5) {
+            return;
+        }
+
+        // 均摊CPU的损耗
+        Thread.sleep(sleep);
+    }
+
+    private boolean testLastTime(long timeInterval, long lastTime) {
+        if (timeInterval == -1) {
+            return false;
+        }
+
+        long currentTime = System.currentTimeMillis();
+        return currentTime - lastTime > timeInterval;
+    }
+
+    private long getTimeInterval(OperateMonitorTaskEntity taskEntity) {
         try {
             String timeMode = (String) taskEntity.getTaskParam().get("timeMode");
             String timeUnit = (String) taskEntity.getTaskParam().get("timeUnit");
             Integer timeInterval = (Integer) taskEntity.getTaskParam().get("timeInterval");
 
             if (MethodUtils.hasEmpty(timeMode, timeUnit, timeInterval)) {
-                return false;
+                return -1;
             }
-
-            long currentTime = System.currentTimeMillis();
 
             if (timeMode.equals("interval")) {
                 if (timeUnit.equals("second")) {
-                    return currentTime - lastTime > timeInterval * 1000;
+                    return timeInterval * 1000;
                 }
                 if (timeUnit.equals("minute")) {
-                    return currentTime - lastTime > timeInterval * 1000 * 60;
+                    return timeInterval * 1000 * 60;
                 }
                 if (timeUnit.equals("hour")) {
-                    return currentTime - lastTime > timeInterval * 1000 * 3600;
+                    return timeInterval * 1000 * 3600;
                 }
                 if (timeUnit.equals("day")) {
-                    return currentTime - lastTime > timeInterval * 1000 * 3600 * 24;
+                    return timeInterval * 1000 * 3600 * 24;
                 }
             }
 
-            return false;
+            return -1;
 
         } catch (Exception e) {
-            return false;
+            return -1;
         }
     }
 }

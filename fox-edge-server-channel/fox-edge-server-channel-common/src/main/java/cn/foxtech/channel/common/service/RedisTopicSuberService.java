@@ -46,34 +46,32 @@ public class RedisTopicSuberService extends RedisTopicSubscriber {
                 respondVO = this.execute(requestVO);
 
                 // 检查：是否发送到指定路由，如果没有说明，则默认发到设备接收的topic
-                if (MethodUtils.hasEmpty(respondVO.getRoute())){
+                if (MethodUtils.hasEmpty(respondVO.getRoute())) {
                     respondVO.setRoute(RedisTopicConstant.topic_channel_respond + RedisTopicConstant.model_device);
                 }
 
                 // 将UUID回填回去
                 respondVO.setUuid(requestVO.getUuid());
                 respondVO.setType(constants.getChannelType());
-                String json = JsonUtils.buildJson(respondVO);
 
                 // 填充到缓存队列
-                SyncQueueObjectMap.inst().push(respondVO.getRoute(), json, 1000);
+                SyncQueueObjectMap.inst().push(respondVO.getRoute(), respondVO, 1000);
 
             } else if (ChannelRequestVO.MODE_PUBLISH.equals(requestVO.getMode())) {
                 // 单向发布模式
                 respondVO = this.publish(requestVO);
 
                 // 检查：是否发送到指定路由，如果没有说明，则默认发到设备接收的topic
-                if (MethodUtils.hasEmpty(respondVO.getRoute())){
+                if (MethodUtils.hasEmpty(respondVO.getRoute())) {
                     respondVO.setRoute(RedisTopicConstant.topic_channel_respond + RedisTopicConstant.model_device);
                 }
 
                 // 将UUID回填回去
                 respondVO.setUuid(requestVO.getUuid());
                 respondVO.setType(constants.getChannelType());
-                String json = JsonUtils.buildJson(respondVO);
 
                 // 填充到缓存队列
-                SyncQueueObjectMap.inst().push(respondVO.getRoute(), json, 1000);
+                SyncQueueObjectMap.inst().push(respondVO.getRoute(), respondVO, 1000);
             } else if (ChannelRequestVO.MODE_MANAGE.equals(requestVO.getMode())) {
                 // 管理模式
                 respondVO = this.manage(requestVO);
@@ -81,10 +79,9 @@ public class RedisTopicSuberService extends RedisTopicSubscriber {
                 // 将UUID回填回去
                 respondVO.setUuid(requestVO.getUuid());
                 respondVO.setType(constants.getChannelType());
-                String json = JsonUtils.buildJson(respondVO);
 
                 // 填充到缓存队列
-                SyncQueueObjectMap.inst().push(RedisTopicConstant.topic_channel_respond + RedisTopicConstant.model_manager, json, 10);
+                SyncQueueObjectMap.inst().push(RedisTopicConstant.topic_channel_respond + RedisTopicConstant.model_manager, respondVO, 10);
 
             }
         } catch (Exception e) {

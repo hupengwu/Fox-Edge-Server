@@ -1,7 +1,10 @@
 package cn.foxtech.kernel.system.repository.service;
 
+import cn.foxtech.common.entity.entity.DeviceModelEntity;
 import cn.foxtech.common.entity.entity.RepoCompEntity;
 import cn.foxtech.common.utils.MapUtils;
+import cn.foxtech.common.utils.json.JsonUtils;
+import cn.foxtech.common.utils.md5.MD5Utils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
@@ -9,8 +12,7 @@ import cn.foxtech.kernel.system.repository.constants.RepoStatusConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -42,12 +44,13 @@ public class RepoCloudModelInstallStatus {
             }
 
             String cloudId = (String) lastVersion.get("id");
-            if (cloudId == null) {
+            String cloudMd5 = (String) lastVersion.get("md5");
+            if (cloudId == null || cloudMd5 == null) {
                 continue;
             }
 
             // 扫描本地状态：计算并保存
-            this.scanStatus(manufacturer, deviceType, cloudId);
+            this.scanStatus(manufacturer, deviceType, cloudId, cloudMd5);
 
             // 取出本地状态
             Integer status = (Integer) MapUtils.getValue(this.statusMap, manufacturer, deviceType, RepoCompConstant.filed_status);
@@ -60,7 +63,7 @@ public class RepoCloudModelInstallStatus {
     }
 
 
-    private void scanStatus(String manufacturer, String deviceType, String cloudId) {
+    private void scanStatus(String manufacturer, String deviceType, String cloudId, String cloudMd5) {
         // 简单验证
         if (MethodUtils.hasEmpty(manufacturer, deviceType)) {
             throw new ServiceException("参数不能为空: manufacturer, deviceType");
@@ -93,6 +96,15 @@ public class RepoCloudModelInstallStatus {
         status = RepoStatusConstant.status_installed;
         MapUtils.setValue(this.statusMap, manufacturer, deviceType, RepoCompConstant.filed_status, status);
 
+        // 阶段6：检查是否待升级
+        if (cloudId.equals(installVersion.get("id"))) {
+            if (!this.getMD5Txt(manufacturer, deviceType).equals(cloudMd5)) {
+                status = RepoStatusConstant.status_damaged_package;
+                MapUtils.setValue(this.statusMap, manufacturer, deviceType, RepoCompConstant.filed_status, status);
+
+            }
+        }
+
         // 阶段7：检查是否待升级
         if (!cloudId.equals(installVersion.get("id"))) {
             status = RepoStatusConstant.status_need_upgrade;
@@ -100,4 +112,49 @@ public class RepoCloudModelInstallStatus {
         }
     }
 
+    private String getMD5Txt(String manufacturer, String deviceType) {
+        try {
+            List<DeviceModelEntity> entityList = this.modelService.getDeviceModelEntityList(manufacturer, deviceType);
+            String txt = this.getOrderText(entityList);
+            String md5 = MD5Utils.getMD5Txt(txt);
+            return md5;
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    private String getOrderText(List<DeviceModelEntity> list) throws InstantiationException, IllegalAccessException {
+        list.sort((v1, v2) -> {
+            String name1 = v1.getModelName();
+            String name2 = v2.getModelName();
+            return name1.compareTo(name2);
+        });
+
+        StringBuilder sb = new StringBuilder();
+        for (DeviceModelEntity entity : list) {
+            sb.append(this.getOrderText(entity));
+            sb.append(";");
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * 有序文本，避免HashMap导致的无序文本问题
+     * 该算法与fox-cloud保持一致
+     *
+     * @param entity
+     * @return
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    private String getOrderText(DeviceModelEntity entity) throws InstantiationException, IllegalAccessException {
+        // 注意：不要调整代码顺序，这是跟fox-cloud保持一致的算法，两边要同步修改
+        List<Object> values = new ArrayList<>();
+        values.add(entity.getModelName());
+        values.add(MapUtils.castMap(entity.getModelParam(), TreeMap.class));
+        values.add(MapUtils.castMap(entity.getExtendParam(), TreeMap.class));
+
+        return values.toString();
+    }
 }

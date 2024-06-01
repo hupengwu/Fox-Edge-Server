@@ -1,9 +1,6 @@
 package cn.foxtech.common.utils.md5;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -13,8 +10,8 @@ import java.security.NoSuchAlgorithmException;
  * 可以将给定的任意长度数据通过一定的算法计算得出一个 128 位固定长度的散列值
  */
 public class MD5Utils {
-    public static String getMD5Txt(String data) throws NoSuchAlgorithmException {
-        return MD5Utils.getMD5(data.getBytes()).toString(16).toUpperCase();
+    public static String getMD5Txt(String data) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        return MD5Utils.getMD5(data.getBytes("UTF-8")).toString(16).toUpperCase();
     }
 
     /**
@@ -39,6 +36,9 @@ public class MD5Utils {
         // 第一步，获取MessageDigest对象，参数为MD5字符串，表示这是一个MD5算法
         MessageDigest md5 = MessageDigest.getInstance("MD5");
 
+        // 重置
+        md5.reset();
+
         // 第二步，输入源数据，参数类型为byte[]
         md5.update(data);
 
@@ -50,9 +50,8 @@ public class MD5Utils {
          */
         BigInteger bigInt = new BigInteger(1, md5.digest());
 
-        // 通过重置，释放缓存，防止内存泄漏
+        // 重置
         md5.reset();
-
         
         return bigInt;
     }
@@ -82,6 +81,10 @@ public class MD5Utils {
 
     private static byte[] getMD5(InputStream data) throws IOException, NoSuchAlgorithmException {
         MessageDigest md5 = MessageDigest.getInstance("MD5");
+
+        // 重置
+        md5.reset();
+
         byte[] buffer = new byte[8192];
 
         int read;
@@ -91,7 +94,7 @@ public class MD5Utils {
 
         byte[] result = md5.digest();
 
-        // 通过reset，释放缓存，防止内存泄漏
+        // 重置
         md5.reset();
 
         return result;

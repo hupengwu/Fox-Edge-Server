@@ -171,7 +171,7 @@ public class DeviceManageController {
      * @param mapList
      * @throws JsonParseException
      */
-    private void extend(List<Map<String, Object>> mapList) throws JsonParseException {
+    private void extend(List<Map<String, Object>> mapList) throws InstantiationException, IllegalAccessException {
         // 构造准备查询的key
         List<String> keys = new ArrayList<>();
         for (Map<String, Object> map : mapList) {

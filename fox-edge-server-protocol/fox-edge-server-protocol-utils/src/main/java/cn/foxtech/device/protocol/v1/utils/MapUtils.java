@@ -1,7 +1,6 @@
 package cn.foxtech.device.protocol.v1.utils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -230,5 +229,59 @@ public class MapUtils {
         }
 
         data.put(keyData, value);
+    }
+
+    /**
+     * 将一种Map转换成另一种Map，例如将HashMap转换未TreeMap
+     *
+     * @param map
+     * @param mapType
+     * @return
+     * @throws ClassCastException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    public static Map castMap(Map map, Class mapType) throws ClassCastException, InstantiationException, IllegalAccessException {
+        if (!Map.class.isAssignableFrom(mapType)) {
+            throw new ClassCastException();
+        }
+
+        Map node = (Map) mapType.newInstance();
+
+        for (Object key : map.keySet()) {
+            Object value = map.get(key);
+
+            if (value instanceof Map) {
+                node.put(key, castMap((Map) value, mapType));
+            }
+            else if (value instanceof Collection) {
+                Collection list = (Collection)value.getClass().newInstance();
+
+                Collection vs = (Collection)value;
+                for (Object v : vs){
+                    if (v instanceof Map){
+                        list.add(castMap((Map)v,mapType));
+                    }
+                    else {
+                        list.add(v);
+                    }
+                }
+
+                node.put(key, list);
+            } else {
+                node.put(key, value);
+            }
+        }
+
+        return node;
+    }
+
+    public static List castMap(List mapList, Class mapType) throws ClassCastException, InstantiationException, IllegalAccessException {
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Object map : mapList) {
+            result.add(castMap((Map)map, mapType));
+        }
+
+        return result;
     }
 }

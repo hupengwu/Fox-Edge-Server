@@ -71,43 +71,67 @@ public class PersistTaskScheduler extends PeriodTaskService {
     }
 
     private int updateManageRequest() {
-        // 预览消息队列
-        List<Object> respondVOList = this.manageRequest.range();
-
         // 读取到的数据量
-        int size = respondVOList.size();
+        int size = 0;
 
-        // 处理并删除这个数据
-        for (Object respondMap : respondVOList) {
+        do {
+            // 弹出数据
+            Object respondMap = this.manageRequest.pop();
+            if (respondMap == null) {
+                break;
+            }
+
+            size++;
+
             // 处理数据
             this.updateManageRespond(respondMap);
 
-            // 删除这个对象
-            this.manageRequest.pop();
-        }
+            // 为其他任务腾出点执行的机会
+            if (size > 256) {
+                break;
+            }
+
+        } while (true);
 
         return size;
     }
 
+    /**
+     * 数据可丢弃：先弹出，再处理
+     *
+     * @return
+     */
     private int updateValueRequest() {
-        // 预览消息队列
-        List<Object> respondVOList = this.valueRequest.range();
-
         // 读取到的数据量
-        int size = respondVOList.size();
+        int size = 0;
 
-        // 处理并删除这个数据
-        for (Object respondMap : respondVOList) {
+        do {
+            // 弹出数据
+            Object respondMap = this.valueRequest.pop();
+            if (respondMap == null) {
+                break;
+            }
+
+            size++;
+
             // 处理数据
             this.updateDeviceRespond(respondMap);
 
-            // 删除这个对象
-            this.valueRequest.pop();
-        }
+            // 为其他任务腾出点执行的机会
+            if (size > 256) {
+                break;
+            }
+
+        } while (true);
 
         return size;
     }
 
+    /**
+     * 数据不可丢弃：先处理成功，再弹出数据
+     *
+     * @return
+     */
     private int updateRecordRequest() {
         // 预览消息队列
         List<Object> respondVOList = this.recordRequest.range();

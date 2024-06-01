@@ -1,7 +1,7 @@
 package cn.foxtech.common.utils.redis.topic.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedisTopicPublisher {
     @Autowired
-    protected StringRedisTemplate stringRedisTemplate;
+    protected RedisTemplate redisTemplate;
 
     public void sendMessage(String topic, Object message) {
-        this.stringRedisTemplate.convertAndSend(topic, message);
+        this.redisTemplate.convertAndSend(topic, message);
     }
 }

@@ -36,9 +36,8 @@ public class RepoLocalJarFileInfoService {
         Map<String, Object> result = new HashMap<>();
         for (Map<String, Object> map : repoList) {
             String modelName = (String) map.getOrDefault("modelName", "");
-            String modelVersion = (String) map.getOrDefault("modelVersion", "");
             String description = (String) map.getOrDefault("description", "");
-            result.put(modelName + ":" + modelVersion, description);
+            result.put(modelName, description);
         }
 
         return result;

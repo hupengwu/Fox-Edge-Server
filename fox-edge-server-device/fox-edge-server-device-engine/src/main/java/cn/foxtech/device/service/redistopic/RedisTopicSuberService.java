@@ -30,7 +30,7 @@ public class RedisTopicSuberService extends RedisTopicSubscriber {
             ChannelRespondVO respondVO = JsonUtils.buildObject(message, ChannelRespondVO.class);
             if (respondVO.getUuid() != null && !respondVO.getUuid().isEmpty()) {
                 // 带UUID报文：这是Exchange需要的的主从应答报文
-                SyncFlagObjectMap.inst().notifyDynamic(respondVO.getUuid(), message);
+                SyncFlagObjectMap.inst().notifyDynamic(respondVO.getUuid(), respondVO);
             } else {
                 // 不带UUID报：这是Subscribe需要的主动上报报文
                 SyncQueueObjectMap.inst().push(RedisTopicConstant.model_channel, respondVO, 1000);

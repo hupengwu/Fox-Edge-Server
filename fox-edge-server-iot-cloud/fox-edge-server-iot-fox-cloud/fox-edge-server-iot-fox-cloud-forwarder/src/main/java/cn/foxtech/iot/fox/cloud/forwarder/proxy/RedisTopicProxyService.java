@@ -1,7 +1,6 @@
 package cn.foxtech.iot.fox.cloud.forwarder.proxy;
 
 import cn.foxtech.common.domain.constant.RedisTopicConstant;
-import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.redis.topic.service.RedisTopicPublisher;
 import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
 import cn.foxtech.core.exception.ServiceException;
@@ -84,17 +83,14 @@ public class RedisTopicProxyService {
         String key = requestVO.getUuid();
         request.put(DeviceMethodVOFieldConstant.field_uuid, requestVO.getUuid());
 
-        // 重新打包数据
-        Object body = JsonUtils.buildJson(request);
-
 
         // 重置信号
         SyncFlagObjectMap.inst().reset(key);
 
         // 发送数据
-        publisher.sendMessage(topicRequest, body);
+        this.publisher.sendMessage(topicRequest, request);
 
-        logger.info(topicRequest + ":" + body);
+        logger.info(topicRequest + ":" + request);
 
         // 等待消息的到达：根据动态key
         String respond = (String) SyncFlagObjectMap.inst().waitDynamic(key, this.buildTimeout(requestVO.getResource(), timeout));
@@ -102,11 +98,9 @@ public class RedisTopicProxyService {
             throw new ServiceException("设备响应超时！");
         }
 
-        body = JsonUtils.buildObject(respond, Map.class);
-
         RestfulLikeRespondVO respondVO = new RestfulLikeRespondVO();
         respondVO.bindVO(requestVO);
-        respondVO.setBody(body);
+        respondVO.setBody(respond);
         return respondVO;
     }
 

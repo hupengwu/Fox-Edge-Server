@@ -10,7 +10,6 @@ import cn.foxtech.common.entity.service.foxsql.FoxSqlService;
 import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.common.status.ServiceStatus;
-import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.redis.topic.service.RedisTopicPublisher;
 import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
@@ -304,14 +303,11 @@ public class LinkManageController {
         requestVO.setMode(LinkRequestVO.MODE_MANAGE);
         requestVO.setSend(param);
 
-
-        String body = JsonUtils.buildJson(requestVO);
-
         // 重置信号
         SyncFlagObjectMap.inst().reset(requestVO.getUuid());
 
         // 发送数据
-        this.publisher.sendMessage(RedisTopicConstant.topic_link_request + linkType, body);
+        this.publisher.sendMessage(RedisTopicConstant.topic_link_request + linkType, requestVO);
 
         // 等待消息的到达：根据动态key
         LinkRespondVO respond = (LinkRespondVO) SyncFlagObjectMap.inst().waitDynamic(requestVO.getUuid(), 2 * 1000);

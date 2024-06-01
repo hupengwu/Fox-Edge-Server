@@ -1,7 +1,9 @@
 package cn.foxtech.kernel.system.repository.service;
 
+import cn.foxtech.common.entity.entity.OperateEntity;
 import cn.foxtech.common.entity.entity.RepoCompEntity;
 import cn.foxtech.common.utils.MapUtils;
+import cn.foxtech.common.utils.md5.MD5Utils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
@@ -9,8 +11,7 @@ import cn.foxtech.kernel.system.repository.constants.RepoStatusConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -94,10 +95,74 @@ public class RepoCloudScriptInstallStatus {
         status = RepoStatusConstant.status_installed;
         MapUtils.setValue(this.statusMap, manufacturer, deviceType, RepoCompConstant.filed_status, status);
 
+        // 阶段6：检查是否待升级
+        if (cloudId.equals(installVersion.get("id"))) {
+            if (!this.getMD5Txt(manufacturer, deviceType).equals(cloudMd5)) {
+                status = RepoStatusConstant.status_damaged_package;
+                MapUtils.setValue(this.statusMap, manufacturer, deviceType, RepoCompConstant.filed_status, status);
+
+            }
+        }
+
         // 阶段7：检查是否待升级
         if (!cloudId.equals(installVersion.get("id"))) {
             status = RepoStatusConstant.status_need_upgrade;
             MapUtils.setValue(this.statusMap, manufacturer, deviceType, RepoCompConstant.filed_status, status);
         }
     }
+
+    private String getMD5Txt(String manufacturer, String deviceType) {
+        try {
+            List<OperateEntity> entityList = this.modelService.getOperateEntityList(manufacturer, deviceType);
+            String txt = this.getOrderText(entityList);
+            String md5 = MD5Utils.getMD5Txt(txt);
+            return md5;
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    private String getOrderText(List<OperateEntity> list) throws InstantiationException, IllegalAccessException {
+        list.sort(new Comparator<OperateEntity>() {
+            @Override
+            public int compare(OperateEntity v1, OperateEntity v2) {
+                String name1 = v1.getOperateName();
+                String name2 = v2.getOperateName();
+                return name1.compareTo(name2);
+            }
+        });
+
+        StringBuilder sb = new StringBuilder();
+        for (OperateEntity entity : list) {
+            sb.append(this.getOrderText(entity));
+            sb.append(";");
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * 有序文本，避免HashMap导致的无序文本问题
+     * 该算法与fox-cloud保持一致
+     *
+     * @param entity
+     * @return
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    private String getOrderText(OperateEntity entity) throws InstantiationException, IllegalAccessException {
+        // 注意：不要调整代码顺序，这是跟fox-cloud保持一致的算法，两边要同步修改
+        List<Object> values = new ArrayList<>();
+        values.add(entity.getOperateName());
+        values.add(entity.getServiceType());
+        values.add(entity.getOperateMode());
+        values.add(entity.getEngineType());
+        values.add(entity.getTimeout());
+        values.add(MapUtils.castMap(entity.getEngineParam(), TreeMap.class));
+        values.add(MapUtils.castMap(entity.getExtendParam(), TreeMap.class));
+
+        return values.toString();
+    }
+
+
 }

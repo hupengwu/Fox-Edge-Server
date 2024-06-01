@@ -19,7 +19,7 @@ public class RedisLoggerService {
 
     private String key;
 
-    private Long maxSize = 1000L;
+    private long maxSize = 1000L;
 
     /**
      * 保存数据
@@ -54,6 +54,10 @@ public class RedisLoggerService {
 
     public Long size() {
         return this.redisTemplate.opsForList().size(this.key);
+    }
+
+    public boolean isBlock() {
+        return this.redisTemplate.opsForList().size(this.key) > this.maxSize;
     }
 
     /**

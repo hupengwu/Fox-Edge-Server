@@ -33,15 +33,14 @@ public class RepoLocalCompConvert {
     public Map<String, Object> convertCloud2Local(Map<String, Object> cloud) {
         String modelType = (String) cloud.get(RepoCompConstant.filed_model_type);
         String modelName = (String) cloud.get(RepoCompConstant.filed_model_name);
-        String modelVersion = (String) cloud.get(RepoCompConstant.filed_model_version);
         String manufacturer = (String) cloud.get(OperateVOFieldConstant.field_manufacturer);
         String deviceType = (String) cloud.get(OperateVOFieldConstant.field_device_type);
         String compId = (String) cloud.get(RepoCompVOFieldConstant.field_id);
 
 
         // 必选参数
-        if (MethodUtils.hasEmpty(modelType, modelName, modelVersion)) {
-            throw new ServiceException("cloud参数不能为空: modelType, modelName, modelVersion");
+        if (MethodUtils.hasEmpty(modelType, modelName)) {
+            throw new ServiceException("cloud参数不能为空: modelType, modelName");
         }
 
         Map<String, Object> localMap = new HashMap<>();
@@ -52,11 +51,11 @@ public class RepoLocalCompConvert {
             localMap.put(RepoCompVOFieldConstant.field_comp_param, new HashMap<>());
 
             // 必选参数
-            if (MethodUtils.hasEmpty(modelName, modelVersion, manufacturer, deviceType)) {
-                throw new ServiceException("参数不能为空: modelName, modelVersion, manufacturer, deviceType");
+            if (MethodUtils.hasEmpty(modelName, manufacturer, deviceType)) {
+                throw new ServiceException("参数不能为空: modelName, manufacturer, deviceType");
             }
 
-            String fileName = modelName + "." + modelVersion + ".jar";
+            String fileName = modelName + ".jar";
 
             // 可选参数
             Map<String, Object> compParam = (Map<String, Object>) localMap.get(RepoCompVOFieldConstant.field_comp_param);
@@ -64,7 +63,6 @@ public class RepoLocalCompConvert {
             compParam.put(OperateVOFieldConstant.field_device_type, deviceType);
             compParam.put(RepoCompVOFieldConstant.field_comp_id, compId);
             compParam.put(RepoCompConstant.filed_model_name, modelName);
-            compParam.put(RepoCompConstant.filed_model_version, modelVersion);
             compParam.put(RepoCompConstant.filed_file_name, fileName);
 
             return localMap;
@@ -75,8 +73,8 @@ public class RepoLocalCompConvert {
             localMap.put(RepoCompVOFieldConstant.field_comp_param, new HashMap<>());
 
             // 必选参数
-            if (MethodUtils.hasEmpty(modelName, modelVersion, manufacturer, deviceType)) {
-                throw new ServiceException("参数不能为空: modelName, modelVersion, manufacturer, deviceType");
+            if (MethodUtils.hasEmpty(modelName, manufacturer, deviceType)) {
+                throw new ServiceException("参数不能为空: modelName, manufacturer, deviceType");
             }
 
             // 可选参数
@@ -85,7 +83,6 @@ public class RepoLocalCompConvert {
             compParam.put(OperateVOFieldConstant.field_device_type, deviceType);
             compParam.put(RepoCompVOFieldConstant.field_comp_id, compId);
             compParam.put(RepoCompConstant.filed_model_name, modelName);
-            compParam.put(RepoCompConstant.filed_model_version, modelVersion);
 
             return localMap;
         }

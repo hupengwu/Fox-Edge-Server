@@ -23,7 +23,6 @@ public class RepoDownLoadTask extends PeriodTask {
 
     private String modelType;
     private String modelName;
-    private String modelVersion;
     private String version;
     private String stage;
     private String pathName;
@@ -33,12 +32,11 @@ public class RepoDownLoadTask extends PeriodTask {
 
     private RepoCloudFileInstallStatus installStatus;
 
-    public RepoDownLoadTask(RepoCloudFIleInstallService installService, RepoCloudFileInstallStatus installStatus, String modelType, String modelName, String modelVersion, String version, String stage, String pathName, String component) {
+    public RepoDownLoadTask(RepoCloudFIleInstallService installService, RepoCloudFileInstallStatus installStatus, String modelType, String modelName, String version, String stage, String pathName, String component) {
         this.installService = installService;
         this.installStatus = installStatus;
         this.modelType = modelType;
         this.modelName = modelName;
-        this.modelVersion = modelVersion;
         this.version = version;
         this.stage = stage;
         this.pathName = pathName;
@@ -71,21 +69,21 @@ public class RepoDownLoadTask extends PeriodTask {
     public void execute() {
         try {
             // 简单验证
-            if (MethodUtils.hasEmpty(modelType, modelName, modelVersion, version, stage, pathName, component)) {
-                throw new ServiceException("参数不能为空: modelType, modelName, modelVersion, version, stage, pathName, component");
+            if (MethodUtils.hasEmpty(modelType, modelName, version, stage, pathName, component)) {
+                throw new ServiceException("参数不能为空: modelType, modelName, version, stage, pathName, component");
             }
 
             // 删除旧的下载文件
             if (RepoCompConstant.repository_type_service.equals(modelType) || RepoCompConstant.repository_type_decoder.equals(modelType) || RepoCompConstant.repository_type_webpack.equals(modelType) || RepoCompConstant.repository_type_template.equals(modelType)) {
-                this.installService.deletePackageFile(modelType, modelName, modelVersion, version, stage, component);
+                this.installService.deletePackageFile(modelType, modelName, version, stage, component);
             }
 
             // 重新下载新的安装文件
-            this.installService.downloadFile(modelType, modelName, modelVersion, version, stage, pathName, component);
+            this.installService.downloadFile(modelType, modelName, version, stage, pathName, component);
 
             // 下载完成后，验证状态
-            this.installStatus.scanLocalStatus(modelType, modelName, modelVersion, version, stage, component);
-            this.installStatus.scanLocalMd5(modelType, modelName, modelVersion, version, stage, component);
+            this.installStatus.scanLocalStatus(modelType, modelName, version, stage, component);
+            this.installStatus.scanLocalMd5(modelType, modelName, version, stage, component);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

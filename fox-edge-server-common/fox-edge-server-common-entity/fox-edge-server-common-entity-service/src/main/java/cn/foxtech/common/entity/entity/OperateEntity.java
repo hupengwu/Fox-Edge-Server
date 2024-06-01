@@ -53,4 +53,11 @@ public class OperateEntity extends OperateMethodBase {
         this.engineParam = (Map<String, Object>) map.get("engineParam");
         this.extendParam = (Map<String, Object>) map.get("extendParam");
     }
+
+    public BaseEntity build(Map<String, Object> map) {
+        OperateEntity entity = new OperateEntity();
+        entity.bind(map);
+
+        return entity;
+    }
 }

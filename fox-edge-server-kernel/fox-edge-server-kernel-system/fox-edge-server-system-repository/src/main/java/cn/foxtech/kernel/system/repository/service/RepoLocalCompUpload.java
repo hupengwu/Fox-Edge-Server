@@ -67,7 +67,7 @@ public class RepoLocalCompUpload {
         String manufacturer = (String) compParam.get(OperateVOFieldConstant.field_manufacturer);
         String fileName = (String) compParam.get("fileName");
         if (MethodUtils.hasEmpty(modelName, deviceType, manufacturer, fileName, commitKey)) {
-            throw new ServiceException("缺少参数： modelName, modelVersion, deviceType, manufacturer, fileName, commitKey");
+            throw new ServiceException("缺少参数： modelName, deviceType, manufacturer, fileName, commitKey");
         }
 
         String filePath = this.pathNameService.getPathName4LocalJarDecoder2file(modelName);
@@ -166,22 +166,21 @@ public class RepoLocalCompUpload {
 
     private Map<String, Object> uploadCsvTemplateEntity(Map<String, Object> compParam, String commitKey) throws IOException, InterruptedException {
         String modelName = (String) compParam.get(RepoCompConstant.filed_model_name);
-        String modelVersion = (String) compParam.get(RepoCompConstant.filed_model_version);
         String deviceType = (String) compParam.get(OperateVOFieldConstant.field_device_type);
         String manufacturer = (String) compParam.get(OperateVOFieldConstant.field_manufacturer);
-        if (MethodUtils.hasEmpty(modelName, modelVersion, deviceType, manufacturer, commitKey)) {
-            throw new ServiceException("缺少参数： modelName, modelVersion, deviceType, manufacturer, commitKey");
+        if (MethodUtils.hasEmpty(modelName, deviceType, manufacturer, commitKey)) {
+            throw new ServiceException("缺少参数： modelName, deviceType, manufacturer, commitKey");
         }
 
         File file = null;
         try {
             // 打包成tar文件
             String tarFileName = modelName + ".tar";
-            this.shellService.packCsvTemplate2TarFile(tarFileName, modelName, modelVersion);
+            this.shellService.packCsvTemplate2TarFile(tarFileName, modelName);
 
 
             // 打开tar文件
-            String pathName = this.pathNameService.getPathName4LocalTemplate2version(modelName, modelVersion);
+            String pathName = this.pathNameService.getPathName4LocalTemplate2version(modelName);
             file = new File(pathName + "\\" + tarFileName);
             if (!file.exists() || !file.isFile()) {
                 throw new ServiceException("文件不存在！");
@@ -190,7 +189,7 @@ public class RepoLocalCompUpload {
             Map<String, Object> formData = new HashMap<>();
             formData.put(RepoCompConstant.filed_model_type, RepoCompConstant.repository_type_template);
             formData.put(RepoCompConstant.filed_model_name, modelName);
-            formData.put(RepoCompConstant.filed_model_version, modelVersion);
+            formData.put(RepoCompConstant.filed_model_version, RepoCompConstant.filed_value_model_version_default);
             formData.put(RepoCompConstant.filed_component, "service");
             formData.put("file", file);
             formData.put(RepoCompConstant.filed_commit_key, commitKey);

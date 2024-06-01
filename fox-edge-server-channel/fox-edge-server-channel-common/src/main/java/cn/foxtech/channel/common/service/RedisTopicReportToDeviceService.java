@@ -3,7 +3,6 @@ package cn.foxtech.channel.common.service;
 import cn.foxtech.channel.common.api.ChannelClientAPI;
 import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.common.domain.constant.RedisTopicConstant;
-import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.redis.topic.service.RedisTopicPublisher;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +41,7 @@ public class RedisTopicReportToDeviceService extends PeriodTaskService {
             // 标识为主动上报模式
             respondVO.setMode(ChannelRespondVO.MODE_RECEIVE);
 
-            String json = JsonUtils.buildJsonWithoutException(respondVO);
-            this.publisher.sendMessage(this.deviceTopic, json);
+            this.publisher.sendMessage(this.deviceTopic, respondVO);
         }
     }
 }

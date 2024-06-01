@@ -219,9 +219,4 @@ public class RedisTopicController implements IRedisTopicController {
 
         return result;
     }
-
-
-    public void publish(String pubTopic, String rspContext) {
-        this.publisher.sendMessage(pubTopic, rspContext);
-    }
 }

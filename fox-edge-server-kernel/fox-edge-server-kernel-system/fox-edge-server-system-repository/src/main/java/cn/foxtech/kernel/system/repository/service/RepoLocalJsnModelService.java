@@ -5,6 +5,7 @@ import cn.foxtech.common.entity.constant.RepoCompVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.DeviceModelEntity;
 import cn.foxtech.common.entity.entity.RepoCompEntity;
+import cn.foxtech.common.utils.ContainerUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.system.common.service.EntityManageService;
@@ -161,7 +162,7 @@ public class RepoLocalJsnModelService {
         return this.entityManageService.getEntity(id, DeviceModelEntity.class);
     }
 
-    public RepoCompEntity getCompEntity(String manufacturer,String deviceType){
+    public RepoCompEntity getCompEntity(String manufacturer, String deviceType) {
         RepoCompEntity compEntity = this.entityManageService.getEntity(RepoCompEntity.class, (Object value) -> {
             RepoCompEntity entity = (RepoCompEntity) value;
 
@@ -177,5 +178,19 @@ public class RepoLocalJsnModelService {
         });
 
         return compEntity;
+    }
+
+    public List<DeviceModelEntity> getDeviceModelEntityList(String manufacturer, String deviceType) {
+        List<BaseEntity> entityList = this.entityManageService.getEntityList(DeviceModelEntity.class, (Object value) -> {
+            DeviceModelEntity entity = (DeviceModelEntity) value;
+
+            if (!manufacturer.equals(entity.getManufacturer())) {
+                return false;
+            }
+
+            return deviceType.equals(entity.getDeviceType());
+        });
+
+        return ContainerUtils.buildClassList(entityList, DeviceModelEntity.class);
     }
 }

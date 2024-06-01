@@ -1,14 +1,15 @@
 package cn.foxtech.common.entity.entity;
 
 
+import cn.foxtech.common.utils.number.NumberUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 设备对象的结构化信息：用来形成某个设备类型级别的数据结构
@@ -86,5 +87,28 @@ public class DeviceObjInfEntity extends BaseEntity {
         this.setId(other.getId());
         this.setCreateTime(other.getCreateTime());
         this.setUpdateTime(other.getUpdateTime());
+    }
+
+    public BaseEntity build(Map<String, Object> map) {
+        try {
+            if (map == null || map.isEmpty()) {
+                return null;
+            }
+
+            DeviceObjInfEntity entity = new DeviceObjInfEntity();
+            entity.setId(NumberUtils.makeLong(map.get("id")));
+            entity.setCreateTime(NumberUtils.makeLong(map.get("createTime")));
+            entity.setUpdateTime(NumberUtils.makeLong(map.get("updateTime")));
+
+
+            entity.setDeviceType((String) map.get("deviceType"));
+            entity.setManufacturer((String) map.get("manufacturer"));
+            entity.setObjectName((String) map.get("objectName"));
+            entity.setValueType((String) map.get("valueType"));
+
+            return entity;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

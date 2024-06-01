@@ -42,6 +42,11 @@ mkdir -p $cpdir
 cpdir=logs
 mkdir -p $cpdir
 
+#复制一目录
+cpdir=repository
+mkdir -p $cpdir
+cp -r $app_home/$cpdir/notice.txt $cpdir
+
 #复制二目录
 cpdir=repository/decoder
 mkdir -p $cpdir

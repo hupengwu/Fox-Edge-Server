@@ -145,18 +145,17 @@ public class RepoCloudFIleInstallService {
     public void extendLocalStatus(Map<String, Object> entity) {
         String modelType = (String) entity.getOrDefault(RepoCompConstant.filed_model_type, "");
         String modelName = (String) entity.getOrDefault(RepoCompConstant.filed_model_name, "");
-        String modelVersion = (String) entity.getOrDefault(RepoCompConstant.filed_model_version, RepoCompConstant.filed_value_model_version_default);
         Map<String, Object> lastVersion = (Map<String, Object>) entity.getOrDefault(RepoCompConstant.filed_last_version, new HashMap<>());
         List<Map<String, Object>> versions = (List<Map<String, Object>>) entity.getOrDefault(RepoCompConstant.filed_versions, "");
         String component = (String) entity.getOrDefault(RepoCompConstant.filed_component, "");
 
 
         // 验证last版本的破损状态
-        int status = this.installStatus.verifyMd5Status(modelType, modelName, modelVersion, component, lastVersion);
+        int status = this.installStatus.verifyMd5Status(modelType, modelName, component, lastVersion);
         if (RepoStatusConstant.status_damaged_package == status) {
             lastVersion.put(RepoCompConstant.filed_status, status);
         } else {
-            if (this.installStatus.verifyUpgradeStatus(modelType, modelName, modelVersion, lastVersion, versions)) {
+            if (this.installStatus.verifyUpgradeStatus(modelType, modelName, lastVersion, versions)) {
                 lastVersion.put(RepoCompConstant.filed_status, RepoStatusConstant.status_need_upgrade);
             }
         }
@@ -164,7 +163,7 @@ public class RepoCloudFIleInstallService {
 
         // 验证明细包的破损状态
         for (Map<String, Object> verEntity : versions) {
-            status = this.installStatus.verifyMd5Status(modelType, modelName, modelVersion, component, verEntity);
+            status = this.installStatus.verifyMd5Status(modelType, modelName, component, verEntity);
             verEntity.put(RepoCompConstant.filed_status, status);
 
             // 检查：该版本是否为【已安装】版本，如果是，则该版本为当前版本，因为【已安装】版本为正在使用的唯一版本
@@ -174,12 +173,11 @@ public class RepoCloudFIleInstallService {
         }
     }
 
-    public void insertRepoCompEntity(String modelType, String modelName, String modelVersion) throws IOException {
+    public void insertRepoCompEntity(String modelType, String modelName) throws IOException {
         // 向云端查询组件信息
         Map<String, Object> body = new HashMap<>();
         body.put(RepoCompConstant.filed_model_type, modelType);
         body.put(RepoCompConstant.filed_model_name, modelName);
-        body.put(RepoCompConstant.filed_model_version, modelVersion);
         Map<String, Object> respond = this.cloudRemoteService.queryCloudCompFileList(body);
 
         // 取出组件信息
@@ -239,36 +237,35 @@ public class RepoCloudFIleInstallService {
         }
     }
 
-    public void scanLocalStatusAndMd5(String modelType, String modelName, String modelVersion, Map<String, Object> versionMap) {
+    public void scanLocalStatusAndMd5(String modelType, String modelName, Map<String, Object> versionMap) {
         String version = (String) versionMap.get(RepoCompConstant.filed_version);
         String stage = (String) versionMap.get(RepoCompConstant.filed_stage);
         String component = (String) versionMap.get(RepoCompConstant.filed_component);
 
         // 扫描本地的状态
-        this.installStatus.scanLocalStatus(modelType, modelName, modelVersion, version, stage, component);
-        this.installStatus.scanLocalMd5(modelType, modelName, modelVersion, version, stage, component);
+        this.installStatus.scanLocalStatus(modelType, modelName, version, stage, component);
+        this.installStatus.scanLocalMd5(modelType, modelName, version, stage, component);
     }
 
     /**
      * 扫描本地的组件安装状态，已经MD5文件状态
      *
-     * @param modelType    模块类型
-     * @param modelName    模块名称
-     * @param modelVersion 模块版本
-     * @param lastVersion  最新的文件版本
-     * @param versions     最新的文件状态
+     * @param modelType   模块类型
+     * @param modelName   模块名称
+     * @param lastVersion 最新的文件版本
+     * @param versions    最新的文件状态
      */
-    public void scanLocalStatusAndMd5(String modelType, String modelName, String modelVersion, Map<String, Object> lastVersion, List<Map<String, Object>> versions) {
+    public void scanLocalStatusAndMd5(String modelType, String modelName, Map<String, Object> lastVersion, List<Map<String, Object>> versions) {
         // 取出最新的文件版本信息
         if (!MethodUtils.hasEmpty(lastVersion)) {
-            this.scanLocalStatusAndMd5(modelType, modelName, modelVersion, lastVersion);
+            this.scanLocalStatusAndMd5(modelType, modelName, lastVersion);
         }
 
         // 各明细版本
         if (!MethodUtils.hasEmpty(versions)) {
             // 每一个版本的状态
             for (Map<String, Object> version : versions) {
-                this.scanLocalStatusAndMd5(modelType, modelName, modelVersion, version);
+                this.scanLocalStatusAndMd5(modelType, modelName, version);
             }
         }
     }
@@ -277,23 +274,22 @@ public class RepoCloudFIleInstallService {
      * 扫码本地已安装模块的状态
      * 主要场景：用户在安装完成之后，删除了本地仓库中的安装包，此时只有安装文件，就涉及到它们的安装状态问题
      *
-     * @param modelType    模块类型
-     * @param modelName    模块名称
-     * @param modelVersion
+     * @param modelType 模块类型
+     * @param modelName 模块名称
      */
-    public Map<String, Object> scanModelStatus(String modelType, String modelName, String modelVersion) {
+    public Map<String, Object> scanModelStatus(String modelType, String modelName) {
         // 简单验证
-        if (MethodUtils.hasEmpty(modelType, modelName, modelVersion)) {
-            throw new ServiceException("参数不能为空: modelType, modelName, modelVersion");
+        if (MethodUtils.hasEmpty(modelType, modelName)) {
+            throw new ServiceException("参数不能为空: modelType, modelName");
         }
 
         if (RepoCompConstant.repository_type_decoder.equals(modelType)) {
-            String fileName = modelName + "." + modelVersion + ".jar";
+            String fileName = modelName + ".jar";
             Map<String, Object> jarInfoMap = this.jarFileService.readJarFiles(fileName);
             return jarInfoMap;
         }
         if (RepoCompConstant.repository_type_template.equals(modelType)) {
-            String modelPathName = this.pathNameService.getPathName4LocalTemplate2modelVersion(modelName, modelVersion);
+            String modelPathName = this.pathNameService.getPathName4LocalTemplate2version(modelName);
             File file = new File(modelPathName);
             if (!file.exists() || file.isFile()) {
                 return null;
@@ -322,13 +318,13 @@ public class RepoCloudFIleInstallService {
      * @param pathName
      * @return
      */
-    public boolean testUrlFileCanBeOpen(String modelType, String modelName, String modelVersion, String version, String pathName) {
+    public boolean testUrlFileCanBeOpen(String modelType, String modelName, String version, String pathName) {
         String host = (String) this.configService.getConfigValueOrDefault(RepoConfigConstant.filed_config_name, RepoConfigConstant.filed_config_file, this.siteUri);
         if (MethodUtils.hasEmpty(host)) {
             throw new ServiceException("尚未配置仓库的uri，请先配置仓库的uri");
         }
 
-        String urlStr = host + "/" + modelType + "/" + modelName + "/" + modelVersion + "/" + version + "/" + pathName;
+        String urlStr = host + "/" + modelType + "/" + modelName + "/" + RepoCompConstant.filed_value_model_version_default + "/" + version + "/" + pathName;
 
         return DownLoadUtil.testUrlFileCanBeOpen(urlStr, "");
     }
@@ -339,13 +335,13 @@ public class RepoCloudFIleInstallService {
      * @param modelType 仓库类型
      * @throws IOException 异常信息
      */
-    public void downloadFile(String modelType, String modelName, String modelVersion, String version, String stage, String pathName, String component) throws IOException, InterruptedException {
+    public void downloadFile(String modelType, String modelName, String version, String stage, String pathName, String component) throws IOException, InterruptedException {
         // 简单验证
-        if (MethodUtils.hasEmpty(modelType, modelName, modelVersion, version, stage, pathName, component)) {
-            throw new ServiceException("参数不能为空:modelType, modelName, modelVersion, version, stage, pathName, component");
+        if (MethodUtils.hasEmpty(modelType, modelName, version, stage, pathName, component)) {
+            throw new ServiceException("参数不能为空:modelType, modelName, version, stage, pathName, component");
         }
 
-        String fileName = this.pathNameService.getFileName4LocalRepoTarFile(modelName, modelVersion, version);
+        String fileName = this.pathNameService.getFileName4LocalRepoTarFile(modelName, version);
 
         String host = (String) this.configService.getConfigValueOrDefault(RepoConfigConstant.filed_config_name, RepoConfigConstant.filed_config_file, this.siteUri);
         if (MethodUtils.hasEmpty(host)) {
@@ -367,8 +363,8 @@ public class RepoCloudFIleInstallService {
         }
 
         // 下载tar文件
-        String url = host + "/" + modelType + "/" + modelName + "/" + modelVersion + "/" + version + "/" + pathName;
-        String localPath = this.pathNameService.getPathName4LocalRepo2component(modelType, modelName, modelVersion, version, stage, component);
+        String url = host + "/" + modelType + "/" + modelName + "/" + RepoCompConstant.filed_value_model_version_default + "/" + version + "/" + pathName;
+        String localPath = this.pathNameService.getPathName4LocalRepo2component(modelType, modelName, version, stage, component);
         DownLoadUtil.downLoadFromHttpUrl(url, fileName, localPath, "");
 
 
@@ -401,7 +397,7 @@ public class RepoCloudFIleInstallService {
 
 
         // 将状态保存起来
-        this.installStatus.scanLocalStatus(modelType, modelName, modelVersion, version, stage, component);
+        this.installStatus.scanLocalStatus(modelType, modelName, version, stage, component);
     }
 
     /**
@@ -412,15 +408,15 @@ public class RepoCloudFIleInstallService {
      * @param version
      * @param component
      */
-    public void deletePackageFile(String modelType, String modelName, String modelVersion, String version, String stage, String component) {
+    public void deletePackageFile(String modelType, String modelName, String version, String stage, String component) {
         try {
             // 简单验证
-            if (MethodUtils.hasEmpty(modelType, modelName, modelVersion, version, component)) {
-                throw new ServiceException("参数不能为空: modelType, modelName, modelVersion, version, component");
+            if (MethodUtils.hasEmpty(modelType, modelName, version, component)) {
+                throw new ServiceException("参数不能为空: modelType, modelName, version, component");
             }
 
             String modelNameDir = this.pathNameService.getPathName4LocalRepo2modelName(modelType, modelName);
-            String modelVersionDir = modelNameDir + "/" + modelVersion;
+            String modelVersionDir = modelNameDir;
             String packageDir = modelVersionDir + "/" + version;
 
             packageDir = FileNameUtils.getOsFilePath(packageDir);
@@ -439,8 +435,8 @@ public class RepoCloudFIleInstallService {
             this.deleteEmptyDir(modelNameDir);
 
             // 将状态保存起来
-            this.installStatus.scanLocalStatus(modelType, modelName, modelVersion, version, stage, component);
-            this.installStatus.scanLocalMd5(modelType, modelName, modelVersion, version, stage, component);
+            this.installStatus.scanLocalStatus(modelType, modelName, version, stage, component);
+            this.installStatus.scanLocalMd5(modelType, modelName, version, stage, component);
         } catch (Exception e) {
             throw new ServiceException(e.getMessage());
         }
@@ -449,22 +445,21 @@ public class RepoCloudFIleInstallService {
     /**
      * 安装模块
      *
-     * @param modelType    模块类型
-     * @param modelName    模块名称
-     * @param modelVersion 模块版本
-     * @param version      jar版本
-     * @param stage        发布状态
-     * @param component    组件类型
+     * @param modelType 模块类型
+     * @param modelName 模块名称
+     * @param version   jar版本
+     * @param stage     发布状态
+     * @param component 组件类型
      */
-    public void installFile(String modelType, String modelName, String modelVersion, String version, String stage, String component) {
+    public void installFile(String modelType, String modelName, String version, String stage, String component) {
         try {
             // 简单验证
-            if (MethodUtils.hasEmpty(modelType, modelName, modelVersion, version, stage, component)) {
-                throw new ServiceException("参数不能为空:modelType, modelName, modelVersion, version, stage, component");
+            if (MethodUtils.hasEmpty(modelType, modelName, version, stage, component)) {
+                throw new ServiceException("参数不能为空:modelType, modelName, version, stage, component");
             }
 
             File file = new File("");
-            String tarDir = this.pathNameService.getPathName4LocalRepo2tar(modelType, modelName, modelVersion, version, stage, component);
+            String tarDir = this.pathNameService.getPathName4LocalRepo2tar(modelType, modelName, version, stage, component);
 
             // 备份目标文件，然后将解压文件复制复制到目标目录
             if (modelType.equals(RepoCompConstant.repository_type_decoder)) {
@@ -475,12 +470,12 @@ public class RepoCloudFIleInstallService {
                 this.jarConfigService.updateConfig(jarFileName, true);
             }
             if (modelType.equals(RepoCompConstant.repository_type_template)) {
-                this.installTemplateFile(tarDir, file.getAbsolutePath() + "/template/" + modelName + "/" + modelVersion);
+                this.installTemplateFile(tarDir, file.getAbsolutePath() + "/template/" + modelName);
             }
             if (modelType.equals(RepoCompConstant.repository_type_service)) {
                 if (ServiceVOFieldConstant.field_type_kernel.equals(component) || ServiceVOFieldConstant.field_type_system.equals(component) || ServiceVOFieldConstant.field_type_service.equals(component)) {
                     // 安装文件
-                    this.installServiceFile(modelName, modelVersion, component, version, stage);
+                    this.installServiceFile(modelName, component, version, stage);
 
                     // 扫描service.conf文件信息，并注册为组件信息
                     this.appService.updateRepoCompEntity(component, modelName);
@@ -493,15 +488,15 @@ public class RepoCloudFIleInstallService {
             }
 
             // 安装某个文件版本后，其他文件版本的状态，都会联动变化，所以要扫描整个大版本
-            List<Map<String, Object>> versions = this.pathNameService.findRepoLocalModel(modelType, modelName, modelVersion);
+            List<Map<String, Object>> versions = this.pathNameService.findRepoLocalModel(modelType, modelName);
             for (Map<String, Object> map : versions) {
                 String subVersion = (String) map.get(RepoCompConstant.filed_version);
                 String subStage = (String) map.get(RepoCompConstant.filed_stage);
                 String subComponent = (String) map.get(RepoCompConstant.filed_component);
 
                 // 将状态保存起来
-                this.installStatus.scanLocalStatus(modelType, modelName, modelVersion, subVersion, subStage, subComponent);
-                this.installStatus.scanLocalMd5(modelType, modelName, modelVersion, subVersion, subStage, subComponent);
+                this.installStatus.scanLocalStatus(modelType, modelName, subVersion, subStage, subComponent);
+                this.installStatus.scanLocalMd5(modelType, modelName, subVersion, subStage, subComponent);
             }
 
         } catch (Exception e) {
@@ -613,7 +608,7 @@ public class RepoCloudFIleInstallService {
      * @throws IOException          异常信息
      * @throws InterruptedException 异常信息
      */
-    private void installServiceFile(String modelName, String modelVersion, String component, String version, String stage) throws IOException, InterruptedException {
+    private void installServiceFile(String modelName, String component, String version, String stage) throws IOException, InterruptedException {
         // 管理服务默认固定9000端口，其他服务按动态端口分配
         Integer serverPort = ServiceVOFieldConstant.field_port_gateway;
         if (!ServiceVOFieldConstant.field_app_gateway.equals(modelName) || !ServiceVOFieldConstant.field_type_kernel.equals(component)) {
@@ -621,7 +616,7 @@ public class RepoCloudFIleInstallService {
         }
 
         File file = new File("");
-        ShellUtils.executeShell(file.getAbsolutePath() + "/shell/upgrade.sh " + component + " " + modelName + " " + modelVersion + " " + version + " " + stage + " " + serverPort);
+        ShellUtils.executeShell(file.getAbsolutePath() + "/shell/upgrade.sh " + component + " " + modelName + " " + version + " " + stage + " " + serverPort);
     }
 
     private void installWebpackFile(String installFileDir, String destFileDir) throws IOException, InterruptedException {
@@ -701,8 +696,8 @@ public class RepoCloudFIleInstallService {
             for (String stage : stages.keySet()) {
                 Map<String, Object> components = (Map<String, Object>) stages.get(stage);
                 for (String component : components.keySet()) {
-                    this.installStatus.scanLocalStatus(RepoCompConstant.repository_type_service, appName, RepoCompConstant.filed_value_model_version_default, version, stage, component);
-                    this.installStatus.scanLocalMd5(RepoCompConstant.repository_type_service, appName, RepoCompConstant.filed_value_model_version_default, version, stage, component);
+                    this.installStatus.scanLocalStatus(RepoCompConstant.repository_type_service, appName, version, stage, component);
+                    this.installStatus.scanLocalMd5(RepoCompConstant.repository_type_service, appName, version, stage, component);
                 }
             }
         }

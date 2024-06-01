@@ -95,7 +95,7 @@ public abstract class BaseEntity implements Serializable {
     public abstract Object makeWrapperKey();
 
     public BaseEntity build(Map<String, Object> map) {
-        throw new ServiceException("未重载BaseEntity build(Map<String,Object> map)函数");
+        throw new ServiceException(this.getClass().getSimpleName() + "未重载BaseEntity build(Map<String,Object> map)函数");
     }
 
     private boolean equals(Object a, Object b) {

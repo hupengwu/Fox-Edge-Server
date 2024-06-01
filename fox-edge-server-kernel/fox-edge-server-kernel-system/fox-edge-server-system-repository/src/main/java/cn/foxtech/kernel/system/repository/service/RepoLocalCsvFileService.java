@@ -60,11 +60,6 @@ public class RepoLocalCsvFileService {
             throw new ServiceException("找不到对应的模块名称:" + modelName);
         }
 
-        String modelVersion = (String) compEntity.getCompParam().get(RepoCompConstant.filed_model_version);
-        if (MethodUtils.hasEmpty(modelVersion)) {
-            throw new ServiceException("找不到对应的模块版本:" + modelVersion);
-        }
-
         String version = (String) compEntity.getCompParam().get(RepoCompConstant.filed_version);
         if (MethodUtils.hasEmpty(version)) {
             throw new ServiceException("找不到对应的版本:" + version);
@@ -74,14 +69,10 @@ public class RepoLocalCsvFileService {
         String deviceType = (String) compEntity.getCompParam().get(OperateVOFieldConstant.field_device_type);
 
 
-        List<Map<String, Object>> resultList = this.queryTemplateFileList(modelName, modelVersion);
+        List<Map<String, Object>> resultList = this.queryTemplateFileList(modelName);
         for (Map<String, Object> map : resultList) {
             if (modelName != null) {
                 map.put(RepoCompConstant.filed_model_name, modelName);
-            }
-
-            if (modelVersion != null) {
-                map.put(RepoCompConstant.filed_model_version, modelVersion);
             }
 
             if (version != null) {
@@ -112,14 +103,12 @@ public class RepoLocalCsvFileService {
         }
 
         String modelName = (String) compEntity.getCompParam().get(RepoCompConstant.filed_model_name);
-        String modelVersion = (String) compEntity.getCompParam().get(RepoCompConstant.filed_model_version);
         String version = (String) compEntity.getCompParam().get(RepoCompConstant.filed_version);
-        if (MethodUtils.hasEmpty(modelName, modelVersion, version)) {
-            throw new ServiceException("找不到对应的模块信息: modelName, modelVersion, version");
+        if (MethodUtils.hasEmpty(modelName, version)) {
+            throw new ServiceException("找不到对应的模块信息: modelName, version");
         }
 
-
-        return "template/" + modelName + "/" + modelVersion + "/" + version;
+        return "template/" + modelName + "/" + version;
     }
 
     public void deleteFileTemplate(Long compId, String fileName) {
@@ -132,12 +121,12 @@ public class RepoLocalCsvFileService {
         delete.delete();
     }
 
-    private List<Map<String, Object>> queryTemplateFileList(String modelName, String modelVersion) {
+    private List<Map<String, Object>> queryTemplateFileList(String modelName) {
         List<Map<String, Object>> result = new ArrayList<>();
 
         File file = new File("");
 
-        File templateDir = new File(file.getAbsolutePath() + "/template/" + modelName + "/" + modelVersion);
+        File templateDir = new File(file.getAbsolutePath() + "/template/" + modelName);
         if (!templateDir.exists() || !templateDir.isDirectory()) {
             return result;
         }
@@ -201,7 +190,6 @@ public class RepoLocalCsvFileService {
         Map<String, Object> data = new HashMap<>();
 
         data.put(RepoCompConstant.filed_model_name, modelName);
-        data.put(RepoCompConstant.filed_model_version, modelVer);
         data.put(RepoCompConstant.filed_version, version);
         data.put(RepoCompConstant.filed_component, RepoCompConstant.repository_type_template);
         data.put("fileName", childFile.getName());

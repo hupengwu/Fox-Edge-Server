@@ -72,7 +72,7 @@ public class RedisTopicSuberService extends RedisTopicSubscriber {
         try {
             TaskRespondVO taskRespondVO = JsonUtils.buildObject(message, TaskRespondVO.class);
             if (!MethodUtils.hasEmpty(taskRespondVO.getUuid())) {
-                SyncFlagObjectMap.inst().notifyDynamic(taskRespondVO.getUuid(), message);
+                SyncFlagObjectMap.inst().notifyDynamic(taskRespondVO.getUuid(), taskRespondVO);
             }
             return;
         } catch (Exception e) {

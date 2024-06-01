@@ -15,6 +15,7 @@ import cn.foxtech.common.utils.redis.topic.service.RedisTopicPublisher;
 import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
+import cn.foxtech.device.domain.vo.TaskRespondVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -99,55 +100,7 @@ public class RedisTopicService {
 
 
         // 发送数据
-        this.publisher.sendMessage(RedisTopicConstant.topic_channel_request + channelType, JsonUtils.buildJson(requestVO));
-
-
-        // 等待消息的到达：根据动态key
-        ChannelRespondVO respond = (ChannelRespondVO) SyncFlagObjectMap.inst().waitDynamic(key, timeout + extra_timeout_channel);
-        if (respond == null) {
-            throw new ServiceException("设备响应超时！");
-        }
-
-        return respond;
-    }
-
-    public Object executeChannel1(Map<String, Object> request) throws InterruptedException, IOException {
-        // 摒弃多余的参数：channelType
-        String channelType = (String) request.remove(ChannelVOFieldConstant.field_channel_type);
-
-
-        // 检查：参数是否为空
-        if (MethodUtils.hasEmpty(channelType)) {
-            throw new ServiceException("参数缺失：channelType");
-        }
-
-        // 检查：目标服务是否已经启动
-        if (!this.serviceStatus.isActive(RedisStatusConstant.value_model_type_channel, channelType, 60 * 1000)) {
-            throw new ServiceException("Channel服务尚未运行：" + channelType);
-        }
-
-        Integer timeout = (Integer) request.get(DeviceMethodVOFieldConstant.field_timeout);
-
-        //填写UUID，从众多方便返回的数据中，识别出来对应的返回报文
-        String key = (String) request.get(DeviceMethodVOFieldConstant.field_uuid);
-        if (MethodUtils.hasEmpty(key)) {
-            key = UUID.randomUUID().toString().replace("-", "");
-            request.put(DeviceMethodVOFieldConstant.field_uuid, key);
-        }
-
-        // 要求channel服务把数据发挥到这个topic之中
-        String route = (String) request.get(DeviceMethodVOFieldConstant.field_route);
-        if (MethodUtils.hasEmpty(route)) {
-            request.put(DeviceMethodVOFieldConstant.field_route, RedisTopicConstant.topic_channel_respond + RedisTopicConstant.model_manager);
-        }
-
-
-        // 重置信号
-        SyncFlagObjectMap.inst().reset(key);
-
-
-        // 发送数据
-        this.publisher.sendMessage(RedisTopicConstant.topic_channel_request + channelType, JsonUtils.buildJson(request));
+        this.publisher.sendMessage(RedisTopicConstant.topic_channel_request + channelType, requestVO);
 
 
         // 等待消息的到达：根据动态key
@@ -178,23 +131,19 @@ public class RedisTopicService {
             request.put(DeviceMethodVOFieldConstant.field_uuid, key);
         }
 
-        // 重新打包数据
-        String body = JsonUtils.buildJson(request);
-
-
         // 重置信号
         SyncFlagObjectMap.inst().reset(key);
 
         // 发送数据
-        publisher.sendMessage(RedisTopicConstant.topic_device_request + RedisTopicConstant.model_public, body);
+        this.publisher.sendMessage(RedisTopicConstant.topic_device_request + RedisTopicConstant.model_public, request);
 
         // 等待消息的到达：根据动态key
-        String respond = (String) SyncFlagObjectMap.inst().waitDynamic(key, timeout + extra_timeout_device);
+        TaskRespondVO respond = (TaskRespondVO) SyncFlagObjectMap.inst().waitDynamic(key, timeout + extra_timeout_device);
         if (respond == null) {
             throw new ServiceException("设备响应超时！");
         }
 
-        return JsonUtils.buildObject(respond, Map.class);
+        return respond;
     }
 
 }

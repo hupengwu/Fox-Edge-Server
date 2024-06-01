@@ -29,7 +29,7 @@ public class DownLoadUtil {
         //得到输入流
         InputStream inputStream = conn.getInputStream();
         //获取自己数组
-        byte[] getData = readInputStream(inputStream);
+        ByteArrayOutputStream bos = readInputStream(inputStream);
 
         //文件保存位置
         File saveDir = new File(savePath);
@@ -38,8 +38,9 @@ public class DownLoadUtil {
         }
         File file = new File(saveDir + File.separator + fileName);
         FileOutputStream fos = new FileOutputStream(file);
-        fos.write(getData);
+        fos.write(bos.toByteArray());
         fos.close();
+        bos.close();
         inputStream.close();
     }
 
@@ -51,15 +52,14 @@ public class DownLoadUtil {
      * @return
      * @throws IOException
      */
-    private static byte[] readInputStream(InputStream inputStream) throws IOException {
+    private static ByteArrayOutputStream readInputStream(InputStream inputStream) throws IOException {
         byte[] buffer = new byte[1024];
         int len = 0;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         while ((len = inputStream.read(buffer)) != -1) {
             bos.write(buffer, 0, len);
         }
-        bos.close();
-        return bos.toByteArray();
+        return bos;
     }
 
     public static void main(String[] args) throws IOException {

@@ -2,7 +2,6 @@ package cn.foxtech.kernel.system.common.service;
 
 import cn.foxtech.common.domain.constant.RedisTopicConstant;
 import cn.foxtech.common.domain.vo.RestFulRequestVO;
-import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.redis.topic.service.RedisTopicPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +73,7 @@ public class GateWayRouteService {
         restFulRequestVO.setData(body);
         restFulRequestVO.setUuid(UUID.randomUUID().toString());
 
-        this.publisher.sendMessage(RedisTopicConstant.topic_gateway_request, JsonUtils.buildJsonWithoutException(restFulRequestVO));
+        this.publisher.sendMessage(RedisTopicConstant.topic_gateway_request, restFulRequestVO);
     }
 
     public void updateRouter(String appName, String appType, Integer port) {
@@ -91,11 +90,11 @@ public class GateWayRouteService {
         restFulRequestVO.setData(body);
         restFulRequestVO.setUuid(UUID.randomUUID().toString());
 
-        this.publisher.sendMessage(RedisTopicConstant.topic_gateway_request, JsonUtils.buildJsonWithoutException(restFulRequestVO));
+        this.publisher.sendMessage(RedisTopicConstant.topic_gateway_request, restFulRequestVO);
     }
 
     public void unregisterRouter(String appName, String appType) {
-        String id = this.buildId(appName,appType);
+        String id = this.buildId(appName, appType);
         this.unregisterRouter(id);
     }
 
@@ -114,6 +113,6 @@ public class GateWayRouteService {
         restFulRequestVO.setData(body);
         restFulRequestVO.setUuid(UUID.randomUUID().toString());
 
-        this.publisher.sendMessage(RedisTopicConstant.topic_gateway_request, JsonUtils.buildJsonWithoutException(restFulRequestVO));
+        this.publisher.sendMessage(RedisTopicConstant.topic_gateway_request, restFulRequestVO);
     }
 }

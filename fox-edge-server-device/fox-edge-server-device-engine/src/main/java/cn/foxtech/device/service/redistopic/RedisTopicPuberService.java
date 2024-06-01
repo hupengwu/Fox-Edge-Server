@@ -3,7 +3,6 @@ package cn.foxtech.device.service.redistopic;
 import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.common.domain.constant.RedisTopicConstant;
-import cn.foxtech.common.domain.vo.RestFulRequestVO;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.redis.topic.service.RedisTopicPublisher;
 import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
@@ -52,9 +51,6 @@ public class RedisTopicPuberService {
             requestVO.setUuid(UUID.randomUUID().toString().replace("-", ""));
         }
 
-        // 重新打包
-        String body = JsonUtils.buildJson(requestVO);
-
         // 通道类型所属的topic
         String topic = RedisTopicConstant.topic_channel_request + requestVO.getType();
 
@@ -63,38 +59,32 @@ public class RedisTopicPuberService {
         SyncFlagObjectMap.inst().reset(key);
 
         // 发送数据
-        this.publisher.sendMessage(topic, body);
+        this.publisher.sendMessage(topic, requestVO);
 
         // 等待消息的到达：根据动态key
-        String respond = (String) SyncFlagObjectMap.inst().waitDynamic(key, requestVO.getTimeout() + TIMEOUT_CHANNEL);
+        ChannelRespondVO respond = (ChannelRespondVO) SyncFlagObjectMap.inst().waitDynamic(key, requestVO.getTimeout() + TIMEOUT_CHANNEL);
         if (respond == null) {
             throw new TimeoutException("通道服务响应超时：" + requestVO.getType());
         }
 
-        return JsonUtils.buildObject(respond, ChannelRespondVO.class);
+        return respond;
     }
 
     /**
      * 将设备主动上报的报文，发送给topic_device_respond_public
      */
     public void sendReportVO(TaskRespondVO taskRespondVO) {
-        // 重新打包
-        String body = JsonUtils.buildJsonWithoutException(taskRespondVO);
-
         // 统一发到public
         String topic = RedisTopicConstant.topic_device_respond + RedisTopicConstant.model_public;
 
         // 发送数据
-        this.publisher.sendMessage(topic, body);
+        this.publisher.sendMessage(topic, taskRespondVO);
     }
 
     /**
      * 将设备响应的报文，发送回客户端：topic_device_respond_XXXX
      */
     public void sendRespondVO(TaskRespondVO taskRespondVO) {
-        // 重新打包
-        String body = JsonUtils.buildJsonWithoutException(taskRespondVO);
-
         // 如果没填具体的model名称，那么统一发到public那边去
         String model = taskRespondVO.getClientName();
         if (model == null) {
@@ -103,19 +93,8 @@ public class RedisTopicPuberService {
         String topic = RedisTopicConstant.topic_device_respond + model;
 
         // 发送数据
-        this.publisher.sendMessage(topic, body);
+        this.publisher.sendMessage(topic, taskRespondVO);
     }
-
-    public void sendRestFulRequestVO(RestFulRequestVO restFulRequestVO) {
-        // 重新打包
-        String body = JsonUtils.buildJsonWithoutException(restFulRequestVO);
-
-        String topic = RedisTopicConstant.topic_manager_request + RedisTopicConstant.model_public;
-
-        // 发送数据
-        this.publisher.sendMessage(topic, body);
-    }
-
 
     public void sendOperateRespondVO(TaskRespondVO taskRespondVO) {
         try {

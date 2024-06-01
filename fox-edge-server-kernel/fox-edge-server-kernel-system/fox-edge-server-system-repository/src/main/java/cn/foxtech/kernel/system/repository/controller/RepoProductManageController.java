@@ -82,14 +82,13 @@ public class RepoProductManageController {
             // 提取业务参数
             String modelName = (String) comp.get(RepoCompConstant.filed_model_name);
             String modelType = (String) comp.get(RepoCompConstant.filed_model_type);
-            String modelVersion = (String) comp.get(RepoCompConstant.filed_model_version);
 
             // 取出最新的文件版本信息
             Map<String, Object> lastVersion = (Map<String, Object>) comp.get(RepoCompConstant.filed_last_version);
             List<Map<String, Object>> versions = (List<Map<String, Object>>) comp.get(RepoCompConstant.filed_versions);
 
             // 立即扫描本地仓库中的组件状态，并将状态保存到缓存
-            this.installService.scanLocalStatusAndMd5(modelType, modelName, modelVersion, lastVersion, versions);
+            this.installService.scanLocalStatusAndMd5(modelType, modelName, lastVersion, versions);
 
             // 取出缓存中获得的扫描状态，并更新到组件之中
             this.installService.extendLocalStatus(comp);
@@ -103,7 +102,6 @@ public class RepoProductManageController {
         // 提取业务参数
         String modelName = (String) comp.get(RepoCompConstant.filed_model_name);
         String modelType = (String) comp.get(RepoCompConstant.filed_model_type);
-        String modelVersion = (String) comp.get(RepoCompConstant.filed_model_version);
 
         Map<String, Object> usedVersion = (Map<String, Object>) comp.get(RepoCompConstant.filed_used_version);
         if (usedVersion != null) {
@@ -114,7 +112,7 @@ public class RepoProductManageController {
         usedVersion.put(RepoCompConstant.filed_version, "unknown");
 
         // 扫描已经安装的模块状态
-        Map<String, Object> modelStatus = this.installService.scanModelStatus(modelType, modelName, modelVersion);
+        Map<String, Object> modelStatus = this.installService.scanModelStatus(modelType, modelName);
         if (!MethodUtils.hasEmpty(modelStatus)) {
             usedVersion.put(RepoCompConstant.filed_version, modelStatus.get(RepoCompConstant.filed_version));
             usedVersion.put(RepoCompConstant.filed_status, RepoStatusConstant.status_installed);
@@ -134,17 +132,15 @@ public class RepoProductManageController {
             // 提取业务参数
             String modelName = (String) comp.get(RepoCompConstant.filed_model_name);
             String modelType = (String) comp.get(RepoCompConstant.filed_model_type);
-            String modelVersion = (String) comp.get(RepoCompConstant.filed_model_version);
-
 
             // 检查参数是否为空
-            if (MethodUtils.hasEmpty(modelName, modelType, modelVersion)) {
+            if (MethodUtils.hasEmpty(modelName, modelType)) {
                 continue;
             }
 
             // 场景1：解码器的处理
             if (RepoCompConstant.repository_type_decoder.equals(modelType)) {
-                String jarFileName = modelName + "." + modelVersion + ".jar";
+                String jarFileName = modelName + ".jar";
                 comp.put("load", loads.contains(jarFileName));
 
 

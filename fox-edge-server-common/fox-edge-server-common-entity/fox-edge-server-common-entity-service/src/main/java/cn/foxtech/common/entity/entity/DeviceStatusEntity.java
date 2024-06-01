@@ -1,11 +1,15 @@
 package cn.foxtech.common.entity.entity;
 
 
+import cn.foxtech.common.utils.number.NumberUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 @Getter(value = AccessLevel.PUBLIC)
@@ -71,5 +75,26 @@ public class DeviceStatusEntity extends BaseEntity {
         this.commSuccessTime = other.commSuccessTime;
         this.commFailedTime = other.commFailedTime;
         this.commFailedCount = other.commFailedCount;
+    }
+
+    public BaseEntity build(Map<String, Object> map) {
+        try {
+            if (map == null || map.isEmpty()) {
+                return null;
+            }
+
+            DeviceStatusEntity entity = new DeviceStatusEntity();
+            entity.setId(NumberUtils.makeLong(map.get("id")));
+            entity.setCreateTime(NumberUtils.makeLong(map.get("createTime")));
+            entity.setUpdateTime(NumberUtils.makeLong(map.get("updateTime")));
+
+            entity.setCommFailedCount(NumberUtils.makeInteger(map.getOrDefault("commFailedCount", 0)));
+            entity.setCommSuccessTime(NumberUtils.makeLong(map.getOrDefault("commSuccessTime", 0L)));
+            entity.setCommFailedTime(NumberUtils.makeLong(map.getOrDefault("commFailedTime", 0L)));
+
+            return entity;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

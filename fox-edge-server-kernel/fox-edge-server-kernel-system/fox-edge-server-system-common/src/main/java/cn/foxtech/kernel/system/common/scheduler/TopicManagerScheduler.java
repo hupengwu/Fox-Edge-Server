@@ -5,7 +5,6 @@ import cn.foxtech.common.domain.constant.RedisTopicConstant;
 import cn.foxtech.common.domain.constant.RestFulManagerVOConstant;
 import cn.foxtech.common.domain.vo.RestFulRequestVO;
 import cn.foxtech.common.domain.vo.RestFulRespondVO;
-import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.redis.topic.service.RedisTopicPublisher;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
@@ -17,7 +16,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -55,7 +53,7 @@ public class TopicManagerScheduler extends PeriodTaskService {
             RestFulRespondVO respondVO = this.execute(requestVO);
 
             // 返回数据
-            this.publisher.sendMessage(this.pubTopic, JsonUtils.buildJsonWithoutException(respondVO));
+            this.publisher.sendMessage(this.pubTopic, respondVO);
         }
     }
 

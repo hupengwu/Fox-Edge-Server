@@ -149,22 +149,21 @@ public class RepoCloudCompController {
                 // 提取业务参数
                 String modelType = (String) map.get(RepoCompConstant.filed_model_type);
                 String modelName = (String) map.get(RepoCompConstant.filed_model_name);
-                String modelVersion = (String) map.get(RepoCompConstant.filed_model_version);
                 String version = (String) map.get(RepoCompConstant.filed_version);
                 String stage = (String) map.get(RepoCompConstant.filed_stage);
                 String pathName = (String) map.get(RepoCompConstant.filed_path_name);
                 String component = (String) map.get(RepoCompConstant.filed_component);
 
                 // 简单验证
-                if (MethodUtils.hasEmpty(modelType, modelName, modelVersion, version, stage, pathName, component)) {
-                    throw new ServiceException("参数不能为空: modelType, modelName, modelVersion, version, stage, pathName, component");
+                if (MethodUtils.hasEmpty(modelType, modelName, version, stage, pathName, component)) {
+                    throw new ServiceException("参数不能为空: modelType, modelName, version, stage, pathName, component");
                 }
 
-                if (!this.installService.testUrlFileCanBeOpen(modelType, modelName, modelVersion, version, pathName)) {
+                if (!this.installService.testUrlFileCanBeOpen(modelType, modelName, version, pathName)) {
                     throw new ServiceException("Fox-Cloud上文件无法下载，请联系该模块的发布者!");
                 }
 
-                this.periodTasksScheduler.insertPeriodTask(new RepoDownLoadTask(this.installService, this.installStatus, modelType, modelName, modelVersion, version, stage, pathName, component));
+                this.periodTasksScheduler.insertPeriodTask(new RepoDownLoadTask(this.installService, this.installStatus, modelType, modelName, version, stage, pathName, component));
             }
 
             return AjaxResult.success();
@@ -201,21 +200,20 @@ public class RepoCloudCompController {
             // 提取业务参数
             String modelType = (String) body.get(RepoCompConstant.filed_model_type);
             String modelName = (String) body.get(RepoCompConstant.filed_model_name);
-            String modelVersion = (String) body.get(RepoCompConstant.filed_model_version);
             String version = (String) body.get(RepoCompConstant.filed_version);
             String stage = (String) body.get(RepoCompConstant.filed_stage);
             String component = (String) body.get(RepoCompConstant.filed_component);
 
             // 简单验证
-            if (MethodUtils.hasEmpty(modelType, modelName, modelVersion, version, stage, component)) {
-                throw new ServiceException("参数不能为空: modelType, modelName, modelVersion, version, stage, component");
+            if (MethodUtils.hasEmpty(modelType, modelName, version, stage, component)) {
+                throw new ServiceException("参数不能为空: modelType, modelName, version, stage, component");
             }
 
             // 创建所属的组件实体
-            this.installService.insertRepoCompEntity(modelType, modelName, modelVersion);
+            this.installService.insertRepoCompEntity(modelType, modelName);
 
             // 安装文件组件
-            this.installService.installFile(modelType, modelName, modelVersion, version, stage, component);
+            this.installService.installFile(modelType, modelName, version, stage, component);
 
 
             return AjaxResult.success();
@@ -241,17 +239,16 @@ public class RepoCloudCompController {
                 // 提取业务参数
                 String modelType = (String) map.get(RepoCompConstant.filed_model_type);
                 String modelName = (String) map.get(RepoCompConstant.filed_model_name);
-                String modelVersion = (String) map.get(RepoCompConstant.filed_model_version);
                 String version = (String) map.get(RepoCompConstant.filed_version);
                 String stage = (String) map.get(RepoCompConstant.filed_stage);
                 String component = (String) map.get(RepoCompConstant.filed_component);
 
                 // 简单验证
-                if (MethodUtils.hasEmpty(modelType, modelName, modelVersion, version, stage, component)) {
-                    throw new ServiceException("参数不能为空: modelType, modelName, modelVersion, version, stage, component");
+                if (MethodUtils.hasEmpty(modelType, modelName, version, stage, component)) {
+                    throw new ServiceException("参数不能为空: modelType, modelName, version, stage, component");
                 }
 
-                this.installService.deletePackageFile(modelType, modelName, modelVersion, version, stage, component);
+                this.installService.deletePackageFile(modelType, modelName, version, stage, component);
             }
 
             return AjaxResult.success();
