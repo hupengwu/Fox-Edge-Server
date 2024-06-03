@@ -83,6 +83,9 @@ public class RepoCloudFIleInstallService {
     private RepoLocalApplicationService appService;
 
     @Autowired
+    private RepoLocalAppLoadService appLoadService;
+
+    @Autowired
     private RepoCloudRemoteService cloudRemoteService;
 
     @Autowired
@@ -479,6 +482,9 @@ public class RepoCloudFIleInstallService {
 
                     // 扫描service.conf文件信息，并注册为组件信息
                     this.appService.updateRepoCompEntity(component, modelName);
+
+                    // 配置为随机启动
+                    this.appLoadService.saveServiceLoad(modelName, component, true);
                 } else {
                     throw new ServiceException("component必须为service或者system或者kernel!");
                 }

@@ -94,7 +94,8 @@ public class CollectorExchangeService extends PeriodTaskService {
             if (!this.testLastTime(timeInterval, lastTime)) {
                 continue;
             }
-            this.lastTimeMap.put(taskEntity.getTemplateName(), System.currentTimeMillis());
+            long startTime = System.currentTimeMillis();
+            this.lastTimeMap.put(taskEntity.getTemplateName(), startTime);
 
             // 组织跟该任务相关的设备ID
             List<Object> deviceIds = taskEntity.getDeviceIds();
@@ -102,7 +103,8 @@ public class CollectorExchangeService extends PeriodTaskService {
                 continue;
             }
 
-            for (Object objectId : deviceIds) {
+            for (int index = 0; index < deviceIds.size(); index++) {
+                Object objectId = deviceIds.get(index);
                 Long deviceId = NumberUtils.makeLong(objectId);
                 if (deviceId == null) {
                     continue;
@@ -114,7 +116,7 @@ public class CollectorExchangeService extends PeriodTaskService {
                 }
 
                 // 均摊CPU的损耗
-                this.sleep(timeInterval, deviceIds.size());
+                this.sleep(startTime, timeInterval, deviceIds.size(), index);
 
                 // 执行任务
                 this.executeTask(deviceEntity, taskEntity);
@@ -205,9 +207,9 @@ public class CollectorExchangeService extends PeriodTaskService {
      * @param deviceCount
      * @throws InterruptedException
      */
-    private void sleep(long timeInterval, int deviceCount) throws InterruptedException {
+    private void sleep(long startTime, long timeInterval, int deviceCount, int index) throws InterruptedException {
         boolean average = false;
-        ConfigEntity configEntity = this.entityManageService.getConfigEntity(this.foxServiceName, this.foxServiceType, "devicePollingConfig");
+        ConfigEntity configEntity = this.entityManageService.getConfigEntity(this.foxServiceName, this.foxServiceType, "serverConfig");
         if (configEntity != null && configEntity.getConfigValue().containsKey("average")) {
             average = (Boolean) configEntity.getConfigValue().get("average");
         }
@@ -216,14 +218,12 @@ public class CollectorExchangeService extends PeriodTaskService {
             return;
         }
 
-        // 太短的sleep，没啥意义
-        long sleep = timeInterval / deviceCount - 1;
-        if (sleep < 5) {
-            return;
+        // 检查：是否需要休眠
+        long step = System.currentTimeMillis() - startTime;
+        long unit = timeInterval / deviceCount;
+        if (step < index * unit) {
+            Thread.sleep(unit);
         }
-
-        // 均摊CPU的损耗
-        Thread.sleep(sleep);
     }
 
     private boolean testLastTime(long timeInterval, long lastTime) {

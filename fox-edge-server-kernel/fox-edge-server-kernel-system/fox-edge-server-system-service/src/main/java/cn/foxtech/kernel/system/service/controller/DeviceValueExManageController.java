@@ -136,6 +136,8 @@ public class DeviceValueExManageController {
         List<Map<String, Object>> list = new ArrayList<>();
         result.put("list", list);
 
+        Long time = System.currentTimeMillis();
+
         int index = 0;
         for (Map<String, Object> map : mapList) {
             Map<String, DeviceObjectValue> params = (Map<String, DeviceObjectValue>) map.get(DeviceValueExVOFieldConstant.field_params);
@@ -178,7 +180,7 @@ public class DeviceValueExManageController {
                 data.put(DeviceValueExVOFieldConstant.field_id, map.get(DeviceValueExVOFieldConstant.field_id));
 
                 data.put(DeviceValueExVOFieldConstant.field_object_name, key);
-                data.put(DeviceValueExVOFieldConstant.field_object_time, value.get("time"));
+                data.put(DeviceValueExVOFieldConstant.field_object_time, (time - NumberUtils.makeLong(value.get("time"))) / 1000);
                 data.put(DeviceValueExVOFieldConstant.field_object_value, value.get("value"));
 
                 list.add(data);
