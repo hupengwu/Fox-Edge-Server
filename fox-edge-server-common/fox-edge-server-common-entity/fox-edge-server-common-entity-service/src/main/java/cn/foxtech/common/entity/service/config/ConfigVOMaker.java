@@ -85,9 +85,9 @@ public class ConfigVOMaker {
         for (BaseEntity base : entityList) {
             // 利用JSON转换的过程，深度clone一个副本，避免接下来的修改操作影响到源数据
             ConfigEntity clone = (ConfigEntity) JsonUtils.clone(base);
-            result.add(clone);
-
             postProcess(clone);
+
+            result.add(clone);
         }
 
         return result;

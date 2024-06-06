@@ -148,6 +148,10 @@ public class ConfigManageController {
                     return AjaxResult.error("实体不存在");
                 }
 
+                if (Boolean.TRUE.equals(exist.getConfigParam().get("readOnly"))) {
+                    return AjaxResult.error("只读配置，不允许修改");
+                }
+
                 // configParam参数是通过脚本来刷新的，不是界面配置的
                 entity.setConfigParam(exist.getConfigParam());
 
