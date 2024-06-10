@@ -2,7 +2,7 @@ package cn.foxtech.common.entity.service.iotdevicemodel;
 
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.IotDeviceModelEntity;
-import cn.foxtech.common.entity.entity.IotIotDeviceModelPo;
+import cn.foxtech.common.entity.entity.IotDeviceModelPo;
 import cn.foxtech.common.utils.json.JsonUtils;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class IotDeviceModelEntityMaker {
     public static List<BaseEntity> makePoList2EntityList(List poList) {
         List<BaseEntity> resultList = new ArrayList<>();
         for (Object entity : poList) {
-            IotIotDeviceModelPo po = (IotIotDeviceModelPo) entity;
+            IotDeviceModelPo po = (IotDeviceModelPo) entity;
 
 
             IotDeviceModelEntity result = IotDeviceModelEntityMaker.makePo2Entity(po);
@@ -32,8 +32,8 @@ public class IotDeviceModelEntityMaker {
         return resultList;
     }
 
-    public static IotIotDeviceModelPo makeEntity2Po(IotDeviceModelEntity entity) {
-        IotIotDeviceModelPo result = new IotIotDeviceModelPo();
+    public static IotDeviceModelPo makeEntity2Po(IotDeviceModelEntity entity) {
+        IotDeviceModelPo result = new IotDeviceModelPo();
         result.bind(entity);
 
         result.setServiceParam(JsonUtils.buildJsonWithoutException(entity.getServiceParam()));
@@ -41,7 +41,7 @@ public class IotDeviceModelEntityMaker {
         return result;
     }
 
-    public static IotDeviceModelEntity makePo2Entity(IotIotDeviceModelPo entity) {
+    public static IotDeviceModelEntity makePo2Entity(IotDeviceModelPo entity) {
         IotDeviceModelEntity result = new IotDeviceModelEntity();
         result.bind(entity);
 

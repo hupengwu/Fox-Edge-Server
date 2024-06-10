@@ -10,7 +10,7 @@ import java.util.List;
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
 @TableName("tb_iot_device_model")
-public class IotIotDeviceModelPo extends IotDeviceModelBase {
+public class IotDeviceModelPo extends IotDeviceModelBase {
     /**
      * 业务参数（描述类的信息）：各厂家的各自定义，差异很大，所以用可变的json
      */
