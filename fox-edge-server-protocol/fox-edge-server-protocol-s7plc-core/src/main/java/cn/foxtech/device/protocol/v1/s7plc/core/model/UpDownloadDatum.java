@@ -1,10 +1,34 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2021-2099 Oscura (xingshuang) <xingshuang_cool@163.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package cn.foxtech.device.protocol.v1.s7plc.core.model;
 
 
 import cn.foxtech.device.protocol.v1.s7plc.core.common.buff.ByteReadBuff;
 import cn.foxtech.device.protocol.v1.s7plc.core.common.buff.ByteWriteBuff;
-import cn.foxtech.device.protocol.v1.s7plc.core.enums.EMessageType;
 import cn.foxtech.device.protocol.v1.s7plc.core.exceptions.S7CommException;
+import cn.foxtech.device.protocol.v1.s7plc.core.enums.EMessageType;
 import lombok.Data;
 
 /**
@@ -30,6 +54,20 @@ public class UpDownloadDatum extends Datum {
      */
     private byte[] data = new byte[0];
 
+    @Override
+    public int byteArrayLength() {
+        return 4 + this.data.length;
+    }
+
+    @Override
+    public byte[] toByteArray() {
+        return ByteWriteBuff.newInstance(4 + this.data.length)
+                .putShort(this.length)
+                .putShort(this.unkonwnBytes)
+                .putBytes(this.data)
+                .getData();
+    }
+
     /**
      * 字节数组数据解析
      *
@@ -52,7 +90,8 @@ public class UpDownloadDatum extends Datum {
      */
     public static UpDownloadDatum fromBytes(byte[] data, int offset, EMessageType messageType) {
         if (EMessageType.ACK_DATA != messageType) {
-            throw new S7CommException("不是响应数据");
+            // 不是响应数据
+            throw new S7CommException("Not response data");
         }
         UpDownloadDatum res = new UpDownloadDatum();
         ByteReadBuff buff = new ByteReadBuff(data, offset);
@@ -78,19 +117,5 @@ public class UpDownloadDatum extends Datum {
         res.unkonwnBytes = 0x00FB;
         res.data = data;
         return res;
-    }
-
-    @Override
-    public int byteArrayLength() {
-        return 4 + this.data.length;
-    }
-
-    @Override
-    public byte[] toByteArray() {
-        return ByteWriteBuff.newInstance(4 + this.data.length)
-                .putShort(this.length)
-                .putShort(this.unkonwnBytes)
-                .putBytes(this.data)
-                .getData();
     }
 }

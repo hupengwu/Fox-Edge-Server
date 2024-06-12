@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2021-2099 Oscura (xingshuang) <xingshuang_cool@163.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package cn.foxtech.device.protocol.v1.s7plc.core.utils;
 
 
@@ -54,10 +78,10 @@ public class AddressUtil {
      */
     public static RequestItem parse(String address, int count, EParamVariableType variableType) {
         if (address == null || address.length() == 0) {
-            throw new IllegalArgumentException("address不能为空");
+            throw new IllegalArgumentException("address is null or empty");
         }
         if (count <= 0) {
-            throw new IllegalArgumentException("count个数必须为正数");
+            throw new IllegalArgumentException("count must be positive");
         }
         // 转换为大写
         address = address.toUpperCase();
@@ -71,7 +95,8 @@ public class AddressUtil {
         item.setByteAddress(parseByteAddress(addList));
         item.setBitAddress(parseBitAddress(addList, variableType));
         if (item.getBitAddress() > 7) {
-            throw new IllegalArgumentException("address地址信息格式错误，位索引只能[0-7]");
+            // address地址信息格式错误，位索引只能[0-7]
+            throw new IllegalArgumentException("address address information format is incorrect, the bit index can only be [0-7]");
         }
         return item;
     }
@@ -99,7 +124,8 @@ public class AddressUtil {
             case "C":
                 return EArea.S7_COUNTERS;
             default:
-                throw new IllegalArgumentException("传入的参数有误，无法解析Area");
+                // 传入的参数有误，无法解析Area
+                throw new IllegalArgumentException("The parameter passed in was incorrect and the Area could not be resolved");
         }
     }
 
@@ -174,7 +200,7 @@ public class AddressUtil {
             case S7_COUNTERS:
                 return "C";
             default:
-                throw new IllegalArgumentException("不支持访问");
+                throw new IllegalArgumentException("This area is not accessible");
         }
     }
 

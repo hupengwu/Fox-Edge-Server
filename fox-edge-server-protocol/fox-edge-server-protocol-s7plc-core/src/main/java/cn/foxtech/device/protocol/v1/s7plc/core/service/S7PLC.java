@@ -1,8 +1,33 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2021-2099 Oscura (xingshuang) <xingshuang_cool@163.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package cn.foxtech.device.protocol.v1.s7plc.core.service;
 
 
 import cn.foxtech.device.protocol.v1.s7plc.core.common.buff.ByteReadBuff;
 import cn.foxtech.device.protocol.v1.s7plc.core.common.buff.ByteWriteBuff;
+import cn.foxtech.device.protocol.v1.s7plc.core.constant.GeneralConst;
 import cn.foxtech.device.protocol.v1.s7plc.core.enums.*;
 import cn.foxtech.device.protocol.v1.s7plc.core.model.DataItem;
 import cn.foxtech.device.protocol.v1.s7plc.core.model.RequestItem;
@@ -19,35 +44,30 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+
 /**
  * @author xingshuang
  */
 public class S7PLC extends PLCNetwork {
 
-    public static final int PORT = 102;
-
-    public static final int DEFAULT_PDU_LENGTH = 240;
-
-    public static final String IP = "127.0.0.1";
-
     public S7PLC() {
-        this(EPlcType.S1200, IP, PORT, 0, 1, DEFAULT_PDU_LENGTH);
+        this(EPlcType.S1200, GeneralConst.LOCALHOST, GeneralConst.S7_PORT, EPlcType.S1200.getRack(), EPlcType.S1200.getSlot(), EPlcType.S1200.getPduLength());
     }
 
     public S7PLC(EPlcType plcType) {
-        this(plcType, IP, PORT, 0, 1, DEFAULT_PDU_LENGTH);
+        this(plcType, GeneralConst.LOCALHOST, GeneralConst.S7_PORT, plcType.getRack(), plcType.getSlot(), plcType.getPduLength());
     }
 
     public S7PLC(EPlcType plcType, String ip) {
-        this(plcType, ip, PORT, 0, 1, DEFAULT_PDU_LENGTH);
+        this(plcType, ip, GeneralConst.S7_PORT, plcType.getRack(), plcType.getSlot(), plcType.getPduLength());
     }
 
     public S7PLC(EPlcType plcType, String ip, int port) {
-        this(plcType, ip, port, 0, 1, DEFAULT_PDU_LENGTH);
+        this(plcType, ip, port, plcType.getRack(), plcType.getSlot(), plcType.getPduLength());
     }
 
     public S7PLC(EPlcType plcType, String ip, int port, int rack, int slot) {
-        this(plcType, ip, port, rack, slot, DEFAULT_PDU_LENGTH);
+        this(plcType, ip, port, rack, slot, plcType.getPduLength());
     }
 
     public S7PLC(EPlcType plcType, String ip, int port, int rack, int slot, int pduLength) {
@@ -476,8 +496,7 @@ public class S7PLC extends PLCNetwork {
      * @param dataVariableType 数据变量类型
      * @param data             数据字节数组
      */
-    public void writeRaw(EParamVariableType variableType, int count, EArea area, int dbNumber, int byteAddress,
-                         int bitAddress, EDataVariableType dataVariableType, byte[] data) {
+    public void writeRaw(EParamVariableType variableType, int count, EArea area, int dbNumber, int byteAddress, int bitAddress, EDataVariableType dataVariableType, byte[] data) {
         if (count <= 0) {
             throw new IllegalArgumentException("count<=0");
         }
@@ -609,7 +628,7 @@ public class S7PLC extends PLCNetwork {
      */
     public void writeString(String address, String data) {
         if (data.length() == 0) {
-            throw new IllegalArgumentException("data字符串参数长度为0");
+            throw new IllegalArgumentException("data length == 0");
         }
         int offset = this.plcType == EPlcType.S200_SMART ? 0 : 1;
         // 填充字节长度数据
@@ -687,16 +706,7 @@ public class S7PLC extends PLCNetwork {
      * @param dateTime LocalDateTime对象
      */
     public void writeDTL(String address, LocalDateTime dateTime) {
-        byte[] data = ByteWriteBuff.newInstance(12)
-                .putShort(dateTime.getYear())
-                .putByte(dateTime.getMonthValue())
-                .putByte(dateTime.getDayOfMonth())
-                .putByte(dateTime.getDayOfWeek().getValue())
-                .putByte(dateTime.getHour())
-                .putByte(dateTime.getMinute())
-                .putByte(dateTime.getSecond())
-                .putInteger(dateTime.getNano())
-                .getData();
+        byte[] data = ByteWriteBuff.newInstance(12).putShort(dateTime.getYear()).putByte(dateTime.getMonthValue()).putByte(dateTime.getDayOfMonth()).putByte(dateTime.getDayOfWeek().getValue()).putByte(dateTime.getHour()).putByte(dateTime.getMinute()).putByte(dateTime.getSecond()).putInteger(dateTime.getNano()).getData();
         this.writeByte(address, data);
     }
 
@@ -742,8 +752,8 @@ public class S7PLC extends PLCNetwork {
     /**
      * 创建插入文件指令
      *
-     * @param blockType             块类型
-     * @param blockNumber           块编号
+     * @param blockType   块类型
+     * @param blockNumber 块编号
      */
     public void insert(EFileBlockType blockType, int blockNumber) {
         this.readFromServerByPersistence(S7Data.createInsert(blockType, blockNumber, EDestinationFileSystem.P));
@@ -845,12 +855,9 @@ public class S7PLC extends PLCNetwork {
         // 12 08 82 41 00 02 00 01 74 01
         // 12 08 82 41 00 02 00 02 74 01
         // 12 08 82 41 00 02 00 03 74 01
-        List<RequestNckItem> requestNckItems = IntStream.of(1, 2, 3, 4)
-                .mapToObj(x -> new RequestNckItem(ENckArea.C_CHANNEL, 1, 2, x, ENckModule.SMA, 1))
-                .collect(Collectors.toList());
+        List<RequestNckItem> requestNckItems = IntStream.of(1, 2, 3, 4).mapToObj(x -> new RequestNckItem(ENckArea.C_CHANNEL, 1, 2, x, ENckModule.SMA, 1)).collect(Collectors.toList());
         List<DataItem> dataItems = this.readS7NckData(requestNckItems);
-        return dataItems.stream().map(x -> ByteReadBuff.newInstance(x.getData(), true).getFloat64())
-                .collect(Collectors.toList());
+        return dataItems.stream().map(x -> ByteReadBuff.newInstance(x.getData(), true).getFloat64()).collect(Collectors.toList());
     }
 
     /**
@@ -864,12 +871,9 @@ public class S7PLC extends PLCNetwork {
         // 12 08 82 41 00 19 00 01 70 01
         // 12 08 82 41 00 19 00 02 70 01
         // 12 08 82 41 00 19 00 03 70 01
-        List<RequestNckItem> requestNckItems = IntStream.of(1, 2, 3, 4)
-                .mapToObj(x -> new RequestNckItem(ENckArea.C_CHANNEL, 1, 25, x, ENckModule.SEGA, 1))
-                .collect(Collectors.toList());
+        List<RequestNckItem> requestNckItems = IntStream.of(1, 2, 3, 4).mapToObj(x -> new RequestNckItem(ENckArea.C_CHANNEL, 1, 25, x, ENckModule.SEGA, 1)).collect(Collectors.toList());
         List<DataItem> dataItems = this.readS7NckData(requestNckItems);
-        return dataItems.stream().map(x -> ByteReadBuff.newInstance(x.getData(), true).getFloat64())
-                .collect(Collectors.toList());
+        return dataItems.stream().map(x -> ByteReadBuff.newInstance(x.getData(), true).getFloat64()).collect(Collectors.toList());
     }
 
     /**
@@ -883,12 +887,9 @@ public class S7PLC extends PLCNetwork {
         // 12 08 82 41 00 03 00 01 74 01
         // 12 08 82 41 00 03 00 02 74 01
         // 12 08 82 41 00 03 00 03 74 01
-        List<RequestNckItem> requestNckItems = IntStream.of(1, 2, 3, 4)
-                .mapToObj(x -> new RequestNckItem(ENckArea.C_CHANNEL, 1, 3, x, ENckModule.SMA, 1))
-                .collect(Collectors.toList());
+        List<RequestNckItem> requestNckItems = IntStream.of(1, 2, 3, 4).mapToObj(x -> new RequestNckItem(ENckArea.C_CHANNEL, 1, 3, x, ENckModule.SMA, 1)).collect(Collectors.toList());
         List<DataItem> dataItems = this.readS7NckData(requestNckItems);
-        return dataItems.stream().map(x -> ByteReadBuff.newInstance(x.getData(), true).getFloat64())
-                .collect(Collectors.toList());
+        return dataItems.stream().map(x -> ByteReadBuff.newInstance(x.getData(), true).getFloat64()).collect(Collectors.toList());
     }
 
     /**
@@ -902,12 +903,9 @@ public class S7PLC extends PLCNetwork {
         // 12 08 82 41 00 01 00 04 12 01
         // 12 08 82 41 00 01 00 05 12 01
         // 12 08 82 41 00 01 00 06 12 01
-        List<RequestNckItem> requestNckItems = IntStream.of(4, 5, 6)
-                .mapToObj(x -> new RequestNckItem(ENckArea.C_CHANNEL, 1, 1, x, ENckModule.FU, 1))
-                .collect(Collectors.toList());
+        List<RequestNckItem> requestNckItems = IntStream.of(4, 5, 6).mapToObj(x -> new RequestNckItem(ENckArea.C_CHANNEL, 1, 1, x, ENckModule.FU, 1)).collect(Collectors.toList());
         List<DataItem> dataItems = this.readS7NckData(requestNckItems);
-        return dataItems.stream().map(x -> ByteReadBuff.newInstance(x.getData(), true).getFloat64())
-                .collect(Collectors.toList());
+        return dataItems.stream().map(x -> ByteReadBuff.newInstance(x.getData(), true).getFloat64()).collect(Collectors.toList());
     }
 
     /**

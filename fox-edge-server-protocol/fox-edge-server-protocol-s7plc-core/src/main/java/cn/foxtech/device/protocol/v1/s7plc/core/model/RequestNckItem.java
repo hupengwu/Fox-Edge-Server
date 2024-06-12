@@ -1,9 +1,33 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2021-2099 Oscura (xingshuang) <xingshuang_cool@163.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package cn.foxtech.device.protocol.v1.s7plc.core.model;
 
 
-import cn.foxtech.device.protocol.v1.s7plc.core.enums.ENckArea;
 import cn.foxtech.device.protocol.v1.s7plc.core.common.buff.ByteReadBuff;
 import cn.foxtech.device.protocol.v1.s7plc.core.common.buff.ByteWriteBuff;
+import cn.foxtech.device.protocol.v1.s7plc.core.enums.ENckArea;
 import cn.foxtech.device.protocol.v1.s7plc.core.enums.ENckModule;
 import cn.foxtech.device.protocol.v1.s7plc.core.enums.ESyntaxID;
 import lombok.Data;
@@ -17,42 +41,6 @@ import lombok.Data;
 public class RequestNckItem extends RequestBaseItem {
 
     public static final int BYTE_LENGTH = 10;
-    /**
-     * NCK区域 <br>
-     * 字节大小：1 <br>
-     * 字节序数：3
-     */
-    private ENckArea area = ENckArea.N_NCK;
-    /**
-     * 通道编号 <br>
-     * 字节大小：1 <br>
-     * 字节序数：4
-     */
-    private int unit = 0x0000;
-    /**
-     * 列编号 <br>
-     * 字节大小：2 <br>
-     * 字节序数：5
-     */
-    private int columnNumber = 0x0000;
-    /**
-     * 行编号 <br>
-     * 字节大小：2 <br>
-     * 字节序数：7
-     */
-    private int lineNumber = 0x0000;
-    /**
-     * 模块名 <br>
-     * 字节大小：1 <br>
-     * 字节序数：8
-     */
-    private ENckModule module = ENckModule.S;
-    /**
-     * 行个数 <br>
-     * 字节大小：1 <br>
-     * 字节序数：9
-     */
-    private int lineCount = 1;
 
     public RequestNckItem() {
         this.specificationType = (byte) 0x12;
@@ -73,43 +61,47 @@ public class RequestNckItem extends RequestBaseItem {
         this.lineCount = lineCount;
     }
 
-    public static RequestNckItem fromBytes(final byte[] data) {
-        return fromBytes(data, 0);
-    }
+    /**
+     * NCK区域 <br>
+     * 字节大小：1 <br>
+     * 字节序数：3
+     */
+    private ENckArea area = ENckArea.N_NCK;
 
     /**
-     * 字节数组数据解析
-     *
-     * @param data   字节数组数据
-     * @param offset 偏移量
-     * @return RequestItem
+     * 通道编号 <br>
+     * 字节大小：1 <br>
+     * 字节序数：4
      */
-    public static RequestNckItem fromBytes(final byte[] data, final int offset) {
-        ByteReadBuff buff = new ByteReadBuff(data, offset);
-        RequestNckItem requestItem = new RequestNckItem();
-        requestItem.specificationType = buff.getByte();
-        requestItem.lengthOfFollowing = buff.getByteToInt();
-        requestItem.syntaxId = ESyntaxID.from(buff.getByte());
-        byte areaAndUnit = buff.getByte();
-        requestItem.area = ENckArea.from((byte) ((areaAndUnit & (byte) 0xE0) >> 5));
-        requestItem.unit = areaAndUnit & (byte) 0x1F;
-        requestItem.columnNumber = buff.getUInt16();
-        requestItem.lineNumber = buff.getUInt16();
-        requestItem.module = ENckModule.from(buff.getByte());
-        requestItem.lineCount = buff.getByteToInt();
-        return requestItem;
-    }
+    private int unit = 0x0000;
 
-    public static RequestNckItem createByParams(ENckArea area, int unit, int columnNumber, int lineNumber, ENckModule module, int lineCount) {
-        RequestNckItem requestItem = new RequestNckItem();
-        requestItem.area = area;
-        requestItem.unit = unit;
-        requestItem.columnNumber = columnNumber;
-        requestItem.lineNumber = lineNumber;
-        requestItem.module = module;
-        requestItem.lineCount = lineCount;
-        return requestItem;
-    }
+    /**
+     * 列编号 <br>
+     * 字节大小：2 <br>
+     * 字节序数：5
+     */
+    private int columnNumber = 0x0000;
+
+    /**
+     * 行编号 <br>
+     * 字节大小：2 <br>
+     * 字节序数：7
+     */
+    private int lineNumber = 0x0000;
+
+    /**
+     * 模块名 <br>
+     * 字节大小：1 <br>
+     * 字节序数：8
+     */
+    private ENckModule module = ENckModule.S;
+
+    /**
+     * 行个数 <br>
+     * 字节大小：1 <br>
+     * 字节序数：9
+     */
+    private int lineCount = 1;
 
     @Override
     public int byteArrayLength() {
@@ -148,6 +140,45 @@ public class RequestNckItem extends RequestBaseItem {
         requestItem.lineNumber = this.lineNumber;
         requestItem.module = this.module;
         requestItem.lineCount = this.lineCount;
+        return requestItem;
+    }
+
+    public static RequestNckItem fromBytes(final byte[] data) {
+        return fromBytes(data, 0);
+    }
+
+    /**
+     * 字节数组数据解析
+     *
+     * @param data   字节数组数据
+     * @param offset 偏移量
+     * @return RequestItem
+     */
+    public static RequestNckItem fromBytes(final byte[] data, final int offset) {
+        ByteReadBuff buff = new ByteReadBuff(data, offset);
+        RequestNckItem requestItem = new RequestNckItem();
+        requestItem.specificationType = buff.getByte();
+        requestItem.lengthOfFollowing = buff.getByteToInt();
+        requestItem.syntaxId = ESyntaxID.from(buff.getByte());
+        byte areaAndUnit = buff.getByte();
+        requestItem.area = ENckArea.from((byte) ((areaAndUnit & (byte) 0xE0) >> 5));
+        requestItem.unit = areaAndUnit & (byte) 0x1F;
+        requestItem.columnNumber = buff.getUInt16();
+        requestItem.lineNumber = buff.getUInt16();
+        requestItem.module = ENckModule.from(buff.getByte());
+        requestItem.lineCount = buff.getByteToInt();
+        return requestItem;
+    }
+
+
+    public static RequestNckItem createByParams(ENckArea area, int unit, int columnNumber, int lineNumber, ENckModule module, int lineCount) {
+        RequestNckItem requestItem = new RequestNckItem();
+        requestItem.area = area;
+        requestItem.unit = unit;
+        requestItem.columnNumber = columnNumber;
+        requestItem.lineNumber = lineNumber;
+        requestItem.module = module;
+        requestItem.lineCount = lineCount;
         return requestItem;
     }
 }

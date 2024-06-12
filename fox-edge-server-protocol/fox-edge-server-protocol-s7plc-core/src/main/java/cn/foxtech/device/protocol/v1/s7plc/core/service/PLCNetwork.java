@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2021-2099 Oscura (xingshuang) <xingshuang_cool@163.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package cn.foxtech.device.protocol.v1.s7plc.core.service;
 
 
@@ -10,7 +34,7 @@ import cn.foxtech.device.protocol.v1.s7plc.core.constant.ErrorCode;
 import cn.foxtech.device.protocol.v1.s7plc.core.enums.*;
 import cn.foxtech.device.protocol.v1.s7plc.core.exceptions.S7CommException;
 import cn.foxtech.device.protocol.v1.s7plc.core.model.*;
-import lombok.extern.slf4j.Slf4j;
+import lombok.Data;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +53,8 @@ import java.util.stream.Collectors;
  *
  * @author xingshuang
  */
+@Data
+@SuppressWarnings("DuplicatedCode")
 public class PLCNetwork extends TcpClientBasic {
 
     /**
@@ -75,34 +101,6 @@ public class PLCNetwork extends TcpClientBasic {
         this.tag = "S7";
     }
 
-    public void setComCallback(Consumer<byte[]> comCallback) {
-        this.comCallback = comCallback;
-    }
-
-    public boolean isPersistence() {
-        return persistence;
-    }
-
-    public void setPersistence(boolean persistence) {
-        this.persistence = persistence;
-    }
-
-    public EPlcType getPlcType() {
-        return plcType;
-    }
-
-    public int getRack() {
-        return rack;
-    }
-
-    public int getSlot() {
-        return slot;
-    }
-
-    public int getPduLength() {
-        return pduLength;
-    }
-
     @Override
     public void connect() {
         try {
@@ -124,20 +122,29 @@ public class PLCNetwork extends TcpClientBasic {
         this.connectionRequest();
         // 存在设置的PDULength != 实际PLC的PDULength，因此以PLC的为准
         this.pduLength = this.connectDtData();
-   //     log.debug("PLC[{}]握手成功，机架号[{}]，槽号[{}]，PDU长度[{}]", this.plcType, this.rack, this.slot, this.pduLength);
+        //  log.debug("PLC[{}] handshake success, rack[{}]，slot[{}]，PDULength[{}]", this.plcType, this.rack, this.slot, this.pduLength);
     }
 
     /**
      * 连接请求
-     * 1500	1200	300	    400	    200	    200Smart
+     * <p>
+     * TSAP包含两个字节，远程TSAP地址是连接的远程PC Access所设置的地址，
+     * 第一个字节标识访问的资源，01是PG，02是OP，03是S7单边（服务器模式），10（16进制）及以上是S7双边通信；
+     * 第二个字节是访问点，是CPU的槽号+CP槽号
+     * 第一个字节：0x01+连接数目（S7-200）或者0x03+连接数目（S7-300/400)
+     * 第二个字节：模块位置（S7-200）或者机架和槽位（S7-300/400）
+     * 1500	    1200	300	    400	    200	    200Smart
      * 0x0102	0x0102	0x0102	0x0102	0x4d57	0x1000
      * 0x0100	0x0100	0x0102	0x0103	0x4d57	0x0300
+     * ------------------------------------------------
+     * 0x0100	0x0100	0x0100	0x0100	0x4d57	0x1000
+     * 0x0300	0x0300	0x0302	0x0303	0x4d57	0x0300
      */
     private void connectionRequest() {
         // 对应0xC1
-        int local = 0x0102;
+        int local = 0x0100;
         // 对应0xC2 | 经测试：S1200支持0x0100、0x0200、0x0300，S200Smart支持0x0200、0x0300
-        int remote = 0x0100;
+        int remote = 0x0300;
         switch (this.plcType) {
             case S200:
                 // S7net中写的是0x1000,0x1001
@@ -146,6 +153,7 @@ public class PLCNetwork extends TcpClientBasic {
                 break;
             case S200_SMART:
                 local = 0x1000;
+                // 远程只能设置为0x0200,0x0201,0x0300,0x0301
                 remote = 0x0300;
                 break;
             case S300:
@@ -162,7 +170,8 @@ public class PLCNetwork extends TcpClientBasic {
         S7Data req = S7Data.createConnectRequest(local, remote);
         S7Data ack = this.readFromServer(req);
         if (ack.getCotp().getPduType() != EPduType.CONNECT_CONFIRM) {
-            throw new S7CommException("连接请求被拒绝");
+            // 连接请求被拒绝
+            throw new S7CommException("The connection request was denied");
         }
     }
 
@@ -175,14 +184,17 @@ public class PLCNetwork extends TcpClientBasic {
         S7Data req = S7Data.createConnectDtData(this.pduLength);
         S7Data ack = this.readFromServer(req);
         if (ack.getCotp().getPduType() != EPduType.DT_DATA) {
-            throw new S7CommException("连接Setup响应错误");
+            // 连接Setup响应错误
+            throw new S7CommException("Connection Setup response error");
         }
         if (ack.getHeader() == null || ack.getHeader().byteArrayLength() != AckHeader.BYTE_LENGTH) {
-            throw new S7CommException("连接Setup响应错误，缺失响应头header或响应头长度不够[12]");
+            // 连接Setup响应错误，缺失响应头header或响应头长度不够[12]
+            throw new S7CommException("Connection Setup response error, missing response header or insufficient response header length [12]");
         }
         int length = ((SetupComParameter) ack.getParameter()).getPduLength();
         if (length <= 0) {
-            throw new S7CommException("PDU的最大长度小于0");
+            // PDU的最大长度小于0
+            throw new S7CommException("The maximum length of a PDU is less than 0");
         }
         return length;
     }
@@ -217,7 +229,8 @@ public class PLCNetwork extends TcpClientBasic {
 
         // 将报文中的TPKT和COTP减掉，剩下PDU的内容，7=4(tpkt)+3(cotp)
         if (this.pduLength > 0 && sendData.length - 7 > this.pduLength) {
-            throw new S7CommException(String.format("发送请求的字节数过长[%d]，已经大于最大的PDU长度[%d]", sendData.length, this.pduLength));
+            // 发送请求的字节数过长[%d]，已经大于最大的PDU长度[%d]
+            throw new S7CommException(String.format("The number of bytes sent for the request is too long [%d], which is larger than the maximum PDU length [%d].", sendData.length, this.pduLength));
         }
 
         TPKT tpkt;
@@ -229,7 +242,8 @@ public class PLCNetwork extends TcpClientBasic {
             byte[] data = new byte[TPKT.BYTE_LENGTH];
             len = this.read(data);
             if (len < TPKT.BYTE_LENGTH) {
-                throw new S7CommException(" TPKT 无效，长度不一致");
+                // TPKT 无效，长度不一致
+                throw new S7CommException("The TPKT is invalid and the length is inconsistent");
             }
             tpkt = TPKT.fromBytes(data);
             total = new byte[tpkt.getLength()];
@@ -237,7 +251,8 @@ public class PLCNetwork extends TcpClientBasic {
             len = this.read(total, TPKT.BYTE_LENGTH, tpkt.getLength() - TPKT.BYTE_LENGTH);
         }
         if (len < total.length - TPKT.BYTE_LENGTH) {
-            throw new S7CommException(" TPKT后面的数据长度，长度不一致");
+            // TPKT后面的数据长度，长度不一致
+            throw new S7CommException("The length of the data after TPKT is inconsistent");
         }
         if (this.comCallback != null) {
             this.comCallback.accept(total);
@@ -290,14 +305,17 @@ public class PLCNetwork extends TcpClientBasic {
         // 响应头正确
         AckHeader ackHeader = (AckHeader) ack.getHeader();
         if (ackHeader.getErrorClass() == null) {
-            throw new S7CommException(String.format("响应异常，未知异常：%s", ErrorCode.MAP.getOrDefault(ackHeader.getErrorCode(), "错误码不存在")));
+            // 响应异常，未知异常
+            throw new S7CommException(String.format("Response exception, unknown exception：%s", ErrorCode.MAP.getOrDefault(ackHeader.getErrorCode(), "The error code does not exist")));
         }
         if (ackHeader.getErrorClass() != EErrorClass.NO_ERROR) {
-            throw new S7CommException(String.format("响应异常，错误类型：%s，错误原因：%s", ackHeader.getErrorClass().getDescription(), ErrorCode.MAP.getOrDefault(ackHeader.getErrorCode(), "错误码不存在")));
+            // 响应异常，错误类型：%s，错误原因
+            throw new S7CommException(String.format("Response exception, error type: %s, error cause：%s", ackHeader.getErrorClass().getDescription(), ErrorCode.MAP.getOrDefault(ackHeader.getErrorCode(), "The error code does not exist")));
         }
         // 发送和接收的PDU编号一致
         if (ackHeader.getPduReference() != req.getHeader().getPduReference()) {
-            throw new S7CommException("pdu应用编号不一致，数据有误");
+            // pdu引用编号不一致，数据有误
+            throw new S7CommException("The PDU references are inconsistent, causing incorrect data");
         }
         if (ack.getDatum() == null) {
             return;
@@ -310,14 +328,16 @@ public class PLCNetwork extends TcpClientBasic {
         List<ReturnItem> returnItems = datum.getReturnItems();
         ReadWriteParameter parameter = (ReadWriteParameter) req.getParameter();
         if (returnItems.size() != parameter.getItemCount()) {
-            throw new S7CommException("返回的数据个数和请求的数据个数不一致");
+            // 返回的数据个数和请求的数据个数不一致
+            throw new S7CommException("The returned data quantity is different from the requested data quantity");
         }
         // 返回结果校验
-        returnItems.forEach(x -> {
-            if (x.getReturnCode() != EReturnCode.SUCCESS) {
-                throw new S7CommException(String.format("返回结果异常，原因：%s", x.getReturnCode().getDescription()));
+        for (int i = 0; i < returnItems.size(); i++) {
+            if (returnItems.get(i).getReturnCode() != EReturnCode.SUCCESS) {
+                // 返回第[%d]个结果异常，原因：%s
+                throw new S7CommException(String.format("Return [%d] result exception, cause: %s", i + 1, returnItems.get(i).getReturnCode().getDescription()));
             }
-        });
+        }
     }
 
     //endregion
@@ -332,7 +352,8 @@ public class PLCNetwork extends TcpClientBasic {
      */
     public List<DataItem> readS7Data(List<RequestItem> requestItems) {
         if (requestItems == null || requestItems.isEmpty()) {
-            throw new S7CommException("请求项缺失，无法获取数据");
+            // 请求项缺失，无法获取数据
+            throw new S7CommException("The request item is missing and the data cannot be retrieved");
         }
         // 根据原始请求列表提取每个请求数据大小
         List<Integer> rawNumbers = requestItems.stream().map(RequestItem::getCount).collect(Collectors.toList());
@@ -404,7 +425,8 @@ public class PLCNetwork extends TcpClientBasic {
      */
     public void writeS7Data(List<RequestItem> requestItems, List<DataItem> dataItems) {
         if (requestItems.size() != dataItems.size()) {
-            throw new S7CommException("写操作过程中，requestItems和dataItems数据个数不一致");
+            // 写操作过程中，requestItems和dataItems数据个数不一致
+            throw new S7CommException("During the write operation, the number of requestItems and dataItems is inconsistent. Procedure");
         }
 
         // 根据原始请求列表提取每个请求数据大小
@@ -534,7 +556,7 @@ public class PLCNetwork extends TcpClientBasic {
                 S7Data ackUpload = this.readFromServer(reqUpload);
                 uploadAckParameter = (UploadAckParameter) ackUpload.getParameter();
                 if (uploadAckParameter.isErrorStatus()) {
-                    throw new S7CommException("上传发生错误");
+                    throw new S7CommException("Upload error occurred");
                 }
                 UpDownloadDatum datum = (UpDownloadDatum) ackUpload.getDatum();
                 buff.putBytes(datum.getData());

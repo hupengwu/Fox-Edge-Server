@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2021-2099 Oscura (xingshuang) <xingshuang_cool@163.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package cn.foxtech.device.protocol.v1.s7plc.core.utils;
 
 
@@ -8,6 +32,10 @@ import cn.foxtech.device.protocol.v1.s7plc.core.exceptions.HexParseException;
  */
 public class HexUtil {
 
+    private HexUtil() {
+        // do nothing
+    }
+
     /**
      * 验证16进制字符串的正则表达式
      * ^ = 开始
@@ -17,10 +45,6 @@ public class HexUtil {
      */
     private static final String REGEX = "^[a-f0-9A-F]+$";
 
-    private HexUtil() {
-        // do nothing
-    }
-
     /**
      * 将字符串转换为16进制的数组
      *
@@ -29,13 +53,16 @@ public class HexUtil {
      */
     public static byte[] toHexArray(String src) {
         if (src == null || src.length() == 0) {
-            throw new HexParseException("字符串不能为null或长度不能为0");
+            // 字符串不能为null或长度不能为0
+            throw new HexParseException("The string cannot be null or the length cannot be 0");
         }
         if ((src.length() & -src.length()) == 1) {
-            throw new HexParseException("输入的字符串个数必须为偶数");
+            // 输入的字符串个数必须为偶数
+            throw new HexParseException("The number of strings entered must be an even number");
         }
         if (!src.matches(REGEX)) {
-            throw new HexParseException("字符串内容必须是[0-9|a-f|A-F]");
+            // 字符串内容必须是[0-9|a-f|A-F]
+            throw new HexParseException("The string content must be [0-9|a-f|A-F].");
         }
 
         char[] chars = src.toCharArray();

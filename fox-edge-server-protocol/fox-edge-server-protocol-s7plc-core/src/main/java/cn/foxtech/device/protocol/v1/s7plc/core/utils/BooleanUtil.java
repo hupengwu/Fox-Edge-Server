@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2021-2099 Oscura (xingshuang) <xingshuang_cool@163.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package cn.foxtech.device.protocol.v1.s7plc.core.utils;
 
 
@@ -38,7 +62,7 @@ public class BooleanUtil {
      */
     public static byte setBit(byte data, int bit, boolean res) {
         if (bit > 7 || bit < 0) {
-            throw new IndexOutOfBoundsException("0<=bit<=7");
+            throw new IndexOutOfBoundsException("0 <= bit <= 7");
         }
         return res ? (byte) (((data & 0xFF) | (1 << bit)) & 0xFF) : (byte) ((data & 0xFF) & ~(1 << bit) & 0xFF);
     }
@@ -52,7 +76,7 @@ public class BooleanUtil {
      */
     public static boolean getValue(byte data, int bit) {
         if (bit > 7 || bit < 0) {
-            throw new IndexOutOfBoundsException("0<=bit<=7");
+            throw new IndexOutOfBoundsException("0 <= bit <= 7");
         }
         return (((data & 0xFF) & (1 << bit)) != 0);
     }
@@ -66,7 +90,7 @@ public class BooleanUtil {
      */
     public static int getValueToInt(byte data, int bit) {
         if (bit > 7 || bit < 0) {
-            throw new IndexOutOfBoundsException("0<=bit<=7");
+            throw new IndexOutOfBoundsException("0 <= bit <= 7");
         }
         return (((data & 0xFF) & (1 << bit)) >> bit);
     }
@@ -83,7 +107,8 @@ public class BooleanUtil {
             throw new NullPointerException("src");
         }
         if (src.length * 8 < quantity) {
-            throw new IllegalArgumentException("quantity数量操作字节数组的位总和");
+            // quantity数量操作字节数组的位总和
+            throw new IllegalArgumentException("The sum of the bits of the operation byte array");
         }
         int count = 1;
         List<Boolean> res = new ArrayList<>();
@@ -106,7 +131,7 @@ public class BooleanUtil {
      */
     public static byte[] listToByteArray(List<Boolean> list) {
         if (list == null || list.isEmpty()) {
-            throw new IllegalArgumentException("list为空");
+            throw new IllegalArgumentException("list is null or empty");
         }
         int index = 0;
         byte[] values = new byte[list.size() / 8 + list.size() % 8 == 0 ? 0 : 1];

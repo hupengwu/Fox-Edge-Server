@@ -1,12 +1,36 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2021-2099 Oscura (xingshuang) <xingshuang_cool@163.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package cn.foxtech.device.protocol.v1.s7plc.core.model;
 
 
-import cn.foxtech.device.protocol.v1.s7plc.core.enums.EDestinationFileSystem;
-import cn.foxtech.device.protocol.v1.s7plc.core.enums.EFunctionCode;
 import cn.foxtech.device.protocol.v1.s7plc.core.common.IObjectByteArray;
 import cn.foxtech.device.protocol.v1.s7plc.core.common.buff.ByteWriteBuff;
+import cn.foxtech.device.protocol.v1.s7plc.core.enums.EDestinationFileSystem;
 import cn.foxtech.device.protocol.v1.s7plc.core.enums.EErrorClass;
 import cn.foxtech.device.protocol.v1.s7plc.core.enums.EFileBlockType;
+import cn.foxtech.device.protocol.v1.s7plc.core.enums.EFunctionCode;
 import lombok.Data;
 
 import java.util.Arrays;
@@ -44,6 +68,57 @@ public class S7Data implements IObjectByteArray {
      * 数据
      */
     private Datum datum;
+
+    @Override
+    public int byteArrayLength() {
+        int length = 0;
+        length += this.tpkt != null ? this.tpkt.byteArrayLength() : 0;
+        length += this.cotp != null ? this.cotp.byteArrayLength() : 0;
+        length += this.header != null ? this.header.byteArrayLength() : 0;
+        length += this.parameter != null ? this.parameter.byteArrayLength() : 0;
+        length += this.datum != null ? this.datum.byteArrayLength() : 0;
+        return length;
+    }
+
+    @Override
+    public byte[] toByteArray() {
+        ByteWriteBuff buff = ByteWriteBuff.newInstance(this.byteArrayLength());
+        if (this.tpkt != null) {
+            buff.putBytes(this.tpkt.toByteArray());
+        }
+        if (this.cotp != null) {
+            buff.putBytes(this.cotp.toByteArray());
+        }
+        if (this.header != null) {
+            buff.putBytes(this.header.toByteArray());
+        }
+        if (this.parameter != null) {
+            buff.putBytes(this.parameter.toByteArray());
+        }
+        if (this.datum != null) {
+            buff.putBytes(this.datum.toByteArray());
+        }
+        return buff.getData();
+    }
+
+    /**
+     * 自我数据校验
+     */
+    public void selfCheck() {
+        if (this.header != null) {
+            this.header.setDataLength(0);
+            this.header.setParameterLength(0);
+        }
+        if (this.parameter != null && this.header != null) {
+            this.header.setParameterLength(this.parameter.byteArrayLength());
+        }
+        if (this.datum != null && this.header != null) {
+            this.header.setDataLength(this.datum.byteArrayLength());
+        }
+        if (this.tpkt != null) {
+            this.tpkt.setLength(this.byteArrayLength());
+        }
+    }
 
     /**
      * 根据字节数据解析S7协议数据
@@ -316,7 +391,7 @@ public class S7Data implements IObjectByteArray {
         s7Data.tpkt = new TPKT();
         s7Data.cotp = COTPData.createDefault();
         s7Data.header = Header.createDefault();
-        s7Data.parameter = PlcControlParameter.insert(blockType, blockNumber, destinationFileSystem);
+        s7Data.parameter = PlcControlParameter.insert(blockType,blockNumber,destinationFileSystem);
         s7Data.selfCheck();
         return s7Data;
     }
@@ -440,56 +515,5 @@ public class S7Data implements IObjectByteArray {
         s7Data.parameter = EndUploadParameter.createDefault(uploadId);
         s7Data.selfCheck();
         return s7Data;
-    }
-
-    @Override
-    public int byteArrayLength() {
-        int length = 0;
-        length += this.tpkt != null ? this.tpkt.byteArrayLength() : 0;
-        length += this.cotp != null ? this.cotp.byteArrayLength() : 0;
-        length += this.header != null ? this.header.byteArrayLength() : 0;
-        length += this.parameter != null ? this.parameter.byteArrayLength() : 0;
-        length += this.datum != null ? this.datum.byteArrayLength() : 0;
-        return length;
-    }
-
-    @Override
-    public byte[] toByteArray() {
-        ByteWriteBuff buff = ByteWriteBuff.newInstance(this.byteArrayLength());
-        if (this.tpkt != null) {
-            buff.putBytes(this.tpkt.toByteArray());
-        }
-        if (this.cotp != null) {
-            buff.putBytes(this.cotp.toByteArray());
-        }
-        if (this.header != null) {
-            buff.putBytes(this.header.toByteArray());
-        }
-        if (this.parameter != null) {
-            buff.putBytes(this.parameter.toByteArray());
-        }
-        if (this.datum != null) {
-            buff.putBytes(this.datum.toByteArray());
-        }
-        return buff.getData();
-    }
-
-    /**
-     * 自我数据校验
-     */
-    public void selfCheck() {
-        if (this.header != null) {
-            this.header.setDataLength(0);
-            this.header.setParameterLength(0);
-        }
-        if (this.parameter != null && this.header != null) {
-            this.header.setParameterLength(this.parameter.byteArrayLength());
-        }
-        if (this.datum != null && this.header != null) {
-            this.header.setDataLength(this.datum.byteArrayLength());
-        }
-        if (this.tpkt != null) {
-            this.tpkt.setLength(this.byteArrayLength());
-        }
     }
 }

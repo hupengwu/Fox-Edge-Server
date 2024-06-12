@@ -22,69 +22,53 @@
  * SOFTWARE.
  */
 
-package cn.foxtech.device.protocol.v1.s7plc.core.enums;
+package cn.foxtech.device.protocol.v1.s7plc.core.constant;
 
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * PDU类型（CRConnect Request 连接请求）
+ * 通用常量
  *
  * @author xingshuang
  */
-public enum EPduType {
+public class GeneralConst {
 
-    /**
-     * 连接请求
-     */
-    CONNECT_REQUEST((byte) 0xE0),
-
-    /**
-     * 连接确认
-     */
-    CONNECT_CONFIRM((byte) 0xD0),
-
-    /**
-     * 断开请求
-     */
-    DISCONNECT_REQUEST((byte) 0x80),
-
-    /**
-     * 断开确认
-     */
-    DISCONNECT_CONFIRM((byte) 0xC0),
-
-    /**
-     * 拒绝
-     */
-    REJECT((byte) 0x50),
-
-    /**
-     * 数据
-     */
-    DT_DATA((byte) 0xF0),
-    ;
-
-    private static Map<Byte, EPduType> map;
-
-    public static EPduType from(byte data) {
-        if (map == null) {
-            map = new HashMap<>();
-            for (EPduType item : EPduType.values()) {
-                map.put(item.code, item);
-            }
-        }
-        return map.get(data);
+    private GeneralConst() {
+        // NOOP
     }
 
-    private final byte code;
+    /**
+     * 本地ip，127.0.0.1
+     */
+    public static final String LOCALHOST = "127.0.0.1";
 
-    EPduType(byte code) {
-        this.code = code;
-    }
+    /**
+     * S7的端口号
+     */
+    public static final int S7_PORT = 102;
 
-    public byte getCode() {
-        return code;
-    }
+    /**
+     * Modbus的端口号
+     */
+    public static final int MODBUS_PORT = 502;
+
+    /**
+     * 三菱的端口号
+     */
+    public static final int MELSEC_PORT = 6000;
+
+    /**
+     * bit类型
+     */
+    public static final int TYPE_BIT = 0;
+
+    /**
+     * word类型
+     */
+    public static final int TYPE_WORD = 1;
+
+    /**
+     * dword类型
+     */
+    public static final int TYPE_DWORD = 2;
+
 }

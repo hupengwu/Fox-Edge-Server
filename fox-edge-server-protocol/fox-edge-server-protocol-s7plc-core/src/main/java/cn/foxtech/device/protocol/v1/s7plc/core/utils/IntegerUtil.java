@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2021-2099 Oscura (xingshuang) <xingshuang_cool@163.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package cn.foxtech.device.protocol.v1.s7plc.core.utils;
 
 
@@ -63,10 +87,23 @@ public class IntegerUtil {
      * @return 字节数组
      */
     public static byte[] toCustomByteArray(long data, int offset, int length) {
+        return toCustomByteArray(data, offset, length, false);
+    }
+
+    /**
+     * 将long转换为字节数组，并自定义获取字节数，默认采用大端模式
+     *
+     * @param data         long数据
+     * @param offset       偏移量
+     * @param length       读取长度
+     * @param littleEndian 小端模式
+     * @return 字节数组
+     */
+    public static byte[] toCustomByteArray(long data, int offset, int length, boolean littleEndian) {
         if (offset + length > 4) {
             throw new IndexOutOfBoundsException("offset + length > 4");
         }
-        byte[] bytes = toByteArray((int) data, false);
+        byte[] bytes = toByteArray((int) data, littleEndian);
         byte[] res = new byte[length];
         System.arraycopy(bytes, offset, res, 0, length);
         return res;
@@ -103,10 +140,10 @@ public class IntegerUtil {
      */
     public static int toInt32(byte[] data, int offset, boolean littleEndian) {
         if (data.length < 4) {
-            throw new IndexOutOfBoundsException("data小于4个字节");
+            throw new IndexOutOfBoundsException("data length < 4");
         }
         if (offset + 4 > data.length) {
-            throw new IndexOutOfBoundsException("offset + 4 > 字节长度");
+            throw new IndexOutOfBoundsException("offset + 4 > data length");
         }
         int b = littleEndian ? 3 : 0;
         int d = littleEndian ? 1 : -1;
@@ -137,10 +174,10 @@ public class IntegerUtil {
      */
     public static int toInt32In3Bytes(byte[] data, int offset, boolean littleEndian) {
         if (data.length < 3) {
-            throw new IndexOutOfBoundsException("data小于3个字节");
+            throw new IndexOutOfBoundsException("data length < 3");
         }
         if (offset + 3 > data.length) {
-            throw new IndexOutOfBoundsException("offset + 3 > 字节长度");
+            throw new IndexOutOfBoundsException("offset + 3 > data length");
         }
         int b = littleEndian ? 2 : 0;
         int d = littleEndian ? 1 : -1;
@@ -180,10 +217,10 @@ public class IntegerUtil {
      */
     public static long toUInt32(byte[] data, int offset, boolean littleEndian) {
         if (data.length < 4) {
-            throw new IndexOutOfBoundsException("data小于4个字节");
+            throw new IndexOutOfBoundsException("data length < 4");
         }
         if (offset + 4 > data.length) {
-            throw new IndexOutOfBoundsException("offset + 4 > 字节长度");
+            throw new IndexOutOfBoundsException("offset + 4 > data length");
         }
         int b = littleEndian ? 3 : 0;
         int d = littleEndian ? 1 : -1;
