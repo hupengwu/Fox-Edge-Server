@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
@@ -75,14 +76,23 @@ public class DeviceBase extends BaseEntity {
     }
 
     public void bind(DeviceBase other) {
-        this.setId(other.getId());
-        this.setCreateTime(other.getCreateTime());
-        this.setUpdateTime(other.getUpdateTime());
+        super.bind(other);
 
         this.deviceName = other.deviceName;
         this.deviceType = other.deviceType;
         this.manufacturer = other.manufacturer;
         this.channelType = other.channelType;
         this.channelName = other.channelName;
+    }
+
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.deviceName = (String) map.get("deviceName");
+        this.deviceType = (String) map.get("deviceType");
+        this.manufacturer = (String) map.get("manufacturer");
+        this.channelType = (String) map.get("channelType");
+        this.channelName = (String) map.get("channelName");
     }
 }

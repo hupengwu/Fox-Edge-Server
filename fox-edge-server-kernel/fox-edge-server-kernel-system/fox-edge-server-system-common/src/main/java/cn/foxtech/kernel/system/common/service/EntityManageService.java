@@ -158,27 +158,6 @@ public class EntityManageService extends EntityServiceManager {
         dBService.put(RepoCompEntity.class.getSimpleName(), this.repoCompEntityService);
 
 
-        // 注册生产者
-        producer.add(ChannelEntity.class.getSimpleName());
-        producer.add(LinkEntity.class.getSimpleName());
-        producer.add(ConfigEntity.class.getSimpleName());
-        producer.add(UserEntity.class.getSimpleName());
-        producer.add(UserMenuEntity.class.getSimpleName());
-        producer.add(UserRoleEntity.class.getSimpleName());
-        producer.add(UserPermissionEntity.class.getSimpleName());
-        producer.add(ExtendConfigEntity.class.getSimpleName());
-        producer.add(ProbeEntity.class.getSimpleName());
-        producer.add(DeviceValueExTaskEntity.class.getSimpleName());
-        producer.add(OperateEntity.class.getSimpleName());
-        producer.add(OperateMonitorTaskEntity.class.getSimpleName());
-        producer.add(OperateManualTaskEntity.class.getSimpleName());
-        producer.add(OperateChannelTaskEntity.class.getSimpleName());
-        producer.add(DeviceMapperEntity.class.getSimpleName());
-        producer.add(DeviceModelEntity.class.getSimpleName());
-        producer.add(IotDeviceModelEntity.class.getSimpleName());
-        producer.add(RepoCompEntity.class.getSimpleName());
-
-
         // 告知：生产者如何装载数据源
         this.getSourceMySQL().add(ChannelEntity.class.getSimpleName());
         this.getSourceMySQL().add(LinkEntity.class.getSimpleName());
@@ -211,6 +190,42 @@ public class EntityManageService extends EntityServiceManager {
 
         reader.add(DeviceEntity.class.getSimpleName());
         writer.add(DeviceEntity.class.getSimpleName());
+        reader.add(OperateEntity.class.getSimpleName());
+        writer.add(OperateEntity.class.getSimpleName());
+        reader.add(RepoCompEntity.class.getSimpleName());
+        writer.add(RepoCompEntity.class.getSimpleName());
+        reader.add(IotDeviceModelEntity.class.getSimpleName());
+        writer.add(IotDeviceModelEntity.class.getSimpleName());
+        reader.add(DeviceModelEntity.class.getSimpleName());
+        writer.add(DeviceModelEntity.class.getSimpleName());
+        reader.add(DeviceMapperEntity.class.getSimpleName());
+        writer.add(DeviceMapperEntity.class.getSimpleName());
+        reader.add(OperateMonitorTaskEntity.class.getSimpleName());
+        writer.add(OperateMonitorTaskEntity.class.getSimpleName());
+        reader.add(OperateManualTaskEntity.class.getSimpleName());
+        writer.add(OperateManualTaskEntity.class.getSimpleName());
+        reader.add(OperateChannelTaskEntity.class.getSimpleName());
+        writer.add(OperateChannelTaskEntity.class.getSimpleName());
+        reader.add(ChannelEntity.class.getSimpleName());
+        writer.add(ChannelEntity.class.getSimpleName());
+        reader.add(LinkEntity.class.getSimpleName());
+        writer.add(LinkEntity.class.getSimpleName());
+        reader.add(ConfigEntity.class.getSimpleName());
+        writer.add(ConfigEntity.class.getSimpleName());
+        reader.add(UserEntity.class.getSimpleName());
+        writer.add(UserEntity.class.getSimpleName());
+        reader.add(UserMenuEntity.class.getSimpleName());
+        writer.add(UserMenuEntity.class.getSimpleName());
+        reader.add(UserRoleEntity.class.getSimpleName());
+        writer.add(UserRoleEntity.class.getSimpleName());
+        reader.add(UserPermissionEntity.class.getSimpleName());
+        writer.add(UserPermissionEntity.class.getSimpleName());
+        reader.add(ExtendConfigEntity.class.getSimpleName());
+        writer.add(ExtendConfigEntity.class.getSimpleName());
+        reader.add(ProbeEntity.class.getSimpleName());
+        writer.add(ProbeEntity.class.getSimpleName());
+        reader.add(DeviceValueExTaskEntity.class.getSimpleName());
+        writer.add(DeviceValueExTaskEntity.class.getSimpleName());
     }
 
     private void instancePublish() {

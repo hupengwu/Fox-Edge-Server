@@ -2,6 +2,7 @@ package cn.foxtech.common.entity.manager;
 
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.service.redis.*;
+import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.utils.common.utils.redis.service.RedisService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,14 @@ public class EntityRedisComponent {
             ConsumerRedisService consumerRedisService = ConsumerRedisService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService);
             return (T) consumerRedisService.getEntity(id);
         }
+        if (this.reader.contains(clazz.getSimpleName())) {
+            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisTemplate);
+            try {
+                return redisReader.readEntity(id);
+            } catch (Exception e) {
+                return null;
+            }
+        }
 
         return null;
     }
@@ -67,6 +76,49 @@ public class EntityRedisComponent {
 
         return null;
     }
+
+    protected <T> BaseEntity getEntity(Class<T> clazz, IBaseFinder finder) {
+        if (this.producer.contains(clazz.getSimpleName())) {
+            ProducerRedisService producerRedisService = ProducerRedisService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService);
+            return producerRedisService.getEntity(finder);
+        }
+        if (this.consumer.contains(clazz.getSimpleName())) {
+            ConsumerRedisService consumerRedisService = ConsumerRedisService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService);
+            return consumerRedisService.getEntity(finder);
+        }
+        if (this.reader.contains(clazz.getSimpleName())) {
+            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisTemplate);
+            try {
+                return redisReader.readEntity(finder);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    protected <T> int getEntityCount(Class<T> clazz, IBaseFinder finder) {
+        if (this.producer.contains(clazz.getSimpleName())) {
+            ProducerRedisService producerRedisService = ProducerRedisService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService);
+            return producerRedisService.getEntityCount(finder);
+        }
+        if (this.consumer.contains(clazz.getSimpleName())) {
+            ConsumerRedisService consumerRedisService = ConsumerRedisService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService);
+            return consumerRedisService.getEntityCount(finder);
+        }
+        if (this.reader.contains(clazz.getSimpleName())) {
+            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisTemplate);
+            try {
+                return redisReader.getEntityCount(finder);
+            } catch (Exception e) {
+                return 0;
+            }
+        }
+
+        return 0;
+    }
+
 
     protected <T> T readEntity(String entityKey, Class<T> clazz) throws IOException {
         if (this.reader.contains(clazz.getSimpleName())) {
@@ -102,8 +154,58 @@ public class EntityRedisComponent {
             ConsumerRedisService consumerRedisService = ConsumerRedisService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService);
             return consumerRedisService.getEntityList();
         }
+        if (this.reader.contains(clazz.getSimpleName())) {
+            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisTemplate);
+            try {
+                return redisReader.readEntityList();
+            } catch (Exception e) {
+                throw new ServiceException(e.getMessage());
+            }
+        }
 
         return new ArrayList<>();
+    }
+
+    protected <T> List<BaseEntity> getEntityList(Class<T> clazz, IBaseFinder finder) {
+        if (this.producer.contains(clazz.getSimpleName())) {
+            ProducerRedisService producerRedisService = ProducerRedisService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService);
+            return producerRedisService.getEntityList(finder);
+        }
+        if (this.consumer.contains(clazz.getSimpleName())) {
+            ConsumerRedisService consumerRedisService = ConsumerRedisService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService);
+            return consumerRedisService.getEntityList(finder);
+        }
+        if (this.reader.contains(clazz.getSimpleName())) {
+            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisTemplate);
+            try {
+                return redisReader.readEntityList(finder);
+            } catch (Exception e) {
+                throw new ServiceException(e.getMessage());
+            }
+        }
+
+        return new ArrayList<>();
+    }
+
+    protected <T> Map<String, BaseEntity> getEntityMap(Class<T> clazz, Collection<String> entityKeys) {
+        if (this.producer.contains(clazz.getSimpleName())) {
+            ProducerRedisService producerRedisService = ProducerRedisService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService);
+            return producerRedisService.getEntityMap(entityKeys);
+        }
+        if (this.consumer.contains(clazz.getSimpleName())) {
+            ConsumerRedisService consumerRedisService = ConsumerRedisService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService);
+            return consumerRedisService.getEntityMap(entityKeys);
+        }
+        if (this.reader.contains(clazz.getSimpleName())) {
+            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisTemplate);
+            try {
+                return redisReader.readEntityMap(entityKeys);
+            } catch (Exception e) {
+                e.getMessage();
+            }
+        }
+
+        return new HashMap<>();
     }
 
     protected <T> BaseRedisService getBaseRedisService(Class<T> clazz) {

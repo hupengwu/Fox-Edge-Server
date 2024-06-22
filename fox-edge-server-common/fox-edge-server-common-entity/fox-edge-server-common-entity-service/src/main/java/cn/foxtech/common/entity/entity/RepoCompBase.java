@@ -1,6 +1,7 @@
 package cn.foxtech.common.entity.entity;
 
 
+import cn.foxtech.common.utils.number.NumberUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
@@ -64,12 +66,19 @@ public class RepoCompBase extends BaseEntity {
     }
 
     public void bind(RepoCompBase other) {
-        this.setId(other.getId());
-        this.setCreateTime(other.getCreateTime());
-        this.setUpdateTime(other.getUpdateTime());
+        super.bind(other);
 
         this.compRepo = other.compRepo;
         this.compType = other.compType;
         this.compName = other.compName;
+    }
+
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.compRepo = (String) map.get("compRepo");
+        this.compType = (String) map.get("compType");
+        this.compName = (String) map.get("compName");
     }
 }

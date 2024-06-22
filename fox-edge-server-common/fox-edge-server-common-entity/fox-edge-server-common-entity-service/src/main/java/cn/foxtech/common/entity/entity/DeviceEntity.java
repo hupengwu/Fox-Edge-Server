@@ -45,4 +45,28 @@ public class DeviceEntity extends DeviceBase {
         this.deviceParam = other.deviceParam;
         this.extendParam = other.extendParam;
     }
+
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.deviceParam = ((Map<String, Object>) map.getOrDefault("deviceParam", new HashMap<>()));
+        this.extendParam = ((Map<String, Object>) map.getOrDefault("extendParam", new HashMap<>()));
+    }
+
+    @Override
+    public BaseEntity build(Map<String, Object> map) {
+        try {
+            if (map == null || map.isEmpty()) {
+                return null;
+            }
+
+            DeviceEntity entity = new DeviceEntity();
+            entity.bind(map);
+
+            return entity;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

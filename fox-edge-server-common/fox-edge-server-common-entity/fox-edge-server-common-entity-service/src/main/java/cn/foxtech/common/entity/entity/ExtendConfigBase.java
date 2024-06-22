@@ -1,10 +1,13 @@
 package cn.foxtech.common.entity.entity;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 将离散的设备参数聚合成复合的设备参数
@@ -66,9 +69,14 @@ public class ExtendConfigBase extends BaseEntity {
         this.extendName = other.extendName;
         this.extendType = other.extendType;
 
+        super.bind(other);
+    }
 
-        this.setId(other.getId());
-        this.setCreateTime(other.getCreateTime());
-        this.setUpdateTime(other.getUpdateTime());
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.extendName = (String) map.get("extendName");
+        this.extendType = (String) map.get("extendType");
     }
 }

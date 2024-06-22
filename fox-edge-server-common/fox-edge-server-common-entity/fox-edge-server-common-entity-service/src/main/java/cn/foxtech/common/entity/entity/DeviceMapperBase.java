@@ -1,13 +1,14 @@
 package cn.foxtech.common.entity.entity;
 
 
+import cn.foxtech.common.utils.number.NumberUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
@@ -23,6 +24,7 @@ public class DeviceMapperBase extends DeviceObjInfEntity {
      * filter     2  过滤，例如将“对象1”剔除掉
      */
     private Integer mapperMode;
+
     /**
      * 获得init方法
      *
@@ -68,6 +70,14 @@ public class DeviceMapperBase extends DeviceObjInfEntity {
 
         this.mapperName = other.mapperName;
         this.mapperMode = other.mapperMode;
+    }
+
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.mapperName = (String) map.get("mapperName");
+        this.mapperMode = NumberUtils.makeInteger(map.get("mapperMode"));
     }
 
     public void init(DeviceObjInfEntity other) {

@@ -79,9 +79,6 @@ public class PeriodTaskBase extends BaseEntity {
         this.deviceType = other.deviceType;
         this.selectDevice = other.selectDevice;
 
-
-        this.setId(other.getId());
-        this.setCreateTime(other.getCreateTime());
-        this.setUpdateTime(other.getUpdateTime());
+        super.bind(other);
     }
 }

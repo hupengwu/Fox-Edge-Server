@@ -69,4 +69,28 @@ public class ConfigEntity extends ConfigBase {
 
         return clone;
     }
+
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.configValue = ((Map<String, Object>) map.getOrDefault("configValue", new HashMap<>()));
+        this.configParam = ((Map<String, Object>) map.getOrDefault("configParam", new HashMap<>()));
+    }
+
+    @Override
+    public BaseEntity build(Map<String, Object> map) {
+        try {
+            if (map == null || map.isEmpty()) {
+                return null;
+            }
+
+            ConfigEntity entity = new ConfigEntity();
+            entity.bind(map);
+
+            return entity;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

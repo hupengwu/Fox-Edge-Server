@@ -63,6 +63,32 @@ public class OperateMonitorTaskEntity extends OperateMonitorTaskBase {
         return list;
     }
 
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.templateParam = (List<Map<String, Object>>) map.getOrDefault("templateParam", new ArrayList<>());
+        this.deviceIds = (List<Object>) map.getOrDefault("deviceIds", new ArrayList<>());
+        this.taskParam = (Map<String, Object>) map.getOrDefault("taskParam", new HashMap<>());
+    }
+
+    @Override
+    public BaseEntity build(Map<String, Object> map) {
+        try {
+            if (map == null || map.isEmpty()) {
+                return null;
+            }
+
+            OperateMonitorTaskEntity entity = new OperateMonitorTaskEntity();
+            entity.bind(map);
+
+            return entity;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+
     /**
      * 填充缺省值
      */

@@ -1,6 +1,7 @@
 package cn.foxtech.kernel.system.service.controller;
 
 import cn.foxtech.common.entity.utils.PageUtils;
+import cn.foxtech.common.utils.http.ExportUtil;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
@@ -15,12 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -97,23 +94,10 @@ public class DeviceTemplateManageController {
                 throw new ServiceException("参数不能为空:modelName, version, component, fileName");
             }
 
-            HttpServletResponse resp = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+            HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
 
             File file = new File("");
-            File download = new File(file.getAbsolutePath() + "/template/" + modelName + "/" + version + "/" + fileName);
-            if (download.exists()) {
-                resp.setContentType("application/x-msdownload");
-                resp.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes(), StandardCharsets.ISO_8859_1));
-                InputStream inputStream = new FileInputStream(download);
-                ServletOutputStream ouputStream = resp.getOutputStream();
-                byte[] b = new byte[1024];
-                int n;
-                while ((n = inputStream.read(b)) != -1) {
-                    ouputStream.write(b, 0, n);
-                }
-                ouputStream.close();
-                inputStream.close();
-            }
+            ExportUtil.exportTextFile(response, file.getAbsolutePath() + "/template/" + modelName + "/" + version, fileName);
         } catch (Exception e) {
             return;
         }

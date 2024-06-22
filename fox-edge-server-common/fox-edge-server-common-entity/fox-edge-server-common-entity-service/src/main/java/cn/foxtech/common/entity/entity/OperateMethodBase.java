@@ -109,23 +109,22 @@ public class OperateMethodBase extends BaseEntity {
         this.dataType = other.dataType;
         this.timeout = other.timeout;
         this.polling = other.polling;
-        this.setId(other.getId());
-        this.setCreateTime(other.getCreateTime());
-        this.setUpdateTime(other.getUpdateTime());
+
+        super.bind(other);
     }
 
-    public void bind(Map<String, Object> map){
-        this.manufacturer = (String)map.get("manufacturer");
-        this.deviceType = (String)map.get("deviceType");
-        this.operateName = (String)map.get("operateName");
-        this.engineType = (String)map.get("engineType");
-        this.operateMode = (String)map.get("operateMode");
-        this.serviceType = (String)map.get("serviceType");
-        this.dataType = (String)map.get("dataType");
-        this.timeout = (Integer)map.getOrDefault("timeout",2000);
-        this.polling = (Boolean)map.getOrDefault("polling",false);
-        this.setId(Long.parseLong(map.getOrDefault("id","0").toString()));
-        this.setCreateTime(Long.parseLong(map.getOrDefault("createTime","0").toString()));
-        this.setUpdateTime(Long.parseLong(map.getOrDefault("updateTime","0").toString()));
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.manufacturer = (String) map.get("manufacturer");
+        this.deviceType = (String) map.get("deviceType");
+        this.operateName = (String) map.get("operateName");
+        this.engineType = (String) map.get("engineType");
+        this.operateMode = (String) map.get("operateMode");
+        this.serviceType = (String) map.get("serviceType");
+        this.dataType = (String) map.get("dataType");
+        this.timeout = (Integer) map.getOrDefault("timeout", 2000);
+        this.polling = (Boolean) map.getOrDefault("polling", false);
     }
 }

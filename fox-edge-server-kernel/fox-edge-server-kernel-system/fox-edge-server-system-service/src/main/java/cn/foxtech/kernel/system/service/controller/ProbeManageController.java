@@ -22,7 +22,7 @@ public class ProbeManageController {
 
     @GetMapping("entities")
     public AjaxResult selectEntityList() {
-        List<BaseEntity> entityList = entityManageService.getProbeEntityList();
+        List<BaseEntity> entityList = this.entityManageService.getEntityList(ProbeEntity.class);
         return AjaxResult.success(EntityVOBuilder.buildVOList(entityList));
     }
 
@@ -83,23 +83,23 @@ public class ProbeManageController {
         entity.setParams(configParam);
         entity.setPeriod(periodParam);
 
-        ProbeEntity exist = entityManageService.getProbeEntity(Long.valueOf(id.toString()));
+        ProbeEntity exist = this.entityManageService.getEntity(Long.valueOf(id.toString()), ProbeEntity.class);
         if (exist == null) {
             return AjaxResult.error("实体不存在");
         }
 
-        entityManageService.updateEntity(entity);
+        this.entityManageService.updateEntity(entity);
         return AjaxResult.success();
     }
 
     @DeleteMapping("entity")
     public AjaxResult deleteEntity(@QueryParam("id") Long id) {
-        ProbeEntity exist = entityManageService.getProbeEntity(id);
+        ProbeEntity exist = this.entityManageService.getEntity(id, ProbeEntity.class);
         if (exist == null) {
             return AjaxResult.error("实体不存在");
         }
 
-        entityManageService.deleteEntity(exist);
+        this.entityManageService.deleteEntity(exist);
         return AjaxResult.success();
     }
 }

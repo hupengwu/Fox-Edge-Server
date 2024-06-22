@@ -16,9 +16,9 @@ public class TestHttpClientUtil {
 
         String json = "{\n" + "    \"edgeId\" : \"BFEBFBFF000906A3\",\n" + "    \"entityTypeList\" : [\"DeviceValueEntity\"]\n" + "}";
 
-        String result = HttpClientUtil.executePost("http://120.25.241.120:8080/aggregator/config/timestamp", json, header);
-        result = HttpClientUtil.executePost("http://120.25.241.120:8080/aggregator/config/timestamp", json, header);
-        result = HttpClientUtil.executePost("http://120.25.241.120:8080/aggregator/config/timestamp", json, header);
+        String result = HttpClientUtil.executePost("http://120.25.241.120:8080/access/config/timestamp", json, header);
+        result = HttpClientUtil.executePost("http://120.25.241.120:8080/access/config/timestamp", json, header);
+        result = HttpClientUtil.executePost("http://120.25.241.120:8080/access/config/timestamp", json, header);
 
     }
 }

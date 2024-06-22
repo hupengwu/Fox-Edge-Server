@@ -70,4 +70,44 @@ public class DeviceValueExCacheEntity extends BaseEntity {
         list.add(this.manufacturer);
         return list;
     }
+
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.deviceName = (String) map.get("deviceName");
+        this.deviceType = (String) map.get("deviceType");
+        this.manufacturer = (String) map.get("manufacturer");
+
+        this.getParams().clear();
+        Map<String, Object> values = (Map<String, Object>) map.get("params");
+        for (String key : values.keySet()) {
+            Map<String, Object> value = (Map<String, Object>) values.get(key);
+            if (value == null) {
+                continue;
+            }
+
+            DeviceValueExObjectValue objectValue = new DeviceValueExObjectValue();
+            objectValue.bind(value);
+
+            this.getParams().put(key, objectValue);
+        }
+
+    }
+
+    @Override
+    public BaseEntity build(Map<String, Object> map) {
+        try {
+            if (map == null || map.isEmpty()) {
+                return null;
+            }
+
+            DeviceEntity entity = new DeviceEntity();
+            entity.bind(map);
+
+            return entity;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

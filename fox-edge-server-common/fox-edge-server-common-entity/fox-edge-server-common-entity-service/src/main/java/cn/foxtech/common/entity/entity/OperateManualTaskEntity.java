@@ -2,7 +2,9 @@ package cn.foxtech.common.entity.entity;
 
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,5 +47,28 @@ public class OperateManualTaskEntity extends OperateManualTaskBase {
         list.add(this.taskParam);
 
         return list;
+    }
+
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.taskParam = (List<Map<String, Object>>) map.getOrDefault("taskParam", new ArrayList<>());
+    }
+
+    @Override
+    public BaseEntity build(Map<String, Object> map) {
+        try {
+            if (map == null || map.isEmpty()) {
+                return null;
+            }
+
+            OperateManualTaskEntity entity = new OperateManualTaskEntity();
+            entity.bind(map);
+
+            return entity;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

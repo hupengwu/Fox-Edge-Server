@@ -10,6 +10,7 @@ import cn.foxtech.common.entity.utils.ExtendConfigUtils;
 import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.common.file.TempDirManageService;
 import cn.foxtech.common.utils.file.FileTextUtils;
+import cn.foxtech.common.utils.http.ExportUtil;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.core.domain.AjaxResult;
@@ -20,14 +21,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.QueryParam;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @RestController
@@ -219,24 +216,10 @@ public class DeviceMapperManageController {
 
             // 下载文件
             HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
-            File download = new File(this.tempDirManageService.getTempDir() + "/" + fileName);
-            if (download.exists()) {
-                response.setContentType("application/x-msdownload");
-                response.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes(), StandardCharsets.ISO_8859_1));
-
-
-                InputStream inputStream = new FileInputStream(download);
-                ServletOutputStream ouputStream = response.getOutputStream();
-                byte[] b = new byte[1024];
-                int n;
-                while ((n = inputStream.read(b)) != -1) {
-                    ouputStream.write(b, 0, n);
-                }
-                ouputStream.close();
-                inputStream.close();
-            }
+            ExportUtil.exportTextFile(response, this.tempDirManageService.getTempDir(), fileName);
 
             // 删除文件
+            File download = new File(this.tempDirManageService.getTempDir() + "/" + fileName);
             download.delete();
 
         } catch (Exception e) {
@@ -305,7 +288,7 @@ public class DeviceMapperManageController {
                     sValue = "";
                 }
                 // 将逗号替换为中文，避免跟CSV的,冲突
-                sValue = sValue.replace(",","；");
+                sValue = sValue.replace(",", "；");
 
                 if (i + 1 != headerLine.size()) {
                     sb.append(sValue + ",");

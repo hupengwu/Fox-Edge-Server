@@ -7,13 +7,13 @@ import cn.foxtech.common.entity.constant.OperateVOFieldConstant;
 import cn.foxtech.common.entity.entity.*;
 import cn.foxtech.common.entity.service.device.DeviceEntityMaker;
 import cn.foxtech.common.entity.service.device.DeviceEntityService;
-import cn.foxtech.common.entity.service.redis.RedisReader;
 import cn.foxtech.common.entity.service.redis.RedisWriter;
 import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.entity.utils.ExtendConfigUtils;
 import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.common.file.TempDirManageService;
 import cn.foxtech.common.utils.file.FileTextUtils;
+import cn.foxtech.common.utils.http.ExportUtil;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.core.domain.AjaxResult;
@@ -25,14 +25,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.QueryParam;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -171,7 +167,7 @@ public class DeviceManageController {
      * @param mapList
      * @throws JsonParseException
      */
-    private void extend(List<Map<String, Object>> mapList) throws InstantiationException, IllegalAccessException {
+    private void extend(List<Map<String, Object>> mapList) {
         // 构造准备查询的key
         List<String> keys = new ArrayList<>();
         for (Map<String, Object> map : mapList) {
@@ -182,8 +178,7 @@ public class DeviceManageController {
         }
 
         // 读取指定的redis数据
-        RedisReader redisReader = this.entityManageService.getRedisReader(DeviceStatusEntity.class);
-        Map<String, BaseEntity> extendMap = redisReader.readEntityMap(keys);
+        Map<String, BaseEntity> extendMap = this.entityManageService.getEntityMap(keys, DeviceStatusEntity.class);
         if (MethodUtils.hasEmpty(extendMap)) {
             return;
         }
@@ -261,36 +256,25 @@ public class DeviceManageController {
                 return AjaxResult.error("具有null的service key！");
             }
 
-            RedisReader redisReader = this.entityManageService.getRedisReader(DeviceEntity.class);
-            RedisWriter redisWriter = this.entityManageService.getRedisWriter(DeviceEntity.class);
-
-            DeviceEntity exist = (DeviceEntity) redisReader.readEntity(entity.makeServiceKey());
-
             // 新增/修改实体：参数不包含id为新增，包含为修改
             if (params.get("id") == null) {
+                DeviceEntity exist = this.entityManageService.getEntity(entity.makeServiceKey(), DeviceEntity.class);
                 if (exist != null) {
                     return AjaxResult.error("实体已存在");
                 }
 
-                // 写入数据库
-                this.entityService.insertEntity(entity);
-                // 写入redis
-                redisWriter.writeEntity(entity);
-
+                this.entityManageService.insertEntity(entity);
                 return AjaxResult.success();
             } else {
+                Long id = Long.parseLong(params.get("id").toString());
+                DeviceEntity exist = this.entityManageService.getEntity(id, DeviceEntity.class);
                 if (exist == null) {
                     return AjaxResult.error("实体不存在");
                 }
 
                 // 修改数据
-                entity.setId(exist.getId());
-
-                // 写入数据库
-                this.entityService.updateEntity(entity);
-                // 写入redis
-                redisWriter.writeEntity(entity);
-
+                entity.setId(id);
+                this.entityManageService.updateEntity(entity);
                 return AjaxResult.success();
             }
         } catch (Exception e) {
@@ -346,29 +330,15 @@ public class DeviceManageController {
             Map<String, Object> data = (Map<String, Object>) result.get(AjaxResult.DATA_TAG);
             List<Map<String, Object>> dataList = (List<Map<String, Object>>) data.get("list");
 
-            // 导出文件
+            // 生成本地文件
             String fileName = this.exportFile(dataList);
 
             // 下载文件
             HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
-            File download = new File(this.tempDirManageService.getTempDir() + "/" + fileName);
-            if (download.exists()) {
-                response.setContentType("application/x-msdownload");
-                response.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes(), StandardCharsets.ISO_8859_1));
-
-
-                InputStream inputStream = new FileInputStream(download);
-                ServletOutputStream ouputStream = response.getOutputStream();
-                byte[] b = new byte[1024];
-                int n;
-                while ((n = inputStream.read(b)) != -1) {
-                    ouputStream.write(b, 0, n);
-                }
-                ouputStream.close();
-                inputStream.close();
-            }
+            ExportUtil.exportTextFile(response, this.tempDirManageService.getTempDir(), fileName);
 
             // 删除文件
+            File download = new File(this.tempDirManageService.getTempDir() + "/" + fileName);
             download.delete();
 
         } catch (Exception e) {

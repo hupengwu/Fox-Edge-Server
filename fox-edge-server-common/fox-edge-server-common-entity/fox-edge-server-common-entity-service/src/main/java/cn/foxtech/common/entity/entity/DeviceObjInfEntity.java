@@ -1,7 +1,6 @@
 package cn.foxtech.common.entity.entity;
 
 
-import cn.foxtech.common.utils.number.NumberUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -84,11 +83,20 @@ public class DeviceObjInfEntity extends BaseEntity {
         this.valueType = other.valueType;
 
 
-        this.setId(other.getId());
-        this.setCreateTime(other.getCreateTime());
-        this.setUpdateTime(other.getUpdateTime());
+        super.bind(other);
     }
 
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.deviceType = (String) map.get("deviceType");
+        this.manufacturer = (String) map.get("manufacturer");
+        this.objectName = (String) map.get("objectName");
+        this.valueType = (String) map.get("valueType");
+    }
+
+    @Override
     public BaseEntity build(Map<String, Object> map) {
         try {
             if (map == null || map.isEmpty()) {
@@ -96,15 +104,7 @@ public class DeviceObjInfEntity extends BaseEntity {
             }
 
             DeviceObjInfEntity entity = new DeviceObjInfEntity();
-            entity.setId(NumberUtils.makeLong(map.get("id")));
-            entity.setCreateTime(NumberUtils.makeLong(map.get("createTime")));
-            entity.setUpdateTime(NumberUtils.makeLong(map.get("updateTime")));
-
-
-            entity.setDeviceType((String) map.get("deviceType"));
-            entity.setManufacturer((String) map.get("manufacturer"));
-            entity.setObjectName((String) map.get("objectName"));
-            entity.setValueType((String) map.get("valueType"));
+            entity.bind(map);
 
             return entity;
         } catch (Exception e) {

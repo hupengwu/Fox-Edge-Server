@@ -95,6 +95,7 @@ public class DeviceValueEntity extends BaseEntity {
         return map;
     }
 
+
     /**
      * 业务Key
      *
@@ -133,9 +134,7 @@ public class DeviceValueEntity extends BaseEntity {
     }
 
     public void bind(DeviceValueEntity other) {
-        this.setId(other.getId());
-        this.setCreateTime(other.getCreateTime());
-        this.setUpdateTime(other.getUpdateTime());
+        super.bind(other);
 
         this.deviceName = other.deviceName;
         this.deviceType = other.deviceType;
@@ -143,6 +142,30 @@ public class DeviceValueEntity extends BaseEntity {
         this.params = other.params;
     }
 
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.deviceName = ((String) map.get("deviceName"));
+        this.deviceType = ((String) map.get("deviceType"));
+        this.manufacturer = ((String) map.get("manufacturer"));
+
+        this.getParams().clear();
+        Map<String, Object> values = (Map<String, Object>) map.get("params");
+        for (String key : values.keySet()) {
+            Map<String, Object> value = (Map<String, Object>) values.get(key);
+            if (value == null) {
+                continue;
+            }
+
+            DeviceObjectValue objectValue = new DeviceObjectValue();
+            objectValue.bind(value);
+
+            this.getParams().put(key, objectValue);
+        }
+    }
+
+    @Override
     public BaseEntity build(Map<String, Object> map) {
         try {
             if (map == null || map.isEmpty()) {
@@ -150,27 +173,7 @@ public class DeviceValueEntity extends BaseEntity {
             }
 
             DeviceValueEntity entity = new DeviceValueEntity();
-            entity.setId(NumberUtils.makeLong(map.get("id")));
-            entity.setCreateTime(NumberUtils.makeLong(map.get("createTime")));
-            entity.setUpdateTime(NumberUtils.makeLong(map.get("updateTime")));
-
-
-            entity.setDeviceName((String) map.get("deviceName"));
-            entity.setDeviceType((String) map.get("deviceType"));
-            entity.setManufacturer((String) map.get("manufacturer"));
-
-            Map<String, Object> values = (Map<String, Object>) map.get("params");
-            for (String key : values.keySet()) {
-                Map<String, Object> value = (Map<String, Object>) values.get(key);
-                if (value == null) {
-                    continue;
-                }
-
-                DeviceObjectValue objectValue = new DeviceObjectValue();
-                objectValue.setTime(NumberUtils.makeLong(value.get("time")));
-                objectValue.setValue(value.get("value"));
-                entity.getParams().put(key, objectValue);
-            }
+            entity.bind(map);
 
             return entity;
         } catch (Exception e) {

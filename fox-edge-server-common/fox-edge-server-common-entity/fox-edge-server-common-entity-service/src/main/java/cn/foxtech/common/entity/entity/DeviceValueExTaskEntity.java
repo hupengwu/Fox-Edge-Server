@@ -48,6 +48,29 @@ public class DeviceValueExTaskEntity extends DeviceValueExTaskBase {
         return list;
     }
 
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.taskParam = ((Map<String, Object>) map.getOrDefault("taskParam", new HashMap<>()));
+    }
+
+    @Override
+    public BaseEntity build(Map<String, Object> map) {
+        try {
+            if (map == null || map.isEmpty()) {
+                return null;
+            }
+
+            DeviceValueExTaskEntity entity = new DeviceValueExTaskEntity();
+            entity.bind(map);
+
+            return entity;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public void updateTaskParam(Map<String, Object> input) {
         Map<String, Object> param1 = this.taskParam;
         Map<String, Object> input1 = input;

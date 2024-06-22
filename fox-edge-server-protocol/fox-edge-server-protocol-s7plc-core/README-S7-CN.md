@@ -10,7 +10,7 @@
 
 这部还是非常感谢原作者xingshuang免费提供的MIT开源协议，允许灵狐在对其进行改造和商用。<br>
 
-Fox-Edge集成的是2023//9/28日的iot-communication的1.4.3版
+Fox-Edge集成的是iot-communication代码分支的2024/4/29的1.5.1版
 
 [原作者源码](https://gitee.com/xingshuang/iot-communication.git)
 
@@ -20,7 +20,7 @@ Fox-Edge集成的是2023//9/28日的iot-communication的1.4.3版
 <dependency>
     <groupId>com.github.xingshuangs</groupId>
     <artifactId>iot-communication</artifactId>
-    <version>1.4.3</version>
+    <version>1.5.1</version>
 </dependency>
 ```
 

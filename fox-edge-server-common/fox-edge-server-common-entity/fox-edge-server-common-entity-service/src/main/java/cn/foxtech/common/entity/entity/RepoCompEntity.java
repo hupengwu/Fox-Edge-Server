@@ -28,4 +28,27 @@ public class RepoCompEntity extends RepoCompBase {
 
         return list;
     }
+
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.compParam = (Map<String, Object>) map.getOrDefault("compParam", new HashMap<>());
+    }
+
+    @Override
+    public BaseEntity build(Map<String, Object> map) {
+        try {
+            if (map == null || map.isEmpty()) {
+                return null;
+            }
+
+            RepoCompEntity entity = new RepoCompEntity();
+            entity.bind(map);
+
+            return entity;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

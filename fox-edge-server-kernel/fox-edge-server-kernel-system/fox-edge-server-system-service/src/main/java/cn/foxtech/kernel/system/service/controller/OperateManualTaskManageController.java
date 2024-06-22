@@ -30,11 +30,15 @@ public class OperateManualTaskManageController {
         return AjaxResult.success(EntityVOBuilder.buildVOList(entityList));
     }
 
+
     @PostMapping("entitiesByName")
     public AjaxResult selectEntityListByNameList(@RequestBody List<String> nameList) {
         Map<String, BaseEntity> result = new HashMap<>();
         for (String name : nameList) {
-            OperateManualTaskEntity entity = this.entityManageService.getOperateManualTaskEntity(name);
+            OperateManualTaskEntity entity = new OperateManualTaskEntity();
+            entity.setTaskName(name);
+
+            entity = this.entityManageService.getEntity(entity.makeServiceKey(), OperateManualTaskEntity.class);
             if (entity == null) {
                 continue;
             }

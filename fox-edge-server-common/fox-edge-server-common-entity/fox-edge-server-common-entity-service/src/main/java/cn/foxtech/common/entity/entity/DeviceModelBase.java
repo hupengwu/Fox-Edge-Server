@@ -64,22 +64,19 @@ public class DeviceModelBase extends BaseEntity {
     }
 
     public void bind(DeviceModelBase other) {
-        this.setId(other.getId());
-        this.setCreateTime(other.getCreateTime());
-        this.setUpdateTime(other.getUpdateTime());
+        super.bind(other);
 
         this.modelName = other.modelName;
         this.deviceType = other.deviceType;
         this.manufacturer = other.manufacturer;
     }
 
-    public void bind(Map<String, Object> map){
-        this.setId(Long.parseLong(map.getOrDefault("id","0").toString()));
-        this.setCreateTime(Long.parseLong(map.getOrDefault("createTime","0").toString()));
-        this.setUpdateTime(Long.parseLong(map.getOrDefault("updateTime","0").toString()));
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
 
-        this.manufacturer = (String)map.get("manufacturer");
-        this.deviceType = (String)map.get("deviceType");
-        this.modelName = (String)map.get("modelName");
+        this.manufacturer = (String) map.get("manufacturer");
+        this.deviceType = (String) map.get("deviceType");
+        this.modelName = (String) map.get("modelName");
     }
 }

@@ -80,4 +80,32 @@ public class ProbeEntity extends BaseEntity {
         return list;
     }
 
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.deviceName = (String) map.get("deviceName");
+        this.deviceType = (String) map.get("deviceType");
+        this.manufacturer = (String) map.get("manufacturer");
+        this.operateName = (String) map.get("operateName");
+        this.params = (Map<String, Object>) map.getOrDefault("params", new HashMap<>());
+        this.period = (Map<String, Object>) map.getOrDefault("period", new HashMap<>());
+    }
+
+    @Override
+    public BaseEntity build(Map<String, Object> map) {
+        try {
+            if (map == null || map.isEmpty()) {
+                return null;
+            }
+
+            ProbeEntity entity = new ProbeEntity();
+            entity.bind(map);
+
+            return entity;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }

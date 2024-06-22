@@ -68,15 +68,23 @@ public class DeviceStatusEntity extends BaseEntity {
     }
 
     public void bind(DeviceStatusEntity other) {
-        this.setId(other.getId());
-        this.setCreateTime(other.getCreateTime());
-        this.setUpdateTime(other.getUpdateTime());
+        super.bind(other);
 
         this.commSuccessTime = other.commSuccessTime;
         this.commFailedTime = other.commFailedTime;
         this.commFailedCount = other.commFailedCount;
     }
 
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.commFailedCount = (NumberUtils.makeInteger(map.getOrDefault("commFailedCount", 0)));
+        this.commSuccessTime = (NumberUtils.makeLong(map.getOrDefault("commSuccessTime", 0L)));
+        this.commFailedTime = (NumberUtils.makeLong(map.getOrDefault("commFailedTime", 0L)));
+    }
+
+    @Override
     public BaseEntity build(Map<String, Object> map) {
         try {
             if (map == null || map.isEmpty()) {
@@ -84,13 +92,7 @@ public class DeviceStatusEntity extends BaseEntity {
             }
 
             DeviceStatusEntity entity = new DeviceStatusEntity();
-            entity.setId(NumberUtils.makeLong(map.get("id")));
-            entity.setCreateTime(NumberUtils.makeLong(map.get("createTime")));
-            entity.setUpdateTime(NumberUtils.makeLong(map.get("updateTime")));
-
-            entity.setCommFailedCount(NumberUtils.makeInteger(map.getOrDefault("commFailedCount", 0)));
-            entity.setCommSuccessTime(NumberUtils.makeLong(map.getOrDefault("commSuccessTime", 0L)));
-            entity.setCommFailedTime(NumberUtils.makeLong(map.getOrDefault("commFailedTime", 0L)));
+            entity.bind(map);
 
             return entity;
         } catch (Exception e) {

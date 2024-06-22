@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
@@ -63,12 +64,19 @@ public class IotDeviceModelBase extends BaseEntity {
     }
 
     public void bind(IotDeviceModelBase other) {
-        this.setId(other.getId());
-        this.setCreateTime(other.getCreateTime());
-        this.setUpdateTime(other.getUpdateTime());
+        super.bind(other);
 
         this.modelName = other.modelName;
         this.modelType = other.modelType;
         this.provider = other.provider;
+    }
+
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.modelName = (String) map.get("modelName");
+        this.modelType = (String) map.get("modelType");
+        this.provider = (String) map.get("provider");
     }
 }

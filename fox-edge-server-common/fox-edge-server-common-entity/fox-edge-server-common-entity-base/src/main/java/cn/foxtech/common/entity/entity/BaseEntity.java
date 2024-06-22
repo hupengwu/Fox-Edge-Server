@@ -1,5 +1,6 @@
 package cn.foxtech.common.entity.entity;
 
+import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.core.exception.ServiceException;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -96,6 +97,18 @@ public abstract class BaseEntity implements Serializable {
 
     public BaseEntity build(Map<String, Object> map) {
         throw new ServiceException(this.getClass().getSimpleName() + "未重载BaseEntity build(Map<String,Object> map)函数");
+    }
+
+    public void bind(Map<String, Object> map) {
+        this.setId(NumberUtils.makeLong(map.get("id")));
+        this.setCreateTime(NumberUtils.makeLong(map.get("createTime")));
+        this.setUpdateTime(NumberUtils.makeLong(map.get("updateTime")));
+    }
+
+    public void bind(BaseEntity other) {
+        this.setId(other.getId());
+        this.setCreateTime(other.getCreateTime());
+        this.setUpdateTime(other.getUpdateTime());
     }
 
     private boolean equals(Object a, Object b) {

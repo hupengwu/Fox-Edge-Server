@@ -1,5 +1,6 @@
 package cn.foxtech.common.entity.entity;
 
+import cn.foxtech.common.utils.number.NumberUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -81,8 +83,17 @@ public class OperateChannelTaskBase extends BaseEntity {
         this.timeout = other.timeout;
 
 
-        this.setId(other.getId());
-        this.setCreateTime(other.getCreateTime());
-        this.setUpdateTime(other.getUpdateTime());
+        super.bind(other);
+    }
+
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.taskName = (String) map.get("taskName");
+        this.channelName = (String) map.get("channelName");
+        this.channelType = (String) map.get("channelType");
+        this.sendMode = (String) map.get("sendMode");
+        this.timeout = NumberUtils.makeInteger(map.get("timeout"));
     }
 }

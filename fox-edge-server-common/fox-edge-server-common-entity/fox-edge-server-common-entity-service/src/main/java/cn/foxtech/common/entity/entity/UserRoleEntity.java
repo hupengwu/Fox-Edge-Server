@@ -1,10 +1,13 @@
 package cn.foxtech.common.entity.entity;
 
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -41,5 +44,28 @@ public class UserRoleEntity extends UserRoleBase {
         list.add(this.params);
 
         return list;
+    }
+
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.params = (Set<Object>) map.getOrDefault("params", new HashSet<>());
+    }
+
+    @Override
+    public BaseEntity build(Map<String, Object> map) {
+        try {
+            if (map == null || map.isEmpty()) {
+                return null;
+            }
+
+            UserRoleEntity entity = new UserRoleEntity();
+            entity.bind(map);
+
+            return entity;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

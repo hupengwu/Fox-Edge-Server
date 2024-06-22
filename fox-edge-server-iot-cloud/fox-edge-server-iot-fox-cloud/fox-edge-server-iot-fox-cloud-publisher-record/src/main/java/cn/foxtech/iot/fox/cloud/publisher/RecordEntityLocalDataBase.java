@@ -81,7 +81,7 @@ public class RecordEntityLocalDataBase {
         // 获得该表所包含的json字段
         Set<String> jsn2obj = this.getTableJsonColumns(tableName);
 
-        // 分页查询数据
+        // 分页查询数据：按ID顺序ASC查询
         return this.foxSqlService.selectMapList("SELECT * FROM " + tableName + " WHERE id > " + pageId + " ORDER  BY id ASC LIMIT " + pageSize, true, jsn2obj);
     }
 
@@ -99,7 +99,7 @@ public class RecordEntityLocalDataBase {
         // 获得该表所包含的json字段
         Set<String> jsn2obj = this.getTableJsonColumns(tableName);
 
-        // 分页查询数据
+        // 分页查询数据：按ID倒序DESC查询
         return this.foxSqlService.selectMapList("SELECT * FROM " + tableName + " ORDER  BY id DESC LIMIT 1", true, jsn2obj);
     }
 

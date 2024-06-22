@@ -8,10 +8,7 @@ import cn.foxtech.core.exception.ServiceException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 对象管理器：在父类的基础上，增加对象级的操作方法
@@ -52,6 +49,10 @@ public class EntityObjectManager extends EntityBaseManager {
      */
     public <T> T readEntity(String entityKey, Class<T> clazz) throws IOException {
         return this.entityRedisComponent.readEntity(entityKey, clazz);
+    }
+
+    public <T> Map<String, BaseEntity> getEntityMap(Collection<String> entityKeys, Class<T> clazz) {
+        return this.entityRedisComponent.getEntityMap(clazz, entityKeys);
     }
 
     public <T> Map<String, Object> readHashMap(String entityKey, Class<T> clazz) throws JsonProcessingException {
@@ -98,21 +99,6 @@ public class EntityObjectManager extends EntityBaseManager {
         return this.entityRedisComponent.getEntityNotify(clazz);
     }
 
-    public Set<String> getDBServiceList() {
-        Set<String> result = new HashSet<>();
-        result.addAll(this.entityMySQLComponent.getDBService().keySet());
-        return result;
-    }
-
-    public BaseEntityService getDBService(String entityType) {
-        BaseEntityService producerEntityService = this.entityMySQLComponent.getEntityServiceBySimpleName(entityType);
-        if (producerEntityService == null) {
-            throw new ServiceException("在DB上未注册该实体：" + entityType);
-        }
-
-        return producerEntityService;
-    }
-
     public Set<String> getEntityTypeList() {
         Set<String> result = new HashSet<>();
         result.addAll(this.entityRedisComponent.getProducer());
@@ -134,19 +120,24 @@ public class EntityObjectManager extends EntityBaseManager {
      * @param entity 实体
      */
     public void insertEntity(BaseEntity entity) {
-        // 获得Redis部件
-        if (!this.entityRedisComponent.getProducer().contains(entity.getClass().getSimpleName())) {
-            throw new ServiceException("在RD上未注册该实体：" + entity.getClass().getSimpleName());
-        }
-
-        // 获得数据库部件
-        ProducerRedisService producerRedisService = (ProducerRedisService) this.entityRedisComponent.getBaseRedisService(entity.getClass());
         BaseEntityService producerEntityService = this.entityMySQLComponent.getEntityService(entity.getClass());
         if (producerEntityService == null) {
             throw new ServiceException("在DB上未注册该实体：" + entity.getClass().getSimpleName());
         }
 
-        EntityServiceUtils.insertEntity(producerEntityService, producerRedisService, entity);
+        // 生产者模式
+        if (this.entityRedisComponent.getProducer().contains(entity.getClass().getSimpleName())) {
+            ProducerRedisService producerRedisService = (ProducerRedisService) this.entityRedisComponent.getBaseRedisService(entity.getClass());
+            EntityServiceUtils.insertEntity(producerEntityService, producerRedisService, entity);
+            return;
+        }
+
+        // 直写redis模式
+        if (this.entityRedisComponent.getWriter().contains(entity.getClass().getSimpleName())) {
+            RedisWriter redisWriter = this.entityRedisComponent.getBaseRedisWriter(entity.getClass().getSimpleName());
+            EntityServiceUtils.insertEntity(producerEntityService, redisWriter, entity);
+            return;
+        }
     }
 
     /**
@@ -175,17 +166,24 @@ public class EntityObjectManager extends EntityBaseManager {
      * @param entity 实体
      */
     public void deleteEntity(BaseEntity entity) {
-        if (!this.entityRedisComponent.getProducer().contains(entity.getClass().getSimpleName())) {
-            throw new ServiceException("在RD上未注册该实体：" + entity.getClass().getSimpleName());
-        }
-
-        ProducerRedisService producerRedisService = (ProducerRedisService) this.entityRedisComponent.getBaseRedisService(entity.getClass());
         BaseEntityService producerEntityService = this.entityMySQLComponent.getEntityService(entity.getClass());
         if (producerEntityService == null) {
             throw new ServiceException("在DB上未注册该实体：" + entity.getClass().getSimpleName());
         }
 
-        EntityServiceUtils.deleteEntity(producerEntityService, producerRedisService, entity);
+        // 生产者模式
+        if (this.entityRedisComponent.getProducer().contains(entity.getClass().getSimpleName())) {
+            ProducerRedisService producerRedisService = (ProducerRedisService) this.entityRedisComponent.getBaseRedisService(entity.getClass());
+            EntityServiceUtils.deleteEntity(producerEntityService, producerRedisService, entity);
+            return;
+        }
+
+        // 直写redis模式
+        if (this.entityRedisComponent.getWriter().contains(entity.getClass().getSimpleName())) {
+            RedisWriter redisWriter = this.entityRedisComponent.getBaseRedisWriter(entity.getClass().getSimpleName());
+            EntityServiceUtils.deleteEntity(producerEntityService, redisWriter, entity);
+            return;
+        }
     }
 
     /**
@@ -196,41 +194,55 @@ public class EntityObjectManager extends EntityBaseManager {
      * @param <T>   类型
      */
     public <T> void deleteEntity(Long id, Class<T> clazz) {
-        if (!this.entityRedisComponent.getProducer().contains(clazz.getSimpleName())) {
-            throw new ServiceException("在RD上未注册该实体：" + clazz.getSimpleName());
-        }
-
-        ProducerRedisService producerRedisService = (ProducerRedisService) this.entityRedisComponent.getBaseRedisService(clazz);
         BaseEntityService producerEntityService = this.entityMySQLComponent.getEntityService(clazz);
         if (producerEntityService == null) {
             throw new ServiceException("在DB上未注册该实体：" + clazz.getSimpleName());
         }
 
-        BaseEntity entity = producerRedisService.getEntity(id);
+        BaseEntity entity = (BaseEntity) this.getEntity(id, clazz);
         if (entity == null) {
             return;
         }
 
-        EntityServiceUtils.deleteEntity(producerEntityService, producerRedisService, entity);
+        // 生产者模式
+        if (this.entityRedisComponent.getProducer().contains(clazz.getSimpleName())) {
+            ProducerRedisService producerRedisService = (ProducerRedisService) this.entityRedisComponent.getBaseRedisService(entity.getClass());
+            EntityServiceUtils.deleteEntity(producerEntityService, producerRedisService, entity);
+            return;
+        }
+
+        // 直写redis模式
+        if (this.entityRedisComponent.getWriter().contains(clazz.getSimpleName())) {
+            RedisWriter redisWriter = this.entityRedisComponent.getBaseRedisWriter(clazz.getSimpleName());
+            EntityServiceUtils.deleteEntity(producerEntityService, redisWriter, entity);
+            return;
+        }
     }
 
     public <T> void deleteEntity(String serviceKey, Class<T> clazz) {
-        if (!this.entityRedisComponent.getProducer().contains(clazz.getSimpleName())) {
-            throw new ServiceException("在RD上未注册该实体：" + clazz.getSimpleName());
-        }
-
-        ProducerRedisService producerRedisService = (ProducerRedisService) this.entityRedisComponent.getBaseRedisService(clazz);
         BaseEntityService producerEntityService = this.entityMySQLComponent.getEntityService(clazz);
         if (producerEntityService == null) {
             throw new ServiceException("在DB上未注册该实体：" + clazz.getSimpleName());
         }
 
-        BaseEntity entity = producerRedisService.getEntity(serviceKey);
+        BaseEntity entity = (BaseEntity) this.getEntity(serviceKey, clazz);
         if (entity == null) {
             return;
         }
 
-        EntityServiceUtils.deleteEntity(producerEntityService, producerRedisService, entity);
+        // 生产者模式
+        if (this.entityRedisComponent.getProducer().contains(clazz.getSimpleName())) {
+            ProducerRedisService producerRedisService = (ProducerRedisService) this.entityRedisComponent.getBaseRedisService(entity.getClass());
+            EntityServiceUtils.deleteEntity(producerEntityService, producerRedisService, entity);
+            return;
+        }
+
+        // 直写redis模式
+        if (this.entityRedisComponent.getWriter().contains(clazz.getSimpleName())) {
+            RedisWriter redisWriter = this.entityRedisComponent.getBaseRedisWriter(clazz.getClass().getSimpleName());
+            EntityServiceUtils.deleteEntity(producerEntityService, redisWriter, entity);
+            return;
+        }
     }
 
     /**
@@ -260,19 +272,26 @@ public class EntityObjectManager extends EntityBaseManager {
      * @param entity 实体
      */
     public void updateEntity(BaseEntity entity) {
-        // 获得REDIS部件
-        if (!this.entityRedisComponent.getProducer().contains(entity.getClass().getSimpleName())) {
-            throw new ServiceException("在RD上未注册该实体：" + entity.getClass().getSimpleName());
-        }
-
-        // 获得数据库部件
-        ProducerRedisService producerRedisService = (ProducerRedisService) this.entityRedisComponent.getBaseRedisService(entity.getClass());
         BaseEntityService producerEntityService = this.entityMySQLComponent.getEntityService(entity.getClass());
         if (producerEntityService == null) {
             throw new ServiceException("在DB上未注册该实体：" + entity.getClass().getSimpleName());
         }
 
-        EntityServiceUtils.updateEntity(producerEntityService, producerRedisService, entity);
+        // 生产者模式
+        if (this.entityRedisComponent.getProducer().contains(entity.getClass().getSimpleName())) {
+            // 获得数据库部件
+            ProducerRedisService producerRedisService = (ProducerRedisService) this.entityRedisComponent.getBaseRedisService(entity.getClass());
+            EntityServiceUtils.updateEntity(producerEntityService, producerRedisService, entity);
+            return;
+        }
+
+        // 直写redis模式
+        if (this.entityRedisComponent.getWriter().contains(entity.getClass().getSimpleName())) {
+            // 获得数据库部件
+            RedisWriter redisWriter = this.entityRedisComponent.getBaseRedisWriter(entity.getClass().getSimpleName());
+            EntityServiceUtils.updateEntity(producerEntityService, redisWriter, entity);
+            return;
+        }
     }
 
     /**

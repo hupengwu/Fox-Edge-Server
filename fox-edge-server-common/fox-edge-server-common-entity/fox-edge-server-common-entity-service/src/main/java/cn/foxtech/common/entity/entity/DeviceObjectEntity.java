@@ -3,10 +3,13 @@ package cn.foxtech.common.entity.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
@@ -82,9 +85,32 @@ public class DeviceObjectEntity extends BaseEntity {
         this.deviceName = other.deviceName;
         this.objectName = other.objectName;
 
+        super.bind(other);
+    }
 
-        this.setId(other.getId());
-        this.setCreateTime(other.getCreateTime());
-        this.setUpdateTime(other.getUpdateTime());
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.manufacturer = (String) map.get("manufacturer");
+        this.deviceType = (String) map.get("deviceType");
+        this.deviceName = (String) map.get("deviceName");
+        this.objectName = (String) map.get("objectName");
+    }
+
+    @Override
+    public BaseEntity build(Map<String, Object> map) {
+        try {
+            if (map == null || map.isEmpty()) {
+                return null;
+            }
+
+            DeviceObjectEntity entity = new DeviceObjectEntity();
+            entity.bind(map);
+
+            return entity;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

@@ -66,7 +66,7 @@ public class RemoteService {
         } else {
             ObjectMapper objectMapper = new ObjectMapper();
             String requestJson = objectMapper.writeValueAsString(requestVO);
-            return this.httpProxyService.executeRestful("/aggregator" + res, "post", requestJson);
+            return this.httpProxyService.executeRestful("/access" + res, "post", requestJson);
         }
     }
 

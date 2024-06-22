@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,10 +52,27 @@ public class DeviceModelEntity extends DeviceModelBase {
         this.extendParam = other.extendParam;
     }
 
+    @Override
     public void bind(Map<String, Object> map) {
         super.bind(map);
 
-        this.modelParam = (Map<String, Object>) map.get("modelParam");
-        this.extendParam = (Map<String, Object>) map.get("extendParam");
+        this.modelParam = ((Map<String, Object>) map.getOrDefault("modelParam", new HashMap<>()));
+        this.extendParam = ((Map<String, Object>) map.getOrDefault("extendParam", new HashMap<>()));
+    }
+
+    @Override
+    public BaseEntity build(Map<String, Object> map) {
+        try {
+            if (map == null || map.isEmpty()) {
+                return null;
+            }
+
+            DeviceModelEntity entity = new DeviceModelEntity();
+            entity.bind(map);
+
+            return entity;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

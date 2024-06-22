@@ -11,7 +11,6 @@ import cn.foxtech.common.entity.entity.DeviceObjectEntity;
 import cn.foxtech.common.entity.entity.DeviceObjectValue;
 import cn.foxtech.common.entity.entity.DeviceValueEntity;
 import cn.foxtech.common.entity.service.deviceobject.DeviceObjectEntityMapper;
-import cn.foxtech.common.entity.service.redis.RedisReader;
 import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.entity.utils.ExtendUtils;
 import cn.foxtech.common.entity.utils.PageUtils;
@@ -105,14 +104,13 @@ public class DeviceValueManageController {
             List<DeviceObjectEntity> entityList = this.mapper.executeSelectData(selectPage);
 
             // 从redis中直接读取真正的设备数值
-            Set<Object> deviceNames = new HashSet<>();
-            RedisReader redisReader = this.entityManageService.getRedisReader(DeviceValueEntity.class);
+            Set<String> deviceNames = new HashSet<>();
             for (DeviceObjectEntity entity : entityList) {
                 DeviceValueEntity deviceValueEntity = new DeviceValueEntity();
                 deviceValueEntity.setDeviceName(entity.getDeviceName());
                 deviceNames.add(deviceValueEntity.makeServiceKey());
             }
-            Map<String, BaseEntity> deviceValueMap = redisReader.readEntityMap(deviceNames);
+            Map<String, BaseEntity> deviceValueMap = this.entityManageService.getEntityMap(deviceNames, DeviceValueEntity.class);
 
             // 组织扩展信息：
             Long time = System.currentTimeMillis();

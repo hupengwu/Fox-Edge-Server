@@ -150,6 +150,11 @@ public class EntityServiceUtils {
         redisService.insertEntity(baseEntity);
     }
 
+    public static void insertEntity(BaseEntityService entityService, RedisWriter redisWriter, BaseEntity baseEntity) {
+        entityService.insertEntity(baseEntity);
+        redisWriter.writeEntity(baseEntity);
+    }
+
     /**
      * 删除实体
      *
@@ -162,6 +167,11 @@ public class EntityServiceUtils {
         redisService.deleteEntity(baseEntity.makeServiceKey());
     }
 
+    public static void deleteEntity(BaseEntityService entityService, RedisWriter redisWriter, BaseEntity baseEntity) {
+        entityService.deleteEntity(baseEntity);
+        redisWriter.deleteEntity(baseEntity.makeServiceKey());
+    }
+
     /**
      * 更新
      *
@@ -172,5 +182,10 @@ public class EntityServiceUtils {
     public static void updateEntity(BaseEntityService entityService, BaseProducerRedisService redisService, BaseEntity baseEntity) {
         entityService.updateEntity(baseEntity);
         redisService.updateEntity(baseEntity);
+    }
+
+    public static void updateEntity(BaseEntityService entityService, RedisWriter redisWriter, BaseEntity baseEntity) {
+        entityService.updateEntity(baseEntity);
+        redisWriter.writeEntity(baseEntity);
     }
 }

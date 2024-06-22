@@ -4,7 +4,6 @@ import cn.foxtech.common.entity.constant.ChannelVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.ChannelEntity;
 import cn.foxtech.common.entity.entity.ChannelStatusEntity;
-import cn.foxtech.common.entity.service.redis.RedisReader;
 import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.core.domain.AjaxResult;
@@ -12,7 +11,6 @@ import cn.foxtech.kernel.system.common.service.EntityManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -53,13 +51,7 @@ public class ChannelStatusManageController {
      */
     private AjaxResult selectEntityList(Map<String, Object> body, boolean isPage) {
         try {
-            // 从redis读取缓存数据
-            RedisReader redisReader = this.entityManageService.getRedisReader(ChannelStatusEntity.class);
-            List<BaseEntity> entityList = redisReader.readEntityList();
-
-            // 筛选数据
-            List<BaseEntity> resultList = new ArrayList<>();
-            for (BaseEntity entity : entityList) {
+            List<BaseEntity> resultList = this.entityManageService.getEntityList(ChannelStatusEntity.class, (Object entity) -> {
                 ChannelStatusEntity channelEntity = (ChannelStatusEntity) entity;
 
                 boolean result = true;
@@ -71,14 +63,8 @@ public class ChannelStatusManageController {
                     result &= channelEntity.getChannelType().equals(body.get(ChannelVOFieldConstant.field_channel_type));
                 }
 
-                if (!result) {
-                    continue;
-                }
-
-                resultList.add(channelEntity);
-            }
-
-
+                return result;
+            });
             // 获得分页数据
             if (isPage) {
                 return PageUtils.getPageList(resultList, body);

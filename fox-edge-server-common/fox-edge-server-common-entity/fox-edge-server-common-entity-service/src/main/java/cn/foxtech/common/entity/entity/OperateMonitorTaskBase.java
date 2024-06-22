@@ -1,10 +1,13 @@
 package cn.foxtech.common.entity.entity;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
@@ -64,9 +67,15 @@ public class OperateMonitorTaskBase extends BaseEntity {
         this.deviceType = other.deviceType;
         this.manufacturer = other.manufacturer;
 
+        super.bind(other);
+    }
 
-        this.setId(other.getId());
-        this.setCreateTime(other.getCreateTime());
-        this.setUpdateTime(other.getUpdateTime());
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.templateName = (String) map.get("templateName");
+        this.deviceType = (String) map.get("deviceType");
+        this.manufacturer = (String) map.get("manufacturer");
     }
 }

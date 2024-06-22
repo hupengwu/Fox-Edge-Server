@@ -40,7 +40,9 @@ public class OperateMonitorTaskManageController {
     public AjaxResult selectEntityListByNameList(@RequestBody List<String> nameList) {
         Map<String, BaseEntity> result = new HashMap<>();
         for (String name : nameList) {
-            OperateMonitorTaskEntity entity = this.entityManageService.getOperateMonitorTaskEntity(name);
+            OperateMonitorTaskEntity entity = new OperateMonitorTaskEntity();
+            entity.setTemplateName(name);
+            entity = this.entityManageService.getEntity(entity.makeServiceKey(), OperateMonitorTaskEntity.class);
             if (entity == null) {
                 continue;
             }

@@ -69,8 +69,6 @@ public class DeviceRecordBase extends BaseEntity {
         this.manufacturer = other.manufacturer;
         this.recordName = other.recordName;
 
-        this.setId(other.getId());
-        this.setCreateTime(other.getCreateTime());
-        this.setUpdateTime(other.getUpdateTime());
+        super.bind(other);
     }
 }

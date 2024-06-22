@@ -48,16 +48,27 @@ public class OperateEntity extends OperateMethodBase {
         return list;
     }
 
+    @Override
     public void bind(Map<String, Object> map) {
         super.bind(map);
+
         this.engineParam = (Map<String, Object>) map.get("engineParam");
         this.extendParam = (Map<String, Object>) map.get("extendParam");
     }
 
+    @Override
     public BaseEntity build(Map<String, Object> map) {
-        OperateEntity entity = new OperateEntity();
-        entity.bind(map);
+        try {
+            if (map == null || map.isEmpty()) {
+                return null;
+            }
 
-        return entity;
+            OperateEntity entity = new OperateEntity();
+            entity.bind(map);
+
+            return entity;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
@@ -53,9 +54,13 @@ public class UserPermissionBase extends BaseEntity {
     public void bind(UserPermissionBase other) {
         this.name = other.name;
 
+        super.bind(other);
+    }
 
-        this.setId(other.getId());
-        this.setCreateTime(other.getCreateTime());
-        this.setUpdateTime(other.getUpdateTime());
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.name = (String) map.get("name");
     }
 }

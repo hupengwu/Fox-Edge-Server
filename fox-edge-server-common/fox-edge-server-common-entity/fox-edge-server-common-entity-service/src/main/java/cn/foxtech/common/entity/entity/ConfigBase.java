@@ -1,11 +1,15 @@
 package cn.foxtech.common.entity.entity;
 
 
+import cn.foxtech.common.utils.number.NumberUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 配置实体：各服务需要读取预置的全局配置参数
@@ -64,7 +68,7 @@ public class ConfigBase extends BaseEntity {
     /**
      * 获取业务值
      *
-     * @return  对象列表
+     * @return 对象列表
      */
     public List<Object> makeServiceValueList() {
         List<Object> list = new ArrayList<>();
@@ -72,13 +76,21 @@ public class ConfigBase extends BaseEntity {
     }
 
     public void bind(ConfigBase other) {
-        this.setId(other.getId());
-        this.setCreateTime(other.getCreateTime());
-        this.setUpdateTime(other.getUpdateTime());
+        super.bind(other);
 
         this.serviceName = other.serviceName;
         this.serviceType = other.serviceType;
         this.configName = other.configName;
         this.remark = other.remark;
+    }
+
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.serviceName = (String) map.get("serviceName");
+        this.serviceType = (String) map.get("serviceType");
+        this.configName = (String) map.get("configName");
+        this.remark = (String) map.get("remark");
     }
 }

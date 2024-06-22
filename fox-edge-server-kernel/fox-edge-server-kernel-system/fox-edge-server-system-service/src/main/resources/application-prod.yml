@@ -2,6 +2,10 @@
 server:
   port: 9101
 
+  tomcat:
+    threads:
+      max: 4                          # 最大工作线程数，默认4
+
 spring:
   application:
     name: fox-edge-server-manager-system-service

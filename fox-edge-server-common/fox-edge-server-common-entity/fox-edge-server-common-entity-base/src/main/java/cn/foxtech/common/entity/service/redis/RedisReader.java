@@ -158,7 +158,7 @@ public class RedisReader {
         return result;
     }
 
-    private Map<String, BaseEntity> makeHashMap2EntityList(List<Object> jsonList) throws InstantiationException, IllegalAccessException {
+    private Map<String, BaseEntity> makeHashMap2EntityList(Collection<Object> jsonList) throws InstantiationException, IllegalAccessException {
         Class clazz = BaseEntityClassFactory.getInstance(this.getEntityType());
 
         BaseEntity builder = (BaseEntity) clazz.newInstance();
@@ -223,6 +223,25 @@ public class RedisReader {
 
         return null;
     }
+
+    public <T> int getEntityCount(IBaseFinder finder) throws InstantiationException, IllegalAccessException {
+        Class clazz = BaseEntityClassFactory.getInstance(this.getEntityType());
+
+        BaseEntity builder = (BaseEntity) clazz.newInstance();
+
+        int count = 0;
+        List<Map<String, Object>> mapList = this.readHashMapList();
+        for (Map<String, Object> map : mapList) {
+            BaseEntity entity = builder.build(map);
+
+            if (finder.compareValue(entity)) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
 
     public <T> T readEntity(Long id) throws InstantiationException, IllegalAccessException {
         return this.readEntity((Object value) -> {

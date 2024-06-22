@@ -81,9 +81,6 @@ public class OperateRecordBase extends BaseEntity {
         this.clientModel = other.clientModel;
         this.operateUuid = other.operateUuid;
 
-
-        this.setId(other.getId());
-        this.setCreateTime(other.getCreateTime());
-        this.setUpdateTime(other.getUpdateTime());
+        super.bind(other);
     }
 }

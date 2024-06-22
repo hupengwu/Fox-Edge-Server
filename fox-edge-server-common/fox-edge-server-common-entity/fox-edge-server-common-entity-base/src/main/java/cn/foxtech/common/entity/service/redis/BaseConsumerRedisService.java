@@ -4,6 +4,7 @@ import cn.foxtech.common.entity.entity.BaseEntity;
 import com.fasterxml.jackson.core.JsonParseException;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -77,6 +78,11 @@ public abstract class BaseConsumerRedisService extends BaseRedisService {
     @Override
     public BaseEntity getEntity(String entityKey) {
         return super.getEntity(entityKey);
+    }
+
+    @Override
+    public Map<String, BaseEntity> getEntityMap(Collection<String> entityKeys) {
+        return super.getEntityMap(entityKeys);
     }
 
     /**

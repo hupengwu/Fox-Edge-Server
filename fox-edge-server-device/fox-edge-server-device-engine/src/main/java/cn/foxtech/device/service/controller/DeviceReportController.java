@@ -2,6 +2,7 @@ package cn.foxtech.device.service.controller;
 
 import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.common.domain.constant.RedisTopicConstant;
+import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.DeviceEntity;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
@@ -73,9 +74,16 @@ public class DeviceReportController extends PeriodTaskService {
         String channelName = channelRespondVO.getName();
         Object recv = channelRespondVO.getRecv();
 
-        // 获得使用该通道名称的设备详细信息
-        List<DeviceEntity> deviceEntityList = this.entityService.getDeviceEntityList(channelType, channelName);
-        for (DeviceEntity entity : deviceEntityList) {
+        List<BaseEntity> entityList = this.entityService.getEntityList(DeviceEntity.class);
+        for (BaseEntity baseEntity : entityList) {
+            DeviceEntity entity = (DeviceEntity) baseEntity;
+            if (!entity.getChannelName().equals(channelName)) {
+                continue;
+            }
+            if (!entity.getChannelType().equals(channelType)) {
+                continue;
+            }
+
             try {
                 Map<String, Object> param = entity.getDeviceParam();
                 if (param == null) {
@@ -95,7 +103,6 @@ public class DeviceReportController extends PeriodTaskService {
                 logger.debug(e.getMessage());
             }
         }
-
     }
 
 }

@@ -26,6 +26,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public abstract class BaseRedisService {
     /**
+     * 更新通知
+     */
+    private final List<BaseConsumerEntityNotify> entityNotify = new CopyOnWriteArrayList<>();
+    /**
      * 数据表的记录数据：重量级数据
      */
     private Map<String, BaseEntity> dataMap = new ConcurrentHashMap<>();
@@ -49,10 +53,6 @@ public abstract class BaseRedisService {
      * 更新通知
      */
     private BaseConsumerTypeNotify typeNotify = null;
-    /**
-     * 更新通知
-     */
-    private final List<BaseConsumerEntityNotify> entityNotify = new CopyOnWriteArrayList<>();
 
     /**
      * 从派生类中，获得redisService
@@ -100,7 +100,7 @@ public abstract class BaseRedisService {
         this.typeNotify = notify;
     }
 
-    protected List<BaseConsumerEntityNotify> getEntityNotify(){
+    protected List<BaseConsumerEntityNotify> getEntityNotify() {
         return this.entityNotify;
     }
 
@@ -397,11 +397,21 @@ public abstract class BaseRedisService {
      * @return 实体
      */
     protected BaseEntity getEntity(String entityKey) {
-        if (!this.dataMap.containsKey(entityKey)) {
-            return null;
+        return this.dataMap.get(entityKey);
+    }
+
+    protected Map<String, BaseEntity> getEntityMap(Collection<String> entityKeys) {
+        Map<String, BaseEntity> entityMap = new HashMap<>();
+        for (String entityKey : entityKeys) {
+            BaseEntity entity = this.dataMap.get(entityKey);
+            if (entity == null) {
+                continue;
+            }
+
+            entityMap.put(entityKey, entity);
         }
 
-        return this.dataMap.get(entityKey);
+        return entityMap;
     }
 
     /**

@@ -1,7 +1,6 @@
 package cn.foxtech.common.entity.manager;
 
 import cn.foxtech.common.entity.entity.*;
-import cn.foxtech.common.entity.service.redis.BaseRedisService;
 import cn.foxtech.common.entity.service.redis.IBaseFinder;
 import cn.foxtech.common.entity.service.usermenu.UserMenuEntityService;
 import cn.foxtech.common.entity.service.usermenu.UserMenuMaker;
@@ -11,7 +10,6 @@ import cn.foxtech.common.entity.service.userrole.UserRoleEntityService;
 import cn.foxtech.common.entity.service.userrole.UserRoleMaker;
 import cn.foxtech.common.utils.ContainerUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -69,18 +67,6 @@ public abstract class EntityServiceManager extends EntityObjectManager {
         return super.getEntity(entity.makeServiceKey(), DeviceEntity.class);
     }
 
-    public OperateMonitorTaskEntity getOperateMonitorTaskEntity(String templateName) {
-        OperateMonitorTaskEntity entity = new OperateMonitorTaskEntity();
-        entity.setTemplateName(templateName);
-        return super.getEntity(entity.makeServiceKey(), OperateMonitorTaskEntity.class);
-    }
-
-    public OperateManualTaskEntity getOperateManualTaskEntity(String taskName) {
-        OperateManualTaskEntity entity = new OperateManualTaskEntity();
-        entity.setTaskName(taskName);
-        return super.getEntity(entity.makeServiceKey(), OperateManualTaskEntity.class);
-    }
-
     public List<BaseEntity> selectUserMenuEntityListByPage(Map<String, Object> body) {
         UserMenuEntityService entityService = (UserMenuEntityService) this.entityMySQLComponent.getEntityService(UserMenuEntity.class);
 
@@ -129,53 +115,15 @@ public abstract class EntityServiceManager extends EntityObjectManager {
         return super.getEntity(entity.makeServiceKey(), UserEntity.class);
     }
 
-
-    public ProbeEntity getProbeEntity(Long id) {
-        return super.getEntity(id, ProbeEntity.class);
-    }
-
-
-    public List<BaseEntity> getProbeEntityList() {
-        return super.getEntityList(ProbeEntity.class);
-    }
-
-
-    public List<DeviceEntity> getDeviceEntityList(String channelType, String channelName) {
-        List<DeviceEntity> resultList = new ArrayList<>();
-
-        List<BaseEntity> entityList = super.getEntityList(DeviceEntity.class);
-        for (BaseEntity baseEntity : entityList) {
-            DeviceEntity entity = (DeviceEntity) baseEntity;
-            if (!entity.getChannelName().equals(channelName)) {
-                continue;
-            }
-            if (!entity.getChannelType().equals(channelType)) {
-                continue;
-            }
-
-            resultList.add(entity);
-        }
-
-        return resultList;
-    }
-
-    public <T> void foreachFinder(Class<T> clazz, IBaseFinder finder) {
-        BaseRedisService entityRedisService = super.getBaseRedisService(clazz);
-        entityRedisService.foreachFinder(finder);
-    }
-
     public <T> List<BaseEntity> getEntityList(Class<T> clazz, IBaseFinder finder) {
-        BaseRedisService entityRedisService = super.getBaseRedisService(clazz);
-        return entityRedisService.getEntityList(finder);
+        return this.entityRedisComponent.getEntityList(clazz, finder);
     }
 
     public <T> T getEntity(Class<T> clazz, IBaseFinder finder) {
-        BaseRedisService entityRedisService = super.getBaseRedisService(clazz);
-        return (T) entityRedisService.getEntity(finder);
+        return (T) this.entityRedisComponent.getEntity(clazz, finder);
     }
 
     public <T> int getEntityCount(Class<T> clazz, IBaseFinder finder) {
-        BaseRedisService entityRedisService = super.getBaseRedisService(clazz);
-        return entityRedisService.getEntityCount(finder);
+        return this.entityRedisComponent.getEntityCount(clazz, finder);
     }
 }

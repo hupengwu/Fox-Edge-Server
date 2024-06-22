@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
@@ -61,9 +62,14 @@ public class LinkBase extends BaseEntity {
         this.linkType = other.linkType;
         this.linkName = other.linkName;
 
+        super.bind(other);
+    }
 
-        this.setId(other.getId());
-        this.setCreateTime(other.getCreateTime());
-        this.setUpdateTime(other.getUpdateTime());
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.linkType = (String) map.get("linkType");
+        this.linkName = (String) map.get("linkName");
     }
 }

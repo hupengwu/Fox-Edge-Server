@@ -2,10 +2,13 @@ package cn.foxtech.common.entity.entity;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
@@ -57,12 +60,17 @@ public class ChannelBase extends BaseEntity {
     }
 
     public void bind(ChannelBase other) {
+        super.bind(other);
+
         this.channelType = other.channelType;
         this.channelName = other.channelName;
+    }
 
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
 
-        this.setId(other.getId());
-        this.setCreateTime(other.getCreateTime());
-        this.setUpdateTime(other.getUpdateTime());
+        this.channelType = (String) map.get("channelType");
+        this.channelName = (String) map.get("channelName");
     }
 }

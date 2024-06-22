@@ -1,10 +1,13 @@
 package cn.foxtech.common.entity.entity;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
@@ -51,11 +54,15 @@ public class UserMenuBase extends BaseEntity {
     }
 
     public void bind(UserMenuBase other) {
+        super.bind(other);
+
         this.name = other.name;
+    }
 
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
 
-        this.setId(other.getId());
-        this.setCreateTime(other.getCreateTime());
-        this.setUpdateTime(other.getUpdateTime());
+        this.name = (String) map.get("name");
     }
 }

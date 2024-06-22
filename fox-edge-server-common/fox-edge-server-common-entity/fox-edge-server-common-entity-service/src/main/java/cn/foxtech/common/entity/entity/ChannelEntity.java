@@ -55,4 +55,28 @@ public class ChannelEntity extends ChannelBase {
         this.channelParam = other.channelParam;
         this.extendParam = other.extendParam;
     }
+
+    @Override
+    public void bind(Map<String, Object> map) {
+        super.bind(map);
+
+        this.channelParam = ((Map<String, Object>) map.getOrDefault("channelParam", new HashMap<>()));
+        this.extendParam = ((Map<String, Object>) map.getOrDefault("extendParam", new HashMap<>()));
+    }
+
+    @Override
+    public BaseEntity build(Map<String, Object> map) {
+        try {
+            if (map == null || map.isEmpty()) {
+                return null;
+            }
+
+            ChannelEntity entity = new ChannelEntity();
+            entity.bind(map);
+
+            return entity;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
