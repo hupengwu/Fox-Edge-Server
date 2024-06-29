@@ -1,6 +1,6 @@
 package cn.foxtech.channel.hikvision.fire.handler;
 
-import cn.foxtech.channel.common.redislist.RedisListRestfulMessage;
+import cn.foxtech.channel.common.service.RestfulMessageService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.method.MethodUtils;
 import lombok.Setter;
@@ -16,7 +16,7 @@ public class ManageHandler {
     private final Logger logger = Logger.getLogger(this.getClass());
 
     @Autowired
-    private RedisListRestfulMessage redisList;
+    private RestfulMessageService redisList;
 
     @Autowired
     private RedisConsoleService console;

@@ -57,14 +57,14 @@ public class TaskRespondVO extends TaskVO {
         return taskRespondVO;
     }
 
-    public static TaskRespondVO buildRespondVO(Map<String, Object> operateRespondMap) {
+    public static TaskRespondVO buildRespondVO(Map<String, Object> map) {
         TaskRespondVO taskRespondVO = new TaskRespondVO();
-        taskRespondVO.bindBaseVO(operateRespondMap);
+        taskRespondVO.bindBaseVO(map);
 
-        taskRespondVO.setMsg((String) operateRespondMap.get("msg"));
-        taskRespondVO.setCode((Integer) operateRespondMap.get("code"));
+        taskRespondVO.setMsg((String) map.get("msg"));
+        taskRespondVO.setCode((Integer) map.get("code"));
 
-        List<Map<String, Object>> respondVOS = (List<Map<String, Object>>) operateRespondMap.get("respondVOS");
+        List<Map<String, Object>> respondVOS = (List<Map<String, Object>>) map.get("respondVOS");
         for (Map<String, Object> respondMap : respondVOS) {
             OperateRespondVO respondVO = OperateRespondVO.buildOperateRespondVO(respondMap);
 

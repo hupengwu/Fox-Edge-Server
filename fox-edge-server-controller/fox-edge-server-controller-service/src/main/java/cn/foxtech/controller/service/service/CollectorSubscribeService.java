@@ -1,22 +1,21 @@
 package cn.foxtech.controller.service.service;
 
 import cn.foxtech.common.entity.entity.DeviceEntity;
+import cn.foxtech.common.rpc.redis.device.client.RedisListDeviceClient;
+import cn.foxtech.common.rpc.redis.persist.client.RedisListPersistClient;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
-import cn.foxtech.common.utils.syncobject.SyncQueueObjectMap;
-import cn.foxtech.controller.common.redislist.PersistRecordService;
 import cn.foxtech.controller.common.service.EntityManageService;
-import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
 import cn.foxtech.device.domain.vo.OperateRespondVO;
 import cn.foxtech.device.domain.vo.TaskRespondVO;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 订阅设备的数据采集：发送给持久化服务的，是走高可靠的队列fox.edge.record.persist.record
- *
+ * <p>
  * 背景：某些设备会主动发布数据给服务器，比如某些短信设备，MQTT设备，它们自己状态变化的时候，会发布数据给订阅者<br>
  */
 @Component
@@ -26,7 +25,10 @@ public class CollectorSubscribeService extends PeriodTaskService {
     EntityManageService entityManageService;
 
     @Autowired
-    private PersistRecordService recordService;
+    private RedisListPersistClient persistClient;
+
+    @Autowired
+    private RedisListDeviceClient deviceClient;
 
     public void execute(long threadId) throws Exception {
         // 检查：是否装载完毕
@@ -35,18 +37,20 @@ public class CollectorSubscribeService extends PeriodTaskService {
             return;
         }
 
-        List<Object> respondVOList;
-
-        // 设备主动上报的记录
-        respondVOList = SyncQueueObjectMap.inst().popup(DeviceMethodVOFieldConstant.value_operate_report, false, 1000);
-        for (Object respondVO : respondVOList) {
-            this.updateDeviceReport((OperateRespondVO) respondVO);
+        // 从redis中弹出一个到达的消息
+        TaskRespondVO respondVO = this.deviceClient.popDeviceReport(1, TimeUnit.SECONDS);
+        if (respondVO == null) {
+            return;
         }
 
-        // 用户操作的记录
-        respondVOList = SyncQueueObjectMap.inst().popup(DeviceMethodVOFieldConstant.value_operate_exchange, false, 1000);
-        for (Object respondVO : respondVOList) {
-            this.updateDeviceReport((OperateRespondVO) respondVO);
+        // 讲上报数据中的操作对象，逐个推送到redis
+        for (OperateRespondVO operateRespondVO : respondVO.getRespondVOS()) {
+            String operateMode = operateRespondVO.getOperateMode();
+            if (operateMode == null) {
+                continue;
+            }
+
+            this.updateDeviceReport(operateRespondVO);
         }
     }
 
@@ -68,7 +72,7 @@ public class CollectorSubscribeService extends PeriodTaskService {
             TaskRespondVO taskRespondVO = TaskRespondVO.buildRespondVO(operateRespondVO, null);
 
             // 记录数据，走高可靠队列，发送给持久化服务，要求存储数据库记录
-            this.recordService.push(taskRespondVO);
+            this.persistClient.pushRecordRequest(taskRespondVO);
         } catch (Exception e) {
             logger.warn(e);
         }

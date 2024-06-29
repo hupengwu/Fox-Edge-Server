@@ -153,8 +153,7 @@ public class EntityOptionManager {
      */
     public Map<String, Object> getOptionEntity(String entityType) {
         for (Object statusValue : this.serviceStatus.getConsumerData().values()) {
-            RedisStatusConsumerService.Status status = (RedisStatusConsumerService.Status) statusValue;
-            Map<String, Object> value = (Map<String, Object>) status.getData();
+            Map<String, Object> value = (Map<String, Object>)  statusValue;
             if (value == null) {
                 continue;
             }

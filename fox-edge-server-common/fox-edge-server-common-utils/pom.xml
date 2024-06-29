@@ -38,6 +38,7 @@
         <module>fox-edge-server-common-utils-redis-topic</module>
         <module>fox-edge-server-common-utils-redis-status</module>
         <module>fox-edge-server-common-utils-redis-logger</module>
+        <module>fox-edge-server-common-utils-redis-value</module>
         <module>fox-edge-server-common-utils-reflect</module>
         <module>fox-edge-server-common-utils-rsa</module>
         <module>fox-edge-server-common-utils-security</module>

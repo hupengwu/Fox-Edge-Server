@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Map;
+
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
 public class ChannelBaseVO {
@@ -19,11 +21,6 @@ public class ChannelBaseVO {
      * 接收模式：只接收不发送，比如设备的主动通知上报
      */
     public static String MODE_RECEIVE = "receive";
-
-    /**
-     * 管理模式：这不是通信模式，而是对通道进行管理
-     */
-    public static String MODE_MANAGE = "manage";
 
     /**
      * 通道类型
@@ -53,11 +50,6 @@ public class ChannelBaseVO {
      * 通信超时
      */
     private Integer timeout;
-    /**
-     * 重路由到某个topic
-     */
-    private String route;
-
 
     /**
      * 绑定信息：方便将request的信息复制给respond
@@ -71,7 +63,16 @@ public class ChannelBaseVO {
         this.mode = vo.mode;
         this.send = vo.send;
         this.recv = vo.recv;
-        this.route = vo.route;
         this.timeout = vo.timeout;
+    }
+
+    public void bindBaseVO(Map<String, Object> map) {
+        this.type = (String) map.get("type");
+        this.uuid = (String) map.get("uuid");
+        this.name = (String) map.get("name");
+        this.mode = (String) map.get("mode");
+        this.send = map.get("send");
+        this.recv = map.get("recv");
+        this.timeout = (Integer) map.get("timeout");
     }
 }

@@ -1,10 +1,11 @@
 package cn.foxtech.iot.fox.cloud.forwarder.proxy;
 
 import cn.foxtech.common.domain.constant.RedisTopicConstant;
-import cn.foxtech.common.utils.redis.topic.service.RedisTopicPublisher;
-import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
+import cn.foxtech.common.rpc.redis.device.client.RedisListDeviceClient;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
+import cn.foxtech.device.domain.vo.TaskRequestVO;
+import cn.foxtech.device.domain.vo.TaskRespondVO;
 import cn.foxtech.iot.fox.cloud.common.vo.RestfulLikeRequestVO;
 import cn.foxtech.iot.fox.cloud.common.vo.RestfulLikeRespondVO;
 import org.apache.log4j.Logger;
@@ -21,12 +22,12 @@ import java.util.Map;
 public class RedisTopicProxyService {
     private static final Logger logger = Logger.getLogger(RedisTopicProxyService.class);
 
-    private static final int extra_timeout_channel = 3000;
-    private static final int extra_timeout_device = extra_timeout_channel + 3000;
+    private static final int extra_timeout_channel = 3;
+    private static final int extra_timeout_device = extra_timeout_channel + 3;
 
 
     @Autowired
-    private RedisTopicPublisher publisher;
+    private RedisListDeviceClient deviceClient;
 
     /**
      * 检查：是不是HttpProxy的资源
@@ -63,7 +64,7 @@ public class RedisTopicProxyService {
      * @return
      * @throws IOException
      */
-    public RestfulLikeRespondVO execute(RestfulLikeRequestVO requestVO) throws InterruptedException, IOException {
+    public RestfulLikeRespondVO executeDevice(RestfulLikeRequestVO requestVO) throws InterruptedException, IOException {
         String topicRequest = this.getTopicHead(requestVO.getResource());
         if (topicRequest == null) {
             throw new ServiceException("尚未支持的方法");
@@ -72,11 +73,6 @@ public class RedisTopicProxyService {
         Map<String, Object> request = (Map<String, Object>) requestVO.getBody();
 
 
-        // 如果是设备请求：那么插入一个"clientName:" "proxy4http2topic"属性，通知设备服务把请求返回到这个位置
-        if ((RedisTopicConstant.topic_device_request + RedisTopicConstant.model_public).equals(topicRequest)) {
-            request.put(DeviceMethodVOFieldConstant.field_client_name, RedisTopicConstant.model_proxy4cloud2topic);
-        }
-
         Integer timeout = (Integer) request.get(DeviceMethodVOFieldConstant.field_timeout);
 
         //填写UID，从众多方便返回的数据中，识别出来对应的返回报文
@@ -84,23 +80,20 @@ public class RedisTopicProxyService {
         request.put(DeviceMethodVOFieldConstant.field_uuid, requestVO.getUuid());
 
 
-        // 重置信号
-        SyncFlagObjectMap.inst().reset(key);
-
         // 发送数据
-        this.publisher.sendMessage(topicRequest, request);
+        this.deviceClient.pushDeviceRequest(TaskRequestVO.buildRequestVO(request));
 
         logger.info(topicRequest + ":" + request);
 
         // 等待消息的到达：根据动态key
-        String respond = (String) SyncFlagObjectMap.inst().waitDynamic(key, this.buildTimeout(requestVO.getResource(), timeout));
-        if (respond == null) {
+        TaskRespondVO taskRespondVO = this.deviceClient.getDeviceRespond(key, this.buildTimeout(requestVO.getResource(), timeout));
+        if (taskRespondVO == null) {
             throw new ServiceException("设备响应超时！");
         }
 
         RestfulLikeRespondVO respondVO = new RestfulLikeRespondVO();
         respondVO.bindVO(requestVO);
-        respondVO.setBody(respond);
+        respondVO.setBody(taskRespondVO);
         return respondVO;
     }
 

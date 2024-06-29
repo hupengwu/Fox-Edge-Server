@@ -1,8 +1,7 @@
 package cn.foxtech.common.status;
 
-import cn.foxtech.common.domain.constant.ServiceVOFieldConstant;
-import cn.foxtech.common.utils.redis.status.RedisStatusConsumerService;
 import cn.foxtech.common.domain.constant.RedisStatusConstant;
+import cn.foxtech.common.domain.constant.ServiceVOFieldConstant;
 import cn.foxtech.common.utils.MapUtils;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,18 +40,30 @@ public class ServiceStatusScheduler extends PeriodTaskService {
 
     public void initialize() {
         // 1.初始化消费者：将数据从redis中装载过来，并保存到本地缓存
-        this.loadConsumer();
+        this.initConsumer();
 
         // 2.初始化生产者：将redis的上次数据，再加上基础数据，保存到本地缓存
         this.initProducer();
     }
 
+    private void initConsumer() {
+        try {
+            Boolean value = this.environment.getProperty(this.serviceStatus.getCacheModeKey(), Boolean.class);
+            if (value == null) {
+                return;
+            }
+
+            this.serviceStatus.setCacheMode(value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void initProducer() {
         // 在初始化阶段，从redis的数据中，继承原有数据，防止删除/添加造成的抖动现象
-        RedisStatusConsumerService.Status status = (RedisStatusConsumerService.Status) MapUtils.getValue(this.consumerService.getStatus(), this.serviceStatus.getServiceKey());
-        if (status != null && status.getData() != null) {
-            this.serviceStatus.getProducerData().putAll((Map<String, Object>) status.getData());
+        Map<String, Object> value = (Map<String, Object>) MapUtils.getValue(this.consumerService.getStatus(), this.serviceStatus.getServiceKey());
+        if (value != null) {
+            this.serviceStatus.getProducerData().putAll(value);
         }
 
         // 填写基本的业务状态
@@ -82,11 +93,6 @@ public class ServiceStatusScheduler extends PeriodTaskService {
         }
     }
 
-    public void setProducerData(String key, Object value) {
-        // 填写基本的业务状态
-        this.serviceStatus.getProducerData().put(key, value);
-    }
-
     private void saveProducer() {
         // 模块信息
         this.serviceStatus.getProducerData().put(RedisStatusConstant.field_active_time, System.currentTimeMillis());
@@ -98,9 +104,10 @@ public class ServiceStatusScheduler extends PeriodTaskService {
     }
 
     public void loadConsumer() {
-        this.consumerService.load();
+        if (!this.serviceStatus.isCacheMode()) {
+            return;
+        }
 
-        this.serviceStatus.getConsumerData().clear();
-        this.serviceStatus.getConsumerData().putAll(this.consumerService.getStatus());
+        this.consumerService.load();
     }
 }

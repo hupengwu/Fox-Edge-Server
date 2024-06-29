@@ -18,8 +18,6 @@ import java.util.Map;
  */
 @Component
 public class ChannelClientAPI {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChannelClientAPI.class);
-
     @Autowired
     private ChannelServerAPI channelServerAPI;
 

@@ -3,7 +3,7 @@ package cn.foxtech.kernel.system.common.service;
 import cn.foxtech.common.domain.constant.RedisTopicConstant;
 import cn.foxtech.common.domain.vo.RestFulRequestVO;
 import cn.foxtech.common.utils.method.MethodUtils;
-import cn.foxtech.common.utils.redis.topic.service.RedisTopicPublisher;
+import cn.foxtech.kernel.system.common.redistopic.RedisTopicPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

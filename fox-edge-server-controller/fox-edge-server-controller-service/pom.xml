@@ -35,12 +35,6 @@
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-json</artifactId>
-            <version>${fox-edge-server.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-utils-number</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>

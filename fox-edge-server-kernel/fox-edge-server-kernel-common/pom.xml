@@ -23,12 +23,6 @@
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-redis-topic</artifactId>
-            <version>${fox-edge-server.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-utils-redis-status</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
@@ -44,13 +38,6 @@
             <artifactId>fox-edge-server-channel-domain</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-link-domain</artifactId>
-            <version>${fox-edge-server.version}</version>
-        </dependency>
-
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
@@ -82,11 +69,6 @@
             <version>${fox-edge-server.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-sync-obejct</artifactId>
-            <version>${fox-edge-server.version}</version>
-        </dependency>
         <dependency>
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-domain</artifactId>

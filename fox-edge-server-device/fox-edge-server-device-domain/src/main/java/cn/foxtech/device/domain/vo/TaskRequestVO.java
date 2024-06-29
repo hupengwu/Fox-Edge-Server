@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 包操作：批量操作
@@ -31,6 +32,21 @@ public class TaskRequestVO extends TaskVO {
         taskRequestVO.setClientName(clientName);
         taskRequestVO.setTimeout(operateRequestVO.getTimeout());
         taskRequestVO.getRequestVOS().add(operateRequestVO);
+        return taskRequestVO;
+    }
+
+    public static TaskRequestVO buildRequestVO(Map<String, Object> map) {
+        TaskRequestVO taskRequestVO = new TaskRequestVO();
+        taskRequestVO.bindBaseVO(map);
+
+
+        List<Map<String, Object>> requestVOS = (List<Map<String, Object>>) map.get("requestVOS");
+        for (Map<String, Object> requestMap : requestVOS) {
+            OperateRequestVO requestVO = OperateRequestVO.buildOperateRequestVO(requestMap);
+
+            taskRequestVO.requestVOS.add(requestVO);
+        }
+
         return taskRequestVO;
     }
 }

@@ -8,27 +8,32 @@ import cn.foxtech.common.entity.entity.ChannelEntity;
 import cn.foxtech.common.entity.entity.DeviceEntity;
 import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
+import cn.foxtech.common.rpc.redis.channel.client.RedisListChannelClient;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.device.protocol.v1.core.channel.FoxEdgeChannelService;
 import cn.foxtech.device.protocol.v1.core.enums.WorkerLoggerType;
 import cn.foxtech.device.protocol.v1.core.utils.JsonUtils;
-import cn.foxtech.device.service.redistopic.RedisTopicPuberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeoutException;
 
 /**
  * 通道转发服务
  */
 @Component
 public class ChannelService implements FoxEdgeChannelService {
-    @Autowired
-    EntityManageService entityService;
+    private static final int TIMEOUT_CHANNEL = 1000;
 
     @Autowired
-    private RedisTopicPuberService publisher;
+    private EntityManageService entityManageService;
+
+
+    @Autowired
+    private RedisListChannelClient channelClient;
 
 
     /**
@@ -49,13 +54,13 @@ public class ChannelService implements FoxEdgeChannelService {
     @Override
     public Object exchange(String deviceName, String deviceType, Object send, int timeout) throws Exception {
         // 进一步获取通道的详细信息
-        DeviceEntity deviceEntity = entityService.getDeviceEntity(deviceName);
+        DeviceEntity deviceEntity = this.entityManageService.getDeviceEntity(deviceName);
         if (deviceEntity == null) {
             throw new ServiceException("在数据库找不大该设备实体：" + deviceName);
         }
 
         // 通道实体
-        ChannelEntity channelEntity = entityService.getChannelEntity(deviceEntity.getChannelName(), deviceEntity.getChannelType());
+        ChannelEntity channelEntity = this.entityManageService.getChannelEntity(deviceEntity.getChannelName(), deviceEntity.getChannelType());
         if (channelEntity == null) {
             throw new ServiceException("在数据库找不大该设备实体对应的ChannelEntity：" + deviceEntity.getDeviceName());
         }
@@ -75,13 +80,13 @@ public class ChannelService implements FoxEdgeChannelService {
     @Override
     public void publish(String deviceName, String deviceType, Object send, int timeout) throws Exception {
         // 进一步获取通道的详细信息
-        DeviceEntity deviceEntity = entityService.getDeviceEntity(deviceName);
+        DeviceEntity deviceEntity = this.entityManageService.getDeviceEntity(deviceName);
         if (deviceEntity == null) {
             throw new ServiceException("在数据库找不大该设备实体：" + deviceName);
         }
 
         // 通道实体
-        ChannelEntity channelEntity = entityService.getChannelEntity(deviceEntity.getChannelName(), deviceEntity.getChannelType());
+        ChannelEntity channelEntity = this.entityManageService.getChannelEntity(deviceEntity.getChannelName(), deviceEntity.getChannelType());
         if (channelEntity == null) {
             throw new ServiceException("在数据库找不大该设备实体对应的ChannelEntity：" + deviceEntity.getDeviceName());
         }
@@ -104,7 +109,7 @@ public class ChannelService implements FoxEdgeChannelService {
 
 
         // 向主从应答类型的设备发送请求
-        ChannelRespondVO respondVO = this.publisher.execute(request);
+        ChannelRespondVO respondVO = this.executeChannel(request);
         if (!HttpStatus.SUCCESS.equals(respondVO.getCode())) {
             throw new ServiceException(respondVO.getMsg());
         }
@@ -126,7 +131,30 @@ public class ChannelService implements FoxEdgeChannelService {
 
 
         // 向非应答类型的设备发送请求
-        return this.publisher.execute(request);
+        return this.executeChannel(request);
+    }
+
+    /**
+     * 将请求发送给对应的channel服务
+     *
+     * @return 响应报文
+     */
+    private ChannelRespondVO executeChannel(ChannelRequestVO requestVO) throws TimeoutException {
+        // 填写UID，从众多方便返回的数据中，识别出来对应的返回报文
+        if (requestVO.getUuid() == null || requestVO.getUuid().isEmpty()) {
+            requestVO.setUuid(UUID.randomUUID().toString().replace("-", ""));
+        }
+
+        // 发送数据
+        this.channelClient.pushChannelRequest(requestVO.getType(), requestVO);
+
+        // 等待消息的到达：根据动态key
+        ChannelRespondVO respond = this.channelClient.getChannelRespond(requestVO.getType(), requestVO.getUuid(), requestVO.getTimeout() + TIMEOUT_CHANNEL);
+        if (respond == null) {
+            throw new TimeoutException("通道服务响应超时：" + requestVO.getType());
+        }
+
+        return respond;
     }
 
     /**
@@ -170,6 +198,7 @@ public class ChannelService implements FoxEdgeChannelService {
         } catch (Exception e) {
             e.getMessage();
         }
-
     }
+
+
 }

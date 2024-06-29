@@ -21,22 +21,41 @@ public class ShellUtils {
     public static List<String> executeShell(String[] pathOrCommand) throws InterruptedException, IOException {
         List<String> result = new ArrayList<>();
 
-        // 执行脚本
-        Process ps = Runtime.getRuntime().exec(pathOrCommand);
-        int exitValue = ps.waitFor();
-        if (0 != exitValue) {
-            //    logger.error("call shell failed. error code is :" + exitValue);
+        Process ps = null;
+        BufferedInputStream in = null;
+        BufferedReader br = null;
+
+        try {
+            // 执行脚本
+            ps = Runtime.getRuntime().exec(pathOrCommand);
+            int exitValue = ps.waitFor();
+            if (0 != exitValue) {
+                return result;
+            }
+
+            // 只能接收脚本echo打印的数据，并且是echo打印的最后一次数据
+            in = new BufferedInputStream(ps.getInputStream());
+            br = new BufferedReader(new InputStreamReader(in));
+            String line;
+            while ((line = br.readLine()) != null) {
+                result.add(line);
+            }
+        } finally {
+            try {
+                if (in != null) {
+                    in.close();
+                }
+                if (br != null) {
+                    br.close();
+                }
+                if (ps != null) {
+                    ps.destroy();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
-        // 只能接收脚本echo打印的数据，并且是echo打印的最后一次数据
-        BufferedInputStream in = new BufferedInputStream(ps.getInputStream());
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        String line;
-        while ((line = br.readLine()) != null) {
-            result.add(line);
-        }
-        in.close();
-        br.close();
 
         return result;
     }

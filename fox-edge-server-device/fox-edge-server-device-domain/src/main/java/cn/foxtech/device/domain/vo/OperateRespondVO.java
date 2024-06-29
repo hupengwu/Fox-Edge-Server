@@ -69,13 +69,13 @@ public class OperateRespondVO extends OperateRequestVO {
         this.setCode(other.code);
     }
 
-    public static OperateRespondVO buildOperateRespondVO(Map<String,Object> operateRespondMap){
+    public static OperateRespondVO buildOperateRespondVO(Map<String,Object> map){
         OperateRespondVO operateRespondVO = new OperateRespondVO();
-        operateRespondVO.bindBaseVO(operateRespondMap);
+        operateRespondVO.bindBaseVO(map);
 
-        operateRespondVO.setCode((Integer)operateRespondMap.get("code"));
-        operateRespondVO.setMsg((String)operateRespondMap.get("msg"));
-        operateRespondVO.setData((Map<String,Object>)operateRespondMap.get("data"));
+        operateRespondVO.setCode((Integer)map.get("code"));
+        operateRespondVO.setMsg((String)map.get("msg"));
+        operateRespondVO.setData((Map<String,Object>)map.get("data"));
 
         return operateRespondVO;
     }

@@ -15,7 +15,6 @@ import cn.foxtech.common.entity.service.devicerecord.DeviceRecordEntityService;
 import cn.foxtech.common.entity.service.devicevalue.task.DeviceValueExTaskEntityService;
 import cn.foxtech.common.entity.service.extendconfig.ExtendConfigEntityService;
 import cn.foxtech.common.entity.service.iotdevicemodel.IotDeviceModelEntityService;
-import cn.foxtech.common.entity.service.link.LinkEntityService;
 import cn.foxtech.common.entity.service.mybatis.BaseEntityService;
 import cn.foxtech.common.entity.service.operate.OperateEntityService;
 import cn.foxtech.common.entity.service.operaterecord.OperateRecordEntityService;
@@ -41,9 +40,6 @@ import java.util.Set;
 public class EntityManageService extends EntityServiceManager {
     @Autowired
     protected ChannelEntityService channelEntityService;
-
-    @Autowired
-    protected LinkEntityService linkEntityService;
 
     @Autowired
     protected DeviceEntityService deviceEntityService;
@@ -136,7 +132,6 @@ public class EntityManageService extends EntityServiceManager {
         // 注册数据库实体
         dBService.put(DeviceEntity.class.getSimpleName(), this.deviceEntityService);
         dBService.put(ChannelEntity.class.getSimpleName(), this.channelEntityService);
-        dBService.put(LinkEntity.class.getSimpleName(), this.linkEntityService);
         dBService.put(ConfigEntity.class.getSimpleName(), this.configEntityService);
         dBService.put(UserEntity.class.getSimpleName(), this.userEntityService);
         dBService.put(UserMenuEntity.class.getSimpleName(), this.userMenuEntityService);
@@ -160,7 +155,6 @@ public class EntityManageService extends EntityServiceManager {
 
         // 告知：生产者如何装载数据源
         this.getSourceMySQL().add(ChannelEntity.class.getSimpleName());
-        this.getSourceMySQL().add(LinkEntity.class.getSimpleName());
         this.getSourceMySQL().add(ConfigEntity.class.getSimpleName());
         this.getSourceMySQL().add(UserEntity.class.getSimpleName());
         this.getSourceMySQL().add(UserMenuEntity.class.getSimpleName());
@@ -208,8 +202,6 @@ public class EntityManageService extends EntityServiceManager {
         writer.add(OperateChannelTaskEntity.class.getSimpleName());
         reader.add(ChannelEntity.class.getSimpleName());
         writer.add(ChannelEntity.class.getSimpleName());
-        reader.add(LinkEntity.class.getSimpleName());
-        writer.add(LinkEntity.class.getSimpleName());
         reader.add(ConfigEntity.class.getSimpleName());
         writer.add(ConfigEntity.class.getSimpleName());
         reader.add(UserEntity.class.getSimpleName());
@@ -231,7 +223,6 @@ public class EntityManageService extends EntityServiceManager {
     private void instancePublish() {
         // 数据的发布模式
         this.entityPublishManager.setPublishEntityUpdateTime(ChannelEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, ChannelEntity.class.getSimpleName());
-        this.entityPublishManager.setPublishEntityUpdateTime(LinkEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, LinkEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(ConfigEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, ConfigEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(UserEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, UserEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(UserMenuEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, UserMenuEntity.class.getSimpleName());
@@ -252,7 +243,6 @@ public class EntityManageService extends EntityServiceManager {
 
     private void instanceOption() {
         this.entityOptionManager.setOptionEntity(ChannelEntity.class.getSimpleName(), "tb_channel", new String[]{"channel_name", "channel_type"});
-        this.entityOptionManager.setOptionEntity(LinkEntity.class.getSimpleName(), "tb_link", new String[]{"link_name", "link_type"});
         this.entityOptionManager.setOptionEntity(OperateEntity.class.getSimpleName(), "tb_operate", new String[]{"manufacturer", "device_type", "operate_name", "engine_type"});
         this.entityOptionManager.setOptionEntity(DeviceEntity.class.getSimpleName(), "tb_device", new String[]{"device_type", "device_name", "channel_type", "channel_name"});
     }

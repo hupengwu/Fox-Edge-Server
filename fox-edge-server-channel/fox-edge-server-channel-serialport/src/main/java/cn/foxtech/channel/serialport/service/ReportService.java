@@ -6,7 +6,6 @@ import cn.foxtech.channel.common.service.ConsoleLoggerPrinter;
 import cn.foxtech.channel.domain.ChannelBaseVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.channel.serialport.entity.SerialChannelEntity;
-import cn.foxtech.common.domain.constant.RedisTopicConstant;
 import cn.foxtech.common.utils.hex.HexUtils;
 import cn.foxtech.common.utils.serialport.AsyncExecutor;
 import cn.foxtech.core.exception.ServiceException;
@@ -19,10 +18,6 @@ import java.util.Map;
 
 @Component
 public class ReportService {
-    /**
-     * 主动上报的topic
-     */
-    private final String reportTopic = RedisTopicConstant.topic_channel_respond + RedisTopicConstant.model_manager;
     /**
      * 属性信息
      */
@@ -76,7 +71,6 @@ public class ReportService {
                 String hex = HexUtils.byteArrayToHexString(data);
                 ChannelRespondVO respondVO = new ChannelRespondVO();
                 respondVO.setName(channelName);
-                respondVO.setRoute(this.reportTopic);
                 respondVO.setMode(ChannelBaseVO.MODE_RECEIVE);
                 respondVO.setType(this.channelProperties.getChannelType());
                 respondVO.setRecv(hex);

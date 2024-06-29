@@ -1,45 +1,44 @@
 package cn.foxtech.device.service.controller;
 
 import cn.foxtech.common.domain.constant.RedisStatusConstant;
-import cn.foxtech.common.domain.constant.RedisTopicConstant;
 import cn.foxtech.common.entity.entity.DeviceEntity;
 import cn.foxtech.common.entity.entity.OperateEntity;
+import cn.foxtech.common.rpc.redis.device.server.RedisListDeviceServer;
+import cn.foxtech.common.rpc.redis.persist.client.RedisListPersistClient;
 import cn.foxtech.common.status.ServiceStatus;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
-import cn.foxtech.common.utils.syncobject.SyncQueueObjectMap;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
 import cn.foxtech.device.domain.vo.OperateRequestVO;
 import cn.foxtech.device.domain.vo.OperateRespondVO;
 import cn.foxtech.device.domain.vo.TaskRequestVO;
 import cn.foxtech.device.domain.vo.TaskRespondVO;
-import cn.foxtech.device.service.redistopic.RedisTopicPuberService;
+import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.service.service.EntityManageService;
 import cn.foxtech.device.service.service.OperateService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.naming.CommunicationException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 设备执行操作控制器：处理上层应用对设备的操作请求，包括批量操作/单步操作/发布操作
  */
 @Component
 public class DeviceExecuteController extends PeriodTaskService {
+    private static final Logger logger = Logger.getLogger(DeviceExecuteController.class);
+
     /**
      * 实体管理
      */
     @Autowired
     EntityManageService entityManageService;
-
-    /**
-     * redis topic发布者
-     */
-    @Autowired
-    private RedisTopicPuberService puberService;
 
     /**
      * 操作服务
@@ -49,6 +48,12 @@ public class DeviceExecuteController extends PeriodTaskService {
 
     @Autowired
     private ServiceStatus serviceStatus;
+
+    @Autowired
+    private RedisListDeviceServer deviceServer;
+
+    @Autowired
+    private RedisListPersistClient persistService;
 
     /**
      * 执行任务
@@ -63,30 +68,28 @@ public class DeviceExecuteController extends PeriodTaskService {
             return;
         }
 
-        // 从消息队列中，一个个弹出消息，逐个处理，这样才能多线程并行处理。
-        List<Object> list = SyncQueueObjectMap.inst().popup(RedisTopicConstant.model_device, true);
-        for (Object object : list) {
-            if (!(object instanceof TaskRequestVO)) {
-                continue;
-            }
-
-            TaskRequestVO taskRequestVO = (TaskRequestVO) object;
-            TaskRespondVO taskRespondVO = new TaskRespondVO();
-            taskRespondVO.bindBaseVO(taskRequestVO);
-
-            // 逐个步骤的操作设备
-            List<OperateRequestVO> deviceRequestVOS = taskRequestVO.getRequestVOS();
-            for (OperateRequestVO operateRequestVO : deviceRequestVOS) {
-                OperateRespondVO operateRespondVO = this.execute(operateRequestVO);
-                taskRespondVO.getRespondVOS().add(operateRespondVO);
-            }
-
-            // 返回数据给发送者
-            this.puberService.sendRespondVO(taskRespondVO);
-
-            // 再主动上报操作记录到持久化服务
-            this.puberService.sendOperateRespondVO(taskRespondVO);
+        TaskRequestVO taskRequestVO = this.deviceServer.popDeviceRequest(1, TimeUnit.SECONDS);
+        if (taskRequestVO == null) {
+            return;
         }
+
+        TaskRespondVO taskRespondVO = new TaskRespondVO();
+        taskRespondVO.bindBaseVO(taskRequestVO);
+
+        // 逐个步骤的操作设备
+        List<OperateRequestVO> deviceRequestVOS = taskRequestVO.getRequestVOS();
+        for (OperateRequestVO operateRequestVO : deviceRequestVOS) {
+            // 执行操作
+            OperateRespondVO operateRespondVO = this.execute(operateRequestVO);
+            taskRespondVO.getRespondVOS().add(operateRespondVO);
+        }
+
+
+        // 返回数据设备服务
+        this.deviceServer.pushDeviceRespond(taskRespondVO.getUuid(), taskRespondVO);
+
+        // 记录用户操作：发送给持久化服务
+        this.recordOperate(taskRespondVO);
     }
 
 
@@ -193,5 +196,51 @@ public class DeviceExecuteController extends PeriodTaskService {
         respondVO.setData(new HashMap<>(), status);
 
         return respondVO;
+    }
+
+
+    private void recordOperate(TaskRespondVO taskRespondVO) {
+        try {
+            // 筛选：是否有data/value/result属性，如果有的话，这个属性是要独立上报的
+            List<OperateRespondVO> respondVOS = new ArrayList<>();
+            for (OperateRespondVO operateRespondVO : taskRespondVO.getRespondVOS()) {
+                // 场景1：用户手动标识的要求记录的数据
+                if (Boolean.TRUE.equals(operateRespondVO.getRecord())) {
+                    // 复制一个副本，并重新填入数据
+                    OperateRespondVO resultVO = new OperateRespondVO();
+                    resultVO.bind(operateRespondVO);
+                    resultVO.setRecord(true);
+
+                    // 打入包裹
+                    respondVOS.add(resultVO);
+                    continue;
+                }
+                // 场景2：解码器要求强制记录的数据
+                Map<String, Object> values = (Map<String, Object>) operateRespondVO.getData().get(DeviceMethodVOFieldConstant.value_data_value);
+                if (values != null && values.containsKey(FoxEdgeOperate.result)) {
+                    // 复制一个副本，并重新填入数据
+                    OperateRespondVO resultVO = new OperateRespondVO();
+                    resultVO.bind(operateRespondVO);
+                    resultVO.setRecord(true);
+
+                    // 打入包裹
+                    respondVOS.add(resultVO);
+                    continue;
+                }
+            }
+
+            // 检查：是否有真正需要记录的操作
+            if (respondVOS.isEmpty()) {
+                return;
+            }
+
+            // 把数据内容，填写为新的操作步骤
+            taskRespondVO.setRespondVOS(respondVOS);
+
+            // 推送数据到持久化服务
+            this.persistService.pushRecordRequest(taskRespondVO);
+        } catch (Exception e) {
+            logger.error(e);
+        }
     }
 }

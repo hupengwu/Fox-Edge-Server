@@ -46,12 +46,6 @@
         </dependency>
 
         <dependency>
-            <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-redis-topic</artifactId>
-            <version>${fox-edge-server.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>net.dreamlu</groupId>
             <artifactId>mica-mqtt-client</artifactId>
             <version>${mica-mqtt.version}</version>

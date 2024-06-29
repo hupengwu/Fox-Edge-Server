@@ -6,6 +6,10 @@ import lombok.Setter;
 
 import java.util.Map;
 
+/**
+ * restful风格的消息结构
+ * 背景：目的是在HTTP、MQTT、REDIS等多种传输管道中，提供统一的交互数据结构
+ */
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
 public class RestFulVO {
@@ -15,17 +19,17 @@ public class RestFulVO {
     private String uuid;
 
     /**
-     * 命令类型
+     * 方法名稱：例如，POST/PUT/GET/DELETE
      */
     private String method;
 
     /**
-     * 模块类型
+     * URI：能夠提供HTTP服务的资源名称
      */
     private String uri;
 
     /**
-     * 通道名称
+     * 数据：类似HTTP的BODY
      */
     private Object data;
 

@@ -15,7 +15,6 @@ import cn.foxtech.device.protocol.v1.core.method.FoxEdgeReportMethod;
 import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 import cn.foxtech.device.scanner.FoxEdgeMethodTemplateScanner;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -33,11 +32,6 @@ public class MethodEntityService {
     @Autowired
     private EntityManageService entityManageService;
 
-    @Value("${spring.fox-service.service.type}")
-    private String foxServiceType = "undefinedServiceType";
-
-    @Value("${spring.fox-service.service.name}")
-    private String foxServiceName = "undefinedServiceName";
 
     /**
      * 扫描解码器

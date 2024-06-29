@@ -38,6 +38,12 @@
             <artifactId>fox-edge-server-device-domain</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-common-rpc-redis</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
     </dependencies>
 
 

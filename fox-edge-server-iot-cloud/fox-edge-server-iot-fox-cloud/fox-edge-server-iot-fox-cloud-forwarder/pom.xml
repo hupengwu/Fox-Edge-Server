@@ -34,14 +34,6 @@
             <version>${fox-edge-server.version}</version>
         </dependency>
 
-
-        <dependency>
-            <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-sync-obejct</artifactId>
-            <version>${fox-edge-server.version}</version>
-        </dependency>
-
-
         <dependency>
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-device-domain</artifactId>
@@ -51,6 +43,12 @@
         <dependency>
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-utils-osinfo</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-common-rpc-redis</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
 

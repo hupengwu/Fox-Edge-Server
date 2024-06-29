@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Map;
+
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
 public class ChannelRespondVO extends ChannelBaseVO {
@@ -16,6 +18,15 @@ public class ChannelRespondVO extends ChannelBaseVO {
      * 出错代码
      */
     private Integer code = HttpStatus.SUCCESS;
+
+    public static ChannelRespondVO buildVO(Map<String, Object> map) {
+        ChannelRespondVO vo = new ChannelRespondVO();
+        vo.bindBaseVO(map);
+        vo.msg = (String) map.get("msg");
+        vo.code = (Integer) map.get("code");
+
+        return vo;
+    }
 
     public static ChannelRespondVO success(String msg, ChannelBaseVO data) {
         ChannelRespondVO vo = new ChannelRespondVO();

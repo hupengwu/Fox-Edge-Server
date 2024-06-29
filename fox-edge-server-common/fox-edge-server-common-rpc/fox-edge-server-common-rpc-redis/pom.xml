@@ -22,8 +22,29 @@
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-device-domain</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-channel-domain</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-utils-redis-logger</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-common-utils-redis-value</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
+
+
     </dependencies>
 </project>

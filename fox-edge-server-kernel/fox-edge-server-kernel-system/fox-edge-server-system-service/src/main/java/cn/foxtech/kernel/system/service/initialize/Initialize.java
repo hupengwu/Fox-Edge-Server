@@ -4,12 +4,10 @@ package cn.foxtech.kernel.system.service.initialize;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.kernel.system.common.initialize.CommonInitialize;
 import cn.foxtech.kernel.system.common.scheduler.PeriodTasksScheduler;
-import cn.foxtech.kernel.system.common.scheduler.RedisListRestfulScheduler;
 import cn.foxtech.kernel.system.repository.initialize.RepoInitialize;
-import cn.foxtech.kernel.system.service.controller.RestfulLikeController;
-import cn.foxtech.kernel.system.service.mqtt.MqttProxyService;
-import cn.foxtech.kernel.system.service.redislist.RedisListRestfulHandler;
-import cn.foxtech.kernel.system.service.redistopic.RedisTopicController;
+import cn.foxtech.kernel.system.service.restfullike.mqtt.MqttRestfulLikeService;
+import cn.foxtech.kernel.system.service.restfullike.redis.RedisRestfulLikeController;
+import cn.foxtech.kernel.system.service.restfullike.redis.RedisRestfulLikeScheduler;
 import cn.foxtech.kernel.system.service.task.CleanCacheTask;
 import cn.foxtech.kernel.system.service.task.CleanLogFileTask;
 import cn.foxtech.kernel.system.service.task.ConfigEntityTask;
@@ -58,19 +56,14 @@ public class Initialize implements CommandLineRunner {
     private CleanLogFileTask cleanLogFileTask;
 
     @Autowired
-    private MqttProxyService mqttProxyService;
+    private MqttRestfulLikeService mqttRestfulLikeService;
 
     @Autowired
-    private RedisListRestfulScheduler restfulScheduler;
+    private RedisRestfulLikeController redisRestfulLikeController;
+
 
     @Autowired
-    private RedisListRestfulHandler restfulHandler;
-
-    @Autowired
-    private RedisTopicController redisTopicController;
-
-    @Autowired
-    private RestfulLikeController restfulController;
+    private RedisRestfulLikeScheduler redisRestfulLikeScheduler;
 
     public void run(String... args) {
         String message = "------------------------Initialize初始化开始！------------------------";
@@ -81,14 +74,10 @@ public class Initialize implements CommandLineRunner {
 
         this.repoInitialize.initialize();
 
-        this.mqttProxyService.initialize();
-
-        this.redisTopicController.initialize();
-
-        this.restfulController.initialize();
-
-        this.restfulScheduler.setHandler(this.restfulHandler);
-        this.restfulScheduler.schedule();
+        // RestfulLike的mqtt和redis的消息响应
+        this.mqttRestfulLikeService.initialize();
+        this.redisRestfulLikeController.initialize();
+        this.redisRestfulLikeScheduler.schedule();
 
         this.createPeriodTask();
 

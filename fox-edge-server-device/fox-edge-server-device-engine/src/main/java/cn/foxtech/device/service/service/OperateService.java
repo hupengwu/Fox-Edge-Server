@@ -25,7 +25,7 @@ import java.util.Map;
 @Component
 public class OperateService {
     @Autowired
-    private EntityManageService entityService;
+    private EntityManageService entityManageService;
 
     @Autowired
     private ChannelService channelService;
@@ -43,7 +43,7 @@ public class OperateService {
      * @throws Exception 操作异常
      */
     public void smplPublish(String deviceName, OperateEntity operateEntity, Map<String, Object> param, int timeout) throws Exception {
-        DeviceEntity deviceEntity = this.entityService.getDeviceEntity(deviceName);
+        DeviceEntity deviceEntity = this.entityManageService.getDeviceEntity(deviceName);
         if (deviceEntity == null) {
             throw new ServiceException("在数据库中找不到设备：" + deviceName);
         }
@@ -69,7 +69,7 @@ public class OperateService {
      * @throws Exception 操作异常
      */
     public Map<String, Object> smplExchange(String deviceName, OperateEntity operateEntity, Map<String, Object> param, int timeout) throws Exception {
-        DeviceEntity deviceEntity = this.entityService.getDeviceEntity(deviceName);
+        DeviceEntity deviceEntity = this.entityManageService.getDeviceEntity(deviceName);
         if (deviceEntity == null) {
             throw new ServiceException("在数据库中找不到设备：" + deviceName);
         }
@@ -85,7 +85,7 @@ public class OperateService {
     }
 
     private List<BaseEntity> getJspOperateReport(DeviceEntity deviceEntity) {
-        List<BaseEntity> entityList = this.entityService.getEntityList(OperateEntity.class, (Object value) -> {
+        List<BaseEntity> entityList = this.entityManageService.getEntityList(OperateEntity.class, (Object value) -> {
             OperateEntity operateEntity = (OperateEntity) value;
 
             if (!operateEntity.getManufacturer().equals(deviceEntity.getManufacturer())) {

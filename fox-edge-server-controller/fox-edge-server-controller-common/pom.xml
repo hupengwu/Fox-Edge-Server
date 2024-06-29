@@ -22,9 +22,10 @@
             <version>${fox-edge-server.version}</version>
         </dependency>
 
+
         <dependency>
             <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-redis-topic</artifactId>
+            <artifactId>fox-edge-server-common-utils-redis-value</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
 
@@ -57,12 +58,6 @@
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-bean</artifactId>
-            <version>${fox-edge-server.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-device-domain</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
@@ -70,38 +65,17 @@
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-protocol-core</artifactId>
-            <version>${fox-edge-server.version}</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-sync-obejct</artifactId>
-            <version>${fox-edge-server.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-md5</artifactId>
-            <version>${fox-edge-server.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-utils-log4j</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
+
         <dependency>
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-utils-scheduler</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
-        <dependency>
-            <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-scheduler</artifactId>
-            <version>${fox-edge-server.version}</version>
-        </dependency>
+
+
         <dependency>
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-domain</artifactId>
@@ -111,6 +85,12 @@
         <dependency>
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-status</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-common-rpc-redis</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
 

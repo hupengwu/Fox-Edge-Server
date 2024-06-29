@@ -1,16 +1,15 @@
 package cn.foxtech.device.service.controller;
 
 import cn.foxtech.channel.domain.ChannelRespondVO;
-import cn.foxtech.common.domain.constant.RedisTopicConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.DeviceEntity;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
+import cn.foxtech.common.rpc.redis.channel.client.RedisListChannelClient;
+import cn.foxtech.common.rpc.redis.device.server.RedisListDeviceServer;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
-import cn.foxtech.common.utils.syncobject.SyncQueueObjectMap;
 import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
 import cn.foxtech.device.domain.vo.OperateRespondVO;
 import cn.foxtech.device.domain.vo.TaskRespondVO;
-import cn.foxtech.device.service.redistopic.RedisTopicPuberService;
 import cn.foxtech.device.service.service.EntityManageService;
 import cn.foxtech.device.service.service.OperateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class DeviceReportController extends PeriodTaskService {
@@ -30,8 +30,12 @@ public class DeviceReportController extends PeriodTaskService {
     @Autowired
     private RedisConsoleService logger;
 
+
     @Autowired
-    private RedisTopicPuberService puberService;
+    private RedisListDeviceServer deviceServer;
+
+    @Autowired
+    private RedisListChannelClient channelClient;
 
     @Autowired
     private OperateService operateService;
@@ -50,19 +54,13 @@ public class DeviceReportController extends PeriodTaskService {
             return;
         }
 
-
-        // 从消息队列中，一个个弹出消息，逐个处理，这样才能多线程并行处理。
-        List<Object> list = SyncQueueObjectMap.inst().popup(RedisTopicConstant.model_channel, false, 1000);
-        for (Object object : list) {
-            if (!(object instanceof ChannelRespondVO)) {
-                continue;
-            }
-
-            ChannelRespondVO channelRespondVO = (ChannelRespondVO) object;
-
-            // 对数据进行解码处理
-            this.decodeEvent(channelRespondVO);
+        ChannelRespondVO channelRespondVO = this.channelClient.popChannelReport(1, TimeUnit.SECONDS);
+        if (channelRespondVO == null) {
+            return;
         }
+
+        // 对数据进行解码处理
+        this.decodeEvent(channelRespondVO);
     }
 
 
@@ -98,7 +96,7 @@ public class DeviceReportController extends PeriodTaskService {
                 TaskRespondVO taskRespondVO = TaskRespondVO.buildRespondVO(operateRespondVO, null);
 
                 // 上报数据到public
-                this.puberService.sendReportVO(taskRespondVO);
+                this.deviceServer.pushDeviceReport(taskRespondVO);
             } catch (Exception e) {
                 logger.debug(e.getMessage());
             }

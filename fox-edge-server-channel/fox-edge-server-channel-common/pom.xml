@@ -64,17 +64,6 @@
             <version>${springframework.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-redis-topic</artifactId>
-            <version>${fox-edge-server.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-classic</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
@@ -96,12 +85,6 @@
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-sync-obejct</artifactId>
-            <version>${fox-edge-server.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-utils-bean</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
@@ -109,6 +92,12 @@
         <dependency>
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-utils-file</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-common-utils-redis-value</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
 
@@ -138,6 +127,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-entity-service</artifactId>

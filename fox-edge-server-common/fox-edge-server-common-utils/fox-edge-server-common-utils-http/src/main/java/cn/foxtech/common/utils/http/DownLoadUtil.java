@@ -72,16 +72,31 @@ public class DownLoadUtil {
      *
      * @param inputStream
      * @return
-     * @throws IOException
+     * @throws Exception
      */
-    private static ByteArrayOutputStream readInputStream(InputStream inputStream) throws IOException {
-        byte[] buffer = new byte[1024];
-        int len = 0;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        while ((len = inputStream.read(buffer)) != -1) {
-            bos.write(buffer, 0, len);
+    private static ByteArrayOutputStream readInputStream(InputStream inputStream) throws Exception {
+        ByteArrayOutputStream bos = null;
+        try {
+            byte[] buffer = new byte[1024];
+            int len = 0;
+            bos = new ByteArrayOutputStream();
+            while ((len = inputStream.read(buffer)) != -1) {
+                bos.write(buffer, 0, len);
+            }
+            return bos;
+        } catch (Exception ie) {
+            try {
+                if (bos != null) {
+                    bos.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+
+            throw ie;
         }
-        return bos;
+
     }
 
     /**

@@ -14,8 +14,8 @@
 
     <properties>
         <!-- fox-edge-server version -->
-        <revision>1.1.5</revision>
-        <fox-edge-server.version>1.1.5</fox-edge-server.version>
+        <revision>1.1.6</revision>
+        <fox-edge-server.version>1.1.6</fox-edge-server.version>
         <!-- java version -->
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -58,7 +58,6 @@
         <module>fox-edge-server-kernel</module>
         <module>fox-edge-server-iot-cloud</module>
         <module>fox-edge-server-channel</module>
-        <module>fox-edge-server-link</module>
         <module>fox-edge-server-device</module>
         <module>fox-edge-server-value</module>
         <module>fox-edge-server-controller</module>
@@ -95,7 +94,7 @@
             <email>5389408@qq.com</email>
         </developer>
     </developers>
-   <scm>
+    <scm>
         <connection>scm:git:git@gitee.com/fierce_wolf/fox-edge-server</connection>
         <developerConnection>scm:git:git@gitee.com/fierce_wolf/fox-edge-server.git</developerConnection>
         <url>git@gitee.com/fierce_wolf/fox-edge-server.git</url>

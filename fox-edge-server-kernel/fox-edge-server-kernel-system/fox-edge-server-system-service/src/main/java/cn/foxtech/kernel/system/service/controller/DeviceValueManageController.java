@@ -14,13 +14,11 @@ import cn.foxtech.common.entity.service.deviceobject.DeviceObjectEntityMapper;
 import cn.foxtech.common.entity.utils.EntityVOBuilder;
 import cn.foxtech.common.entity.utils.ExtendUtils;
 import cn.foxtech.common.entity.utils.PageUtils;
+import cn.foxtech.common.rpc.redis.persist.client.RedisListPersistClient;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.pair.Pair;
-import cn.foxtech.common.utils.redis.topic.service.RedisTopicPublisher;
-import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
-import cn.foxtech.kernel.system.common.redislist.RedisListPersistRequest;
 import cn.foxtech.kernel.system.common.service.EntityManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/kernel/manager/device/value")
@@ -40,11 +39,9 @@ public class DeviceValueManageController {
     @Autowired
     private EntityManageService entityManageService;
 
-    @Autowired
-    private RedisTopicPublisher publisher;
 
     @Autowired
-    private RedisListPersistRequest persistService;
+    private RedisListPersistClient persistService;
 
 
     @PostMapping("page")
@@ -194,15 +191,11 @@ public class DeviceValueManageController {
         requestVO.setMethod("delete");
         requestVO.setData(deviceValueList);
 
-
-        // 重置信号
-        SyncFlagObjectMap.inst().reset(requestVO.getUuid());
-
         // 发送数据
-        this.persistService.push(requestVO);
+        this.persistService.pushManageRequest(requestVO);
 
         // 等待消息的到达：根据动态key
-        RestFulRespondVO respond = (RestFulRespondVO) SyncFlagObjectMap.inst().waitDynamic(requestVO.getUuid(), 30 * 1000);
+        RestFulRespondVO respond = this.persistService.popManageRespond(10, TimeUnit.SECONDS);
         if (respond == null) {
             throw new ServiceException("服务响应超时！");
         }

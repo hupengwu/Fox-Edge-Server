@@ -5,13 +5,11 @@ import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.ConfigEntity;
 import cn.foxtech.common.entity.entity.DeviceEntity;
 import cn.foxtech.common.entity.entity.OperateMonitorTaskEntity;
-import cn.foxtech.common.entity.manager.InitialConfigService;
+import cn.foxtech.common.rpc.redis.persist.client.RedisListPersistClient;
 import cn.foxtech.common.status.ServiceStatus;
-import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
-import cn.foxtech.controller.common.redislist.PersistValueService;
 import cn.foxtech.controller.common.service.DeviceOperateService;
 import cn.foxtech.controller.common.service.EntityManageService;
 import cn.foxtech.device.domain.vo.OperateRequestVO;
@@ -44,16 +42,13 @@ public class CollectorExchangeService extends PeriodTaskService {
     @Autowired
     private EntityManageService entityManageService;
     @Autowired
-    private PersistValueService valueService;
+    private RedisListPersistClient persistClient;
     @Autowired
     private DeviceOperateService deviceOperateService;
     @Value("${spring.redis_topic.controller_model}")
     private String controllerModel = "system_controller";
     @Autowired
     private ServiceStatus serviceStatus;
-
-    @Autowired
-    private InitialConfigService configService;
 
     @Value("${spring.fox-service.service.type}")
     private String foxServiceType = "undefinedServiceType";
@@ -79,7 +74,7 @@ public class CollectorExchangeService extends PeriodTaskService {
         }
 
         // 检测：持久化服务接收队列是否堵塞了
-        if (this.valueService.isBlock()) {
+        if (this.persistClient.isValueRequestBlock()) {
             return;
         }
 
@@ -149,8 +144,13 @@ public class CollectorExchangeService extends PeriodTaskService {
                 return;
             }
 
+            // 检查：下游的持久化队列，是否已经进入50%的繁忙状态
+            if (this.persistClient.isValueRequestBusy(50)) {
+                Thread.sleep(100);
+            }
+
             // 更新设备消息到数据库和redis
-            this.valueService.push(taskRespondVO);
+            this.persistClient.pushValueRequest(taskRespondVO);
         } catch (Exception e) {
             logger.info(e);
         }
@@ -175,7 +175,7 @@ public class CollectorExchangeService extends PeriodTaskService {
         for (Map<String, Object> param : operateTemplateEntity.getTemplateParam()) {
             try {
                 // 单个设备的操作
-                OperateRequestVO operateRequestVO = JsonUtils.buildObject(param, OperateRequestVO.class);
+                OperateRequestVO operateRequestVO = OperateRequestVO.buildOperateRequestVO(param);
                 operateRequestVO.setDeviceType(deviceEntity.getDeviceType());
                 operateRequestVO.setManufacturer(deviceEntity.getManufacturer());
                 operateRequestVO.setDeviceName(deviceEntity.getDeviceName());

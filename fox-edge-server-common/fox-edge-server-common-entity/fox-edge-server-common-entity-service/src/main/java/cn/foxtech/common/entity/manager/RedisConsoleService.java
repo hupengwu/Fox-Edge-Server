@@ -2,25 +2,23 @@ package cn.foxtech.common.entity.manager;
 
 import cn.foxtech.common.domain.constant.RedisStatusConstant;
 import cn.foxtech.common.utils.redis.logger.RedisLoggerService;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Component
 public class RedisConsoleService extends RedisLoggerService {
+    @Getter
+    private final String key = "fox.edge.service.console.public";
+
     @Value("${spring.fox-service.service.type}")
     private String foxServiceType = "undefinedServiceType";
 
     @Value("${spring.fox-service.service.name}")
     private String foxServiceName = "undefinedServiceName";
-
-    public RedisConsoleService() {
-        this.setKey("fox.edge.service.console.public");
-    }
 
     public void error(String value) {
         this.out("ERROR", value);

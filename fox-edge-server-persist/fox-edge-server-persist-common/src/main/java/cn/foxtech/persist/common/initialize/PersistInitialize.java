@@ -4,7 +4,9 @@ import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.status.ServiceStatusScheduler;
 import cn.foxtech.persist.common.scheduler.EntityManageScheduler;
-import cn.foxtech.persist.common.scheduler.PersistTaskScheduler;
+import cn.foxtech.persist.common.scheduler.RedisListManageScheduler;
+import cn.foxtech.persist.common.scheduler.RedisListRecordScheduler;
+import cn.foxtech.persist.common.scheduler.RedisListValueScheduler;
 import cn.foxtech.persist.common.service.DeviceObjectMapper;
 import cn.foxtech.persist.common.service.EntityManageService;
 import cn.foxtech.persist.common.service.EntityVerifyService;
@@ -49,7 +51,13 @@ public class PersistInitialize {
     private EntityVerifyService entityVerifyService;
 
     @Autowired
-    private PersistTaskScheduler periodTaskScheduler;
+    private RedisListValueScheduler listValueScheduler;
+
+    @Autowired
+    private RedisListRecordScheduler listRecordScheduler;
+
+    @Autowired
+    private RedisListManageScheduler listManageScheduler;
 
     @Autowired
     private InitialConfigService configService;
@@ -77,7 +85,9 @@ public class PersistInitialize {
         this.configService.initialize("serverConfig", "serverConfig.json");
 
         // 设备记录的上报接收任务
-        this.periodTaskScheduler.schedule();
+        this.listValueScheduler.schedule();
+        this.listRecordScheduler.schedule();
+        this.listManageScheduler.schedule();
 
         // 在启动阶段，会产生很多临时数据，所以强制GC一次
         System.gc();

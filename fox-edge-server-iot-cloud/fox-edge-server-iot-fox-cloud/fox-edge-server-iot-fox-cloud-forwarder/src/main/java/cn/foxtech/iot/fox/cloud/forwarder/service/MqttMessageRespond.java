@@ -105,7 +105,7 @@ public class MqttMessageRespond extends PeriodTaskService {
             // 执行RedisTopic API服务接口的请求
             if (this.redisTopicProxyService.isRedisResource(requestVO.getResource())) {
                 // 执行HTTP请求
-                RestfulLikeRespondVO respondVO = this.redisTopicProxyService.execute(requestVO);
+                RestfulLikeRespondVO respondVO = this.redisTopicProxyService.executeDevice(requestVO);
                 if (respondVO == null) {
                     respondVO = RestfulLikeRespondVO.error("操作失败!");
                 }

@@ -1,16 +1,17 @@
 package cn.foxtech.common.status;
 
 import cn.foxtech.common.domain.constant.RedisStatusConstant;
-import cn.foxtech.common.utils.redis.status.RedisStatusConsumerService;
+import cn.foxtech.common.utils.number.NumberUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 应用状态
@@ -18,37 +19,72 @@ import java.util.concurrent.ConcurrentHashMap;
 @Getter(value = AccessLevel.PUBLIC)
 @Component
 public class ServiceStatus {
-    @Getter(value = AccessLevel.PUBLIC)
-    private final Map<String, Object> producerData = new ConcurrentHashMap<>();
+    /**
+     * 缓存模式的配置key
+     */
+    private final String cacheModeKey = "spring.fox-service.mode.cache";
+    /**
+     * 消费者
+     */
+    @Autowired
+    private ServiceStatusConsumerService consumerService;
+    /**
+     * 生产者
+     */
+    @Autowired
+    private ServiceStatusProducerService producerService;
 
+    /**
+     * redis直读
+     */
+    @Autowired
+    private ServiceStatusReaderService readerService;
 
-    @Getter(value = AccessLevel.PUBLIC)
-    private final Map<String, Object> consumerData = new ConcurrentHashMap<>();
-
+    /**
+     * 服务内线
+     */
     @Value("${spring.fox-service.service.type}")
     private String foxServiceType = "undefinedServiceType";
-
+    /**
+     * 服务名称
+     */
     @Value("${spring.fox-service.service.name}")
     private String foxServiceName = "undefinedServiceName";
 
+    /**
+     * 模型类型
+     */
     @Value("${spring.fox-service.model.type}")
     private String foxModelType = "undefinedModelType";
-
+    /**
+     * 模型名称
+     */
     @Value("${spring.fox-service.model.name}")
     private String foxModelName = "undefinedModelName";
 
-    public String getServiceKey() {
-        return this.foxServiceType + ":" + this.foxServiceName;
+
+    /**
+     * 是否为本地缓存模式
+     * cache模式：消费者的数据，是通过线程定时从redis中装载，使用者反复消费缓存中的数据
+     * redis模式：消费者的数据，是消费者直接从redis中读取数据
+     */
+    @Setter(value = AccessLevel.PUBLIC)
+    private boolean cacheMode = true;
+
+    public Map<String, Object> getConsumerData() {
+        if (this.cacheMode) {
+            return this.consumerService.getStatus();
+        } else {
+            return this.readerService.getStatus();
+        }
     }
 
-    public Object getConsumerData(String key, String hkey) {
-        RedisStatusConsumerService.Status status = (RedisStatusConsumerService.Status) consumerData.get(key);
-        if (status == null) {
-            return null;
-        }
+    public Map<String, Object> getProducerData() {
+        return this.producerService.getStatus();
+    }
 
-        Map<String, Object> map = (Map<String, Object>) status.getData();
-        return map.get(hkey);
+    public String getServiceKey() {
+        return this.foxServiceType + ":" + this.foxServiceName;
     }
 
     /**
@@ -59,15 +95,12 @@ public class ServiceStatus {
      * @return
      */
     public Long getActiveTime(String modelType, String modelName) {
-        Long maxActiveTime = null;
-        for (Map.Entry<String, Object> entry : this.getConsumerData().entrySet()) {
-            try {
-                RedisStatusConsumerService.Status status = (RedisStatusConsumerService.Status) entry.getValue();
-                if (status == null) {
-                    continue;
-                }
+        Map<String, Object> consumerData = this.getConsumerData();
 
-                Map<String, Object> value = (Map<String, Object>) status.getData();
+        Long maxActiveTime = null;
+        for (String key : consumerData.keySet()) {
+            try {
+                Map<String, Object> value = (Map<String, Object>) consumerData.get(key);
                 if (value == null) {
                     continue;
                 }
@@ -77,14 +110,7 @@ public class ServiceStatus {
                 String name = (String) value.get(RedisStatusConstant.field_model_name);
                 if (modelType.equals(type) && modelName.equals(name)) {
                     // 获得该服务再缓存中的activeTime数据
-                    Long time = null;
-                    Object activeTime = value.get(RedisStatusConstant.field_active_time);
-                    if (activeTime instanceof Long) {
-                        time = (Long) activeTime;
-                    }
-                    if (activeTime instanceof Integer) {
-                        time = Long.valueOf((Integer) activeTime);
-                    }
+                    Long time = NumberUtils.makeLong(value.get(RedisStatusConstant.field_active_time));
 
                     // 是否存在该activeTime数据
                     if (time == null) {
@@ -140,10 +166,11 @@ public class ServiceStatus {
     }
 
     private List<Map<String, Object>> getDataList(Integer timeout, Long currentTime) {
+        Map<String, Object> consumerData = this.getConsumerData();
+
         List<Map<String, Object>> resultList = new ArrayList<>();
-        for (Object statusValue : this.consumerData.values()) {
-            RedisStatusConsumerService.Status status = (RedisStatusConsumerService.Status) statusValue;
-            Map<String, Object> value = (Map<String, Object>) status.getData();
+        for (Object statusValue : consumerData.values()) {
+            Map<String, Object> value = (Map<String, Object>) statusValue;
             if (value == null) {
                 continue;
             }
@@ -154,7 +181,8 @@ public class ServiceStatus {
             }
 
             // 剔除失效的任务：超时超到指定范围的业务
-            if (currentTime - status.getLastTime() > timeout) {
+            Long activeTime = NumberUtils.makeLong(value.getOrDefault(RedisStatusConstant.field_active_time, -1L));
+            if (currentTime - activeTime > timeout) {
                 continue;
             }
 

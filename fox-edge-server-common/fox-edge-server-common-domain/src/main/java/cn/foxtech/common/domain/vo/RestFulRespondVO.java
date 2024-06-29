@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Map;
+
 /**
  * restful风格的接口
  */
@@ -20,6 +22,16 @@ public class RestFulRespondVO extends RestFulVO {
      * 出错代码
      */
     private Integer code = HttpStatus.SUCCESS;
+
+    public static RestFulRespondVO buildVO(Map<String, Object> map) {
+        RestFulRespondVO vo = new RestFulRespondVO();
+        vo.bindResVO(map);
+
+        vo.msg = (String) map.get("msg");
+        vo.code = (Integer) map.get("code");
+
+        return vo;
+    }
 
     public static RestFulRespondVO success(String msg, RestFulVO data) {
         RestFulRespondVO vo = new RestFulRespondVO();

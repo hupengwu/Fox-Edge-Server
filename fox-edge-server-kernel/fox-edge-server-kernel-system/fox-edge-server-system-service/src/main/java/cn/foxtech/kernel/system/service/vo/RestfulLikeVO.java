@@ -37,7 +37,6 @@ public class RestfulLikeVO {
 
     public void bindVO(RestfulLikeVO other) {
         this.topic = other.topic;
-
         this.uuid = other.uuid;
         this.resource = other.resource;
         this.method = other.method;
