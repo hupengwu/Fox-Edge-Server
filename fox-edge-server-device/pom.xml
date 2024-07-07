@@ -21,6 +21,7 @@
         <module>fox-edge-server-device-engine</module>
         <module>fox-edge-server-device-graalvm</module>
         <module>fox-edge-server-device-service</module>
+        <module>fox-edge-server-device-nacos</module>
     </modules>
 
 

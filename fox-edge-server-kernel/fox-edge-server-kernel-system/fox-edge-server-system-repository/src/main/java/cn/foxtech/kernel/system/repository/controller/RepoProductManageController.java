@@ -3,6 +3,7 @@ package cn.foxtech.kernel.system.repository.controller;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
+import cn.foxtech.kernel.common.service.EdgeService;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
 import cn.foxtech.kernel.system.repository.constants.RepoStatusConstant;
 import cn.foxtech.kernel.system.repository.service.RepoCloudFIleInstallService;
@@ -20,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/kernel/manager/repository/product")
+@RequestMapping("/repository/product")
 public class RepoProductManageController {
     /**
      * 仓库服务
@@ -33,15 +34,20 @@ public class RepoProductManageController {
     private RepoProductService productService;
 
     @Autowired
-    private RepoLocalJarFileConfigService repoLocalJarFileConfigService;
+    private RepoLocalJarFileConfigService configService;
 
     @Autowired
     private RepoLocalAppLoadService appLoadService;
+
+    @Autowired
+    private EdgeService edgeService;
 
 
     @PostMapping("/page")
     public Map<String, Object> selectPageList(@RequestBody Map<String, Object> body) {
         try {
+            this.edgeService.testDockerEnv();
+
             // 云端查询数据
             Map<String, Object> respond = this.productService.queryProductPage(body);
             return respond;
@@ -53,6 +59,8 @@ public class RepoProductManageController {
     @GetMapping("entity")
     public AjaxResult getEntity(@QueryParam("uuid") String uuid) {
         try {
+            this.edgeService.testDockerEnv();
+
             // 简单验证
             if (MethodUtils.hasEmpty(uuid)) {
                 throw new ServiceException("参数不能为空: uuid");
@@ -124,7 +132,7 @@ public class RepoProductManageController {
     }
 
     private void extendLoadConfig(Map<String, Object> entity) {
-        Set<String> loads = this.repoLocalJarFileConfigService.getLoads();
+        Set<String> loads = this.configService.getLoads();
 
         // 从本地查询安装状态
         List<Map<String, Object>> comps = (List<Map<String, Object>>) entity.get("comps");

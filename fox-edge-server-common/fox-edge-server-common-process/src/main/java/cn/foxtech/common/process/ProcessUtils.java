@@ -90,6 +90,10 @@ public class ProcessUtils {
     }
 
     public static Map<String, Object> getSysProcess(String feature) throws IOException, InterruptedException {
+        return getSysProcess(feature, true);
+    }
+
+    public static Map<String, Object> getSysProcess(String feature, boolean isSysParam) throws IOException, InterruptedException {
         List<String> shellLineList = ShellUtils.executeShell("ps -aux|grep " + feature);
         for (String shellLine : shellLineList) {
             String[] items = shellLine.split("\\s+");
@@ -102,10 +106,22 @@ public class ProcessUtils {
 
             // ps -aux返回的格式: 0~10是linux的固定信息项目
             Map<String, Object> map = makeShellParam(items);
-            String command = (String) map.get("command");
-            if (command.endsWith(feature)) {
-                return map;
+
+            // 检查：是否存在该特征
+            if (isSysParam) {
+                String command = (String) map.get("command");
+                if (command.endsWith(feature)) {
+                    return map;
+                }
+            } else {
+                // 非系统参数部分
+                for (String item : items) {
+                    if (item.indexOf(feature) >= 0) {
+                        return map;
+                    }
+                }
             }
+
         }
 
         return null;

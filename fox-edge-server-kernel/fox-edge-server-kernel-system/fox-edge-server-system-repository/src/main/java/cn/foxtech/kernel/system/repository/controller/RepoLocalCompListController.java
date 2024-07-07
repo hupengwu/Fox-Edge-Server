@@ -23,7 +23,7 @@ import java.util.Map;
  * 组件列表管理：包括应用服务、静态解码、动态解码、文件模板的组件级别的管理
  */
 @RestController
-@RequestMapping("/kernel/manager/repository/local/comp-list")
+@RequestMapping("/repository/local/comp-list")
 public class RepoLocalCompListController {
     @Autowired
     private EntityManageService entityManageService;

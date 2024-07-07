@@ -28,9 +28,9 @@ public class HttpRestfulProxyService {
 
     public void Initialize() {
         // manager-system服务
-        this.proxyMapping.put("/kernel/manager", "http://localhost:9000");
+        this.proxyMapping.put("/kernel/manager", "http://localhost:9000/kernel/manager");
         // gateway的user服务
-        this.proxyMapping.put("/user", "http://localhost:9000");
+        this.proxyMapping.put("/user", "http://localhost:9000/user");
     }
 
 

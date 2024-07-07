@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/kernel/manager/repository/model")
+@RequestMapping("/repository/model")
 public class RepoCloudModelController {
     /**
      * 仓库服务

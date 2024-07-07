@@ -3,9 +3,10 @@
     "mysql-server": "/sbin/mysqld",
     "maria-server": "/sbin/mariadbd",
     "redis-server": "/bin/redis-server",
+    "nacos-server": "/nacos-server",
     "node-red": "node-red"
   },
   "configParam": {
   },
-  "remark": "指明启动mysql和redis的命令行特征特征，使fox-edge可以通过ps命令找到这两个进程的内存和CPU占用率"
+  "remark": "\"remark\": \"说明：\\n指明启动mysql和redis的命令行特征特征，使fox-edge可以通过ps命令找到这两个进程的内存和CPU占用率\\n\\n形成的linux命令行为：ps -aux|grep xxxx\\n\\n范例：\\n{\\n     \\\"node-red\\\": \\\"node-red\\\",-------------------------------node-red的特征\\n     \\\"redis-server\\\": \\\"/bin/redis-server\\\",--------------------redis的特征\\n     \\\"nacos-server\\\": \\\"/nacos-server\\\",----------------------nacos的特征\\n     \\\"mysql-server\\\": \\\"/sbin/mysqld\\\",----------------------mysql的特征\\n     \\\"maria-server\\\": \\\"/sbin/mariadbd\\\"---------------------mariadb的特征\\n}\""
 }

@@ -25,8 +25,8 @@
      </dependencies>
 
     <build>
-        <!-- 产生的构件的文件名，指定为artifactId格式 -->
-        <finalName>${artifactId}</finalName>
+        <!-- 产生的构件的文件名，强制指定为fox-edge-server-device-service该名称 -->
+        <finalName>fox-edge-server-device-service</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

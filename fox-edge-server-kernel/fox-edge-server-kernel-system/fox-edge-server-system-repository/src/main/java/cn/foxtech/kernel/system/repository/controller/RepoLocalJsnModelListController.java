@@ -21,7 +21,7 @@ import java.util.Map;
  * 操作方法列表管理：包括JSP方法和JAR方法
  */
 @RestController
-@RequestMapping("/kernel/manager/repository/local/jsn-list")
+@RequestMapping("/repository/local/jsn-list")
 public class RepoLocalJsnModelListController {
     /**
      * 仓库服务

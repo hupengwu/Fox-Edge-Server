@@ -16,7 +16,7 @@
 
     <modules>
         <module>fox-edge-server-persist-common</module>
-        <module>fox-edge-server-persist-service</module>
+        <module>fox-edge-server-persist-mysql</module>
         <module>fox-edge-server-persist-iotdb</module>
     </modules>
 

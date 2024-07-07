@@ -1,4 +1,3 @@
-# 开发环境配置
 server:
   port: 9101
 
@@ -11,7 +10,7 @@ spring:
     name: fox-edge-server-manager-system-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.1.23:3306/fox_edge?useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://192.168.1.21:3306/fox_edge?useUnicode=true&characterEncoding=utf8
     username: fox-edge
     password: 12345678
 
@@ -29,6 +28,8 @@ spring:
     model:                          # 模块信息，用于业务之间的分类和协助
       type: "manager"               # 模块类型，指明这是一个controller类型的业务，这类业务主要是用户的业务流程的逻辑
       name: "manager"               # 模块类型名称，告知别的业务，它的业务名称，可以通过该名称跟它进行通信，比如topic的主题
+    mode:
+      router: "local"               # 本地模式：是否为本地工作模式
 
   redis:
     host: localhost

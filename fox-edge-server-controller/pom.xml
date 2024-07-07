@@ -16,6 +16,8 @@
 
     <modules>
         <module>fox-edge-server-controller-common</module>
+        <module>fox-edge-server-controller-engine</module>
+        <module>fox-edge-server-controller-nacos</module>
         <module>fox-edge-server-controller-service</module>
     </modules>
 

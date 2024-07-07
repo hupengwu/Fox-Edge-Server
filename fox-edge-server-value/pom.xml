@@ -15,6 +15,7 @@
 
     <modules>
         <module>fox-edge-server-value-engine</module>
+        <module>fox-edge-server-value-nacos</module>
         <module>fox-edge-server-value-service</module>
     </modules>
 

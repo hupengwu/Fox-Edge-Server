@@ -6,6 +6,7 @@ import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.common.constants.EdgeServiceConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
+import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -17,8 +18,17 @@ import java.util.Map;
 @Component
 public class EdgeService {
     private final Map<String, Object> map = new HashMap<>();
+    /**
+     * 命令行启动参数
+     */
     @Autowired
-    private ApplicationArguments applicationArguments;
+    private ApplicationArguments arguments;
+
+    /**
+     * yml配置参数
+     */
+    @Autowired
+    private AbstractEnvironment environment;
 
     /**
      * 获取主机信息：目前测试只有CPU的ID是可以成功获取的
@@ -37,11 +47,12 @@ public class EdgeService {
             this.map.put(EdgeServiceConstant.filed_env_type, envType);
         }
 
+
         return this.map;
     }
 
     private String getAppArg(String tag, String defaultValue) {
-        String[] args = this.applicationArguments.getSourceArgs();
+        String[] args = this.arguments.getSourceArgs();
         for (String arg : args) {
             if (!arg.startsWith(tag)) {
                 continue;
@@ -51,6 +62,21 @@ public class EdgeService {
         }
 
         return defaultValue;
+    }
+
+    /**
+     * 获取工作模式
+     *
+     * @return 工作模式
+     */
+    public String getWorkMode() {
+        // 根据是否配置了nacos来判定，是否为本地模式还是云模式
+        Object value = this.environment.getProperty("spring.cloud.nacos.discovery.server-addr", Object.class);
+        if (value == null) {
+            return EdgeServiceConstant.value_work_mode_local;
+        } else {
+            return EdgeServiceConstant.value_work_mode_cloud;
+        }
     }
 
     /**
@@ -75,7 +101,7 @@ public class EdgeService {
         return (String) this.getOSInfo().get(EdgeServiceConstant.filed_env_type);
     }
 
-    public void disable4Docker() {
+    public void testDockerEnv() {
         if (this.isDockerEnv()) {
             throw new ServiceException("运行环境为docker，该环境不支持该操作！");
         }

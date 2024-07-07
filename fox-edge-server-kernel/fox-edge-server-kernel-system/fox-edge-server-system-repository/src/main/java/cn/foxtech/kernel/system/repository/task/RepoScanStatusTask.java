@@ -66,7 +66,7 @@ public class RepoScanStatusTask extends PeriodTask {
     private void deleteJunkFiles(String modelType) {
         try {
             // 名单列表
-            List<Map<String, Object>> localList = this.cacheService.queryLocalListFile(modelType);
+            List<Map<String, Object>> localList = this.cacheService.readList(modelType);
             Set<String> tables = new HashSet<>();
             for (Map<String, Object> map : localList) {
                 String modelName = (String) map.getOrDefault(RepoCompConstant.filed_model_name, "");

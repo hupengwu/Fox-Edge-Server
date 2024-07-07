@@ -82,6 +82,7 @@ public class RepoLocalCompUpload {
         formData.put(RepoCompConstant.filed_model_name, modelName);
         formData.put(RepoCompConstant.filed_model_version, RepoCompConstant.filed_value_model_version_default);
         formData.put(RepoCompConstant.filed_component, "service");
+        formData.put(RepoCompConstant.filed_work_mode, "");
         formData.put("file", file);
         formData.put(RepoCompConstant.filed_commit_key, commitKey);
 
@@ -191,6 +192,7 @@ public class RepoLocalCompUpload {
             formData.put(RepoCompConstant.filed_model_name, modelName);
             formData.put(RepoCompConstant.filed_model_version, RepoCompConstant.filed_value_model_version_default);
             formData.put(RepoCompConstant.filed_component, "service");
+            formData.put(RepoCompConstant.filed_work_mode, "");
             formData.put("file", file);
             formData.put(RepoCompConstant.filed_commit_key, commitKey);
 

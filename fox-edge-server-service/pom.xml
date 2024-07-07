@@ -16,7 +16,7 @@
 
     <modules>
         <module>fox-edge-service-common</module>
-        <module>fox-edge-server-period-service</module>
+        <module>fox-edge-service-period</module>
     </modules>
 
 

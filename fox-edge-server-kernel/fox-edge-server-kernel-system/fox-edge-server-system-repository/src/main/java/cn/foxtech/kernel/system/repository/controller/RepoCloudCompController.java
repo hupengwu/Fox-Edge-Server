@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/kernel/manager/repository")
+@RequestMapping("/repository")
 public class RepoCloudCompController {
     @Autowired
     private RedisConsoleService logger;
@@ -69,12 +69,18 @@ public class RepoCloudCompController {
                 throw new ServiceException("参数不能为空:modelType");
             }
 
+
             // 查询本地/远程文件列表
             List<Map<String, Object>> list;
             if ("local".equals(source)) {
-                list = this.cacheService.queryLocalListFile(modelType);
+                list = this.cacheService.readList(modelType);
+                if (list.isEmpty()){
+                    list = this.installService.queryUriListFile(modelType);
+                    this.cacheService.saveList(modelType, list);
+                }
             } else {
                 list = this.installService.queryUriListFile(modelType);
+                this.cacheService.saveList(modelType, list);
             }
 
             // 分析本地的安装状态
@@ -135,7 +141,7 @@ public class RepoCloudCompController {
     @PostMapping("/download")
     public AjaxResult downloadPackFile(@RequestBody Map<String, Object> body) {
         try {
-            this.edgeService.disable4Docker();
+            this.edgeService.testDockerEnv();
 
             // 提取业务参数
             List<Map<String, Object>> list = (List<Map<String, Object>>) body.get("list");
@@ -175,7 +181,7 @@ public class RepoCloudCompController {
     @PostMapping("/scan")
     public AjaxResult deleteDecoderFile(@RequestBody Map<String, Object> body) {
         try {
-            this.edgeService.disable4Docker();
+            this.edgeService.testDockerEnv();
 
             // 提取业务参数
             String modelType = (String) body.get(RepoCompConstant.filed_model_type);
@@ -195,7 +201,7 @@ public class RepoCloudCompController {
     @PostMapping("/install")
     public AjaxResult installPackFile(@RequestBody Map<String, Object> body) {
         try {
-            this.edgeService.disable4Docker();
+            this.edgeService.testDockerEnv();
 
             // 提取业务参数
             String modelType = (String) body.get(RepoCompConstant.filed_model_type);
@@ -225,7 +231,7 @@ public class RepoCloudCompController {
     @PostMapping("/delete")
     public AjaxResult deletePackageFile(@RequestBody Map<String, Object> body) {
         try {
-            this.edgeService.disable4Docker();
+            this.edgeService.testDockerEnv();
 
             // 提取业务参数
             List<Map<String, Object>> list = (List<Map<String, Object>>) body.get("list");

@@ -26,7 +26,7 @@ import java.util.Map;
  * CSV文件列表管理：设备模板的文件列表
  */
 @RestController
-@RequestMapping("/kernel/manager/repository/local/file-list")
+@RequestMapping("/repository/local/file-list")
 public class RepoLocalCsvFileListController {
     /**
      * 仓库服务

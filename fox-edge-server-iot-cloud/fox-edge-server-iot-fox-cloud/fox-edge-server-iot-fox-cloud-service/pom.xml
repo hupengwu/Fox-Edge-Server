@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -14,29 +14,18 @@
     <description>${project.artifactId}</description>
 
     <dependencies>
+        <!-- 核心模块-->
         <dependency>
             <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-iot-fox-cloud-common</artifactId>
+            <artifactId>fox-edge-server-iot-fox-cloud-engine</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-iot-fox-cloud-forwarder</artifactId>
-            <version>${fox-edge-server.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-iot-fox-cloud-publisher-service</artifactId>
-            <version>${fox-edge-server.version}</version>
-        </dependency>
-
-    </dependencies>
+     </dependencies>
 
     <build>
-        <!-- 产生的构件的文件名，指定为artifactId格式 -->
-        <finalName>${artifactId}</finalName>
+        <!-- 产生的构件的文件名，强制指定为fox-edge-server-iot-fox-cloud该名称 -->
+        <finalName>fox-edge-server-iot-fox-cloud</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

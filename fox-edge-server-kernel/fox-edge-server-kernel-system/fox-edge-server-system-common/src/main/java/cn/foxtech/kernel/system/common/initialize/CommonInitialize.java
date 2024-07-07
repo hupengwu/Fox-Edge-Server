@@ -11,6 +11,7 @@ import cn.foxtech.kernel.system.common.task.GateWayRouteUpdateTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -48,6 +49,10 @@ public class CommonInitialize {
     private InitialConfigService configService;
 
 
+    @Value("${spring.fox-service.mode.router}")
+    private String routerMode;
+
+
     public void initialize() {
         String message = "------------------------SystemInitialize初始化开始！------------------------";
         console.info(message);
@@ -78,6 +83,9 @@ public class CommonInitialize {
     }
 
     private void createPeriodTask() {
-        this.periodTasksScheduler.insertPeriodTask(this.gateWayRouteUpdateTask);
+        // 检查：本地工作模式下，向gateway服务手动注册路由
+        if ("local".equals(this.routerMode)) {
+            this.periodTasksScheduler.insertPeriodTask(this.gateWayRouteUpdateTask);
+        }
     }
 }

@@ -23,7 +23,11 @@
         <module>fox-edge-server-iot-fox-cloud-publisher-config</module>
         <module>fox-edge-server-iot-fox-cloud-publisher-define</module>
         <module>fox-edge-server-iot-fox-cloud-publisher-service</module>
+        <module>fox-edge-server-iot-fox-cloud-engine</module>
+        <module>fox-edge-server-iot-fox-cloud-nacos</module>
         <module>fox-edge-server-iot-fox-cloud-service</module>
+
+
     </modules>
 
 

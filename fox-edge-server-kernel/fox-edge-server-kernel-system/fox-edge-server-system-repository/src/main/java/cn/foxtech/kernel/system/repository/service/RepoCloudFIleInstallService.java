@@ -5,13 +5,14 @@ import cn.foxtech.common.entity.entity.RepoCompEntity;
 import cn.foxtech.common.process.ProcessUtils;
 import cn.foxtech.common.utils.file.FileCompareUtils;
 import cn.foxtech.common.utils.file.FileNameUtils;
-import cn.foxtech.common.utils.file.FileTextUtils;
 import cn.foxtech.common.utils.http.DownLoadUtil;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.osinfo.OSInfo;
 import cn.foxtech.common.utils.shell.ShellUtils;
 import cn.foxtech.core.exception.ServiceException;
+import cn.foxtech.kernel.common.constants.EdgeServiceConstant;
+import cn.foxtech.kernel.common.service.EdgeService;
 import cn.foxtech.kernel.system.common.service.EntityManageService;
 import cn.foxtech.kernel.system.common.service.ManageConfigService;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
@@ -94,6 +95,9 @@ public class RepoCloudFIleInstallService {
     @Autowired
     private RepoLocalCompBuilder compBuilder;
 
+    @Autowired
+    private EdgeService edgeService;
+
 
     /**
      * 从云端查询仓库列表，并保存到本地
@@ -105,41 +109,16 @@ public class RepoCloudFIleInstallService {
     public List<Map<String, Object>> queryUriListFile(String modelType) throws IOException {
         Map<String, Object> body = new HashMap<>();
         body.put(RepoCompConstant.filed_model_type, modelType);
+        if (RepoCompConstant.repository_type_service.equals(modelType)) {
+            body.put(EdgeServiceConstant.filed_work_mode, this.edgeService.getWorkMode());
+        }
+
         Map<String, Object> respond = this.cloudRemoteService.queryCloudCompFileList(body);
 
         List<Map<String, Object>> list = (List<Map<String, Object>>) respond.get("data");
         if (list == null) {
             throw new ServiceException("云端数据仓库返回的数据为空！");
         }
-        Map<String, Object> data = new HashMap<>();
-        data.put("list", list);
-
-        String json = JsonUtils.buildJson(data);
-
-        String listFileName;
-        if (RepoCompConstant.repository_type_decoder.equals(modelType)) {
-            listFileName = "decoderList.jsn";
-        } else if (RepoCompConstant.repository_type_webpack.equals(modelType)) {
-            listFileName = "webpackList.jsn";
-        } else if (RepoCompConstant.repository_type_service.equals(modelType)) {
-            listFileName = "serviceList.jsn";
-        } else if (RepoCompConstant.repository_type_template.equals(modelType)) {
-            listFileName = "templateList.jsn";
-        } else {
-            listFileName = "serviceList.jsn";
-        }
-
-        // 确认目录
-        String localPath = this.pathNameService.getPathName4LocalRepo2modelType(modelType);
-
-        // 创建目录
-        File pathDir = new File(localPath);
-        if (!pathDir.exists()) {
-            pathDir.mkdirs();
-        }
-
-        // 将获得的list信息保存到本地
-        FileTextUtils.writeTextFile(localPath + "/" + listFileName, json, "UTF-8");
 
         return list;
     }

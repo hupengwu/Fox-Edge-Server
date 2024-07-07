@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- *  网关服务的路由的更新
+ * 网关服务的路由的更新
  */
 @Component
 public class GateWayRouteUpdateTask extends PeriodTask {
@@ -131,7 +131,8 @@ public class GateWayRouteUpdateTask extends PeriodTask {
                 String id = this.gateWayRouteService.buildId(appName, appType);
                 if (routes.containsKey(id)) {
                     // 场景1：路由内容一致，不需要处理
-                    if (appPort.equals(routes.get(id))) {
+                    String uri = this.gateWayRouteService.buildUri(appName,appType,appPort);
+                    if (uri.equals(routes.get(id))) {
                         continue;
                     } else {
                         // 场景2：路由内容不一致，就重新刷新
@@ -206,13 +207,13 @@ public class GateWayRouteUpdateTask extends PeriodTask {
                 if (uri == null || !uri.startsWith("http://localhost:")) {
                     return;
                 }
-                String port = uri.substring("http://localhost:".length());
 
-                result.put(id, Integer.valueOf(port));
+                result.put(id, uri);
             } catch (IOException e) {
                 return;
             }
         });
+
         return result;
     }
 }

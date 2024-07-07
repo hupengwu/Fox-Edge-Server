@@ -1,7 +1,3 @@
-# 开发环境配置
-server:
-  port: 9305
-
 spring:
   application:
     name: fox-edge-server-controller-service

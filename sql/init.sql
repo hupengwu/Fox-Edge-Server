@@ -34,6 +34,8 @@ create user 'fox-edge'@'%' identified by '12345678';
 grant all privileges on fox_edge.* to 'fox-edge'@'%';
 flush privileges;
 
+#切换数据库
+USE `fox_edge`;
 
 #刷入数据库脚本
 source /opt/fox-edge/sql/init_table.sql;

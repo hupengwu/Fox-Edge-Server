@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/kernel/manager/repository/script")
+@RequestMapping("/repository/script")
 public class RepoCloudScriptController {
     /**
      * 仓库服务

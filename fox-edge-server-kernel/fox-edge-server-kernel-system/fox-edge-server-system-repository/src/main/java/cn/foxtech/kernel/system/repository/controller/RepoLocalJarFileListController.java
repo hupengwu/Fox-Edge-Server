@@ -25,15 +25,15 @@ import java.util.Set;
  * JAR文件列表管理：设备JAR解码器的文件列表
  */
 @RestController
-@RequestMapping("/kernel/manager/repository/local/jar-file")
+@RequestMapping("/repository/local/jar-file")
 public class RepoLocalJarFileListController {
     @Autowired
     private EdgeService edgeService;
     @Autowired
-    private RepoLocalAppStartService repoLocalAppStartService;
+    private RepoLocalAppStartService appStartService;
 
     @Autowired
-    private RepoLocalJarFileInfoService repoLocalJarFileInfoService;
+    private RepoLocalJarFileInfoService fileInfoService;
 
     @Autowired
     private RepoCloudCacheService cacheService;
@@ -65,13 +65,13 @@ public class RepoLocalJarFileListController {
     private AjaxResult selectEntityList(Map<String, Object> body, boolean isPage) {
         try {
             // 从仓库获得解码器的描述信息
-            List<Map<String, Object>> repoList = this.cacheService.queryLocalListFile(RepoCompConstant.repository_type_decoder);
+            List<Map<String, Object>> repoList = this.cacheService.readList(RepoCompConstant.repository_type_decoder);
 
             // 取出需要装载的数据
             Set<String> loadJars = this.configService.getLoads();
 
             // 扫描文件，获得解码器的信息
-            List<Map<String, Object>> resultList = this.repoLocalJarFileInfoService.findJarInfo(loadJars, repoList);
+            List<Map<String, Object>> resultList = this.fileInfoService.findJarInfo(loadJars, repoList);
 
             // 分页返回
             return PageUtils.getPageMapList(resultList, body);
@@ -121,7 +121,7 @@ public class RepoLocalJarFileListController {
 
             for (String fileName : fileNames) {
                 // 删除本地文件
-                this.repoLocalJarFileInfoService.deleteFile(fileName);
+                this.fileInfoService.deleteFile(fileName);
             }
 
 
@@ -134,7 +134,7 @@ public class RepoLocalJarFileListController {
     @PostMapping("process/restart")
     public AjaxResult restartProcess(@RequestBody Map<String, Object> params) {
         try {
-            this.edgeService.disable4Docker();
+            this.edgeService.testDockerEnv();
 
             // 查找设备服务的业务名称：用户安装的可能是device-service或者device-graalvm
             Map<String, Object> deviceService = this.serviceStatus.getActiveService(RedisStatusConstant.value_model_type_device, RedisStatusConstant.value_model_name_device, 60 * 1000);
@@ -146,7 +146,7 @@ public class RepoLocalJarFileListController {
             String serviceName = (String) deviceService.get(RedisStatusConstant.field_service_name);
 
             // 重启服务
-            this.repoLocalAppStartService.restartProcess(serviceName, serviceType);
+            this.appStartService.restartProcess(serviceName, serviceType);
             return AjaxResult.success();
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
@@ -163,7 +163,7 @@ public class RepoLocalJarFileListController {
                 throw new ServiceException("参数不能为空: fileName");
             }
 
-            Map<String, Object> jarInfo = this.repoLocalJarFileInfoService.readJarFileInfo(fileName);
+            Map<String, Object> jarInfo = this.fileInfoService.readJarFileInfo(fileName);
             if (jarInfo == null) {
                 throw new ServiceException("读取jar文件的信息失败!");
             }

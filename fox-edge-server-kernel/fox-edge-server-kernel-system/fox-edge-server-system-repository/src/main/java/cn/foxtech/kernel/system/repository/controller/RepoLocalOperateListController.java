@@ -21,7 +21,7 @@ import java.util.Map;
  * 操作方法列表管理：包括JSP方法和JAR方法
  */
 @RestController
-@RequestMapping("/kernel/manager/repository/local/operate-list")
+@RequestMapping("/repository/local/operate-list")
 public class RepoLocalOperateListController {
     /**
      * 仓库服务

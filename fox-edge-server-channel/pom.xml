@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,27 +16,28 @@
 
     <modules>
         <!-- 公共框架 -->
-        <module>fox-edge-server-channel-domain</module>
-        <module>fox-edge-server-channel-common</module>
+        <module>channel-common</module>
 
         <!-- 各类channel服务的实现 -->
-        <module>fox-edge-server-channel-coap-client</module>
-        <module>fox-edge-server-channel-opc-ua</module>
-        <module>fox-edge-server-channel-tcp-server</module>
-        <module>fox-edge-server-channel-tcp-client</module>
-        <module>fox-edge-server-channel-udp-server</module>
-        <module>fox-edge-server-channel-udp-client</module>
-        <module>fox-edge-server-channel-mqtt-client</module>
-        <module>fox-edge-server-channel-http-client</module>
-        <module>fox-edge-server-channel-hikvision-fire</module>
-        <module>fox-edge-server-channel-iec104</module>
-        <module>fox-edge-server-channel-gdana-digester</module>
-        <module>fox-edge-server-channel-snmp-service</module>
-        <module>fox-edge-server-channel-s7plc-client</module>
-        <module>fox-edge-server-channel-socket-core</module>
-        <module>fox-edge-server-channel-serialport</module>
-        <module>fox-edge-server-channel-serialport-analyzer</module>
-        <module>fox-edge-server-channel-simulator</module>
+        <module>channel-coap-client</module>
+        <module>channel-http-client</module>
+        <module>channel-hikvision-fire</module>
+        <module>channel-iec104-client</module>
+        <module>channel-opc-ua</module>
+        <module>channel-mqtt-client</module>
+        <module>channel-serialport</module>
+        <module>channel-serialport-analyzer</module>
+        <module>channel-simulator</module>
+        <module>channel-snmp-client</module>
+        <module>channel-s7plc-client</module>
+        <module>channel-tcp-client</module>
+        <module>channel-tcp-server</module>
+        <module>channel-udp-server</module>
+        <module>channel-udp-client</module>
+
+
+
+
     </modules>
 
 

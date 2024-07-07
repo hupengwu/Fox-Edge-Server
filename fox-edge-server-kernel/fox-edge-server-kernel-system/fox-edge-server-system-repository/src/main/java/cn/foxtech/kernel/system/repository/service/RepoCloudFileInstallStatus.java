@@ -60,7 +60,7 @@ public class RepoCloudFileInstallStatus {
             }
 
             // 获得云端组件列表
-            List<Map<String, Object>> cloudList = this.cacheService.queryLocalListFile(modelType);
+            List<Map<String, Object>> cloudList = this.cacheService.readList(modelType);
 
             // 尚未下载云端组件，标识未未下载状态
             for (Map<String, Object> map : cloudList) {

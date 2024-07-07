@@ -34,6 +34,9 @@ function readINI()
 #=============================================读取fox-edge.ini的全局配置==========================================#
 
 #redis参数
+app_param_discovery_addr=$(readINI $app_home/shell/fox-edge.ini nacos discovery_addr)
+app_param_config_addr=$(readINI $app_home/shell/fox-edge.ini nacos config_addr)
+#redis参数
 app_param_redis_host=$(readINI $app_home/shell/fox-edge.ini redis host)
 app_param_redis_port=$(readINI $app_home/shell/fox-edge.ini redis port)
 app_param_redis_password=$(readINI $app_home/shell/fox-edge.ini redis password)
@@ -45,6 +48,14 @@ app_param_mysql_password=$(readINI $app_home/shell/fox-edge.ini mysql password)
 #环境变量
 app_local_ip=$(readINI $app_home/shell/fox-edge.ini environment ip)
 app_local_type=$(readINI $app_home/shell/fox-edge.ini environment type)
+app_local_mode=$(readINI $app_home/shell/fox-edge.ini environment mode)
+
+
+#cloud参数
+nacos_param=''
+if [[ $app_local_mode == cloud ]]; then
+	nacos_param='--spring.cloud.nacos.discovery.server-addr='$app_param_discovery_addr' --spring.cloud.nacos.config.server-addr='$app_param_config_addr 
+fi
 
 #=============================================读取fox-edge.ini的全局配置==========================================#
 
@@ -194,9 +205,11 @@ if [[ $app_engine == java ]]; then
 	--app_type=$app_type \
 	--app_name=$app_name \
 	--env_type=$app_local_type \
-	-Dspring.profiles.active=prod \
+	--work_mode=$app_local_mode \
+	--spring.profiles.active=prod \
 	$spring_param \
 	$server_port \
+	$nacos_param \
 	--spring.redis.host=$app_param_redis_host --spring.redis.port=$app_param_redis_port --spring.redis.password=$app_param_redis_password \
 	--spring.datasource.username=$app_param_mysql_username --spring.datasource.password=$app_param_mysql_password  --spring.datasource.url=jdbc:mysql://$app_param_mysql_host:$app_param_mysql_port/fox_edge \
 	>$app_home/logs/start_$jar_name.out 2>&1 & \
@@ -211,6 +224,7 @@ if [[ $app_engine == python3  || $app_engine == python ]]; then
 	--app_type=$app_type \
 	--app_name=$app_name \
 	--env_type=$app_local_type \
+	--work_mode=$app_local_mode \
 	server.port=$serverPort \
 	redis.host=$app_param_redis_host redis.port=$app_param_redis_port redis.password=$app_param_redis_password \
 	mysql.host=$app_param_mysql_host mysql.port=$app_param_mysql_port mysql.username=$app_param_mysql_username  mysql.password=$app_param_mysql_password mysql.database=fox_edge \

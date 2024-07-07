@@ -4,6 +4,7 @@ package cn.foxtech.kernel.system.repository.initialize;
 import cn.foxtech.common.domain.constant.ServiceVOFieldConstant;
 import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
+import cn.foxtech.kernel.common.service.EdgeService;
 import cn.foxtech.kernel.system.common.scheduler.PeriodTasksScheduler;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
 import cn.foxtech.kernel.system.repository.service.*;
@@ -52,6 +53,9 @@ public class RepoInitialize {
     @Autowired
     private RepoLocalJarFileCompScanner compScanner;
 
+    @Autowired
+    private EdgeService edgeService;
+
 
     /**
      * 初始化配置：需要感知运行期的用户动态输入的配置，所以直接使用这个组件
@@ -66,6 +70,18 @@ public class RepoInitialize {
         this.configService.initialize("repositoryConfig", "repositoryConfig.json");
         this.configService.initialize("systemProcessConfig", "systemProcessConfig.json");
 
+        // 创建周期性任务
+        this.createPeriodTask();
+    }
+
+    /**
+     * 下列周期性任务，都涉及到本地文件操作，命令行操作，所以只能工作在device模式下，不允许工作在docker模式下
+     */
+    private void createPeriodTask() {
+        // 检查：是否工作在docker模式中，只有在非docker模式下，才能进行后续的任务操作
+        if (this.edgeService.isDockerEnv()) {
+            return;
+        }
 
         // 周期性任务
         this.periodTasksScheduler.insertPeriodTask(this.processGcTask);
@@ -83,10 +99,7 @@ public class RepoInitialize {
         this.periodTasksScheduler.insertPeriodTask(new RepoAppScanTask(this.appServerService, ServiceVOFieldConstant.field_type_system));
         this.periodTasksScheduler.insertPeriodTask(new RepoAppScanTask(this.appServerService, ServiceVOFieldConstant.field_type_service));
 
-
         // 一次性任务
         this.periodTasksScheduler.insertPeriodTask(new JarFileScanTask(this.compScanner, this.logger));
     }
-
-
 }

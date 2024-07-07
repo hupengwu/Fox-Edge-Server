@@ -20,6 +20,7 @@ public class RepoCompConstant {
     public static final String filed_used_version = "usedVersion";
 
     public static final String filed_component = "component";
+    public static final String filed_work_mode = "workMode";
     public static final String filed_status = "status";
 
     public static final String filed_local_md5 = "localMd5";

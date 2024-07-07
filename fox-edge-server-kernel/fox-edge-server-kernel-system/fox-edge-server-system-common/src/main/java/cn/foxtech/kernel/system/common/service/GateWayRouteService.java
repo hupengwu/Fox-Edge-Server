@@ -22,6 +22,16 @@ public class GateWayRouteService {
         return appType + ":" + appName;
     }
 
+    public String buildUri(String appName, String appType, Integer port) {
+        // 构造uri
+        String uri = "http://localhost:" + port + "/" + appType + "/" + appName;
+        if (uri.endsWith("-service")) {
+            uri = uri.substring(0, uri.length() - "-service".length());
+        }
+
+        return uri;
+    }
+
     /**
      * 构造路由注册路由的数据结构：
      * 注意：xxx-service格式的名称，作为资源名，会被缩短为xxx
@@ -42,11 +52,18 @@ public class GateWayRouteService {
         List<Map<String, Object>> predicates = new ArrayList<>();
         predicates.add(predicate);
 
+        // 构造uri
+        String uri = this.buildUri(appName, appType, port);
+
+        // 构造过滤器
+        List<String> filters = new ArrayList<>();
+        filters.add("StripPrefix=2");
+
         Map<String, Object> body = new HashMap<>();
         body.put("id", this.buildId(appName, appType));
         body.put("predicates", predicates);
-        body.put("uri", "http://localhost:" + port);
-        body.put("filters", new ArrayList<>());
+        body.put("uri", uri);
+        body.put("filters", filters);
         body.put("order", 0);
 
         return body;

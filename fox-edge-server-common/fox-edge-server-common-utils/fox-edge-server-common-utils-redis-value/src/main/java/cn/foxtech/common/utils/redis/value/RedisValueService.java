@@ -13,11 +13,9 @@ import java.util.concurrent.TimeUnit;
 public abstract class RedisValueService {
     @Autowired
     private RedisTemplate redisTemplate;
-
     private long timeout = 60L;
 
     public abstract String getKey();
-
 
     protected void set(String hashKey, Object value) {
         if (hashKey == null || hashKey.isEmpty() || value == null) {
@@ -28,7 +26,7 @@ public abstract class RedisValueService {
         String mainKey = this.getKey() + ":" + hashKey;
 
         this.redisTemplate.opsForValue().set(mainKey, value);
-        this.redisTemplate.expire(mainKey, timeout, TimeUnit.SECONDS);
+        this.expire(mainKey, this.timeout);
     }
 
     protected Object get(String hashKey, long timeout) {
@@ -47,7 +45,7 @@ public abstract class RedisValueService {
             while (true) {
                 Object data = this.redisTemplate.opsForValue().get(mainKey);
                 if (data != null) {
-                    this.redisTemplate.expire(mainKey, 0, TimeUnit.SECONDS);
+                    this.expire(mainKey, 0);
                     return data;
                 }
 
@@ -60,6 +58,14 @@ public abstract class RedisValueService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    protected void expire(String mainKey, long timeout) {
+        if (this.timeout == -1L) {
+            return;
+        }
+
+        this.redisTemplate.expire(mainKey, timeout, TimeUnit.SECONDS);
     }
 
 }

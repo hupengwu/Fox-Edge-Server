@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/kernel/manager/repository/local/app-service")
+@RequestMapping("/repository/local/app-service")
 public class RepoLocalApplicationController {
     @Autowired
     private RepoLocalAppLoadService appLoadService;
@@ -51,7 +51,7 @@ public class RepoLocalApplicationController {
     private RepoLocalPathNameService pathNameService;
 
     @Autowired
-    private RepoLocalAppSysService repoLocalAppSysService;
+    private RepoLocalAppSysService appSysService;
 
 
     @GetMapping("/status/entities")
@@ -75,7 +75,7 @@ public class RepoLocalApplicationController {
             // 扩展相关的进程状态信息
             ProcessUtils.extendAppStatus(confFileInfoList);
 
-            List<Map<String, Object>> sysProcessList = this.repoLocalAppSysService.getSysProcessList();
+            List<Map<String, Object>> sysProcessList = this.appSysService.getSysProcessList();
             sysProcessList.addAll(confFileInfoList);
 
 
@@ -118,7 +118,7 @@ public class RepoLocalApplicationController {
     @PostMapping("config/load")
     public AjaxResult setServiceLoad(@RequestBody Map<String, Object> body) {
         try {
-            this.edgeService.disable4Docker();
+            this.edgeService.testDockerEnv();
 
             // 提取业务参数
             String appName = (String) body.get(ServiceVOFieldConstant.field_app_name);
@@ -149,7 +149,7 @@ public class RepoLocalApplicationController {
     @PostMapping("process/restart")
     public AjaxResult restartProcess(@RequestBody Map<String, Object> body) {
         try {
-            this.edgeService.disable4Docker();
+            this.edgeService.testDockerEnv();
 
             // 提取业务参数
             String appName = (String) body.get(ServiceVOFieldConstant.field_app_name);
@@ -175,7 +175,7 @@ public class RepoLocalApplicationController {
     @PostMapping("process/stop")
     public AjaxResult stopProcess(@RequestBody Map<String, Object> body) {
         try {
-            this.edgeService.disable4Docker();
+            this.edgeService.testDockerEnv();
 
             // 提取业务参数
             String appName = (String) body.get(ServiceVOFieldConstant.field_app_name);
@@ -202,7 +202,8 @@ public class RepoLocalApplicationController {
     @PostMapping("process/uninstall")
     public AjaxResult uninstallProcess(@RequestBody Map<String, Object> body) {
         try {
-            this.edgeService.disable4Docker();
+            this.edgeService.testDockerEnv();
+
             // 提取业务参数
             String appName = (String) body.get(ServiceVOFieldConstant.field_app_name);
             String appType = (String) body.get(ServiceVOFieldConstant.field_app_type);

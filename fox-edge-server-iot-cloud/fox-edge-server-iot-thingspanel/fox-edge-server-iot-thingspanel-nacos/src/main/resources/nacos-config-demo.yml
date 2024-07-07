@@ -1,0 +1,13 @@
+spring:
+  redis:
+    host: localhost
+    port: 6379
+    password: 12345678
+
+  fox-service:                            # 配置信息
+    service:                              # 服务信息，指明这个服务的模块信息，用于识别进程，它跟shell和restful路由强相关
+      type: "service"                     # 服务类型：kernel/system/service
+      name: "iot-thingspanel"                # 服务名称：这是服务的名称
+    model:                                # 模块信息，用于业务之间的分类和协助
+      type: "iot-cloud"                  # 模块类型，指明这是一个controller类型的业务，这类业务主要是用户的业务流程的逻辑
+      name: "thingspanel"                 # 模块类型名称，告知别的业务，它的业务名称，可以通过该名称跟它进行通信，比如topic的主题
