@@ -14,6 +14,12 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
+-- 导出 fox_edge 的数据库结构
+DROP DATABASE IF EXISTS `fox_edge`;
+CREATE DATABASE IF NOT EXISTS `fox_edge`;
+USE `fox_edge`;
+
 -- 导出  表 fox_edge.tb_channel 结构
 DROP TABLE IF EXISTS `tb_channel`;
 CREATE TABLE IF NOT EXISTS `tb_channel` (
@@ -28,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `tb_channel` (
   UNIQUE KEY `channel_name_channel_type` (`channel_name`,`channel_type`),
   KEY `channel_name` (`channel_name`),
   KEY `channel_type` (`channel_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=120 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=120 ;
 
 -- 数据导出被取消选择。
 
@@ -46,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `tb_config` (
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `service_name_service_type_config_name` (`service_name`,`service_type`,`config_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=296 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='该参数是由manage服务来配置，再给各个服务消费';
+) ENGINE=InnoDB AUTO_INCREMENT=296  COMMENT='该参数是由manage服务来配置，再给各个服务消费';
 
 -- 数据导出被取消选择。
 
@@ -67,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `tb_device` (
   UNIQUE KEY `device_name` (`device_name`),
   KEY `device_type` (`device_type`),
   KEY `manufacturer` (`manufacturer`)
-) ENGINE=InnoDB AUTO_INCREMENT=2356 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2356 ;
 
 -- 数据导出被取消选择。
 
@@ -83,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_history` (
   PRIMARY KEY (`id`),
   KEY `device_id` (`device_id`),
   KEY `object_name` (`object_name`)
-) ENGINE=MyISAM AUTO_INCREMENT=15041695 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=15041695 ;
 
 -- 数据导出被取消选择。
 
@@ -102,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_mapper` (
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `device_type_manufacturer_object_name` (`device_type`,`manufacturer`,`object_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=609 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='对象重命名';
+) ENGINE=InnoDB AUTO_INCREMENT=609  COMMENT='对象重命名';
 
 -- 数据导出被取消选择。
 
@@ -121,7 +127,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_model` (
   UNIQUE KEY `template_name` (`model_name`) USING BTREE,
   KEY `device_type` (`device_type`),
   KEY `manufacturer` (`manufacturer`)
-) ENGINE=InnoDB AUTO_INCREMENT=1360 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='将原来的CSV文件，进行JSON化，那么能够应用模板的解码器们，就有了动态配置的能力';
+) ENGINE=InnoDB AUTO_INCREMENT=1360  COMMENT='将原来的CSV文件，进行JSON化，那么能够应用模板的解码器们，就有了动态配置的能力';
 
 -- 数据导出被取消选择。
 
@@ -141,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_object` (
   KEY `device_name` (`device_name`),
   KEY `object_name` (`object_name`),
   KEY `manufacturer` (`manufacturer`)
-) ENGINE=InnoDB AUTO_INCREMENT=101536 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='设备的一个个数据对象信息';
+) ENGINE=InnoDB AUTO_INCREMENT=101536  COMMENT='设备的一个个数据对象信息';
 
 -- 数据导出被取消选择。
 
@@ -161,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_record` (
   KEY `device_type` (`device_type`) USING BTREE,
   KEY `event_name` (`record_name`) USING BTREE,
   KEY `manufacturer` (`manufacturer`)
-) ENGINE=InnoDB AUTO_INCREMENT=717579 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=717579 ;
 
 -- 数据导出被取消选择。
 
@@ -173,7 +179,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_status` (
   `create_time` bigint DEFAULT NULL COMMENT '创建时间',
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB ;
 
 -- 数据导出被取消选择。
 
@@ -187,7 +193,7 @@ CREATE TABLE IF NOT EXISTS `tb_device_value_task` (
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `tark_name` (`task_name`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='设备数值二次加工任务';
+) ENGINE=InnoDB AUTO_INCREMENT=3  COMMENT='设备数值二次加工任务';
 
 -- 数据导出被取消选择。
 
@@ -203,7 +209,7 @@ CREATE TABLE IF NOT EXISTS `tb_extend` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `extend_name` (`extend_name`),
   KEY `extend_type` (`extend_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 ;
 
 -- 数据导出被取消选择。
 
@@ -221,7 +227,7 @@ CREATE TABLE IF NOT EXISTS `tb_iot_device_model` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `model_name` (`model_name`),
   KEY `model_provider` (`provider`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='云平台的设备的物模型';
+) ENGINE=InnoDB AUTO_INCREMENT=5  COMMENT='云平台的设备的物模型';
 
 -- 数据导出被取消选择。
 
@@ -239,7 +245,7 @@ CREATE TABLE IF NOT EXISTS `tb_link` (
   UNIQUE KEY `link_name_link_type` (`link_name`,`link_type`),
   KEY `link_name` (`link_name`),
   KEY `link_type` (`link_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='链路实体';
+) ENGINE=InnoDB AUTO_INCREMENT=60  COMMENT='链路实体';
 
 -- 数据导出被取消选择。
 
@@ -267,7 +273,7 @@ CREATE TABLE IF NOT EXISTS `tb_operate` (
   KEY `manufacturer` (`manufacturer`),
   KEY `engine_type` (`engine_type`),
   KEY `service_type` (`service_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=276 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=276 ;
 
 -- 数据导出被取消选择。
 
@@ -287,7 +293,7 @@ CREATE TABLE IF NOT EXISTS `tb_operate_channel_task` (
   UNIQUE KEY `task_name` (`task_name`),
   KEY `channel_name` (`channel_name`),
   KEY `channel_type` (`channel_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='操作实例：用户手动操作设备时，提交的任务';
+) ENGINE=InnoDB AUTO_INCREMENT=42  COMMENT='操作实例：用户手动操作设备时，提交的任务';
 
 -- 数据导出被取消选择。
 
@@ -307,7 +313,7 @@ CREATE TABLE IF NOT EXISTS `tb_operate_manual_task` (
   KEY `device_name` (`device_name`),
   KEY `device_type` (`device_type`),
   KEY `manufacturer` (`manufacturer`)
-) ENGINE=InnoDB AUTO_INCREMENT=105 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='操作实例：用户手动操作设备时，提交的任务';
+) ENGINE=InnoDB AUTO_INCREMENT=105  COMMENT='操作实例：用户手动操作设备时，提交的任务';
 
 -- 数据导出被取消选择。
 
@@ -327,7 +333,7 @@ CREATE TABLE IF NOT EXISTS `tb_operate_monitor_task` (
   UNIQUE KEY `template_name` (`template_name`),
   KEY `device_type` (`device_type`),
   KEY `manufacturer` (`manufacturer`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='控制器监控模板，控制器会以操作参数为缺省参数，自动填入。当设备参数有同名参数的时候，设备参数覆盖相同的数据。';
+) ENGINE=InnoDB AUTO_INCREMENT=19  COMMENT='控制器监控模板，控制器会以操作参数为缺省参数，自动填入。当设备参数有同名参数的时候，设备参数覆盖相同的数据。';
 
 -- 数据导出被取消选择。
 
@@ -350,7 +356,7 @@ CREATE TABLE IF NOT EXISTS `tb_operate_record` (
   KEY `device_type` (`device_type`) USING BTREE,
   KEY `event_name` (`record_name`) USING BTREE,
   KEY `manufacturer` (`manufacturer`)
-) ENGINE=InnoDB AUTO_INCREMENT=23652 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23652 ;
 
 -- 数据导出被取消选择。
 
@@ -369,7 +375,7 @@ CREATE TABLE IF NOT EXISTS `tb_period_record` (
   KEY `device_id` (`device_id`) USING BTREE,
   KEY `object_name` (`object_name`) USING BTREE,
   KEY `record_batch` (`record_batch`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='设备数值的周期记录';
+) ENGINE=InnoDB  COMMENT='设备数值的周期记录';
 
 -- 数据导出被取消选择。
 
@@ -390,7 +396,7 @@ CREATE TABLE IF NOT EXISTS `tb_period_task` (
   UNIQUE KEY `device_name` (`task_name`) USING BTREE,
   KEY `device_type` (`device_type`) USING BTREE,
   KEY `manufacturer` (`manufacturer`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='周期记录任务';
+) ENGINE=InnoDB AUTO_INCREMENT=38  COMMENT='周期记录任务';
 
 -- 数据导出被取消选择。
 
@@ -411,7 +417,7 @@ CREATE TABLE IF NOT EXISTS `tb_probe` (
   KEY `device_type` (`device_type`),
   KEY `operate_name` (`operate_name`),
   KEY `manufacturer` (`manufacturer`)
-) ENGINE=InnoDB AUTO_INCREMENT=433544 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='设备探针：用于对某些对象进行实时性监控的临时性任务。';
+) ENGINE=InnoDB AUTO_INCREMENT=433544  COMMENT='设备探针：用于对某些对象进行实时性监控的临时性任务。';
 
 -- 数据导出被取消选择。
 
@@ -427,7 +433,7 @@ CREATE TABLE IF NOT EXISTS `tb_repo_comp` (
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `comp_repo_comp_type_comp_name` (`comp_repo`,`comp_type`,`comp_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=472 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='仓库组件信息';
+) ENGINE=InnoDB AUTO_INCREMENT=472  COMMENT='仓库组件信息';
 
 -- 数据导出被取消选择。
 
@@ -445,7 +451,7 @@ CREATE TABLE IF NOT EXISTS `tb_user` (
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 ;
 
 -- 数据导出被取消选择。
 
@@ -458,7 +464,7 @@ CREATE TABLE IF NOT EXISTS `tb_user_menu` (
   `create_time` bigint DEFAULT NULL COMMENT '创建时间',
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='菜单模板，预定义了某类用户的菜单信息。用户表可以根据名称引用该模板，作为自己的界面菜单信息';
+) ENGINE=InnoDB AUTO_INCREMENT=13  COMMENT='菜单模板，预定义了某类用户的菜单信息。用户表可以根据名称引用该模板，作为自己的界面菜单信息';
 
 -- 数据导出被取消选择。
 
@@ -472,7 +478,7 @@ CREATE TABLE IF NOT EXISTS `tb_user_permission` (
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `username` (`name`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='后台权限模板，预定义了某类用户的权限信息。用户表可以根据名称引用该模板，作为自己的权限信息';
+) ENGINE=InnoDB AUTO_INCREMENT=10  COMMENT='后台权限模板，预定义了某类用户的权限信息。用户表可以根据名称引用该模板，作为自己的权限信息';
 
 -- 数据导出被取消选择。
 
@@ -486,7 +492,7 @@ CREATE TABLE IF NOT EXISTS `tb_user_role` (
   `update_time` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `username` (`name`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='后台角色模板，预定义了某类用户的后台信息。用户表可以根据名称引用该模板，作为自己的后台信息';
+) ENGINE=InnoDB AUTO_INCREMENT=10  COMMENT='后台角色模板，预定义了某类用户的后台信息。用户表可以根据名称引用该模板，作为自己的后台信息';
 
 -- 数据导出被取消选择。
 
