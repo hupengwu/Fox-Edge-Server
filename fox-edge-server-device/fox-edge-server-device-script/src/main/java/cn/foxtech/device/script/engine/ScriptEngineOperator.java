@@ -112,12 +112,8 @@ public class ScriptEngineOperator {
             //再将JSON格式的字符串，转换回Map
             Map<String, Object> values = JsonUtils.buildObject((String) data, Map.class);
 
-            Map<String, Object> statusValue = new HashMap<>();
-            statusValue.put(FoxEdgeOperate.status, values);
-
             Map<String, Object> result = new HashMap<>();
-            result.put(FoxEdgeConstant.OPERATE_NAME_TAG, operateName);
-            result.put(FoxEdgeConstant.DATA_TAG, statusValue);
+            result.put(FoxEdgeOperate.status, values);
             return result;
         } catch (InvalidFormatException ife) {
             // 不打印JSON转换日志

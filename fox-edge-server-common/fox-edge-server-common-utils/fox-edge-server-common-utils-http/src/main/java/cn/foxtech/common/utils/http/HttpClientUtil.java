@@ -1,10 +1,12 @@
 package cn.foxtech.common.utils.http;
 
 import cn.foxtech.common.constant.HttpStatus;
+import cn.foxtech.core.exception.ServiceException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -18,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HttpClientUtil {
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * 执行GET方法
@@ -156,6 +159,65 @@ public class HttpClientUtil {
         return resultString;
     }
 
+    public static String executePut(String url, String json, Map<String, String> header) throws IOException {
+        // 创建Httpclient对象
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpResponse response = null;
+        String resultString = "";
+        try {
+            // 创建Http Put请求
+            HttpPut httpPut = new HttpPut(url);
+            // 创建请求内容
+            StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
+            httpPut.setEntity(entity);
+            for (String key : header.keySet()) {
+                httpPut.setHeader(key, header.get(key));
+            }
+
+            // 执行http请求
+            response = httpClient.execute(httpPut);
+            resultString = EntityUtils.toString(response.getEntity(), "utf-8");
+        } finally {
+            try {
+                if (response != null) {
+                    response.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return resultString;
+    }
+
+    public static String executePut(String url, String json) throws IOException {
+        // 创建Httpclient对象
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpResponse response = null;
+        String resultString = "";
+        try {
+            // 创建Http Put
+            HttpPut httpPut = new HttpPut(url);
+            // 创建请求内容
+            StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
+            httpPut.setEntity(entity);
+
+            // 执行http请求
+            response = httpClient.execute(httpPut);
+            resultString = EntityUtils.toString(response.getEntity(), "utf-8");
+        } finally {
+            try {
+                if (response != null) {
+                    response.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return resultString;
+    }
+
 
     /**
      * 执行POST方法
@@ -193,28 +255,50 @@ public class HttpClientUtil {
 
     public static <REQ, RSP> RSP executePost(String url, REQ requestVO, Class<RSP> rspClass) throws IOException {
         // 转换成json
-        ObjectMapper objectMapper = new ObjectMapper();
         String requestJson = objectMapper.writeValueAsString(requestVO);
 
         // 向通道服务器发送请求
         String respondJson = HttpClientUtil.executePost(url, requestJson);
 
-        // 转换JSON结构
-        RSP respondVO = objectMapper.readValue(respondJson, rspClass);
-        return respondVO;
+        try {
+            // 转换JSON结构
+            RSP respondVO = objectMapper.readValue(respondJson, rspClass);
+            return respondVO;
+        } catch (Exception e) {
+            throw new ServiceException("服务端响应异常：" + respondJson);
+        }
+
+    }
+
+    public static <REQ, RSP> RSP executePut(String url, REQ requestVO, Class<RSP> rspClass) throws IOException {
+        // 转换成json
+        String requestJson = objectMapper.writeValueAsString(requestVO);
+
+        // 向通道服务器发送请求
+        String respondJson = HttpClientUtil.executePut(url, requestJson);
+
+        try {
+            // 转换JSON结构
+            RSP respondVO = objectMapper.readValue(respondJson, rspClass);
+            return respondVO;
+        } catch (Exception e) {
+            throw new ServiceException("服务端响应异常：" + respondJson);
+        }
+
     }
 
     public static <RSP> RSP executeGet(String url, Class<RSP> rspClass) throws IOException {
-        // 转换成json
-        ObjectMapper objectMapper = new ObjectMapper();
-
         // 向通道服务器发送请求
         String respondJson = HttpClientUtil.executeGet(url);
 
-        // 转换JSON结构
-        RSP respondVO = objectMapper.readValue(respondJson, rspClass);
-        return respondVO;
+        try {
+            // 转换JSON结构
+            RSP respondVO = objectMapper.readValue(respondJson, rspClass);
+            return respondVO;
+        } catch (Exception e) {
+            throw new ServiceException("服务端响应异常：" + respondJson);
+        }
     }
 
-   
+
 }

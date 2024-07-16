@@ -51,9 +51,11 @@ public class DownLoadUtil {
                     fos.close();
                 }
                 if (bos != null) {
+                    bos.reset();
                     bos.close();
                 }
                 if (his != null) {
+                    his.reset();
                     his.close();
                 }
                 if (conn != null) {

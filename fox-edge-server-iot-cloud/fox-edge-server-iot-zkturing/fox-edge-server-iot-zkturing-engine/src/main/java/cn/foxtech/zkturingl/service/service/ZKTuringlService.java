@@ -33,10 +33,10 @@ public class ZKTuringlService {
 
     public void initialize() {
         // 取出全局配置参数
-        Map<String, Object> whzktl = (Map<String, Object>) this.localConfigService.getConfig().getOrDefault("whzktl", new HashMap<>());
+        Map<String, Object> zkturing = (Map<String, Object>) this.localConfigService.getConfig().getOrDefault("zkturing", new HashMap<>());
 
-        String publish = (String) whzktl.getOrDefault("publish", "");
-        String subscribe = (String) whzktl.getOrDefault("subscribe", "");
+        String publish = (String) zkturing.getOrDefault("publish", "");
+        String subscribe = (String) zkturing.getOrDefault("subscribe", "");
         this.publish = publish.replace("{edgeId}", OSInfoUtils.getCPUID());
         this.subscribe = subscribe.replace("{edgeId}", OSInfoUtils.getCPUID());
 

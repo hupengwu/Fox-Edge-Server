@@ -31,6 +31,7 @@ import cn.foxtech.device.protocol.v1.s7plc.core.algorithm.S7SequentialGroupAlg;
 import cn.foxtech.device.protocol.v1.s7plc.core.common.buff.ByteReadBuff;
 import cn.foxtech.device.protocol.v1.s7plc.core.common.buff.ByteWriteBuff;
 import cn.foxtech.device.protocol.v1.s7plc.core.constant.ErrorCode;
+import cn.foxtech.device.protocol.v1.s7plc.core.constant.GeneralConst;
 import cn.foxtech.device.protocol.v1.s7plc.core.enums.*;
 import cn.foxtech.device.protocol.v1.s7plc.core.exceptions.S7CommException;
 import cn.foxtech.device.protocol.v1.s7plc.core.model.*;
@@ -38,6 +39,7 @@ import lombok.Data;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -88,9 +90,9 @@ public class PLCNetwork extends TcpClientBasic {
     private boolean persistence = true;
 
     /**
-     * 通信回调
+     * 通信回调，第一个参数是tag标签，指示该报文含义；第二个参数是具体报文内容
      */
-    private Consumer<byte[]> comCallback;
+    private BiConsumer<String, byte[]> comCallback;
 
     public PLCNetwork() {
         super();
@@ -224,7 +226,7 @@ public class PLCNetwork extends TcpClientBasic {
      */
     private byte[] readFromServer(byte[] sendData) {
         if (this.comCallback != null) {
-            this.comCallback.accept(sendData);
+            this.comCallback.accept(GeneralConst.PACKAGE_REQ, sendData);
         }
 
         // 将报文中的TPKT和COTP减掉，剩下PDU的内容，7=4(tpkt)+3(cotp)
@@ -255,7 +257,7 @@ public class PLCNetwork extends TcpClientBasic {
             throw new S7CommException("The length of the data after TPKT is inconsistent");
         }
         if (this.comCallback != null) {
-            this.comCallback.accept(total);
+            this.comCallback.accept(GeneralConst.PACKAGE_ACK, total);
         }
         return total;
     }
