@@ -1,13 +1,13 @@
 package cn.foxtech.iot.fox.cloud.forwarder.proxy;
 
 import cn.foxtech.common.domain.constant.RedisTopicConstant;
+import cn.foxtech.common.domain.vo.RestfulLikeRequestVO;
+import cn.foxtech.common.domain.vo.RestfulLikeRespondVO;
 import cn.foxtech.common.rpc.redis.device.client.RedisListDeviceClient;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
 import cn.foxtech.device.domain.vo.TaskRequestVO;
 import cn.foxtech.device.domain.vo.TaskRespondVO;
-import cn.foxtech.iot.fox.cloud.common.vo.RestfulLikeRequestVO;
-import cn.foxtech.iot.fox.cloud.common.vo.RestfulLikeRespondVO;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -19,7 +19,7 @@ public class RedisListManagerClientRespond extends RedisValueService {
      * 查询服务端响应
      *
      * @param uuid
-     * @param timeout 超时，单位秒
+     * @param timeout 超时，单位毫秒
      * @return
      */
     public RestFulRespondVO queryRespond(String uuid, long timeout) {

@@ -64,6 +64,7 @@
         <module>fox-edge-server-controller</module>
         <module>fox-edge-server-persist</module>
         <module>fox-edge-server-service</module>
+        <module>fox-edge-server-rpc-sdk</module>
         <module>fox-edge-server-protocol</module>
     </modules>
 

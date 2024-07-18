@@ -1,7 +1,7 @@
 package cn.foxtech.iot.fox.cloud.common.mqtt;
 
-import cn.foxtech.iot.fox.cloud.common.vo.RestfulLikeRequestVO;
-import cn.foxtech.iot.fox.cloud.common.vo.RestfulLikeRespondVO;
+import cn.foxtech.common.domain.vo.RestfulLikeRequestVO;
+import cn.foxtech.common.domain.vo.RestfulLikeRespondVO;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

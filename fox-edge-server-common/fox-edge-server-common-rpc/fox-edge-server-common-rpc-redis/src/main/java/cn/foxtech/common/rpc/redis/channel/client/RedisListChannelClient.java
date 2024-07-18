@@ -1,5 +1,6 @@
 package cn.foxtech.common.rpc.redis.channel.client;
 
+import cn.foxtech.channel.domain.ChannelRequestVO;
 import cn.foxtech.channel.domain.ChannelRespondVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,8 +23,8 @@ public class RedisListChannelClient {
     }
 
 
-    public void pushChannelRequest(String channelType, Object value) {
-        this.channelRequest.push(channelType,value);
+    public void pushChannelRequest(String channelType, ChannelRequestVO value) {
+        this.channelRequest.push(channelType, value);
     }
 
     public ChannelRespondVO popChannelReport(long timeout, TimeUnit unit) {

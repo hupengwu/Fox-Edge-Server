@@ -1,5 +1,6 @@
 package cn.foxtech.common.rpc.redis.manager.client;
 
+import cn.foxtech.common.domain.vo.RestFulRequestVO;
 import cn.foxtech.common.domain.vo.RestFulRespondVO;
 import cn.foxtech.core.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,10 @@ public class RedisListManagerClient {
 
     public void pushRequest(String uri, String method, Object data) {
         this.managerRequest.pushRequest(uri, method, data);
+    }
+
+    public void pushRequest(RestFulRequestVO requestVO) {
+        this.managerRequest.pushRequest(requestVO);
     }
 
     /**

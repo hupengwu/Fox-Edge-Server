@@ -7,8 +7,9 @@ import lombok.Setter;
 import java.util.Map;
 
 /**
- * restful风格的消息结构
- * 背景：目的是在HTTP、MQTT、REDIS等多种传输管道中，提供统一的交互数据结构
+ * RestFul风格的VO
+ * 说明：
+ * RestFulVO这是面向Fox-Edge的内部各服务之间的【东西向接口】，只有新增了UUID这个额外的特性
  */
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)

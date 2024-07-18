@@ -1,0 +1,19 @@
+{
+  "host": "localhost",
+  "name": "Mica-Mqtt-Client",
+  "port": 1883,
+  "enabled": true,
+  "timeout": 5,
+  "use-ssl": false,
+  "version": "mqtt_3_1_1",
+  "clientId": "",
+  "password": "123456",
+  "reconnect": true,
+  "user-name": "mica",
+  "re-interval": 5000,
+  "clean-session": true,
+  "keep-alive-secs": 60,
+  "buffer-allocator": "heap",
+  "read-buffer-size": "8KB",
+  "max-bytes-in-message": "10MB"
+}

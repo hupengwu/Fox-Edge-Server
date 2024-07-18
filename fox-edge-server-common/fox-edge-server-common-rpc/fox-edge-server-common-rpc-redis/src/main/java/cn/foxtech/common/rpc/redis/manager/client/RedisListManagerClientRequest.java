@@ -31,6 +31,10 @@ public class RedisListManagerClientRequest extends RedisLoggerService {
         requestVO.setMethod(method);
         requestVO.setData(data);
 
+        this.pushRequest(requestVO);
+    }
+
+    public void pushRequest(RestFulRequestVO requestVO) {
         super.push(requestVO);
     }
 

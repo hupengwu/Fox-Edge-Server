@@ -28,14 +28,14 @@ public class DeviceTemplateManageController {
     private RepoCloudFileInstallStatus installStatus;
 
     @Autowired
-    private RepoLocalCsvFileService templateService;
+    private RepoLocalCsvFileService csvFileService;
 
 
     @PostMapping("/page")
     public AjaxResult selectEntityList(@RequestBody Map<String, Object> body) {
         try {
             // 从磁盘中查找所有的模板文件信息
-            List<Map<String, Object>> resultList = this.templateService.queryTemplateList();
+            List<Map<String, Object>> resultList = this.csvFileService.queryTemplateList();
 
             return PageUtils.getPageMapList(resultList, body);
         } catch (Exception e) {

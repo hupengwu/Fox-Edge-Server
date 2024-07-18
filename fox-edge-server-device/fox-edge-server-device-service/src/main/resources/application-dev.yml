@@ -15,7 +15,7 @@ spring:
       name: "device"        # 模块类型名称，告知别的业务，它的业务名称，可以通过该名称跟它进行通信，比如topic的主题
 
   redis:
-    host: 192.168.1.21
+    host: 192.168.1.23
     port: 6379
     password: 12345678
     jedis:

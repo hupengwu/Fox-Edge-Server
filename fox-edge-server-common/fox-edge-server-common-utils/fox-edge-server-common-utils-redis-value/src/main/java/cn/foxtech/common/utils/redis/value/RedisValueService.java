@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 public abstract class RedisValueService {
     @Autowired
     private RedisTemplate redisTemplate;
-    private long timeout = 60L;
+    private long timeout = 60 * 1000L;
 
     public abstract String getKey();
 
@@ -65,7 +65,7 @@ public abstract class RedisValueService {
             return;
         }
 
-        this.redisTemplate.expire(mainKey, timeout, TimeUnit.SECONDS);
+        this.redisTemplate.expire(mainKey, timeout, TimeUnit.MILLISECONDS);
     }
 
 }

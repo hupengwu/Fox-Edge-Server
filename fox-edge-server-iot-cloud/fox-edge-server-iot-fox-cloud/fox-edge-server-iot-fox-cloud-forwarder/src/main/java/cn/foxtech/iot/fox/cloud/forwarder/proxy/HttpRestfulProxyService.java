@@ -1,10 +1,10 @@
 package cn.foxtech.iot.fox.cloud.forwarder.proxy;
 
+import cn.foxtech.common.domain.vo.RestfulLikeRequestVO;
+import cn.foxtech.common.domain.vo.RestfulLikeRespondVO;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.iot.fox.cloud.common.service.proxy.LocalHttpProxyService;
-import cn.foxtech.iot.fox.cloud.common.vo.RestfulLikeRequestVO;
-import cn.foxtech.iot.fox.cloud.common.vo.RestfulLikeRespondVO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;

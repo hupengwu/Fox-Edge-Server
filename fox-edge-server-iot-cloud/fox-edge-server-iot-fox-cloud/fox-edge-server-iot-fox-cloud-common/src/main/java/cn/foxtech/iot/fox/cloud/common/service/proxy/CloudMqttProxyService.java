@@ -1,12 +1,12 @@
 package cn.foxtech.iot.fox.cloud.common.service.proxy;
 
+import cn.foxtech.common.domain.vo.RestfulLikeRequestVO;
+import cn.foxtech.common.domain.vo.RestfulLikeRespondVO;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.uuid.UuidUtils;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.iot.fox.cloud.common.mqtt.MqttClientService;
 import cn.foxtech.iot.fox.cloud.common.mqtt.MqttMessageE2C;
-import cn.foxtech.iot.fox.cloud.common.vo.RestfulLikeRequestVO;
-import cn.foxtech.iot.fox.cloud.common.vo.RestfulLikeRespondVO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;

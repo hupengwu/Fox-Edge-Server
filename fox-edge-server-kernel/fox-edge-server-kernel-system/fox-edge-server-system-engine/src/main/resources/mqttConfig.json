@@ -30,7 +30,7 @@
       {
         "saveMode": "Raw",
         "showMode": "Security",
-        "fieldName": "cloud.mqtt.password",
+        "fieldName": "mqtt.password",
         "valueType": "string",
         "defaultValue": ""
       }

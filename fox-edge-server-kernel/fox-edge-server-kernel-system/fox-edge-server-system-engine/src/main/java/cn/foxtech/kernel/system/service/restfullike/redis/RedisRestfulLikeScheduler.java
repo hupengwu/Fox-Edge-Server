@@ -45,7 +45,7 @@ public class RedisRestfulLikeScheduler extends PeriodTaskService {
         RestFulRespondVO respondVO = this.execute(requestVO);
 
         // 检查是否需要返回数据：如果有UUID，说明客户端会根据UUID取数据
-        if (MethodUtils.hasEmpty(requestVO.getUuid())) {
+        if (!MethodUtils.hasEmpty(requestVO.getUuid())) {
             this.managerServer.pushRespond(requestVO.getUuid(), respondVO);
         }
     }

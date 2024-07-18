@@ -1,9 +1,9 @@
 package cn.foxtech.kernel.system.service.restfullike.mqtt;
 
+import cn.foxtech.common.domain.vo.RestfulLikeRequestVO;
+import cn.foxtech.common.domain.vo.RestfulLikeRespondVO;
 import cn.foxtech.common.mqtt.MqttClientService;
 import cn.foxtech.kernel.system.service.restfullike.redis.RedisRestfulLikeController;
-import cn.foxtech.kernel.system.service.vo.RestfulLikeRequestVO;
-import cn.foxtech.kernel.system.service.vo.RestfulLikeRespondVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

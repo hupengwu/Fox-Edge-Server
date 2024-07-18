@@ -16,7 +16,7 @@
 
     <modules>
         <module>fox-edge-server-system-common</module>
-        <module>fox-edge-server-system-repository</module>
+        <module>fox-edge-server-system-repos</module>
         <module>fox-edge-server-system-engine</module>
         <module>fox-edge-server-system-nacos</module>
         <module>fox-edge-server-system-service</module>

@@ -1,9 +1,10 @@
 package cn.foxtech.persist.common.service.updater;
 
 import cn.foxtech.common.entity.constant.DeviceStatusVOFieldConstant;
+import cn.foxtech.common.entity.entity.DeviceStatusEntity;
+import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.device.domain.vo.OperateRespondVO;
 import cn.foxtech.persist.common.service.EntityManageService;
-import cn.foxtech.common.entity.entity.DeviceStatusEntity;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,10 +33,10 @@ public class DeviceCommStatusUpdater {
             DeviceStatusEntity statusEntity = new DeviceStatusEntity();
             statusEntity.setId(deviceId);
 
-            long commFailedTime = Long.parseLong(status.get(OperateRespondVO.data_comm_status_failed_time).toString());
-            long commSuccessTime = Long.parseLong(status.get(OperateRespondVO.data_comm_status_success_time).toString());
+            long commFailedTime = NumberUtils.makeLong(status.get(OperateRespondVO.data_comm_status_failed_time));
+            long commSuccessTime = NumberUtils.makeLong(status.get(OperateRespondVO.data_comm_status_success_time));
 
-            Long time = System.currentTimeMillis();
+            long time = System.currentTimeMillis();
 
             Map<String, Object> existEntity = this.entityManageService.readHashMap(statusEntity.makeServiceKey(), DeviceStatusEntity.class);
             if (existEntity == null) {
@@ -54,7 +55,7 @@ public class DeviceCommStatusUpdater {
                 this.entityManageService.writeEntity(statusEntity);
 
             } else {
-                int commFailedCount = Integer.parseInt(existEntity.getOrDefault(DeviceStatusVOFieldConstant.field_failed_count,0).toString());
+                int commFailedCount = NumberUtils.makeInteger(existEntity.getOrDefault(DeviceStatusVOFieldConstant.field_failed_count, 0));
                 if (commFailedTime > 0) {
                     commFailedCount++;
                 } else {

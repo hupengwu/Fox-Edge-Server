@@ -42,7 +42,7 @@
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-system-repository</artifactId>
+            <artifactId>fox-edge-server-system-repos</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
 

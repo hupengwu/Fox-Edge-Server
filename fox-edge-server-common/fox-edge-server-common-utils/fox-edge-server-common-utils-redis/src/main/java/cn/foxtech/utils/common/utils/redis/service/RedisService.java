@@ -140,7 +140,7 @@ public class RedisService {
      * @return true=设置成功；false=设置失败
      */
     public boolean expire(final String key, final long timeout) {
-        return expire(key, timeout, TimeUnit.SECONDS);
+        return expire(key, timeout, TimeUnit.MILLISECONDS);
     }
 
     /**

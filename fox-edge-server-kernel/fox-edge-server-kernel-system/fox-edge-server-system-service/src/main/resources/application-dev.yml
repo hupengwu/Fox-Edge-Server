@@ -10,7 +10,7 @@ spring:
     name: fox-edge-server-manager-system-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.1.21:3306/fox_edge?useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://192.168.1.23:3306/fox_edge?useUnicode=true&characterEncoding=utf8
     username: fox-edge
     password: 12345678
 
@@ -32,7 +32,7 @@ spring:
       router: "local"               # 本地模式：是否为本地工作模式
 
   redis:
-    host: localhost
+    host: 192.168.1.23
     port: 6379
     password: 12345678
     jedis:

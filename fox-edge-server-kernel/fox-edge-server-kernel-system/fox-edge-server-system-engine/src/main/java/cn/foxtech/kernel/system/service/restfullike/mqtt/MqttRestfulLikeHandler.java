@@ -1,11 +1,11 @@
 package cn.foxtech.kernel.system.service.restfullike.mqtt;
 
+import cn.foxtech.common.domain.vo.RestfulLikeRequestVO;
+import cn.foxtech.common.domain.vo.RestfulLikeRespondVO;
 import cn.foxtech.common.mqtt.MqttClientHandler;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.exception.ServiceException;
-import cn.foxtech.kernel.system.service.vo.RestfulLikeRequestVO;
-import cn.foxtech.kernel.system.service.vo.RestfulLikeRespondVO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

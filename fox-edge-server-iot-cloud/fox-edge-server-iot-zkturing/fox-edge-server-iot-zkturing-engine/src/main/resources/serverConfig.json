@@ -26,8 +26,8 @@
       }
     },
     "zkturing": {
-      "publish": "/zktl/gateway/{edgeId}/up",
-      "subscribe": "/zktl/gateway/{edgeId}/down/#"
+      "publish": "/zkturing/gateway/{edgeId}/up",
+      "subscribe": "/zkturing/gateway/{edgeId}/down/#"
     },
     "extend": {
       "extendField": "whzktl"
@@ -38,7 +38,7 @@
     "list": [{
       "saveMode": "Raw",
       "showMode": "Security",
-      "fieldName": "cloud.mqtt.password",
+      "fieldName": "remote.mqtt.password",
       "valueType": "string",
       "defaultValue": ""
     }]
