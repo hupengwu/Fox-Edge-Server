@@ -2,6 +2,7 @@ package cn.foxtech.iot.fox.cloud.publisher;
 
 
 import cn.foxtech.common.entity.constant.EntityPublishConstant;
+import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.entity.service.redis.AgileMapRedisService;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
@@ -169,9 +170,9 @@ public class ConfigEntityManageScheduler extends PeriodTaskService {
             AgileMapRedisService redisService = this.publishEntityManageService.getAgileMapService(entityType);
 
             // 装载数据：从redis读取数据，并获知变化状态
-            Map<String, Object> addMap = new HashMap<>();
+            Map<String, BaseEntity> addMap = new HashMap<>();
             Set<String> delSet = new HashSet<>();
-            Map<String, Object> mdyMap = new HashMap<>();
+            Map<String, BaseEntity> mdyMap = new HashMap<>();
             redisService.loadChangeEntities(addMap, delSet, mdyMap);
 
             // 检测：数据

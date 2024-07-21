@@ -47,6 +47,7 @@
         <module>fox-edge-server-common-utils-serial</module>
         <module>fox-edge-server-common-utils-scheduler</module>
         <module>fox-edge-server-common-utils-sync-obejct</module>
+        <module>fox-edge-server-common-utils-time-interval</module>
         <module>fox-edge-server-common-utils-uuid</module>
     </modules>
 

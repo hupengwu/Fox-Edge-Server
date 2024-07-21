@@ -4,20 +4,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>fox-edge-server-controller</artifactId>
+        <artifactId>fox-edge-server-iot-fox-publish</artifactId>
         <groupId>cn.fox-tech</groupId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>fox-edge-server-controller-engine</artifactId>
-    <version>${revision}</version>
+    <artifactId>fox-edge-server-iot-fox-publish-engine</artifactId>
     <name>${project.artifactId}</name>
     <description>${project.artifactId}</description>
-    <dependencies>
 
+    <dependencies>
+        <!-- 核心模块-->
         <dependency>
             <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-controller-common</artifactId>
+            <artifactId>fox-edge-server-common-core</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
 
@@ -28,35 +28,21 @@
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-hex</artifactId>
+            <artifactId>fox-edge-server-common-entity-service</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-number</artifactId>
+            <artifactId>fox-edge-server-common-utils-json</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-time-interval</artifactId>
+            <artifactId>fox-edge-server-iot-common</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-reflect</artifactId>
-            <version>${fox-edge-server.version}</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-file</artifactId>
-            <version>${fox-edge-server.version}</version>
-        </dependency>
-
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
@@ -67,31 +53,38 @@
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-channel-domain</artifactId>
+            <artifactId>fox-edge-server-common-utils-time-interval</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-device-domain</artifactId>
-            <version>${fox-edge-server.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
+
         <dependency>
             <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-protocol-core</artifactId>
+            <artifactId>fox-edge-server-common-utils-container</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-process</artifactId>
+            <artifactId>fox-edge-server-common-utils-uuid</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-common-utils-sync-obejct</artifactId>
+            <version>${fox-edge-server.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.fox-tech</groupId>
+            <artifactId>fox-edge-server-common-utils-osinfo</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
 
     </dependencies>
-
 </project>

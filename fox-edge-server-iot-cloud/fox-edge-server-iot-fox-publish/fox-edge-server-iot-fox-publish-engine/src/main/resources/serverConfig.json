@@ -1,0 +1,122 @@
+{
+  "configValue": {
+    "remote": {
+      "mode": "mqtt",
+      "http": {
+        "host": ""
+      },
+      "mqtt": {
+        "host": "192.168.1.21",
+        "name": "Mica-Mqtt-Client",
+        "port": 1883,
+        "enabled": true,
+        "timeout": 5,
+        "use-ssl": false,
+        "version": "mqtt_3_1_1",
+        "clientId": "",
+        "password": "123456",
+        "reconnect": true,
+        "user-name": "mica",
+        "re-interval": 5000,
+        "clean-session": true,
+        "keep-alive-secs": 60,
+        "buffer-allocator": "heap",
+        "read-buffer-size": "8KB",
+        "max-bytes-in-message": "10MB"
+      }
+    },
+    "topic": {
+      "publish": "/iot-fox-publish/gateway/{edgeId}/up",
+      "subscribe": "/iot-fox-publish/gateway/{edgeId}/down/#"
+    },
+    "entities": {
+      "deviceValueEntity": {
+        "publish": true,
+        "interval": 3600
+      },
+      "deviceRecordEntity": {
+        "publish": true,
+        "interval": 10
+      },
+      "deviceValueExEntity": {
+        "publish": true,
+        "interval": 3600
+      },
+      "configEntity": {
+        "publish": true,
+        "interval": 1
+      },
+      "channelEntity": {
+        "publish": true,
+        "interval": 1
+      },
+      "channelStatusEntity": {
+        "publish": true,
+        "interval": 1
+      },
+      "deviceEntity": {
+        "publish": true,
+        "interval": 1
+      },
+      "deviceMapperEntity": {
+        "publish": true,
+        "interval": 1
+      },
+      "deviceModelEntity": {
+        "publish": true,
+        "interval": 1
+      },
+      "deviceStatusEntity": {
+        "publish": true,
+        "interval": 1
+      },
+      "deviceValueExTaskEntity": {
+        "publish": true,
+        "interval": 1
+      },
+      "extendConfigEntity": {
+        "publish": true,
+        "interval": 1
+      },
+      "iotDeviceModelEntity": {
+        "publish": true,
+        "interval": 1
+      },
+      "operateChannelTaskEntity": {
+        "publish": true,
+        "interval": 1
+      },
+      "operateEntity": {
+        "publish": true,
+        "interval": 1
+      },
+      "operateManualTaskEntity": {
+        "publish": true,
+        "interval": 1
+      },
+      "operateMonitorTaskEntity": {
+        "publish": true,
+        "interval": 1
+      },
+      "repoCompEntity": {
+        "publish": true,
+        "interval": 1
+      }
+    },
+    "extend": {
+      "extendField": "iot-fox-publish"
+    }
+  },
+  "configParam": {
+    "list": [
+      {
+        "saveMode": "Raw",
+        "showMode": "Security",
+        "fieldName": "remote.mqtt.password",
+        "valueType": "string",
+        "defaultValue": ""
+      }
+    ]
+  },
+  "remark": "iot-fox-publish服务所需要的云端配置：\n\n{\n     \"extend\": {----------------------------------------------------------设备上的扩展字段，用于标识哪些设备需要上传\n          \"extendField\": \"iot-fox-base\"\n     },\n     \"topic\": {------------------------------------------------------------跟云端服务约定的topic，可以修改成其他格式\n          \"publish\": \"/iot-fox-base/gateway/{edgeId}/up\",\n          \"subscribe\": \"/iot-fox-base/gateway/{edgeId}/down/#\"\n     },\n     \"remote\": {----------------------------------------------------------访问云端的通讯方式和参数\n          \"mode\": \"mqtt\",\n          \"http\": {\n               \"host\": \"\"\n          },\n          \"mqtt\": {\n               \"host\": \"192.168.1.21\",\n               \"port\": 1883\n          }\n     },\n     \"entities\": {---------------------------------------------------------需要推送的数据\n          \"deviceValueEntity\": {\n               \"publish\": true,----------------------------------------------是否需要推送\n               \"interval\": 1--------------------------------------------------推送的时间间隔（单位：秒）\n          },\n          \"deviceRecordEntity\": {\n               \"publish\": false,\n               \"interval\": 10\n          }\n     }\n}"
+}

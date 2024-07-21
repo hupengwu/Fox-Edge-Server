@@ -21,6 +21,7 @@
         <module>fox-edge-server-iot-huawei</module>
         <module>fox-edge-server-iot-zkturing</module>
         <module>fox-edge-server-iot-fox-cloud</module>
+        <module>fox-edge-server-iot-fox-publish</module>
     </modules>
 
 

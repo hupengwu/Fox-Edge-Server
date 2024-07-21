@@ -10,6 +10,7 @@ import cn.foxtech.common.status.ServiceStatus;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
+import cn.foxtech.common.utils.time.interval.TimeIntervalMap;
 import cn.foxtech.controller.common.service.DeviceOperateService;
 import cn.foxtech.controller.common.service.EntityManageService;
 import cn.foxtech.device.domain.vo.OperateRequestVO;
@@ -37,7 +38,7 @@ public class CollectorExchangeService extends PeriodTaskService {
     /**
      * 任务最近执行时间
      */
-    private final Map<String, Long> lastTimeMap = new HashMap<>();
+    private final TimeIntervalMap timeIntervalMap = new TimeIntervalMap();
 
     @Autowired
     private EntityManageService entityManageService;
@@ -82,15 +83,15 @@ public class CollectorExchangeService extends PeriodTaskService {
         for (BaseEntity entity : taskList) {
             OperateMonitorTaskEntity taskEntity = (OperateMonitorTaskEntity) entity;
 
+            long startTime = System.currentTimeMillis();
             long timeInterval = this.getTimeInterval(taskEntity);
 
+
             // 检查：是否到了执行周期
-            long lastTime = this.lastTimeMap.getOrDefault(taskEntity.getTemplateName(), 0L);
-            if (!this.testLastTime(timeInterval, lastTime)) {
+            if (!this.timeIntervalMap.testLastTime(taskEntity.getTemplateName(), startTime, timeInterval)) {
                 continue;
             }
-            long startTime = System.currentTimeMillis();
-            this.lastTimeMap.put(taskEntity.getTemplateName(), startTime);
+
 
             // 组织跟该任务相关的设备ID
             List<Object> deviceIds = taskEntity.getDeviceIds();
@@ -226,20 +227,11 @@ public class CollectorExchangeService extends PeriodTaskService {
         }
     }
 
-    private boolean testLastTime(long timeInterval, long lastTime) {
-        if (timeInterval == -1) {
-            return false;
-        }
-
-        long currentTime = System.currentTimeMillis();
-        return currentTime - lastTime > timeInterval;
-    }
-
     private long getTimeInterval(OperateMonitorTaskEntity taskEntity) {
         try {
             String timeMode = (String) taskEntity.getTaskParam().get("timeMode");
             String timeUnit = (String) taskEntity.getTaskParam().get("timeUnit");
-            Integer timeInterval = (Integer) taskEntity.getTaskParam().get("timeInterval");
+            Integer timeInterval = (Integer) taskEntity.getTaskParam().get("timeIntervalMap");
 
             if (MethodUtils.hasEmpty(timeMode, timeUnit, timeInterval)) {
                 return -1;

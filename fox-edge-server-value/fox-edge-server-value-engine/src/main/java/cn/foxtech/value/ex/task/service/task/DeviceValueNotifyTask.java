@@ -63,7 +63,7 @@ public class DeviceValueNotifyTask extends PeriodTask {
             Map<String, BaseEntity> addMap = new HashMap<>();
             Set<String> delSet = new HashSet<>();
             Map<String, BaseEntity> mdyMap = new HashMap<>();
-            redisService.loadChangeEntities(addMap, delSet, mdyMap, new DeviceValueEntity());
+            redisService.loadChangeEntities(addMap, delSet, mdyMap);
 
             // 检测：数据
             if (addMap.isEmpty() && delSet.isEmpty() && mdyMap.isEmpty()) {

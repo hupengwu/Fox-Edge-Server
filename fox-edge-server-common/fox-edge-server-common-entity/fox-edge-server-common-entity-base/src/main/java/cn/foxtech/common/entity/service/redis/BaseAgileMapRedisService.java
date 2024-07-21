@@ -2,6 +2,7 @@ package cn.foxtech.common.entity.service.redis;
 
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.utils.DifferUtils;
+import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.utils.common.utils.redis.service.RedisService;
 import com.fasterxml.jackson.core.JsonParseException;
 
@@ -177,92 +178,27 @@ public abstract class BaseAgileMapRedisService {
      * @param mdyMap 修改
      * @throws IOException 异常
      */
-    public void loadChangeEntities(Map<String, Object> addMap, Set<String> delSet, Map<String, Object> mdyMap) throws IOException {
+    public void loadChangeEntities(Map<String, BaseEntity> addMap, Set<String> delSet, Map<String, BaseEntity> mdyMap) throws IOException, InstantiationException, IllegalAccessException {
         if (this.notify != null) {
             return;
         }
 
+        // 从类工厂，实例化出一个builder对象
+        Class clazz = BaseEntityClassFactory.getInstance(this.getEntityType());
+        BaseEntity builder = (BaseEntity) clazz.newInstance();
+
         // 读取时间戳
-        Long sync = this.getRedisService().getCacheObject(this.getHead() + "sync");
+        Object sync = this.getRedisService().getCacheObject(this.getHead() + "sync");
         if (sync == null) {
             return;
-        } else {
-            this.updateTime = sync;
         }
-
-        // 读取敏捷数据：带有每个Entity的UpdateTime
-        Map<String, Long> newUpdateTimes = this.getRedisService().getCacheMap(this.getHead() + "agile");
-        if (newUpdateTimes == null) {
-            newUpdateTimes = new HashMap<>();
-        }
-
-        // 根据时间戳，判定变化的数据
-        Set<String> addList = new HashSet<>();
-        Set<String> delList = new HashSet<>();
-        Set<String> eqlList = new HashSet<>();
-        DifferUtils.differByValue(this.agileMap.keySet(), newUpdateTimes.keySet(), addList, delList, eqlList);
-
-        Set<String> mdfList = new HashSet<>();
-        for (String key : eqlList) {
-            Long newUpdateTime = newUpdateTimes.get(key);
-            Long oldUpdateTime = this.agileMap.get(key);
-            if (newUpdateTime.equals(oldUpdateTime)) {
-                continue;
-            }
-
-            mdfList.add(key);
-        }
-
-        if (addList.isEmpty() && delList.isEmpty() && mdfList.isEmpty()) {
+        // 检查：总时间戳是否发生了变化
+        if (this.updateTime.equals(sync)) {
             return;
         }
 
-        // 读取全量的date：redis基础组件，没有读取指定数据的Map接口
-        Map<String, Object> jsonMap = this.getRedisService().getCacheMap(this.getHead() + "data");
-        Map<String, Map<String, Object>> dataMap = this.makeEntityMap(jsonMap);
-
-        // 新增的数据
-        for (String key : addList) {
-            Map<String, Object> data = dataMap.get(key);
-            if (data == null) {
-                continue;
-            }
-
-            Long newUpdateTime = newUpdateTimes.get(key);
-            this.agileMap.put(key, newUpdateTime);
-
-            addMap.put(key, data);
-        }
-
-        // 修改的数据
-        for (String key : mdfList) {
-            Map<String, Object> data = dataMap.get(key);
-            if (data == null) {
-                continue;
-            }
-
-            Long newUpdateTime = newUpdateTimes.get(key);
-            this.agileMap.put(key, newUpdateTime);
-
-            mdyMap.put(key, data);
-        }
-
-        // 删除的数据
-        delSet.addAll(delList);
-    }
-
-    public void loadChangeEntities(Map<String, BaseEntity> addMap, Set<String> delSet, Map<String, BaseEntity> mdyMap, BaseEntity builder) throws IOException {
-        if (this.notify != null) {
-            return;
-        }
-        
-        // 读取时间戳
-        Long sync = this.getRedisService().getCacheObject(this.getHead() + "sync");
-        if (sync == null) {
-            return;
-        } else {
-            this.updateTime = sync;
-        }
+        // 记录下新的时间戳
+        this.updateTime = NumberUtils.makeLong(sync);
 
         // 读取敏捷数据：带有每个Entity的UpdateTime
         Map<String, Long> newUpdateTimes = this.getRedisService().getCacheMap(this.getHead() + "agile");
