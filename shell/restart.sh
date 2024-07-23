@@ -49,6 +49,7 @@ app_param_mysql_password=$(readINI $app_home/shell/fox-edge.ini mysql password)
 app_local_ip=$(readINI $app_home/shell/fox-edge.ini environment ip)
 app_local_type=$(readINI $app_home/shell/fox-edge.ini environment type)
 app_local_mode=$(readINI $app_home/shell/fox-edge.ini environment mode)
+app_local_cpu_id=$(readINI $app_home/shell/fox-edge.ini environment cpu_id)
 
 
 #cloud参数
@@ -205,6 +206,7 @@ if [[ $app_engine == java ]]; then
 	--app_type=$app_type \
 	--app_name=$app_name \
 	--env_type=$app_local_type \
+	--env_cpu_id=$app_local_cpu_id \
 	--work_mode=$app_local_mode \
 	--spring.profiles.active=prod \
 	$spring_param \
@@ -224,6 +226,8 @@ if [[ $app_engine == python3  || $app_engine == python ]]; then
 	--app_type=$app_type \
 	--app_name=$app_name \
 	--env_type=$app_local_type \
+	--env_cpu_id=$app_local_cpu_id \
+	app_local_mode
 	--work_mode=$app_local_mode \
 	server.port=$serverPort \
 	redis.host=$app_param_redis_host redis.port=$app_param_redis_port redis.password=$app_param_redis_password \

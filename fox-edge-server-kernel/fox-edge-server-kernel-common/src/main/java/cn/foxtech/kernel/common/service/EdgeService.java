@@ -1,6 +1,7 @@
 package cn.foxtech.kernel.common.service;
 
 
+import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.osinfo.OSInfoUtils;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.common.constants.EdgeServiceConstant;
@@ -39,14 +40,22 @@ public class EdgeService {
      * @return
      */
     public Map<String, Object> getOSInfo() {
-        if (!this.map.containsKey("cpuId")) {
-            this.map.put("cpuId", OSInfoUtils.getCPUID());
+        if (!this.map.containsKey(EdgeServiceConstant.filed_cpu_id)) {
+            String cpuId = this.getAppArg("--env_cpu_id=", "");
+            if (MethodUtils.hasEmpty(cpuId)) {
+                cpuId = OSInfoUtils.getCPUID();
+            }
+
+            this.map.put("cpuId", cpuId);
         }
         if (!this.map.containsKey(EdgeServiceConstant.filed_env_type)) {
             String envType = this.getAppArg("--env_type=", EdgeServiceConstant.value_env_type_device);
             this.map.put(EdgeServiceConstant.filed_env_type, envType);
         }
-
+        if (!this.map.containsKey(EdgeServiceConstant.filed_work_mode)) {
+            String workMode = this.getAppArg("--work_mode", EdgeServiceConstant.value_work_mode_local);
+            this.map.put(EdgeServiceConstant.filed_work_mode, workMode);
+        }
 
         return this.map;
     }
@@ -85,7 +94,7 @@ public class EdgeService {
      * @return
      */
     public String getCPUID() {
-        return this.getOSInfo().get("cpuId").toString();
+        return this.getOSInfo().get(EdgeServiceConstant.filed_cpu_id).toString();
     }
 
     /**

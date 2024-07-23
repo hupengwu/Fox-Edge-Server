@@ -1,6 +1,7 @@
 package cn.foxtech.kernel.common.constants;
 
 public class EdgeServiceConstant {
+    public static final String filed_cpu_id = "cpuId";
     public static final String filed_env_type = "envType";
     public static final String value_env_type_device = "device";
     public static final String value_env_type_docker = "docker";

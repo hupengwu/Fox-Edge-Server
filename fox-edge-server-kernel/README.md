@@ -1,7 +1,7 @@
 # fox-edge-server-kernel
 
 ## 介绍
-内核服务，它包括三个模块：gateway、auth、system
+内核服务，它包括三个模块：gateway、system
 
 #### gateway
 
@@ -47,7 +47,7 @@ Fox-Edge的部署环境是非常灵活的，比如在边缘端、比如在云端
 
 2、fox-edge-server-system-nacos
 
-### 云服务模式3
+### 云服务模式2
 
 在k8s的云端部署情况下，fox-edge可能跟客户的其他服务一起部署，那么此时很可能会有一个已经存在的公共gateway
 
