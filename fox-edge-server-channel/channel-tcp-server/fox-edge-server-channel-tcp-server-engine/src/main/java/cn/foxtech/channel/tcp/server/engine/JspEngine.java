@@ -53,82 +53,76 @@ public class JspEngine {
 
 
     public void startJspEngine(Integer serverPort, Map<String, Object> engine) {
-        try {
-            Map<String, Object> keyHandler = (Map<String, Object>) engine.getOrDefault("keyHandler", new HashMap<>());
-            Map<String, Object> splitHandler = (Map<String, Object>) engine.getOrDefault("splitHandler", new HashMap<>());
-            String returnText = (String) engine.getOrDefault("returnText", "");
-            Map<String, Object> register = (Map<String, Object>) engine.getOrDefault("register", new HashMap<>());
-            String channelName = (String) register.getOrDefault("channelName", "");
-            String manufacturer = (String) register.getOrDefault("manufacturer", "");
-            String deviceType = (String) register.getOrDefault("deviceType", "");
-            String deviceName = (String) register.getOrDefault("deviceName", "");
+        Map<String, Object> keyHandler = (Map<String, Object>) engine.getOrDefault("keyHandler", new HashMap<>());
+        Map<String, Object> splitHandler = (Map<String, Object>) engine.getOrDefault("splitHandler", new HashMap<>());
+        String returnText = (String) engine.getOrDefault("returnText", "");
+        Map<String, Object> register = (Map<String, Object>) engine.getOrDefault("register", new HashMap<>());
+        String channelName = (String) register.getOrDefault("channelName", "");
+        String manufacturer = (String) register.getOrDefault("manufacturer", "");
+        String deviceType = (String) register.getOrDefault("deviceType", "");
+        String deviceName = (String) register.getOrDefault("deviceName", "");
 
-            OperateEntity find = new OperateEntity();
-            find.setManufacturer((String) keyHandler.get("manufacturer"));
-            find.setDeviceType((String) keyHandler.get("deviceType"));
-            find.setOperateName("keyHandler");
+        OperateEntity find = new OperateEntity();
+        find.setManufacturer((String) keyHandler.get("manufacturer"));
+        find.setDeviceType((String) keyHandler.get("deviceType"));
+        find.setOperateName("keyHandler");
 
-            // 获得操作实体：身份识别
-            OperateEntity keyHandlerEntity = this.entityManageService.getEntity(find.makeServiceKey(), OperateEntity.class);
-            if (keyHandlerEntity == null) {
-                throw new ServiceException("获得身份识别keyHandler的操作方法出错：manufacturer, deviceType" + find.makeServiceKey());
-            }
-
-            find = new OperateEntity();
-            find.setManufacturer((String) splitHandler.get("manufacturer"));
-            find.setDeviceType((String) splitHandler.get("deviceType"));
-            find.setOperateName("splitHandler");
-
-            // 获得操作实体：报文分拆
-            OperateEntity splitHandlerEntity = this.entityManageService.getEntity(find.makeServiceKey(), OperateEntity.class);
-            if (splitHandlerEntity == null) {
-                throw new ServiceException("获得报文分拆splitHandler的操作方法出错：manufacturer, deviceType" + find.makeServiceKey());
-            }
-
-            ConsumerRedisService consumerRedisService = (ConsumerRedisService) this.entityManageService.getBaseRedisService(OperateEntity.class);
-
-
-            // 绑定动态通知
-            OperateEntitySplitNotify splitNotify = new OperateEntitySplitNotify();
-            splitNotify.setScriptEngineService(this.scriptEngineService);
-            splitNotify.setConsole(this.console);
-            splitNotify.setOperateEntity(splitHandlerEntity);
-            splitNotify.setFormat((String) splitHandler.getOrDefault("format", "HEX"));
-            splitNotify.reset();
-            consumerRedisService.bindEntityNotify(splitNotify);
-
-            // 绑定动态通知
-            OperateEntityKeyNotify keyNotify = new OperateEntityKeyNotify();
-            keyNotify.setScriptEngineService(this.scriptEngineService);
-            keyNotify.setConsole(this.console);
-            keyNotify.setOperateEntity(keyHandlerEntity);
-            keyNotify.setFormat((String) keyHandler.getOrDefault("format", "HEX"));
-            keyNotify.reset();
-            consumerRedisService.bindEntityNotify(keyNotify);
-
-
-            ChannelHandler channelHandler = new ChannelHandler();
-            channelHandler.setServiceKeyHandler(keyNotify.getServiceKeyHandler());
-            channelHandler.setChannelManager(this.channelManager);
-            channelHandler.setLogger(this.channelProperties.isLogger());
-            channelHandler.setConsole(this.console);
-            channelHandler.setSessionHandler(this.sessionHandler);
-            channelHandler.setManageHandler(this.manageHandler);
-
-            // 绑定需要创建的通道和设备名称
-            this.manageHandler.setChannelName(channelName);
-            this.manageHandler.setManufacturer(manufacturer);
-            this.manageHandler.setDeviceType(deviceType);
-            this.manageHandler.setDeviceName(deviceName);
-
-            this.sessionHandler.setReturnText(returnText);
-
-            // 创建一个Tcp Server实例
-            NettyTcpServer.createServer(serverPort, splitNotify.getSplitMessageHandler(), channelHandler);
-        } catch (Exception e) {
-            String message = "startJspEngine出现异常:" + e.getMessage();
-            this.logger.info(message);
-            this.console.info(message);
+        // 获得操作实体：身份识别
+        OperateEntity keyHandlerEntity = this.entityManageService.getEntity(find.makeServiceKey(), OperateEntity.class);
+        if (keyHandlerEntity == null) {
+            throw new ServiceException("从redis中获得身份识别keyHandler的操作方法出错：manufacturer, deviceType" + find.makeServiceKey());
         }
+
+        find = new OperateEntity();
+        find.setManufacturer((String) splitHandler.get("manufacturer"));
+        find.setDeviceType((String) splitHandler.get("deviceType"));
+        find.setOperateName("splitHandler");
+
+        // 获得操作实体：报文分拆
+        OperateEntity splitHandlerEntity = this.entityManageService.getEntity(find.makeServiceKey(), OperateEntity.class);
+        if (splitHandlerEntity == null) {
+            throw new ServiceException("从redis中获得报文分拆splitHandler的操作方法出错：manufacturer, deviceType" + find.makeServiceKey());
+        }
+
+        ConsumerRedisService consumerRedisService = (ConsumerRedisService) this.entityManageService.getBaseRedisService(OperateEntity.class);
+
+
+        // 绑定动态通知
+        OperateEntitySplitNotify splitNotify = new OperateEntitySplitNotify();
+        splitNotify.setScriptEngineService(this.scriptEngineService);
+        splitNotify.setConsole(this.console);
+        splitNotify.setOperateEntity(splitHandlerEntity);
+        splitNotify.setFormat((String) splitHandler.getOrDefault("format", "HEX"));
+        splitNotify.reset();
+        consumerRedisService.bindEntityNotify(splitNotify);
+
+        // 绑定动态通知
+        OperateEntityKeyNotify keyNotify = new OperateEntityKeyNotify();
+        keyNotify.setScriptEngineService(this.scriptEngineService);
+        keyNotify.setConsole(this.console);
+        keyNotify.setOperateEntity(keyHandlerEntity);
+        keyNotify.setFormat((String) keyHandler.getOrDefault("format", "HEX"));
+        keyNotify.reset();
+        consumerRedisService.bindEntityNotify(keyNotify);
+
+
+        ChannelHandler channelHandler = new ChannelHandler();
+        channelHandler.setServiceKeyHandler(keyNotify.getServiceKeyHandler());
+        channelHandler.setChannelManager(this.channelManager);
+        channelHandler.setLogger(this.channelProperties.isLogger());
+        channelHandler.setConsole(this.console);
+        channelHandler.setSessionHandler(this.sessionHandler);
+        channelHandler.setManageHandler(this.manageHandler);
+
+        // 绑定需要创建的通道和设备名称
+        this.manageHandler.setChannelName(channelName);
+        this.manageHandler.setManufacturer(manufacturer);
+        this.manageHandler.setDeviceType(deviceType);
+        this.manageHandler.setDeviceName(deviceName);
+
+        this.sessionHandler.setReturnText(returnText);
+
+        // 创建一个Tcp Server实例
+        NettyTcpServer.createServer(serverPort, splitNotify.getSplitMessageHandler(), channelHandler);
     }
 }

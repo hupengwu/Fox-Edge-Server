@@ -18,7 +18,7 @@ public class BitsUtils {
     /**
      * 4字节整数内存编码，转换为int
      *
-     * @param bts0  bts0
+     * @param bts0 bts0
      * @param bts1 bts1
      * @param bts2 bts2
      * @param bts3 bts3
@@ -88,6 +88,7 @@ public class BitsUtils {
 
     /**
      * 8字节浮点数内存编码，转换为double
+     *
      * @param bts0 bts0
      * @param bts1 bts1
      * @param bts2 bts2
@@ -101,5 +102,34 @@ public class BitsUtils {
     public static double bitsToDouble(byte bts0, byte bts1, byte bts2, byte bts3, byte bts4, byte bts5, byte bts6, byte bts7) {
         long bits = (bts0 & 0xff) + ((bts1 & 0xff) << 8) + ((bts2 & 0xff) << 16) + ((bts3 & 0xff) << 24) + ((bts4 & 0xff) << 32) + ((bts5 & 0xff) << 40) + ((bts6 & 0xff) << 48) + ((bts7 & 0xff) << 56);
         return Double.longBitsToDouble(bits);
+    }
+
+    public static int getBitsValue(int value, int bitIndex) {
+        return getBitsValue(value, bitIndex, 1);
+    }
+
+    /**
+     * 按位获得数值
+     * 例如:getBitsValue(0b0000111, 1, 2)
+     * 意思是希望取得bit1位开始的2个bit(也就是0b0000110),并按0b11返回
+     *
+     * @param value
+     * @param bitIndex
+     * @param bitWidth
+     * @return
+     */
+    public static int getBitsValue(int value, int bitIndex, int bitWidth) {
+        if (bitWidth < 1 || bitWidth > 16) {
+            return 0;
+        }
+
+        // 掩码
+        int mask = 1;
+        for (int i = 0; i < bitWidth - 1; i++) {
+            mask = (mask << 1) + 1;
+        }
+
+        // 移位,并掩码
+        return value >> bitIndex & mask;
     }
 }

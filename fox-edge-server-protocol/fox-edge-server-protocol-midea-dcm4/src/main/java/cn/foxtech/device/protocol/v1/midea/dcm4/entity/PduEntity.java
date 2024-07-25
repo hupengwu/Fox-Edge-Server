@@ -31,6 +31,13 @@ public class PduEntity {
      */
     private byte[] data = new byte[8];
 
+    /**
+     * 编码
+     * 测试报文：aa a0 a1 c9 a1 00 00 00 00 00 00 00 55 55
+     *
+     * @param entity
+     * @return
+     */
     public static byte[] encodePdu(PduEntity entity) {
         byte[] data = new byte[14];
 
@@ -63,6 +70,7 @@ public class PduEntity {
 
     /**
      * 解码
+     * 测试报文：aa a1 a0 c9 a1 00 b1 00 b2 00 00 00 f2 55
      *
      * @param pdu PDU报文
      * @return 实体
@@ -100,19 +108,11 @@ public class PduEntity {
             sum += data[i] & 0xff;
         }
 
+        sum &= 0xff;
         sum ^= 0xff;
         sum += 1;
 
         return (byte) sum;
     }
 
-    public static void main(String[] args) {
-        PduEntity pduEntity = new PduEntity();
-        pduEntity.data[0] = (byte) 0xA2;
-        byte[] pdu = PduEntity.encodePdu(pduEntity);
-        String text = HexUtils.byteArrayToHexString(pdu, true);
-        System.out.print(text);
-
-        PduEntity pduEntity1 = PduEntity.decodePdu(pdu);
-    }
 }

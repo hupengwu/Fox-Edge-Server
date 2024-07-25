@@ -64,8 +64,9 @@ public class ServerInitializer {
 
         List<Map<String, Object>> servers = (List<Map<String, Object>>) config.get("servers");
         for (Map<String, Object> server : servers) {
+            Integer serverPort = 0;
             try {
-                Integer serverPort = (Integer) server.get("serverPort");
+                serverPort = (Integer) server.get("serverPort");
                 Map<String, Object> engine = (Map<String, Object>) server.getOrDefault("engine", new HashMap<>());
                 String engineType = (String) engine.get("engineType");
 
@@ -81,12 +82,12 @@ public class ServerInitializer {
                     this.jspEngine.startJspEngine(serverPort, engine);
                 }
 
-                String message = "启动服务端口:" + serverPort;
+                String message = "启动服务端口成功:" + serverPort;
                 this.logger.info(message);
                 this.console.info(message);
 
             } catch (Exception e) {
-                String message = "scanJarFile出现异常:" + e.getMessage();
+                String message = "启动服务端口失败:" + serverPort + "。 失败描述：" + e.getMessage();
                 this.logger.error(message);
                 this.console.error(message);
             }

@@ -14,7 +14,6 @@ import cn.foxtech.device.protocol.RootLocation;
 import cn.foxtech.device.protocol.v1.utils.MethodUtils;
 import cn.foxtech.device.protocol.v1.utils.netty.ServiceKeyHandler;
 import cn.foxtech.device.protocol.v1.utils.netty.SplitMessageHandler;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +28,6 @@ import java.util.Set;
  */
 @Component
 public class JarEngine {
-    private final Logger logger = Logger.getLogger(this.getClass());
     /**
      * 日志
      */
@@ -50,73 +48,61 @@ public class JarEngine {
     @Autowired
     private ManageHandler manageHandler;
 
-    public void startJarEngine(Integer serverPort, Map<String, Object> engine) {
-        try {
-            String keyHandler = (String) engine.get("keyHandler");
-            String splitHandler = (String) engine.get("splitHandler");
-            String returnText = (String) engine.getOrDefault("returnText", "");
-            Map<String, Object> register = (Map<String, Object>) engine.getOrDefault("register", new HashMap<>());
-            String channelName = (String) register.getOrDefault("channelName", "");
-            String manufacturer = (String) register.getOrDefault("manufacturer", "");
-            String deviceType = (String) register.getOrDefault("deviceType", "");
-            String deviceName = (String) register.getOrDefault("deviceName", "");
+    public void startJarEngine(Integer serverPort, Map<String, Object> engine) throws InstantiationException, IllegalAccessException {
+        String keyHandler = (String) engine.get("keyHandler");
+        String splitHandler = (String) engine.get("splitHandler");
+        String returnText = (String) engine.getOrDefault("returnText", "");
+        Map<String, Object> register = (Map<String, Object>) engine.getOrDefault("register", new HashMap<>());
+        String channelName = (String) register.getOrDefault("channelName", "");
+        String manufacturer = (String) register.getOrDefault("manufacturer", "");
+        String deviceType = (String) register.getOrDefault("deviceType", "");
+        String deviceName = (String) register.getOrDefault("deviceName", "");
 
-            if (MethodUtils.hasEmpty(keyHandler, splitHandler)) {
-                throw new ServiceException("全局配置参数不能为空：keyHandler, splitHandler");
-            }
-
-            // 装载器：加载类信息
-            Set<Class<?>> classSet = JarLoaderUtils.getClasses(RootLocation.class.getPackage().getName());
-
-            // 取出splitHandler的java类
-            Class splitHandlerClass = this.getSplitHandler(classSet, splitHandler);
-            if (splitHandlerClass == null) {
-                String message = "找不到splitHandler对应的JAVA类：" + splitHandler;
-                this.console.error(message);
-                this.logger.error(message);
-                return;
-            }
-
-            // 取出keyHandler的java类
-            Class keyHandlerClass = this.getKeyHandler(classSet, keyHandler);
-            if (keyHandlerClass == null) {
-                String message = "找不到keyHandler对应的JAVA类：" + keyHandler;
-                this.console.error(message);
-                this.logger.error(message);
-                return;
-            }
-
-            // 实例化一个SplitMessageHandler对象
-            SplitMessageHandler splitMessageHandler = (SplitMessageHandler) splitHandlerClass.newInstance();
-            // 实例化一个serviceKeyHandler对象
-            ServiceKeyHandler serviceKeyHandler = (ServiceKeyHandler) keyHandlerClass.newInstance();
-
-            // 绑定关系
-            ChannelHandler channelHandler = new ChannelHandler();
-            channelHandler.setServiceKeyHandler(serviceKeyHandler);
-            channelHandler.setChannelManager(this.channelManager);
-            channelHandler.setLogger(this.channelProperties.isLogger());
-            channelHandler.setConsole(this.console);
-            channelHandler.setSessionHandler(this.sessionHandler);
-            channelHandler.setManageHandler(this.manageHandler);
-
-            // 绑定需要创建的通道和设备名称
-            this.manageHandler.setChannelName(channelName);
-            this.manageHandler.setManufacturer(manufacturer);
-            this.manageHandler.setDeviceType(deviceType);
-            this.manageHandler.setDeviceName(deviceName);
-
-            this.sessionHandler.setReturnText(returnText);
-
-            // 创建一个Tcp Server实例
-            NettyTcpServer.createServer(serverPort, splitMessageHandler, channelHandler);
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            String message = "scanJarFile出现异常：" + e.getMessage();
-            this.console.error(message);
-            this.logger.error(message);
+        if (MethodUtils.hasEmpty(keyHandler, splitHandler)) {
+            throw new ServiceException("全局配置参数不能为空：keyHandler, splitHandler");
         }
+
+        // 装载器：加载类信息
+        Set<Class<?>> classSet = JarLoaderUtils.getClasses(RootLocation.class.getPackage().getName());
+
+        // 取出splitHandler的java类
+        Class splitHandlerClass = this.getSplitHandler(classSet, splitHandler);
+        if (splitHandlerClass == null) {
+            String message = "从JAR中无法装载到splitHandler对应的JAVA类：" + splitHandler;
+            throw new ServiceException(message);
+        }
+
+        // 取出keyHandler的java类
+        Class keyHandlerClass = this.getKeyHandler(classSet, keyHandler);
+        if (keyHandlerClass == null) {
+            String message = "从JAR中无法装载到keyHandler对应的JAVA类：" + keyHandler;
+            throw new ServiceException(message);
+        }
+
+        // 实例化一个SplitMessageHandler对象
+        SplitMessageHandler splitMessageHandler = (SplitMessageHandler) splitHandlerClass.newInstance();
+        // 实例化一个serviceKeyHandler对象
+        ServiceKeyHandler serviceKeyHandler = (ServiceKeyHandler) keyHandlerClass.newInstance();
+
+        // 绑定关系
+        ChannelHandler channelHandler = new ChannelHandler();
+        channelHandler.setServiceKeyHandler(serviceKeyHandler);
+        channelHandler.setChannelManager(this.channelManager);
+        channelHandler.setLogger(this.channelProperties.isLogger());
+        channelHandler.setConsole(this.console);
+        channelHandler.setSessionHandler(this.sessionHandler);
+        channelHandler.setManageHandler(this.manageHandler);
+
+        // 绑定需要创建的通道和设备名称
+        this.manageHandler.setChannelName(channelName);
+        this.manageHandler.setManufacturer(manufacturer);
+        this.manageHandler.setDeviceType(deviceType);
+        this.manageHandler.setDeviceName(deviceName);
+
+        this.sessionHandler.setReturnText(returnText);
+
+        // 创建一个Tcp Server实例
+        NettyTcpServer.createServer(serverPort, splitMessageHandler, channelHandler);
     }
 
     public void loadJarFiles(Map<String, Object> configs) {
