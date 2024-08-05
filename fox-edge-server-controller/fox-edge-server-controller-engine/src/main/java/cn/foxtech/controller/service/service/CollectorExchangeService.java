@@ -231,7 +231,7 @@ public class CollectorExchangeService extends PeriodTaskService {
         try {
             String timeMode = (String) taskEntity.getTaskParam().get("timeMode");
             String timeUnit = (String) taskEntity.getTaskParam().get("timeUnit");
-            Integer timeInterval = (Integer) taskEntity.getTaskParam().get("timeIntervalMap");
+            Integer timeInterval = (Integer) taskEntity.getTaskParam().get("timeInterval");
 
             if (MethodUtils.hasEmpty(timeMode, timeUnit, timeInterval)) {
                 return -1;

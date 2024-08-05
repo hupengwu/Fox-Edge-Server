@@ -25,10 +25,13 @@ public class Test {
         result.clear();
         result.put("devAddr", 1);
 
-        result.put("强劲功能","关闭");
-        result.put("风速","自动风");
-        result.put("设定模式","自动");
+        result.put("强劲功能", "关闭");
+        result.put("风速", "自动风");
+        result.put("设定模式", "自动");
+        result.put("空调开关", "开机");
+        result.put("设定温度", 24);
         hex = SetParam.encodePdu(result);
+        SetParam.decodePdu("aa a1 a0 c1 b1 80 18 00 00 00 00 00 b5 55", param);
 
         long value = BitValueUtils.getBitsValue(0x0f, 0, 3);
         // 读版本：

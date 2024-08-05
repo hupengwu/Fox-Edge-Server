@@ -36,6 +36,11 @@ public class UploadUtil {
     public static String multipartPost(String url, Map<String, String> headers, Map<String, Object> formData) {
         // 创建 HttpPost 对象
         HttpPost httpPost = new HttpPost(url);
+        try {
+
+        } catch (Exception e) {
+
+        }
 
         // 设置请求头
         for (String key : headers.keySet()) {
@@ -59,6 +64,8 @@ public class UploadUtil {
         HttpEntity entity = builder.build();
         // 将构造好的 entity 设置到 HttpPost 对象中
         httpPost.setEntity(entity);
+
+
         return execute(httpPost, null);
     }
 
@@ -76,11 +83,15 @@ public class UploadUtil {
         }
     }
 
-    private static String execute(HttpRequestBase httpRequestBase, HttpContext context) {
-        CloseableHttpClient httpClient = HttpClients.createDefault();
+    private static String execute(HttpRequestBase httpRequest, HttpContext context) {
+        CloseableHttpClient httpClient = null;
+        CloseableHttpResponse httpResponse = null;
 
-        // 使用 try-with-resources 发起请求，保证请求完成后资源关闭
-        try (CloseableHttpResponse httpResponse = httpClient.execute(httpRequestBase, context)) {
+        try {
+            // 使用 try-with-resources 发起请求，保证请求完成后资源关闭
+            httpClient = HttpClients.createDefault();
+            httpResponse = httpClient.execute(httpRequest, context);
+
             // 处理响应体
             HttpEntity httpEntity = httpResponse.getEntity();
             if (httpEntity != null) {
@@ -89,6 +100,20 @@ public class UploadUtil {
             }
         } catch (Exception ex) {
             throw new RuntimeException("http execute failed:" + ex.getMessage());
+        } finally {
+            try {
+                if (httpResponse != null) {
+                    httpResponse.close();
+                }
+                if (httpClient != null) {
+                    httpClient.close();
+                }
+                if (httpRequest != null) {
+                    httpRequest.reset();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         throw new RuntimeException("http execute failed:" + HttpStatus.SC_INTERNAL_SERVER_ERROR);

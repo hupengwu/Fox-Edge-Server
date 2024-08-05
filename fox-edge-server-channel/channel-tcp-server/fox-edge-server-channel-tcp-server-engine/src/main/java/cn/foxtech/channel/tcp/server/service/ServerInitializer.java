@@ -75,11 +75,12 @@ public class ServerInitializer {
                     throw new ServiceException("全局配置参数不能为空：engineType, serverPort");
                 }
 
-                if (engineType.equals("Java")) {
-                    this.jarEngine.startJarEngine(serverPort, engine);
-                }
-                if (engineType.equals("JavaScript")) {
-                    this.jspEngine.startJspEngine(serverPort, engine);
+                if ("Java".equals(engineType)) {
+                    this.jarEngine.startEngine(serverPort, engine);
+                } else if ("JavaScript".equals(engineType)) {
+                    this.jspEngine.startEngine(serverPort, engine);
+                } else {
+                    throw new ServiceException("不支持的engineType：" + engineType);
                 }
 
                 String message = "启动服务端口成功:" + serverPort;

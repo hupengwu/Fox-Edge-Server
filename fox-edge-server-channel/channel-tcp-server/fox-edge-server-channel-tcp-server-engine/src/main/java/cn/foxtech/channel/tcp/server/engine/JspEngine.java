@@ -14,7 +14,6 @@ import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.entity.service.redis.ConsumerRedisService;
 import cn.foxtech.common.utils.netty.server.tcp.NettyTcpServer;
 import cn.foxtech.core.exception.ServiceException;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +25,6 @@ import java.util.Map;
  */
 @Component
 public class JspEngine {
-    private final Logger logger = Logger.getLogger(this.getClass());
     /**
      * 日志
      */
@@ -52,7 +50,7 @@ public class JspEngine {
     private ManageHandler manageHandler;
 
 
-    public void startJspEngine(Integer serverPort, Map<String, Object> engine) {
+    public void startEngine(Integer serverPort, Map<String, Object> engine) {
         Map<String, Object> keyHandler = (Map<String, Object>) engine.getOrDefault("keyHandler", new HashMap<>());
         Map<String, Object> splitHandler = (Map<String, Object>) engine.getOrDefault("splitHandler", new HashMap<>());
         String returnText = (String) engine.getOrDefault("returnText", "");

@@ -79,6 +79,11 @@ public class SetParam {
             throw new ProtocolException("数据长度不正确");
         }
 
+        // 空调设定模式和设定风速
+        SettingsUtils.decodeSettingsMode(data[1], result);
+
+        result.put("设定温度", data[2] & 0xff);
+
         return result;
     }
 

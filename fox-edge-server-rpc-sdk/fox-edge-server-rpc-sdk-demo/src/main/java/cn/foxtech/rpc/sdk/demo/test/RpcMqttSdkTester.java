@@ -59,7 +59,7 @@ public class RpcMqttSdkTester {
         this.mqttClient.sendRequest(requestVO);
         logger.info("管理服务-发送MQTT请求：" + JsonUtils.buildJsonWithoutException(requestVO));
 
-        // 等待响应
+        // 等待响应：MQTT消息订阅的RemoteMqttHandler，会通知你是否收到Fox-Edge发送给你的消息
         RestfulLikeRespondVO respondVO = this.mqttClient.waitRespond(requestVO.getUuid(), 10 * 1000);
         logger.info("管理服务-返回MQTT响应：" + JsonUtils.buildJsonWithoutException(respondVO));
     }

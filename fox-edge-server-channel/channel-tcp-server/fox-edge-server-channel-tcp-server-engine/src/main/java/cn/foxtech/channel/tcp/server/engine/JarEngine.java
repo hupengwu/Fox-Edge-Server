@@ -48,7 +48,7 @@ public class JarEngine {
     @Autowired
     private ManageHandler manageHandler;
 
-    public void startJarEngine(Integer serverPort, Map<String, Object> engine) throws InstantiationException, IllegalAccessException {
+    public void startEngine(Integer serverPort, Map<String, Object> engine) throws InstantiationException, IllegalAccessException {
         String keyHandler = (String) engine.get("keyHandler");
         String splitHandler = (String) engine.get("splitHandler");
         String returnText = (String) engine.getOrDefault("returnText", "");
