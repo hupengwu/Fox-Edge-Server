@@ -1,3 +1,7 @@
+/* ----------------------------------------------------------------------------
+ * Copyright (c) Guangzhou Fox-Tech Co., Ltd. 2020-2024. All rights reserved.
+ * --------------------------------------------------------------------------- */
+
 package cn.foxtech.device.script.engine;
 
 import cn.foxtech.common.entity.entity.OperateEntity;
@@ -21,12 +25,18 @@ public class ExchangeService {
     @Autowired
     private ScriptEngineOperator engineOperator;
 
-    public Map<String, Object> exchange(String deviceName, String manufacturer, String deviceType, OperateEntity operateEntity, Map<String, Object> params, int timeout, FoxEdgeChannelService channelService) throws ProtocolException, CommunicationException {
+    @Autowired
+    private ScriptEngineModel engineModel;
+
+    public Map<String, Object> exchange(String deviceName, String manufacturer, String deviceType, OperateEntity operateEntity, Map<String, Object> params, int timeout, FoxEdgeChannelService channelService) throws ProtocolException {
         try {
             // 取出ScriptEngine
             ScriptEngine engine = this.engineService.getScriptEngine(manufacturer, deviceType);
 
-            // 取出编码/解码信息
+            // 取出：设备模型信息
+            String modelName = (String) operateEntity.getEngineParam().getOrDefault("modelName", "");
+
+            // 取出：编码/解码信息
             Map<String, Object> encode = (Map<String, Object>) operateEntity.getEngineParam().getOrDefault("encode", new HashMap<>());
             Map<String, Object> decode = (Map<String, Object>) operateEntity.getEngineParam().getOrDefault("decode", new HashMap<>());
             if (MethodUtils.hasEmpty(encode, decode)) {
@@ -53,6 +63,9 @@ public class ExchangeService {
 
 
             try {
+                // 为ScriptEngine填入设备模型
+                this.engineModel.setEnvDeviceModel(manufacturer, deviceType, modelName, params);
+
                 // 为ScriptEngine填入全局变量
                 this.engineOperator.setSendEnvValue(engine, params);
 

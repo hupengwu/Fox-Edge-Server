@@ -1,3 +1,20 @@
+/* ----------------------------------------------------------------------------
+ * Copyright (c) Guangzhou Fox-Tech Co., Ltd. 2020-2024. All rights reserved.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------- */
+ 
 package cn.foxtech.device.script.engine;
 
 import cn.foxtech.common.entity.entity.BaseEntity;
@@ -14,6 +31,10 @@ import java.util.Map;
 import java.util.Set;
 
 
+/**
+ * OperateEntity变更通知
+ * 说明：OperateEntity发生修改的时候，为ScriptEngine重新装载对应的JavaScript脚本
+ */
 @Component
 public class OperateNotify implements BaseConsumerTypeNotify {
     private static final Logger logger = Logger.getLogger(OperateNotify.class);
@@ -44,6 +65,11 @@ public class OperateNotify implements BaseConsumerTypeNotify {
         }
     }
 
+    /**
+     * 绑定JavaScript引擎：使用OperateEntity中的JavaScript脚本初始化ScriptEngine
+     *
+     * @param entity 实体
+     */
     public void rebindScriptEngine(BaseEntity entity) {
         try {
             OperateEntity operateEntity = (OperateEntity) entity;
@@ -84,7 +110,7 @@ public class OperateNotify implements BaseConsumerTypeNotify {
 
         } catch (Exception e) {
             String message = "初始化脚本引擎异常：" + entity.makeServiceKey() + "; " + e.getMessage();
-            this.logger.error(message);
+            logger.error(message);
             this.console.error(message);
         }
 

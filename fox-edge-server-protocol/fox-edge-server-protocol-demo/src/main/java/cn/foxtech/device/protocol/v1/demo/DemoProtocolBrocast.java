@@ -1,4 +1,8 @@
-package cn.foxtech.device.protocol.v1.lrw;
+/* ----------------------------------------------------------------------------
+ * Copyright (c) Guangzhou Fox-Tech Co., Ltd. 2020-2024. All rights reserved.
+ * --------------------------------------------------------------------------- */
+
+package cn.foxtech.device.protocol.v1.demo;
 
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
@@ -8,7 +12,7 @@ import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import java.util.Map;
 
 @FoxEdgeDeviceType(value = "LRW解码器", manufacturer = "Fox-Edge")
-public class LRWProtocolBrocast extends LRWProtocolFrame {
+public class DemoProtocolBrocast extends DemoProtocolFrame {
     /**
      * 查询传感器状态
      *

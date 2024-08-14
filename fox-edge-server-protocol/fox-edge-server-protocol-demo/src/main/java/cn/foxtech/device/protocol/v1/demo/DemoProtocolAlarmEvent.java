@@ -1,4 +1,8 @@
-package cn.foxtech.device.protocol.v1.lrw;
+/* ----------------------------------------------------------------------------
+ * Copyright (c) Guangzhou Fox-Tech Co., Ltd. 2020-2024. All rights reserved.
+ * --------------------------------------------------------------------------- */
+
+package cn.foxtech.device.protocol.v1.demo;
 
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeDeviceType;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
@@ -13,7 +17,7 @@ import java.util.Map;
  * 告警通知的范例
  */
 @FoxEdgeDeviceType(value = "LRW解码器", manufacturer = "Fox-Edge")
-public class LRWProtocolAlarmEvent extends LRWProtocolFrame {
+public class DemoProtocolAlarmEvent extends DemoProtocolFrame {
 
     /**
      * FoxEdgeEvent注解，指明这是一个设备主动上报，所有它只有解码函数
@@ -30,7 +34,7 @@ public class LRWProtocolAlarmEvent extends LRWProtocolFrame {
         byte[] pack = HexUtils.hexStringToByteArray(hexString);
 
         // 解码报文
-        LRWEntity entity = decodePack(pack);
+        DemoEntity entity = decodePack(pack);
         if (entity == null) {
             throw new ProtocolException("报文格式不正确！");
         }

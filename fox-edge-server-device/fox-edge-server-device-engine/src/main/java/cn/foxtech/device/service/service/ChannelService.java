@@ -1,3 +1,7 @@
+/* ----------------------------------------------------------------------------
+ * Copyright (c) Guangzhou Fox-Tech Co., Ltd. 2020-2024. All rights reserved.
+ * --------------------------------------------------------------------------- */
+
 package cn.foxtech.device.service.service;
 
 import cn.foxtech.channel.domain.ChannelBaseVO;

@@ -1,3 +1,7 @@
+/* ----------------------------------------------------------------------------
+ * Copyright (c) Guangzhou Fox-Tech Co., Ltd. 2020-2024. All rights reserved.
+ * --------------------------------------------------------------------------- */
+
 package cn.foxtech.device.script.engine;
 
 import cn.foxtech.common.entity.entity.OperateEntity;
@@ -20,7 +24,7 @@ public class PublishService {
     @Autowired
     private ScriptEngineOperator engineOperator;
 
-    public void publish(String deviceName, String manufacturer, String deviceType, OperateEntity operateEntity, Map<String, Object> params, int timeout, FoxEdgeChannelService channelService) throws ProtocolException, CommunicationException {
+    public void publish(String deviceName, String manufacturer, String deviceType, OperateEntity operateEntity, Map<String, Object> params, int timeout, FoxEdgeChannelService channelService) throws ProtocolException {
         try {
             // 取出ScriptEngine
             ScriptEngine engine = this.engineService.getScriptEngine(manufacturer, deviceType);

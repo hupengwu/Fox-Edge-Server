@@ -1,3 +1,7 @@
+/* ----------------------------------------------------------------------------
+ * Copyright (c) Guangzhou Fox-Tech Co., Ltd. 2020-2024. All rights reserved.
+ * --------------------------------------------------------------------------- */
+
 package cn.foxtech.device.protocol.v1.test;
 
 import cn.foxtech.device.protocol.v1.dlt645.v2007.DLT645v2007ProtocolReadData;

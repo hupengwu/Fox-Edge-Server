@@ -1,3 +1,7 @@
+/* ----------------------------------------------------------------------------
+ * Copyright (c) Guangzhou Fox-Tech Co., Ltd. 2020-2024. All rights reserved.
+ * --------------------------------------------------------------------------- */
+
 package cn.foxtech.common.utils;
 
 import java.util.*;
@@ -157,6 +161,13 @@ public class MapUtils {
         self.put(keys[keys.length - 2], keys[keys.length - 1]);
     }
 
+    /**
+     * 删除末端的树叶
+     *
+     * @param map
+     * @param keys
+     * @throws ClassCastException
+     */
     public static void remove(Map map, Object... keys) throws ClassCastException {
         Map self = map;
 

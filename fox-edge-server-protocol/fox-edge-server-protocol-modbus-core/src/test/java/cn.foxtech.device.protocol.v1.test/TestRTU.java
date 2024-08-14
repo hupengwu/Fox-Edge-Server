@@ -1,10 +1,11 @@
+/* ----------------------------------------------------------------------------
+ * Copyright (c) Guangzhou Fox-Tech Co., Ltd. 2020-2024. All rights reserved.
+ * --------------------------------------------------------------------------- */
+
 package cn.foxtech.device.protocol.v1.test;
 
 
-import cn.foxtech.device.protocol.v1.modbus.core.ModBusConstants;
-import cn.foxtech.device.protocol.v1.modbus.core.ModBusEntity;
-import cn.foxtech.device.protocol.v1.modbus.core.ModBusProtocol;
-import cn.foxtech.device.protocol.v1.modbus.core.ModBusProtocolFactory;
+import cn.foxtech.device.protocol.v1.modbus.core.*;
 import cn.foxtech.device.protocol.v1.utils.Crc16Utils;
 import cn.foxtech.device.protocol.v1.utils.HexUtils;
 import cn.foxtech.device.protocol.v1.utils.enums.CrcType;
@@ -26,8 +27,16 @@ public class TestRTU {
 
         ModBusProtocol modBusProtocol = ModBusProtocolFactory.createProtocol(ModBusConstants.MODE_RTU);
         ModBusEntity modBusEntity = modBusProtocol.unPackCmd2Entity(pdu);
+        pdu = modBusProtocol.packCmd4Entity(modBusEntity);
 
+        ModBusReadRegistersRequest request = new ModBusReadRegistersRequest();
+        pdu = modBusProtocol.packCmdReadRegisters4Request(request);
 
+        System.out.println(HexUtils.byteArrayToHexString(pdu));
+
+        modBusEntity = modBusProtocol.unPackCmd2Entity(HexUtils.hexStringToByteArray("01030443556680D5A7"));
+
+        ModBusReadRegistersRespond respond = modBusProtocol.unPackCmdReadRegisters2Respond(HexUtils.hexStringToByteArray("01030443556680D5A7"));
 
 
     }

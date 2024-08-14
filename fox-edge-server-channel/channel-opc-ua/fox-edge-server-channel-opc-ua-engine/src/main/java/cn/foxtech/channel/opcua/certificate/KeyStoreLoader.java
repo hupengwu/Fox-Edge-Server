@@ -3,6 +3,10 @@
  * Copyright © 2019 jellyleo.com
  * All rights reserved.
  */
+/* ----------------------------------------------------------------------------
+ * Copyright (c) Guangzhou Fox-Tech Co., Ltd. 2020-2024. All rights reserved.
+ * --------------------------------------------------------------------------- */
+
 package cn.foxtech.channel.opcua.certificate;
 
 import org.eclipse.milo.opcua.sdk.server.util.HostnameUtil;

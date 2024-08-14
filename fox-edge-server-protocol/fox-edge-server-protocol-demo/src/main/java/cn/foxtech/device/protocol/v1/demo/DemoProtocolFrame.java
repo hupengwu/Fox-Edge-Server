@@ -1,4 +1,8 @@
-package cn.foxtech.device.protocol.v1.lrw;
+/* ----------------------------------------------------------------------------
+ * Copyright (c) Guangzhou Fox-Tech Co., Ltd. 2020-2024. All rights reserved.
+ * --------------------------------------------------------------------------- */
+
+package cn.foxtech.device.protocol.v1.demo;
 
 
 /**
@@ -7,7 +11,7 @@ package cn.foxtech.device.protocol.v1.lrw;
  * 2、准备导出的函数，要加上FoxEdgeMethod注解，告知扫描器，在这边读取操作方法
  * 3、FoxEdgeMethod编码解码函数，比如严格参照范例的格式
  */
-public class LRWProtocolFrame {
+public class DemoProtocolFrame {
 
     /**
      * 报文打包
@@ -38,7 +42,7 @@ public class LRWProtocolFrame {
      * @param pack
      * @return
      */
-    public static LRWEntity decodePack(byte[] pack) {
+    public static DemoEntity decodePack(byte[] pack) {
         if (pack.length < 5) {
             return null;
         }
@@ -48,7 +52,7 @@ public class LRWProtocolFrame {
             return null;
         }
 
-        LRWEntity entity = new LRWEntity();
+        DemoEntity entity = new DemoEntity();
 
         // 命令字
         entity.setCmd(pack[1]);

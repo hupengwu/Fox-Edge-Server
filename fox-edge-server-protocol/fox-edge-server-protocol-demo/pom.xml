@@ -9,7 +9,7 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>fox-edge-server-protocol-lrw</artifactId>
+    <artifactId>fox-edge-server-protocol-demo</artifactId>
     <name>${project.artifactId}</name>
     <description>${project.artifactId}</description>
 

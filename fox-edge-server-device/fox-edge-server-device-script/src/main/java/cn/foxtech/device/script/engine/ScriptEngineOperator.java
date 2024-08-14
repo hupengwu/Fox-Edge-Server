@@ -1,3 +1,7 @@
+/* ----------------------------------------------------------------------------
+ * Copyright (c) Guangzhou Fox-Tech Co., Ltd. 2020-2024. All rights reserved.
+ * --------------------------------------------------------------------------- */
+
 package cn.foxtech.device.script.engine;
 
 import cn.foxtech.common.entity.manager.InitialConfigService;
@@ -16,6 +20,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 脚本引擎执行器
+ * 说明：JS引擎的管理方式，使用的是一个设备类型，拥有一个ScriptEngine
+ * 1、优点：这样带来的好处，就是减少了ScriptEngine实例的数量，同时允许一个设备类型，支持lib的方式，
+ * 互相调用各个operateEntity中的JS脚本，而且允许encode/decode的JS脚本中的JS函数是允许同名
+ * 这就大大提高了开发者编写JS脚本代码的可读取。
+ * 2、限制：由于encode/decode的JS脚本函数是允许同名的，这样带来的限制，每次执行operateEntity的JS脚本的时候，
+ * 需要重启导入encode/decode的入口函数脚本，否则会调用成别的入口函数脚本，会带来额外的性能开销。
+ * 3、结论：综合考虑上面的优缺点，还是当前方案更适合，毕竟愿意使用JS的开发者，是可以容忍这种性能开销的。
+ */
 @Component
 public class ScriptEngineOperator {
     @Autowired
@@ -31,6 +45,7 @@ public class ScriptEngineOperator {
         try {
             // 先将Map转成JSP能够处理的JSON字符串
             engine.put("fox_edge_param", JsonUtils.buildJson(params));
+
         } catch (Exception e) {
             // 打印日志
             this.printLogger(e.getMessage());
@@ -69,7 +84,7 @@ public class ScriptEngineOperator {
         try {
             // 记录格式
 
-            // 装载待执行的脚本
+            // 重新装载待待执行的脚本
             engine.eval(decodeScript);
 
             // 执行JSP脚本中的函数
@@ -103,7 +118,7 @@ public class ScriptEngineOperator {
     public Map<String, Object> decodeStatus(ScriptEngine engine, String operateName, String decodeMain, String decodeScript) {
         // 状态格式
         try {
-            // 装载待执行的脚本
+            // 重新装载待待执行的脚本
             engine.eval(decodeScript);
 
             // 执行JSP脚本中的函数
@@ -131,7 +146,7 @@ public class ScriptEngineOperator {
 
     public Map<String, Object> decodeResult(ScriptEngine engine, String operateName, String decodeMain, String decodeScript) {
         try {
-            // 装载待执行的脚本
+            // 重新装载待待执行的脚本
             engine.eval(decodeScript);
 
             // 执行JSP脚本中的函数
@@ -161,7 +176,7 @@ public class ScriptEngineOperator {
 
     public Object encode(ScriptEngine engine, String encodeMain, String encodeScript) {
         try {
-            // 装载待执行的脚本
+            // 重新装载待待执行的脚本
             engine.eval(encodeScript);
 
             // 执行JSP脚本中的函数
