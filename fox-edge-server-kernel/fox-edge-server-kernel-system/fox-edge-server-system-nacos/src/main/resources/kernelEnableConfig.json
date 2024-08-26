@@ -1,0 +1,19 @@
+{
+  "configValue": {
+    "kernel": {
+      "enable": [
+      ],
+      "disable": [
+        {
+          "appType": "kernel",
+          "appName": "manager-compose"
+        }
+      ]
+    }
+  },
+  "configParam": {
+    "readOnly": false,
+    "hide": true
+  },
+  "remark": ""
+}

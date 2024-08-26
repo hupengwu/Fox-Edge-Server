@@ -12,7 +12,8 @@ import java.io.IOException;
 import java.util.Map;
 
 public class JsonUtils {
-    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
     /**
      * 将T1的数据填入T2结构中
      *
@@ -26,6 +27,7 @@ public class JsonUtils {
         String jsn = objectMapper.writeValueAsString(value);
         return objectMapper.readValue(jsn, valueType);
     }
+
 
     public static <T> T buildObject(String value, Class<T> valueType) throws IOException {
         return objectMapper.readValue(value, valueType);
@@ -66,9 +68,9 @@ public class JsonUtils {
         }
     }
 
-    public static <T> T buildObjectWithoutException(Map map, Class<T> valueType) {
+    public static <T1, T2> T2 buildObjectWithoutException(T1 value, Class<T2> valueType) {
         try {
-            String jsn = objectMapper.writeValueAsString(map);
+            String jsn = objectMapper.writeValueAsString(value);
             return objectMapper.readValue(jsn, valueType);
         } catch (Exception e) {
             return null;
@@ -99,7 +101,7 @@ public class JsonUtils {
     public static <T> T clone(T value) {
         try {
             String json = objectMapper.writeValueAsString(value);
-            return (T)objectMapper.readValue(json, value.getClass());
+            return (T) objectMapper.readValue(json, value.getClass());
         } catch (Exception e) {
             return null;
         }

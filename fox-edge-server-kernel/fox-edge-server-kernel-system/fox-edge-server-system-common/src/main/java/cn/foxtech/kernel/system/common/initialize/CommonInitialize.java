@@ -5,7 +5,6 @@
 package cn.foxtech.kernel.system.common.initialize;
 
 
-import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.kernel.common.initialize.KernelInitialize;
 import cn.foxtech.kernel.system.common.scheduler.EntityManageScheduler;
@@ -46,19 +45,11 @@ public class CommonInitialize {
     @Autowired
     private GateWayRouteUpdateTask gateWayRouteUpdateTask;
 
-    /**
-     * 初始化配置：需要感知运行期的用户动态输入的配置，所以直接使用这个组件
-     */
-    @Autowired
-    private InitialConfigService configService;
-
-
     @Value("${spring.fox-service.mode.router}")
     private String routerMode;
 
-
     public void initialize() {
-        String message = "------------------------SystemInitialize初始化开始！------------------------";
+        String message = "------------------------CommonInitialize初始化开始！------------------------";
         console.info(message);
         logger.info(message);
 
@@ -71,17 +62,13 @@ public class CommonInitialize {
         // 启动同步线程
         this.entityManageScheduler.schedule();
 
-        // 初始化通信超时配置
-        this.configService.initialize("deviceTimeOutConfig", "deviceTimeOutConfig.json");
-
-
         // 启动周期任务线程
         this.periodTasksScheduler.schedule();
 
         // 添加周期任务
         this.createPeriodTask();
 
-        message = "------------------------SystemInitialize初始化结束！------------------------";
+        message = "------------------------CommonInitialize初始化结束！------------------------";
         console.info(message);
         logger.info(message);
     }

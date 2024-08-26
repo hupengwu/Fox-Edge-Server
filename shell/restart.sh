@@ -46,15 +46,16 @@ app_param_mysql_port=$(readINI $app_home/shell/fox-edge.ini mysql port)
 app_param_mysql_username=$(readINI $app_home/shell/fox-edge.ini mysql username)
 app_param_mysql_password=$(readINI $app_home/shell/fox-edge.ini mysql password)
 #环境变量
-app_local_ip=$(readINI $app_home/shell/fox-edge.ini environment ip)
-app_local_type=$(readINI $app_home/shell/fox-edge.ini environment type)
-app_local_mode=$(readINI $app_home/shell/fox-edge.ini environment mode)
-app_local_cpu_id=$(readINI $app_home/shell/fox-edge.ini environment cpu_id)
+app_env_ip=$(readINI $app_home/shell/fox-edge.ini environment ip)
+app_env_type=$(readINI $app_home/shell/fox-edge.ini environment type)
+app_env_mode=$(readINI $app_home/shell/fox-edge.ini environment mode)
+app_env_cpu_id=$(readINI $app_home/shell/fox-edge.ini environment cpu_id)
+app_env_kernel=$(readINI $app_home/shell/fox-edge.ini environment kernel)
 
 
 #cloud参数
 nacos_param=''
-if [[ $app_local_mode == cloud ]]; then
+if [[ $app_env_mode == cloud ]]; then
 	nacos_param='--spring.cloud.nacos.discovery.server-addr='$app_param_discovery_addr' --spring.cloud.nacos.config.server-addr='$app_param_config_addr 
 fi
 
@@ -205,9 +206,10 @@ if [[ $app_engine == java ]]; then
 	$app_home/bin/$app_type/$app_name/$jar_name \
 	--app_type=$app_type \
 	--app_name=$app_name \
-	--env_type=$app_local_type \
-	--env_cpu_id=$app_local_cpu_id \
-	--work_mode=$app_local_mode \
+	--env_type=$app_env_type \
+	--env_cpu_id=$app_env_cpu_id \
+	--work_mode=$app_env_mode \
+	--kernel_mode=$app_env_kernel \
 	--spring.profiles.active=prod \
 	$spring_param \
 	$server_port \
@@ -225,10 +227,9 @@ if [[ $app_engine == python3  || $app_engine == python ]]; then
 	$app_home/bin/$app_type/$app_name/$py_name \
 	--app_type=$app_type \
 	--app_name=$app_name \
-	--env_type=$app_local_type \
-	--env_cpu_id=$app_local_cpu_id \
-	app_local_mode
-	--work_mode=$app_local_mode \
+	--env_type=$app_env_type \
+	--env_cpu_id=$app_env_cpu_id \
+	--work_mode=$app_env_mode \
 	server.port=$serverPort \
 	redis.host=$app_param_redis_host redis.port=$app_param_redis_port redis.password=$app_param_redis_password \
 	mysql.host=$app_param_mysql_host mysql.port=$app_param_mysql_port mysql.username=$app_param_mysql_username  mysql.password=$app_param_mysql_password mysql.database=fox_edge \

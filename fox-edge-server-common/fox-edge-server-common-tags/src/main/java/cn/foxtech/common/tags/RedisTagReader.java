@@ -39,16 +39,16 @@ public class RedisTagReader {
      *
      * @return
      */
-    public synchronized Object readTagsSync() {
+    public Object readTagsSync() {
         return this.redisTemplate.opsForValue().get(this.getHead() + "sync");
     }
 
-    public synchronized Map<String, Object> readTags() {
+    public Map<String, Object> readTags() {
         Map<String, Object> dataJsn = this.redisTemplate.opsForHash().entries(this.getHead() + "data");
         return dataJsn;
     }
 
-    public synchronized Object readTag(String key) {
+    public Object readTag(String key) {
         return this.redisTemplate.opsForHash().get(this.getHead() + "data", key);
     }
 }

@@ -8,6 +8,7 @@ import cn.foxtech.common.entity.constant.EntityPublishConstant;
 import cn.foxtech.common.entity.entity.*;
 import cn.foxtech.common.entity.manager.EntityPublishManager;
 import cn.foxtech.common.entity.manager.EntityServiceManager;
+import cn.foxtech.utils.common.utils.redis.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +22,12 @@ public class EntityManageService extends EntityServiceManager {
     @Autowired
     private EntityPublishManager entityPublishManager;
 
+    @Autowired
+    private RedisService redisService;
+
     public void instance() {
+        this.instance(this.redisService);
+
         Set<String> producer = this.entityRedisComponent.getProducer();
         Set<String> consumer = this.entityRedisComponent.getConsumer();
 

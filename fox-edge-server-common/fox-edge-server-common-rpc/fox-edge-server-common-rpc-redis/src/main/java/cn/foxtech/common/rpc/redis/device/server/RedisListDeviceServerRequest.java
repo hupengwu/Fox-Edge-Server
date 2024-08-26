@@ -4,7 +4,7 @@
 
 package cn.foxtech.common.rpc.redis.device.server;
 
-import cn.foxtech.common.utils.redis.logger.RedisLoggerService;
+import cn.foxtech.common.utils.redis.list.RedisListService;
 import cn.foxtech.device.domain.vo.TaskRequestVO;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * 记录类型的队列：这是可靠性记录，它会在redis之中缓存
  */
 @Component
-public class RedisListDeviceServerRequest extends RedisLoggerService {
+public class RedisListDeviceServerRequest extends RedisListService {
     @Getter
     private final String key = "fox.edge.list:device:task:request";
 

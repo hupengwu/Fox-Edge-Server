@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 初始化配置的管理
- *
+ * <p>
  * 简化初始化配置的注册流程
  */
 @Getter
@@ -34,4 +34,16 @@ public class InitialConfigService extends EntityConfigInitializer {
 
     @Value("${spring.fox-service.service.name}")
     private String foxServiceName = "undefinedServiceName";
+
+    /**
+     * 重新绑定
+     * 说明：
+     * 默认（服务模式），全局只有一个entityManageService实例，可以有spring框架的Autowired自动组装。
+     * 组合模式，此时多个模块都会有entityManageService实例，需要手动指定一个entityManageService
+     *
+     * @param entityManageService
+     */
+    public void bindEntityManageService(EntityServiceManager entityManageService) {
+        this.entityManageService = entityManageService;
+    }
 }

@@ -30,7 +30,7 @@ public class RedisWriter {
     }
 
 
-    public synchronized void writeEntityMap(Map<String, BaseEntity> dataMap) {
+    public void writeEntityMap(Map<String, BaseEntity> dataMap) {
         if (dataMap == null || dataMap.isEmpty()) {
             return;
         }
@@ -48,7 +48,7 @@ public class RedisWriter {
         this.redisTemplate.opsForValue().set(this.getHead() + "sync", time);
     }
 
-    public synchronized void deleteEntity(Set<String> keys) {
+    public void deleteEntity(Set<String> keys) {
         if (keys == null || keys.isEmpty()) {
             return;
         }

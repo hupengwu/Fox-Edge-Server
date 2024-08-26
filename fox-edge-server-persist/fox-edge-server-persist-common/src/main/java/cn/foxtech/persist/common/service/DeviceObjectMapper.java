@@ -19,7 +19,7 @@ import java.util.Map;
 @Component
 public class DeviceObjectMapper {
     @Autowired
-    private EntityManageService entityManageService;
+    private PersistManageService entityManageService;
 
     /**
      * 映射表

@@ -141,17 +141,20 @@ public class JReadRegistersTemplate implements ITemplate {
         if (jDecoderValueParam.value_type.equals("int")) {
             request.setMemAddr(jDecoderValueParam.value_index);
             request.setValue((int) (Integer.valueOf(objectValue.toString()) / jDecoderValueParam.magnification));
+            return request;
+        }
+        if (jDecoderValueParam.value_type.equals("long")) {
+            request.setMemAddr(jDecoderValueParam.value_index);
+            request.setValue((int) (Integer.valueOf(objectValue.toString()) / jDecoderValueParam.magnification));
+            return request;
         }
         if (jDecoderValueParam.value_type.equals("float")) {
             request.setMemAddr(jDecoderValueParam.value_index);
             request.setValue((int) (Float.valueOf(objectValue.toString()) / jDecoderValueParam.magnification));
+            return request;
         }
 
-        if (jDecoderValueParam.value_type.equals("bool")) {
-            throw new ProtocolException("不支持对bool进行编码，因为一个16位寄存器可能是多个bool在彼此共享");
-        }
-
-        return request;
+        throw new ProtocolException("不支持对该数据进行编码：" + objectName);
     }
 
 
@@ -182,6 +185,16 @@ public class JReadRegistersTemplate implements ITemplate {
             // 整数：比如284，编码格式为int16，但实际上是放大10倍，变为2840
             if (jDecoderValueParam.value_type.equals("int")) {
                 result.put(name, (int) (status * jDecoderValueParam.magnification));
+            }
+            // 整数：比如284，编码格式为long32，但实际上是放大10倍，变为2840
+            if (jDecoderValueParam.value_type.equals("long")) {
+                if (statusList.length <= index + 1) {
+                    continue;
+                }
+
+                status = statusList[index] * 0x10000 + statusList[index + 1];
+
+                result.put(name, (long) (status * jDecoderValueParam.magnification));
             }
             // 定点小数：比如284，编码格式为int16，但实际上是缩小10倍，变为实28.4
             if (jDecoderValueParam.value_type.equals("fix-float")) {

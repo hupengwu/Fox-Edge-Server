@@ -101,7 +101,7 @@
 
         <dependency>
             <groupId>cn.fox-tech</groupId>
-            <artifactId>fox-edge-server-common-utils-redis-logger</artifactId>
+            <artifactId>fox-edge-server-common-utils-redis-list</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
 

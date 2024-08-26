@@ -9,8 +9,8 @@ import cn.foxtech.common.rpc.redis.persist.server.RedisListPersistServer;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import cn.foxtech.device.domain.vo.OperateRespondVO;
 import cn.foxtech.device.domain.vo.TaskRespondVO;
-import cn.foxtech.persist.common.service.EntityManageService;
 import cn.foxtech.persist.common.service.EntityUpdateService;
+import cn.foxtech.persist.common.service.PersistManageService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class RedisListValueScheduler extends PeriodTaskService {
     private static final Logger logger = Logger.getLogger(RedisListValueScheduler.class);
     @Autowired
-    EntityManageService entityManageService;
+    PersistManageService entityManageService;
     @Autowired
     EntityUpdateService entityUpdateService;
 
@@ -59,9 +59,9 @@ public class RedisListValueScheduler extends PeriodTaskService {
     }
 
 
-    private void updateDeviceRespond(Object respondMap) {
+    private void updateDeviceRespond(Object respond) {
         try {
-            TaskRespondVO taskRespondVO = TaskRespondVO.buildRespondVO((Map<String, Object>) respondMap);
+            TaskRespondVO taskRespondVO = TaskRespondVO.buildRespondVO((Map<String, Object>) respond);
             for (OperateRespondVO operateRespondVO : taskRespondVO.getRespondVOS()) {
                 this.entityUpdateService.updateDeviceRespond(operateRespondVO, taskRespondVO.getClientName());
             }

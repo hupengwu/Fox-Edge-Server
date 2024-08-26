@@ -18,11 +18,10 @@ import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.period.service.entity.PeriodRecordEntity;
 import cn.foxtech.period.service.entity.PeriodTaskEntity;
 import cn.foxtech.period.service.mapper.periodrecord.PeriodRecordEntityMapper;
-import cn.foxtech.period.service.service.EntityManageService;
+import cn.foxtech.period.service.service.PeriodManageService;
 import cn.foxtech.common.entity.constant.DeviceVOFieldConstant;
 import cn.foxtech.common.entity.constant.PeriodRecordVOFieldConstant;
 import cn.foxtech.common.entity.constant.PeriodTaskVOFieldConstant;
-import cn.foxtech.common.entity.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,7 +34,7 @@ import java.util.*;
 @RequestMapping("/record/object")
 public class PeriodRecordController {
     @Autowired
-    private EntityManageService entityManageService;
+    private PeriodManageService entityManageService;
 
     @Autowired
     private PeriodRecordEntityMapper mapper;

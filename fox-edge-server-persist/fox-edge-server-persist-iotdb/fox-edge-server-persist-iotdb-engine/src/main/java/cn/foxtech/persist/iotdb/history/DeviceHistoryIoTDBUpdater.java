@@ -12,7 +12,8 @@ import cn.foxtech.common.entity.entity.DeviceValueEntity;
 import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.utils.ContainerUtils;
 import cn.foxtech.persist.common.history.IDeviceHistoryUpdater;
-import cn.foxtech.persist.common.service.EntityManageService;
+import cn.foxtech.persist.common.service.PersistEnvService;
+import cn.foxtech.persist.common.service.PersistManageService;
 import cn.foxtech.persist.iotdb.service.IoTDBSessionService;
 import org.apache.iotdb.rpc.IoTDBConnectionException;
 import org.apache.iotdb.rpc.StatementExecutionException;
@@ -32,13 +33,16 @@ public class DeviceHistoryIoTDBUpdater implements IDeviceHistoryUpdater {
      * 实体管理
      */
     @Autowired
-    private EntityManageService entityManageService;
+    private PersistManageService entityManageService;
 
     @Autowired
     private IoTDBSessionService sessionService;
 
     @Autowired
     private InitialConfigService configService;
+
+    @Autowired
+    private PersistEnvService persistEnvService;
 
     /**
      * 上次处理时间
@@ -124,7 +128,8 @@ public class DeviceHistoryIoTDBUpdater implements IDeviceHistoryUpdater {
                 return;
             }
 
-            Map<String, Object> configs = this.configService.getConfigParam("serverConfig");
+            String serverConfig = this.persistEnvService.getServerConfig();
+            Map<String, Object> configs = this.configService.getConfigParam(serverConfig);
             Map<String, Object> params = (Map<String, Object>) configs.getOrDefault("deviceHistory", new HashMap<>());
 
             Integer lifeCycle = (Integer) params.getOrDefault("lifeCycle", 3600 * 24);

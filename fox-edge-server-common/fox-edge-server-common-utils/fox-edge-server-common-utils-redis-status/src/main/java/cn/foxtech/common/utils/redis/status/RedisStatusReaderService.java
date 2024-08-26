@@ -20,7 +20,7 @@ public abstract class RedisStatusReaderService {
      *
      * @return 状态
      */
-    public synchronized Map<String, Object> getStatus() {
+    public Map<String, Object> getStatus() {
         return (Map<String, Object>) redisTemplate.opsForHash().entries(this.getKeyData());
     }
 }

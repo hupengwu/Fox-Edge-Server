@@ -10,7 +10,7 @@ import cn.foxtech.common.entity.manager.EntityPublishManager;
 import cn.foxtech.common.utils.pair.Pair;
 import cn.foxtech.persist.common.history.IDeviceHistoryUpdater;
 import cn.foxtech.persist.common.service.DeviceObjectMapper;
-import cn.foxtech.persist.common.service.EntityManageService;
+import cn.foxtech.persist.common.service.PersistManageService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class DeviceStatusValueUpdater {
      * 实体管理
      */
     @Autowired
-    private EntityManageService entityManageService;
+    private PersistManageService entityManageService;
     @Autowired
     private IDeviceHistoryUpdater deviceHistoryEntityUpdater;
     @Autowired

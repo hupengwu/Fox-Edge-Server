@@ -7,6 +7,7 @@ package cn.foxtech.value.ex.task.service.service;
 import cn.foxtech.common.entity.entity.*;
 import cn.foxtech.common.entity.manager.EntityPublishManager;
 import cn.foxtech.common.entity.manager.EntityServiceManager;
+import cn.foxtech.utils.common.utils.redis.service.RedisService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,12 @@ public class EntityManageService extends EntityServiceManager {
     @Autowired
     private EntityPublishManager entityPublishManager;
 
+    @Autowired
+    private RedisService redisService;
+
     public void instance() {
+        this.instance(this.redisService);
+
         Set<String> agileConsumer = this.entityAgileMapComponent.getConsumer();
         Set<String> redisConsumer = this.entityRedisComponent.getConsumer();
         Set<String> reader = this.entityRedisComponent.getReader();

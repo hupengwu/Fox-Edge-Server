@@ -35,7 +35,7 @@ public class RedisTagWriter {
     }
 
 
-    public synchronized void writeTags(Map<String, Object> tagMap) {
+    public void writeTags(Map<String, Object> tagMap) {
         if (tagMap == null || tagMap.isEmpty()) {
             return;
         }
@@ -53,7 +53,7 @@ public class RedisTagWriter {
         this.redisTemplate.opsForValue().set(this.getHead() + "sync", time);
     }
 
-    public synchronized void deleteTags(Set<String> entityTypes) {
+    public void deleteTags(Set<String> entityTypes) {
         if (entityTypes == null || entityTypes.isEmpty()) {
             return;
         }

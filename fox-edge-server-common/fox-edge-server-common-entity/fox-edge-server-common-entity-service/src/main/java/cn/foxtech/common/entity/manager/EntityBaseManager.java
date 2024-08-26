@@ -15,7 +15,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.serializer.SerializationException;
 
 import java.util.HashSet;
@@ -40,39 +39,47 @@ public abstract class EntityBaseManager {
     /**
      * redis缓存组件
      */
-    @Autowired
-    protected EntityRedisComponent entityRedisComponent;
+    protected EntityRedisComponent entityRedisComponent = new EntityRedisComponent();
     /**
      * 数据库组件
      */
-    @Autowired
-    protected EntityMySqlComponent entityMySQLComponent;
+    protected EntityMySqlComponent entityMySQLComponent = new EntityMySqlComponent();
     /**
      * 数据变化感知组件
      */
-    @Autowired
-    protected EntityChangeComponent entityChangeComponent;
+    protected EntityChangeComponent entityChangeComponent = new EntityChangeComponent();
     /**
      * HashMap版本的redis缓存组件：只读
      */
-    @Autowired
-    protected EntityHashMapComponent entityHashMapComponent;
+    protected EntityHashMapComponent entityHashMapComponent = new EntityHashMapComponent();
     /**
      * 敏捷状态组件
      */
-    @Autowired
-    protected EntityAgileMapComponent entityAgileMapComponent;
+    protected EntityAgileMapComponent entityAgileMapComponent = new EntityAgileMapComponent();
 
     /**
      * redis部件
      */
-    @Autowired
     private RedisService redisService;
+
     /**
      * 初始化状态
      */
     @Getter(value = AccessLevel.PUBLIC)
     private boolean isInitialized = false;
+
+    /**
+     * 绑定
+     *
+     * @param redisService
+     */
+    protected void instance(RedisService redisService) {
+        this.redisService = redisService;
+
+        this.entityRedisComponent.setRedisService(redisService);
+        this.entityHashMapComponent.setRedisService(redisService);
+        this.entityAgileMapComponent.setRedisService(redisService);
+    }
 
     public void addReader(String entityType) {
         this.entityRedisComponent.getReader().add(entityType);

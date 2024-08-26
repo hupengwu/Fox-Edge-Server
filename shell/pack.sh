@@ -10,13 +10,46 @@ mkdir -p temp/fox-edge
 cd temp/fox-edge
 workdir=/opt/temp/fox-edge
 
-#==============================================================================#
+#=============================================配置文件的读写函数定义区============================================#
+#读取INI文件的通用函数：$(readINI 文件名 section名 item名)
+#范例：
+#     value=$(readINI fox-edge.ini 段名1 Key2)
+#     读取fox-edge.ini的配置文件，文件中有个叫'段名1'的section，在这个section里有个叫Key2的item，然后将这个作为变量数值赋值给value变量
+function readINI()
+{
+ FILENAME=$1; SECTION=$2; KEY=$3
+ RESULT=`awk -F '=' '/\['$SECTION'\]/{a=1}a==1&&$1~/'$KEY'/{print $2;exit}' $FILENAME`
+ echo $RESULT
+} 
+#=============================================配置文件的读写函数定义区============================================#
+
+#环境变量
+app_env_kernel=$(readINI $app_home/shell/fox-edge.ini environment kernel)
+
+#=====================================================打包文件目录================================================#
 
 #复制二级目录
 cpdir=bin/kernel
 mkdir -p $cpdir
-cp -r $app_home/$cpdir bin
+if [[ $app_env_kernel == compose ]]; then
+	cp -r $app_home/$cpdir/manager-compose bin/kernel/manager-compose
+else
+	cp -r $app_home/$cpdir/gateway-service bin/kernel/gateway-service
+	cp -r $app_home/$cpdir/manager-service bin/kernel/manager-service
+fi
 
+#复制一级目录并清理service和system目录
+cpdir=shell
+mkdir -p $cpdir
+cp -r $app_home/$cpdir .
+rm -rf shell/service
+rm -rf shell/system
+if [[ $app_env_kernel == compose ]]; then
+	rm -rf shell/service shell/kernel/gateway-service
+	rm -rf shell/service shell/kernel/manager-service	
+else
+	rm -rf shell/service shell/kernel/manager-compose
+fi
 
 #复制一级目录
 cpdir=conf
@@ -57,12 +90,6 @@ cpdir=repository/service
 mkdir -p $cpdir
 cp -r $app_home/$cpdir/serviceList.jsn $cpdir
 
-#复制一级目录并清理service和system目录
-cpdir=shell
-mkdir -p $cpdir
-cp -r $app_home/$cpdir .
-rm -rf shell/service
-rm -rf shell/system
 
 #复制一级目录
 cpdir=sql

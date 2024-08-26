@@ -5,7 +5,7 @@
 package cn.foxtech.common.rpc.redis.manager.server;
 
 import cn.foxtech.common.domain.vo.RestFulRequestVO;
-import cn.foxtech.common.utils.redis.logger.RedisLoggerService;
+import cn.foxtech.common.utils.redis.list.RedisListService;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * 记录类型的队列：这是可靠性记录，它会在redis之中缓存
  */
 @Component
-public class RedisListManagerServerRequest extends RedisLoggerService {
+public class RedisListManagerServerRequest extends RedisListService {
     @Getter
     private final String key = "fox.edge.list:manager:restful:message:request";
 

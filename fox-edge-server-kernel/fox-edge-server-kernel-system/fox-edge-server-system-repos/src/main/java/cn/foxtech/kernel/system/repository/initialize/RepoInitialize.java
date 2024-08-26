@@ -67,10 +67,10 @@ public class RepoInitialize {
     @Autowired
     private InitialConfigService configService;
 
-
     public void initialize() {
         this.engineParamService.initialize();
 
+        this.configService.initialize("kernelEnableConfig", "kernelEnableConfig.json");
         this.configService.initialize("repositoryConfig", "repositoryConfig.json");
         this.configService.initialize("systemProcessConfig", "systemProcessConfig.json");
 

@@ -5,7 +5,7 @@
 package cn.foxtech.common.rpc.redis.manager.client;
 
 import cn.foxtech.common.domain.vo.RestFulRequestVO;
-import cn.foxtech.common.utils.redis.logger.RedisLoggerService;
+import cn.foxtech.common.utils.redis.list.RedisListService;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * 发送者： 其他服务
  */
 @Component
-public class RedisListManagerClientRequest extends RedisLoggerService {
+public class RedisListManagerClientRequest extends RedisListService {
     @Getter
     private final String key = "fox.edge.list:manager:restful:message:request";
 

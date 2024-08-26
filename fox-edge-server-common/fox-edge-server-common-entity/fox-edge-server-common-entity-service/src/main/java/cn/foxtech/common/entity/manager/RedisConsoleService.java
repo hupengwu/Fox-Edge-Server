@@ -5,7 +5,7 @@
 package cn.foxtech.common.entity.manager;
 
 import cn.foxtech.common.domain.constant.RedisStatusConstant;
-import cn.foxtech.common.utils.redis.logger.RedisLoggerService;
+import cn.foxtech.common.utils.redis.list.RedisListService;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class RedisConsoleService extends RedisLoggerService {
+public class RedisConsoleService extends RedisListService {
     @Getter
     private final String key = "fox.edge.service.console.public";
 

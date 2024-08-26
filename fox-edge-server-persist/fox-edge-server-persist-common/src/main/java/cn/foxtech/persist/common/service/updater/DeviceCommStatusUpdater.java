@@ -8,7 +8,7 @@ import cn.foxtech.common.entity.constant.DeviceStatusVOFieldConstant;
 import cn.foxtech.common.entity.entity.DeviceStatusEntity;
 import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.device.domain.vo.OperateRespondVO;
-import cn.foxtech.persist.common.service.EntityManageService;
+import cn.foxtech.persist.common.service.PersistManageService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ public class DeviceCommStatusUpdater {
      * 实体管理
      */
     @Autowired
-    private EntityManageService entityManageService;
+    private PersistManageService entityManageService;
 
     /**
      * 根据通信状态数据到redis

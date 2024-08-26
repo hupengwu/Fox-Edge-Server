@@ -25,7 +25,7 @@ public class KernelInitialize {
 
 
     public void initialize() {
-        String message = "------------------------CommonInitialize初始化开始！------------------------";
+        String message = "------------------------KernelInitialize初始化开始！------------------------";
         console.info(message);
         logger.info(message);
 
@@ -34,7 +34,7 @@ public class KernelInitialize {
         this.serviceStatusScheduler.schedule();
 
 
-        message = "------------------------CommonInitialize初始化结束！------------------------";
+        message = "------------------------KernelInitialize初始化结束！------------------------";
         console.info(message);
         logger.info(message);
     }

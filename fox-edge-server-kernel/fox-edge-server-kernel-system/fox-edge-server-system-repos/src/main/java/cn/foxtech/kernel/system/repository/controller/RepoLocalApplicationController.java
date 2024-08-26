@@ -70,6 +70,9 @@ public class RepoLocalApplicationController {
             // 从磁盘中查找所有的shell文件信息
             List<Map<String, Object>> confFileInfoList = this.appConfService.getConfFileInfoList();
 
+            // 过滤掉隐藏项目
+            confFileInfoList = this.appConfService.filterAppConfFile(confFileInfoList);
+
             // 按docker模式处理一遍
             confFileInfoList = this.buildDockerMode(confFileInfoList);
 

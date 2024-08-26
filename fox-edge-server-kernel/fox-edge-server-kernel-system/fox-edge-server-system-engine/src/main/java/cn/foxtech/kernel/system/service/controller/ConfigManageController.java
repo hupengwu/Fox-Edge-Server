@@ -57,7 +57,6 @@ public class ConfigManageController {
 
                 boolean result = true;
 
-
                 if (body.containsKey(ConfigVOFieldConstant.field_config_name)) {
                     result &= entity.getConfigName().contains((String) body.get(ConfigVOFieldConstant.field_config_name));
                 }

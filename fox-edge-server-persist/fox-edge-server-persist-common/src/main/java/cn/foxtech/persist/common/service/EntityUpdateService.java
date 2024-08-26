@@ -32,7 +32,7 @@ public class EntityUpdateService {
      * 实体管理
      */
     @Autowired
-    private EntityManageService entityManageService;
+    private PersistManageService entityManageService;
 
 
     @Autowired

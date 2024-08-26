@@ -6,17 +6,18 @@ package cn.foxtech.controller.service.service;
 
 import cn.foxtech.common.domain.constant.RedisStatusConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
-import cn.foxtech.common.entity.entity.ConfigEntity;
 import cn.foxtech.common.entity.entity.DeviceEntity;
 import cn.foxtech.common.entity.entity.OperateMonitorTaskEntity;
+import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.rpc.redis.persist.client.RedisListPersistClient;
 import cn.foxtech.common.status.ServiceStatus;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import cn.foxtech.common.utils.time.interval.TimeIntervalMap;
+import cn.foxtech.controller.common.service.ControllerEnvService;
+import cn.foxtech.controller.common.service.ControllerManageService;
 import cn.foxtech.controller.common.service.DeviceOperateService;
-import cn.foxtech.controller.common.service.EntityManageService;
 import cn.foxtech.device.domain.vo.OperateRequestVO;
 import cn.foxtech.device.domain.vo.OperateRespondVO;
 import cn.foxtech.device.domain.vo.TaskRequestVO;
@@ -45,7 +46,7 @@ public class CollectorExchangeService extends PeriodTaskService {
     private final TimeIntervalMap timeIntervalMap = new TimeIntervalMap();
 
     @Autowired
-    private EntityManageService entityManageService;
+    private ControllerManageService entityManageService;
     @Autowired
     private RedisListPersistClient persistClient;
     @Autowired
@@ -54,6 +55,12 @@ public class CollectorExchangeService extends PeriodTaskService {
     private String controllerModel = "system_controller";
     @Autowired
     private ServiceStatus serviceStatus;
+
+    @Autowired
+    private ControllerEnvService controllerEnvService;
+
+    @Autowired
+    private InitialConfigService configService;
 
     @Value("${spring.fox-service.service.type}")
     private String foxServiceType = "undefinedServiceType";
@@ -213,12 +220,9 @@ public class CollectorExchangeService extends PeriodTaskService {
      * @throws InterruptedException
      */
     private void sleep(long startTime, long timeInterval, int deviceCount, int index) throws InterruptedException {
-        boolean average = false;
-        ConfigEntity configEntity = this.entityManageService.getConfigEntity(this.foxServiceName, this.foxServiceType, "serverConfig");
-        if (configEntity != null && configEntity.getConfigValue().containsKey("average")) {
-            average = (Boolean) configEntity.getConfigValue().get("average");
-        }
-
+        String serverConfig = this.controllerEnvService.getServerConfig();
+        Map<String, Object> configs = this.configService.getConfigParam(serverConfig);
+        Boolean average = (Boolean) configs.getOrDefault("average", false);
         if (!average) {
             return;
         }

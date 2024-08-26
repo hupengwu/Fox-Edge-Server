@@ -29,7 +29,7 @@ public class PeriodRecordService extends PeriodTaskService {
     private final Map<String, Long> lastTimeMap = new HashMap<>();
 
     @Autowired
-    private EntityManageService entityManageService;
+    private PeriodManageService entityManageService;
 
 
     @Autowired(required = false)

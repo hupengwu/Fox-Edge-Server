@@ -4,7 +4,7 @@
 
 package cn.foxtech.common.rpc.redis.persist.client;
 
-import cn.foxtech.common.utils.redis.logger.RedisLoggerService;
+import cn.foxtech.common.utils.redis.list.RedisListService;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * 高可靠信道：记录类型的队列，这是可靠性记录，它会在redis之中缓存
  */
 @Component
-public class RedisListPersistClientValueRequest extends RedisLoggerService {
+public class RedisListPersistClientValueRequest extends RedisListService {
     @Getter
     private final String key = "fox.edge.list:persist:value:request";
 

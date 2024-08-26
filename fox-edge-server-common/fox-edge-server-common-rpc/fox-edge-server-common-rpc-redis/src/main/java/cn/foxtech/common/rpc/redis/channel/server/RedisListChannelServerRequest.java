@@ -5,7 +5,7 @@
 package cn.foxtech.common.rpc.redis.channel.server;
 
 import cn.foxtech.channel.domain.ChannelRequestVO;
-import cn.foxtech.common.utils.redis.logger.RedisLoggerService;
+import cn.foxtech.common.utils.redis.list.RedisListService;
 import lombok.AccessLevel;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * 记录类型的队列：这是可靠性记录，它会在redis之中缓存
  */
 @Component
-public class RedisListChannelServerRequest extends RedisLoggerService {
+public class RedisListChannelServerRequest extends RedisListService {
     private final String key = "fox.edge.list:channel:";
 
     @Setter(value = AccessLevel.PUBLIC)

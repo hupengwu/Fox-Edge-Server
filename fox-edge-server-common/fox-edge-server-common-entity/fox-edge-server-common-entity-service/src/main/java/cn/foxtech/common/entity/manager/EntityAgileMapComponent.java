@@ -6,12 +6,10 @@ package cn.foxtech.common.entity.manager;
 
 
 import cn.foxtech.common.entity.service.redis.AgileMapRedisService;
-import cn.foxtech.common.entity.service.redis.BaseAgileMapRedisService;
 import cn.foxtech.utils.common.utils.redis.service.RedisService;
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,18 +18,14 @@ import java.util.Set;
  * 敏捷版的HashMap版的Redis的部件：它只将Agile时间戳装载到本地内存
  * 这样就可以达到减少内存占用，又可以快速感知redis的时间戳发生了变化
  */
-@Data
-@Component
+@Getter(value = AccessLevel.PUBLIC)
+@Setter(value = AccessLevel.PUBLIC)
 public class EntityAgileMapComponent {
     /**
      * 消费者：Entity结构的数据
      */
     private final Set<String> consumer = new HashSet<>();
 
-    @Autowired
-    public RedisTemplate redisTemplate;
-
-    @Autowired
     private RedisService redisService;
 
     protected <T> AgileMapRedisService getBaseRedisService(Class<T> clazz) {

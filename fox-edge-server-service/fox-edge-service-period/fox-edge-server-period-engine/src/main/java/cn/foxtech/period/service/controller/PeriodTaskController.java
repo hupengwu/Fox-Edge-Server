@@ -26,7 +26,7 @@ import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.period.service.entity.PeriodTaskEntity;
-import cn.foxtech.period.service.service.EntityManageService;
+import cn.foxtech.period.service.service.PeriodManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +37,7 @@ import java.util.*;
 @RequestMapping("/task")
 public class PeriodTaskController {
     @Autowired
-    private EntityManageService entityManageService;
+    private PeriodManageService entityManageService;
 
     @GetMapping("entities")
     public AjaxResult selectEntityList() {

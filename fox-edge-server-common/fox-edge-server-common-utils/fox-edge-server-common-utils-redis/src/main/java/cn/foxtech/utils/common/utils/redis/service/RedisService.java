@@ -4,6 +4,8 @@
 
 package cn.foxtech.utils.common.utils.redis.service;
 
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
@@ -11,10 +13,12 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+@Getter(value = AccessLevel.PUBLIC)
 @Component
 public class RedisService {
+
     @Autowired
-    public RedisTemplate redisTemplate;
+    private RedisTemplate redisTemplate;
 
     /**
      * 缓存基本的对象，Integer、String、实体类等

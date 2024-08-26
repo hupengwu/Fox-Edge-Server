@@ -9,6 +9,8 @@ import cn.foxtech.common.entity.entity.UserMenuEntity;
 import cn.foxtech.common.entity.entity.UserPermissionEntity;
 import cn.foxtech.common.entity.entity.UserRoleEntity;
 import cn.foxtech.common.entity.manager.EntityServiceManager;
+import cn.foxtech.utils.common.utils.redis.service.RedisService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -18,8 +20,12 @@ import java.util.Set;
  */
 @Component
 public class EntityManageService extends EntityServiceManager {
+    @Autowired
+    private RedisService redisService;
 
     public void instance() {
+        this.instance(this.redisService);
+
         Set<String> reader = this.entityRedisComponent.getReader();
 
         // 注册redis读数据

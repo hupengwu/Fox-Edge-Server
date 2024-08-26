@@ -8,10 +8,9 @@ import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.service.redis.*;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.utils.common.utils.redis.service.RedisService;
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.IOException;
 import java.util.*;
@@ -19,8 +18,8 @@ import java.util.*;
 /**
  * Redis部件
  */
-@Data
-@Component
+@Getter(value = AccessLevel.PUBLIC)
+@Setter(value = AccessLevel.PUBLIC)
 public class EntityRedisComponent {
     /**
      * 生产者:Entity结构的数据
@@ -33,9 +32,7 @@ public class EntityRedisComponent {
 
     private final Set<String> reader = new HashSet<>();
     private final Set<String> writer = new HashSet<>();
-    @Autowired
-    public RedisTemplate redisTemplate;
-    @Autowired
+
     private RedisService redisService;
 
     protected <T> T getEntity(Long id, Class<T> clazz) {
@@ -48,7 +45,7 @@ public class EntityRedisComponent {
             return (T) consumerRedisService.getEntity(id);
         }
         if (this.reader.contains(clazz.getSimpleName())) {
-            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisTemplate);
+            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService.getRedisTemplate());
             try {
                 return redisReader.readEntity(id);
             } catch (Exception e) {
@@ -70,7 +67,7 @@ public class EntityRedisComponent {
         }
 
         if (this.reader.contains(clazz.getSimpleName())) {
-            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisTemplate);
+            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService.getRedisTemplate());
             try {
                 return (T) redisReader.readEntity(entityKey);
             } catch (Exception e) {
@@ -91,7 +88,7 @@ public class EntityRedisComponent {
             return consumerRedisService.getEntity(finder);
         }
         if (this.reader.contains(clazz.getSimpleName())) {
-            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisTemplate);
+            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService.getRedisTemplate());
             try {
                 return redisReader.readEntity(finder);
             } catch (Exception e) {
@@ -112,7 +109,7 @@ public class EntityRedisComponent {
             return consumerRedisService.getEntityCount(finder);
         }
         if (this.reader.contains(clazz.getSimpleName())) {
-            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisTemplate);
+            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService.getRedisTemplate());
             try {
                 return redisReader.getEntityCount(finder);
             } catch (Exception e) {
@@ -126,7 +123,7 @@ public class EntityRedisComponent {
 
     protected <T> T readEntity(String entityKey, Class<T> clazz) throws IOException {
         if (this.reader.contains(clazz.getSimpleName())) {
-            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisTemplate);
+            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService.getRedisTemplate());
             return (T) redisReader.readEntity(entityKey);
         }
 
@@ -135,7 +132,7 @@ public class EntityRedisComponent {
 
     protected <T> Map<String, Object> readHashMap(String entityKey, Class<T> clazz) {
         if (this.reader.contains(clazz.getSimpleName())) {
-            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisTemplate);
+            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService.getRedisTemplate());
             return redisReader.readHashMap(entityKey);
         }
 
@@ -144,7 +141,7 @@ public class EntityRedisComponent {
 
     protected void writeEntity(BaseEntity entity) {
         if (this.writer.contains(entity.getClass().getSimpleName())) {
-            RedisWriter redisWriter = RedisWriterService.getInstanceBySimpleName(entity.getClass().getSimpleName(), this.redisTemplate);
+            RedisWriter redisWriter = RedisWriterService.getInstanceBySimpleName(entity.getClass().getSimpleName(), this.redisService.getRedisTemplate());
             redisWriter.writeEntity(entity);
         }
     }
@@ -159,7 +156,7 @@ public class EntityRedisComponent {
             return consumerRedisService.getEntityList();
         }
         if (this.reader.contains(clazz.getSimpleName())) {
-            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisTemplate);
+            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService.getRedisTemplate());
             try {
                 return redisReader.readEntityList();
             } catch (Exception e) {
@@ -180,7 +177,7 @@ public class EntityRedisComponent {
             return consumerRedisService.getEntityList(finder);
         }
         if (this.reader.contains(clazz.getSimpleName())) {
-            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisTemplate);
+            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService.getRedisTemplate());
             try {
                 return redisReader.readEntityList(finder);
             } catch (Exception e) {
@@ -201,7 +198,7 @@ public class EntityRedisComponent {
             return consumerRedisService.getEntityMap(entityKeys);
         }
         if (this.reader.contains(clazz.getSimpleName())) {
-            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisTemplate);
+            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService.getRedisTemplate());
             try {
                 return redisReader.readEntityMap(entityKeys);
             } catch (Exception e) {
@@ -249,7 +246,7 @@ public class EntityRedisComponent {
 
     protected <T> RedisReader getBaseRedisReader(Class<T> clazz) {
         if (this.reader.contains(clazz.getSimpleName())) {
-            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisTemplate);
+            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService.getRedisTemplate());
             return redisReader;
         }
 
@@ -258,7 +255,7 @@ public class EntityRedisComponent {
 
     protected <T> RedisReader getBaseRedisReader(String entityType) {
         if (this.reader.contains(entityType)) {
-            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(entityType, this.redisTemplate);
+            RedisReader redisReader = RedisReaderService.getInstanceBySimpleName(entityType, this.redisService.getRedisTemplate());
             return redisReader;
         }
 
@@ -267,7 +264,7 @@ public class EntityRedisComponent {
 
     protected <T> RedisWriter getBaseRedisWriter(String entityType) {
         if (this.writer.contains(entityType)) {
-            RedisWriter redisWriter = RedisWriterService.getInstanceBySimpleName(entityType, this.redisTemplate);
+            RedisWriter redisWriter = RedisWriterService.getInstanceBySimpleName(entityType, this.redisService.getRedisTemplate());
             return redisWriter;
         }
 
@@ -276,7 +273,7 @@ public class EntityRedisComponent {
 
     protected <T> RedisWriter getBaseRedisWriter(Class<T> clazz) {
         if (this.writer.contains(clazz.getSimpleName())) {
-            RedisWriter redisWriter = RedisWriterService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisTemplate);
+            RedisWriter redisWriter = RedisWriterService.getInstanceBySimpleName(clazz.getSimpleName(), this.redisService.getRedisTemplate());
             return redisWriter;
         }
 

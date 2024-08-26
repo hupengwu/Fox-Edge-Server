@@ -10,7 +10,7 @@ import cn.foxtech.common.domain.vo.RestFulRespondVO;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.rpc.redis.persist.server.RedisListPersistServer;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
-import cn.foxtech.persist.common.service.EntityManageService;
+import cn.foxtech.persist.common.service.PersistManageService;
 import cn.foxtech.persist.common.service.EntityUpdateService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class RedisListManageScheduler extends PeriodTaskService {
     private static final Logger logger = Logger.getLogger(RedisListManageScheduler.class);
     @Autowired
-    EntityManageService entityManageService;
+    PersistManageService entityManageService;
     @Autowired
     EntityUpdateService entityUpdateService;
 

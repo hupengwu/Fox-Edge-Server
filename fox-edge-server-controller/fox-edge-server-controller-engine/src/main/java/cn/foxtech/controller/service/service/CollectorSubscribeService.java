@@ -8,7 +8,7 @@ import cn.foxtech.common.entity.entity.DeviceEntity;
 import cn.foxtech.common.rpc.redis.device.client.RedisListDeviceClient;
 import cn.foxtech.common.rpc.redis.persist.client.RedisListPersistClient;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
-import cn.foxtech.controller.common.service.EntityManageService;
+import cn.foxtech.controller.common.service.ControllerManageService;
 import cn.foxtech.device.domain.vo.OperateRespondVO;
 import cn.foxtech.device.domain.vo.TaskRespondVO;
 import org.apache.log4j.Logger;
@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class CollectorSubscribeService extends PeriodTaskService {
     private static final Logger logger = Logger.getLogger(CollectorSubscribeService.class);
     @Autowired
-    EntityManageService entityManageService;
+    ControllerManageService entityManageService;
 
     @Autowired
     private RedisListPersistClient persistClient;

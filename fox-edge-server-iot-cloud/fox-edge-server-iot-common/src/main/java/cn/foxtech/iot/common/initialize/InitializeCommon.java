@@ -44,6 +44,7 @@ public class InitializeCommon {
         this.serviceStatusScheduler.schedule();
 
         // 装载数据实体
+        this.entityManageService.instance();
         this.entityManageService.initLoadEntity();
 
         // 将全局配置，读取到本地缓存中，方便后面反复使用，该方法必须在this.entityManageService.initLoadEntity()之后执行

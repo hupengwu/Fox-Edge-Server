@@ -26,7 +26,7 @@ public class EntityVerifyService {
      * 实体管理
      */
     @Autowired
-    private EntityManageService entityManageService;
+    private PersistManageService entityManageService;
 
     public void initialize() {
         // 以mysql的DeviceObjectEntity表为基准，对DeviceValueEntity进行验证

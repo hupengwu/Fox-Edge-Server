@@ -5,7 +5,7 @@
 package cn.foxtech.service.common.initialize;
 
 import cn.foxtech.common.status.ServiceStatusScheduler;
-import cn.foxtech.service.common.scheduler.EntityManageScheduler;
+import cn.foxtech.service.common.scheduler.ServiceEntityManageScheduler;
 import cn.foxtech.service.common.service.ServiceEntityManageService;
 import lombok.Data;
 import org.apache.log4j.Logger;
@@ -30,7 +30,7 @@ public class ServiceCommonInitialize {
      * 实体调度
      */
     @Autowired
-    private EntityManageScheduler entityManageScheduler;
+    private ServiceEntityManageScheduler entityManageScheduler;
 
     /**
      * 进程状态

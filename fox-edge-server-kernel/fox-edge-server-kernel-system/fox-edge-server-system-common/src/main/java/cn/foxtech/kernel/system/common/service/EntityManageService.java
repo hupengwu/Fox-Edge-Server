@@ -31,6 +31,7 @@ import cn.foxtech.common.entity.service.user.UserEntityService;
 import cn.foxtech.common.entity.service.usermenu.UserMenuEntityService;
 import cn.foxtech.common.entity.service.userpermission.UserPermissionEntityService;
 import cn.foxtech.common.entity.service.userrole.UserRoleEntityService;
+import cn.foxtech.utils.common.utils.redis.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -113,8 +114,13 @@ public class EntityManageService extends EntityServiceManager {
     @Autowired
     private EntityOptionManager entityOptionManager;
 
+    @Autowired
+    private RedisService redisService;
+
 
     public void instance() {
+        this.instance(this.redisService);
+
         // 初始化状态数据的装载
         this.instanceStatus();
 
@@ -177,8 +183,9 @@ public class EntityManageService extends EntityServiceManager {
         this.getSourceMySQL().add(RepoCompEntity.class.getSimpleName());
 
         // 注册消费者
-        consumer.add(DeviceObjInfEntity.class.getSimpleName());
         consumer.add(OperateMethodEntity.class.getSimpleName());
+        consumer.add(DeviceObjInfEntity.class.getSimpleName());
+
 
         // 注册redis读数据
         reader.add(ChannelStatusEntity.class.getSimpleName());

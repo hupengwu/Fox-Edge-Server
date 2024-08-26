@@ -13,10 +13,7 @@ import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.common.service.EdgeService;
 import cn.foxtech.kernel.system.common.scheduler.PeriodTasksScheduler;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
-import cn.foxtech.kernel.system.repository.service.RepoCloudCacheService;
-import cn.foxtech.kernel.system.repository.service.RepoCloudFIleInstallService;
-import cn.foxtech.kernel.system.repository.service.RepoCloudFileInstallStatus;
-import cn.foxtech.kernel.system.repository.service.RepoLocalPathNameService;
+import cn.foxtech.kernel.system.repository.service.*;
 import cn.foxtech.kernel.system.repository.task.RepoDownLoadTask;
 import cn.foxtech.kernel.system.repository.task.RepoScanStatusTask;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +47,9 @@ public class RepoCloudCompController {
 
     @Autowired
     private RepoLocalPathNameService pathNameService;
+
+    @Autowired
+    private RepoLocalAppConfService appConfService;
 
     /**
      * 周期任务调度器
@@ -86,6 +86,9 @@ public class RepoCloudCompController {
                 list = this.installService.queryUriListFile(modelType);
                 this.cacheService.saveList(modelType, list);
             }
+
+            // 过滤掉配置文件中指定的项目
+            list = this.appConfService.filterModelList(list);
 
             // 分析本地的安装状态
             for (Map<String, Object> map : list) {

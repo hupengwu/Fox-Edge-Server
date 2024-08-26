@@ -72,6 +72,9 @@ public class ProcessStartTask extends PeriodTask {
             // 从磁盘中查找所有的shell文件信息
             List<Map<String, Object>> confFileInfoList = this.repoLocalAppConfService.getConfFileInfoList();
 
+            // 过滤掉指定的项目
+            confFileInfoList = this.repoLocalAppConfService.filterAppConfFile(confFileInfoList);
+
             // 扩展数据库中的启动配置信息
             this.repoLocalAppLoadService.extendStartConfig(confFileInfoList);
 

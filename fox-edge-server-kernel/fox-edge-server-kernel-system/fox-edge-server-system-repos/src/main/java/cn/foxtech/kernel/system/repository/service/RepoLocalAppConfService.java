@@ -5,19 +5,18 @@
 package cn.foxtech.kernel.system.repository.service;
 
 import cn.foxtech.common.domain.constant.ServiceVOFieldConstant;
+import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.file.FileTextUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.exception.ServiceException;
+import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 获得各服务组件的启动service.conf 信息
@@ -31,6 +30,12 @@ public class RepoLocalAppConfService {
 
     @Autowired
     private RepoLocalPathNameService pathNameService;
+
+    /**
+     * 初始化配置：需要感知运行期的用户动态输入的配置，所以直接使用这个组件
+     */
+    @Autowired
+    private InitialConfigService configService;
 
     /**
      * 读取配置文件内容
@@ -181,6 +186,64 @@ public class RepoLocalAppConfService {
         result.addAll(readConfFile(file.getAbsolutePath(), ServiceVOFieldConstant.field_type_kernel));
         result.addAll(readConfFile(file.getAbsolutePath(), ServiceVOFieldConstant.field_type_system));
         result.addAll(readConfFile(file.getAbsolutePath(), ServiceVOFieldConstant.field_type_service));
+
+        return result;
+    }
+
+    public List<Map<String, Object>> filterAppConfFile(List<Map<String, Object>> appList) {
+        Set<String> disables = this.getKernelAppEnable(false);
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Map<String, Object> map : appList) {
+            String appType = (String) map.getOrDefault(ServiceVOFieldConstant.field_app_type, "");
+            String appName = (String) map.getOrDefault(ServiceVOFieldConstant.field_app_name, "");
+            String key = appType + ":" + appName;
+
+            if (disables.contains(key)) {
+                continue;
+            }
+
+            result.add(map);
+        }
+
+        return result;
+    }
+
+    public List<Map<String, Object>> filterModelList(List<Map<String, Object>> appList) {
+        Set<String> disables = this.getKernelAppEnable(false);
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Map<String, Object> map : appList) {
+            String appType = (String) map.getOrDefault(RepoCompConstant.filed_component, "");
+            String appName = (String) map.getOrDefault(RepoCompConstant.filed_model_name, "");
+            String key = appType + ":" + appName;
+
+            if (disables.contains(key)) {
+                continue;
+            }
+
+            result.add(map);
+        }
+
+        return result;
+    }
+
+    public Set<String> getKernelAppEnable(boolean enable) {
+        Map<String, Object> kernelEnableConfig = this.configService.getConfigParam("kernelEnableConfig");
+        Map<String, Object> kernelConfig = (Map<String, Object>) kernelEnableConfig.getOrDefault("kernel", new HashMap<>());
+
+        String key = "disable";
+        if (enable) {
+            key = "enable";
+        }
+        List<Map<String, Object>> list = (List<Map<String, Object>>) kernelConfig.getOrDefault(key, new ArrayList<>());
+
+        Set<String> result = new HashSet<>();
+        for (Map<String, Object> map : list) {
+            String appType = (String) map.getOrDefault(ServiceVOFieldConstant.field_app_type, "");
+            String appName = (String) map.getOrDefault(ServiceVOFieldConstant.field_app_name, "");
+            result.add(appType + ":" + appName);
+        }
 
         return result;
     }

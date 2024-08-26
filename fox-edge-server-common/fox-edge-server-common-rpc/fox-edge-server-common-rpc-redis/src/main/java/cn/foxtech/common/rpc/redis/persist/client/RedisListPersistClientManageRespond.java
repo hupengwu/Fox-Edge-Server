@@ -5,7 +5,7 @@
 package cn.foxtech.common.rpc.redis.persist.client;
 
 import cn.foxtech.common.domain.vo.RestFulRespondVO;
-import cn.foxtech.common.utils.redis.logger.RedisLoggerService;
+import cn.foxtech.common.utils.redis.list.RedisListService;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * 发送者： persist
  */
 @Component
-public class RedisListPersistClientManageRespond extends RedisLoggerService {
+public class RedisListPersistClientManageRespond extends RedisListService {
     @Getter
     private final String key = "fox.edge.list:persist:manage:respond";
 
