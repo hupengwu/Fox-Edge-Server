@@ -1810,12 +1810,6 @@ DELETE FROM `tb_user_role`;
 INSERT INTO `tb_user_role` (`id`, `name`, `role`, `create_time`, `update_time`) VALUES
 	(1, 'ADMIN', '["ADMIN"]', 1651831121752, 1651831121752);
 
--- 正在导出表  fox_edge.test 的数据：~2 rows (大约)
-DELETE FROM `test`;
-INSERT INTO `test` (`字段 1`) VALUES
-	('W'),
-	('w');
-
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
