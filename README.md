@@ -19,8 +19,16 @@ Fox-Edge 边缘计算，致力于提供一种在线下管理智能设备的物�
 1.  **x86系列** 或者 **ARM系列** 的**小型工控机** 或者是 **软路由** 或者是 **小型工业网关** 这类小型物理设备
 2. 最低配置：4G物理内存（推荐8G内存），64G存储空间。
 
-<img src="https://gitee.com/fierce_wolf/fox-edge-server/raw/master/img/NanoPiR5C.jpg" style="width:50%;height:auto;">
+- x86软路由
 <img src="https://gitee.com/fierce_wolf/fox-edge-server/raw/master/img/device-router.jpg" alt="软路由" style="width:50%;height:auto;">
+
+- ARM软路由
+<img src="https://gitee.com/fierce_wolf/fox-edge-server/raw/master/img/FriendR5C.jpg" style="width:50%;height:auto;">
+
+- ARM工控机
+<img src="https://gitee.com/fierce_wolf/fox-edge-server/raw/master/img/GA235.jpg" style="width:50%;height:auto;">
+
+- x86工控机
 <img src="https://gitee.com/fierce_wolf/fox-edge-server/raw/master/img/device.jpg" style="width:50%;height:auto;">
 
 
