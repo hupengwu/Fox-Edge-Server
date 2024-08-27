@@ -76,7 +76,7 @@ public class RecordEntityPublish {
         }
 
         // 查询数据
-        entityList = this.selectEntityListByPage(tableName, remoteId + 1, pageSize);
+        entityList = this.selectEntityListByPage(tableName, remoteId, pageSize);
 
         // 发布数据到云端
         Map<String, Object> dataMap = new HashMap<>();
