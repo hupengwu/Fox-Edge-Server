@@ -1,0 +1,13 @@
+value_name,value_index,bit_index,bit_length,value_type,magnification,determine,remark
+通道1占空比,0,0,16,int,10,,
+通道2占空比,1,0,16,int,10,,
+通道3占空比,2,0,16,int,10,,
+通道4占空比,3,0,16,int,10,,
+通道1频率,4,0,32,long,1,,
+通道2频率,6,0,32,long,1,,
+通道3频率,8,0,32,long,1,,
+通道4频率,10,0,32,long,1,,
+通道1控制,12,0,16,int,1,,
+通道2控制,13,0,16,int,1,,
+通道3控制,14,0,16,int,1,,
+通道4控制,15,0,16,int,1,,

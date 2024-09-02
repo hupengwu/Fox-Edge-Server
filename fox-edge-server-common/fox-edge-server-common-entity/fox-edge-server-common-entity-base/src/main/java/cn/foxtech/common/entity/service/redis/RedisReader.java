@@ -72,7 +72,7 @@ public class RedisReader {
 
         List<Map<String, Object>> mapList = this.readHashMapList();
         for (Map<String, Object> map : mapList) {
-            BaseEntity entity = builder.build(map);
+            BaseEntity entity = this.build(builder, map);
             if (entity == null) {
                 continue;
             }
@@ -88,6 +88,26 @@ public class RedisReader {
         });
 
         return entityList;
+    }
+
+    /**
+     * 将MAP转换为BaseEntity对象
+     * 策略：先尝试用builder来转换map对象，如果这个类型没有重载build()函数，那么久使用JSON进行转换
+     *
+     * @param builder
+     * @param map
+     * @return
+     */
+    private BaseEntity build(BaseEntity builder, Map<String, Object> map) {
+        if (builder == null || map == null) {
+            return null;
+        }
+
+        try {
+            return builder.build(map);
+        } catch (Exception e) {
+            return JsonUtils.buildObjectWithoutException(map, builder.getClass());
+        }
     }
 
     public List<Map<String, Object>> readHashMapList() {
@@ -174,7 +194,7 @@ public class RedisReader {
                 continue;
             }
 
-            BaseEntity entity = builder.build(map);
+            BaseEntity entity = this.build(builder, map);
             if (entity == null) {
                 continue;
             }
@@ -194,7 +214,7 @@ public class RedisReader {
 
         List<Map<String, Object>> mapList = this.readHashMapList();
         for (Map<String, Object> map : mapList) {
-            BaseEntity entity = builder.build(map);
+            BaseEntity entity = this.build(builder, map);
 
             if (finder.compareValue(entity)) {
                 entityList.add(entity);
@@ -218,7 +238,7 @@ public class RedisReader {
 
         List<Map<String, Object>> mapList = this.readHashMapList();
         for (Map<String, Object> map : mapList) {
-            BaseEntity entity = builder.build(map);
+            BaseEntity entity = this.build(builder, map);
 
             if (finder.compareValue(entity)) {
                 return (T) entity;
@@ -236,7 +256,7 @@ public class RedisReader {
         int count = 0;
         List<Map<String, Object>> mapList = this.readHashMapList();
         for (Map<String, Object> map : mapList) {
-            BaseEntity entity = builder.build(map);
+            BaseEntity entity = this.build(builder, map);
 
             if (finder.compareValue(entity)) {
                 count++;

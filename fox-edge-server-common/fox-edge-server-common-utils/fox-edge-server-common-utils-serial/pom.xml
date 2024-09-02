@@ -25,11 +25,11 @@
             <artifactId>jna-platform</artifactId>
             <version>${jna.version}</version>
         </dependency>
+
         <dependency>
             <groupId>cn.fox-tech</groupId>
             <artifactId>fox-edge-server-common-utils-hex</artifactId>
-            <version>1.0.3</version>
-            <scope>compile</scope>
+            <version>${fox-edge-server.version}</version>
         </dependency>
     </dependencies>
 </project>

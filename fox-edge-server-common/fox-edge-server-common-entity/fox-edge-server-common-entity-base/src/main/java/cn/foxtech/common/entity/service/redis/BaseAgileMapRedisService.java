@@ -6,6 +6,7 @@ package cn.foxtech.common.entity.service.redis;
 
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.utils.DifferUtils;
+import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.utils.common.utils.redis.service.RedisService;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -274,7 +275,7 @@ public abstract class BaseAgileMapRedisService {
     private Map<String, BaseEntity> makeEntityMap(List<Map<String, Object>> mapList, BaseEntity builder) throws JsonParseException {
         Map<String, BaseEntity> result = new ConcurrentHashMap<>();
         for (Map<String, Object> map : mapList) {
-            BaseEntity entity = builder.build(map);
+            BaseEntity entity = this.build(builder, map);
             if (entity == null) {
                 continue;
             }
@@ -283,6 +284,21 @@ public abstract class BaseAgileMapRedisService {
         }
 
         return result;
+    }
+
+    private BaseEntity build(BaseEntity builder, Map<String, Object> map) {
+        if (builder == null || map == null) {
+            return null;
+        }
+
+        // 先尝试用高效的builder，来进行数据的转换，如果这个函数重载了的话，是可以转换成功的
+        BaseEntity entity = builder.build(map);
+        if (entity != null) {
+            return entity;
+        }
+
+        // 如果没有重载过上面的builder，那么就用JSON进行转换
+        return JsonUtils.buildObjectWithoutException(map, builder.getClass());
     }
 
     /**

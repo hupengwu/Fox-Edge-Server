@@ -11,6 +11,7 @@ import cn.foxtech.common.process.ProcessUtils;
 import cn.foxtech.common.status.ServiceStatus;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
+import cn.foxtech.common.utils.osinfo.OSInfo;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.common.constants.EdgeServiceConstant;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.QueryParam;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +69,11 @@ public class RepoLocalApplicationController {
     @GetMapping("/process/entities")
     public AjaxResult getProcess() {
         try {
+            // windows版本：不能查询进程，返回个空集合
+            if (OSInfo.isWindows()) {
+                return AjaxResult.success(new ArrayList<>());
+            }
+
             // 从磁盘中查找所有的shell文件信息
             List<Map<String, Object>> confFileInfoList = this.appConfService.getConfFileInfoList();
 
