@@ -113,6 +113,7 @@ public class RepoCloudFIleInstallService {
     public List<Map<String, Object>> queryUriListFile(String modelType) throws IOException {
         Map<String, Object> body = new HashMap<>();
         body.put(RepoCompConstant.filed_model_type, modelType);
+        body.put(RepoCompConstant.filed_arch, this.edgeService.getArch());
         if (RepoCompConstant.repository_type_service.equals(modelType)) {
             body.put(EdgeServiceConstant.filed_work_mode, this.edgeService.getWorkMode());
         }

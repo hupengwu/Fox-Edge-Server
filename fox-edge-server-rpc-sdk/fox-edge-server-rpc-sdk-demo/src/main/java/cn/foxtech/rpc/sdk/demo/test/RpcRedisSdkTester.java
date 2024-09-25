@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * --------------------------------------------------------------------------- */
- 
+
 package cn.foxtech.rpc.sdk.demo.test;
 
 import cn.foxtech.channel.domain.ChannelBaseVO;
@@ -43,6 +43,7 @@ public class RpcRedisSdkTester {
 
     @Autowired
     private RpcSdkRedisClient redisClient;
+
 
     public void test() {
         this.testChannel();
@@ -103,6 +104,7 @@ public class RpcRedisSdkTester {
 
         taskRequestVO.getRequestVOS().add(operateRequestVO1);
         taskRequestVO.getRequestVOS().add(operateRequestVO2);
+        taskRequestVO.setTimeout(operateRequestVO1.getTimeout() + operateRequestVO2.getTimeout());
 
 
         this.redisClient.getDeviceClient().pushDeviceRequest(taskRequestVO);
@@ -244,4 +246,6 @@ public class RpcRedisSdkTester {
         restFulRespondVO = this.redisClient.getManagerClient().queryRespond(uuid, 2000);
         logger.info("管理服务-返回响应：" + JsonUtils.buildJsonWithoutException(restFulRespondVO));
     }
+
+
 }

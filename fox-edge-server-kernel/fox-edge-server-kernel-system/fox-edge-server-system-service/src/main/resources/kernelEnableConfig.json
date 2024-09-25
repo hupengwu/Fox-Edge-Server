@@ -12,8 +12,8 @@
     }
   },
   "configParam": {
-    "readOnly": false,
-    "hide": true
+    "readOnly": true,
+    "hide": false
   },
   "remark": ""
 }

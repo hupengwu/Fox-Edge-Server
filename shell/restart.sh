@@ -75,6 +75,9 @@ spring_param=$springParam
 #python的参数
 py_name=$pyName
 py_param=$pyParam
+#native的参数
+native_name=$nativeName
+native_param=$nativeParam
 
 
 #检查：配置参数是否读取成功
@@ -103,13 +106,17 @@ elif [[ $app_engine == python3 ]]; then
 		echo "读取$app_home/shell/$service_name/service.conf的pyName配置参数失败！"
 		exit
 	fi
+elif [[ $app_engine == native ]]; then
+	if [ -z ${native_name:1:1} ]; then 
+		echo "读取$app_home/shell/$service_name/service.conf的nativeName配置参数失败！"
+		exit
+	fi
 else
 	echo "读取$app_home/shell/$service_name/service.conf的jarName配置参数失败：不支持的appEngine：$app_engine"
 	exit
 fi
 
 #=============================================读取service.ini的业务配置===========================================#
-
 
 #==========================================提取调试参数d 和端口参数p =============================================#
 #提取参数：参数的预处理，将无序的参数，根据前缀p和d，初始化serverPort、debugPort
@@ -182,7 +189,6 @@ else
 fi
 #=======================================生成变量server_port和dubeg_param==========================================#
 
-
 #=========================================组织命令行参数，并重启业务进程==========================================#
 #杀死进程
 ids=`ps -ef | grep $app_home/bin/$app_type/$app_name/ | grep -v 'grep' | awk '{print $2}'`
@@ -204,6 +210,7 @@ if [[ $app_engine == java ]]; then
 	--add-opens java.base/java.net=ALL-UNNAMED  \
 	-jar \
 	$app_home/bin/$app_type/$app_name/$jar_name \
+	--app_engine=$app_engine \
 	--app_type=$app_type \
 	--app_name=$app_name \
 	--env_type=$app_env_type \
@@ -222,9 +229,12 @@ fi
 
 #执行Python3的PY程序
 if [[ $app_engine == python3  || $app_engine == python ]]; then
+
+	#启动进程
 	nohup \
 	$app_engine \
 	$app_home/bin/$app_type/$app_name/$py_name \
+	--app_engine=$app_engine \
 	--app_type=$app_type \
 	--app_name=$app_name \
 	--env_type=$app_env_type \
@@ -235,6 +245,29 @@ if [[ $app_engine == python3  || $app_engine == python ]]; then
 	mysql.host=$app_param_mysql_host mysql.port=$app_param_mysql_port mysql.username=$app_param_mysql_username  mysql.password=$app_param_mysql_password mysql.database=fox_edge \
 	$py_param \
 	>$app_home/logs/start_$py_name.out 2>&1 & \
+	
 fi
+
+
+#执行native的native程序
+if [[ $app_engine == native ]]; then
+
+	#启动进程
+	nohup \
+	$app_home/bin/$app_type/$app_name/$native_name \
+	--app_engine=$app_engine \
+	--app_type=$app_type \
+	--app_name=$app_name \
+	--env_type=$app_env_type \
+	--env_cpu_id=$app_env_cpu_id \
+	--work_mode=$app_env_mode \
+	server.port=$serverPort \
+	redis.host=$app_param_redis_host redis.port=$app_param_redis_port redis.password=$app_param_redis_password \
+	mysql.host=$app_param_mysql_host mysql.port=$app_param_mysql_port mysql.username=$app_param_mysql_username  mysql.password=$app_param_mysql_password mysql.database=fox_edge \
+	$native_param \
+	>$app_home/logs/start_$native_name.out 2>&1 & \
+	
+fi
+
 
 #=========================================组织命令行参数，并重启业务进程==========================================#

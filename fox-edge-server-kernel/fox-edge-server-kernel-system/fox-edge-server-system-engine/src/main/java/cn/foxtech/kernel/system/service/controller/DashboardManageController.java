@@ -136,6 +136,7 @@ public class DashboardManageController {
         Map<String, Object> cpuInfo = OSInfoUtils.getCpuInfo();
         indicators.put("cpuUID", this.edgeService.getCPUID());
         indicators.put("envType", this.edgeService.isDockerEnv());
+        indicators.put("arch", this.edgeService.getArch());
 
         indicators.put("diskSizeTxt", diskInfo.get("sizeTxt"));
         indicators.put("diskSize", diskInfo.getOrDefault("size", 1));

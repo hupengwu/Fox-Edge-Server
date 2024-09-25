@@ -28,7 +28,7 @@
     }
   },
   "configParam": {
-    "readOnly": false,
+    "readOnly": true,
     "hide": false
   },
   "remark": "内核服务：自动生成的系统配置，请勿修改\n\nenable：当前版本，所使用的内核服务\ndisable：当前版本，需要屏蔽的服务"

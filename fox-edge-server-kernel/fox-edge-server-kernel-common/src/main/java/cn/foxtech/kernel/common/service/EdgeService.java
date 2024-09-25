@@ -93,6 +93,14 @@ public class EdgeService {
     }
 
     /**
+     * 获得架构信息
+     * @return
+     */
+    public String getArch() {
+        return System.getProperty("os.arch");
+    }
+
+    /**
      * CPU的ID
      *
      * @return

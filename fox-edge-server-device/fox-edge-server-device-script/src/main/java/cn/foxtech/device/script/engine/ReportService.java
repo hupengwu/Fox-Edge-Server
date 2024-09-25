@@ -37,6 +37,9 @@ public class ReportService {
         // 取出ScriptEngine
         ScriptEngine engine = this.engineService.getScriptEngine(manufacturer, deviceType);
 
+        // 为ScriptEngine填入全局变量
+        this.engineOperator.setRecvEnvValue(engine, recv, params);
+
         // 逐个解码器进行测试
         for (BaseEntity entity : jspReportList) {
             OperateEntity operateEntity = (OperateEntity) entity;
@@ -56,17 +59,16 @@ public class ReportService {
                 }
 
 
-                // 为ScriptEngine填入全局变量
-                this.engineOperator.setRecvEnvValue(engine, recv, params);
-
                 // 将解码结果，根据模式，用各自的字段带回
                 if (FoxEdgeOperate.record.equals(operateEntity.getDataType())) {
                     return this.engineOperator.decodeRecord(engine, operateEntity.getOperateName(), decodeMain, decodeScript);
+                } else if (FoxEdgeOperate.result.equals(operateEntity.getDataType())) {
+                    return this.engineOperator.decodeResult(engine, operateEntity.getOperateName(), decodeMain, decodeScript);
                 } else {
                     return this.engineOperator.decodeStatus(engine, operateEntity.getOperateName(), decodeMain, decodeScript);
                 }
             } catch (Exception e) {
-               continue;
+                continue;
             }
         }
 

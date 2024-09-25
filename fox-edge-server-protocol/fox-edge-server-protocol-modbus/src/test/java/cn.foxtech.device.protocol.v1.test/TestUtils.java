@@ -32,10 +32,18 @@ import java.util.Map;
 
 public class TestUtils {
     public static void main(String[] args) throws Exception {
+        int bits = Float.floatToIntBits(440.000f);
+        float ss1 = Float.intBitsToFloat(bits);
+        ss1 = BitsUtils.bitsToFloat(bits);
+
+
 
         // 45 0f 60 00
         float ss = BitsUtils.bitsToFloat((byte) 0x00, (byte) 0x60, (byte) 0x0f, (byte) 0x45);
         ss = BitsUtils.bitsToFloat((byte) 0xC3, (byte) 0xf5, (byte) 0xFa, (byte) 0x41);
+
+        // 0xC1 0x48 0x00 0x00,-12.5
+        ss = BitsUtils.bitsToFloat((byte) 0x00, (byte) 0x00, (byte) 0x48, (byte) 0xC1);
 
         test1();
 

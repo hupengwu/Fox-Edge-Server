@@ -12,7 +12,6 @@ import cn.foxtech.common.entity.constant.ChannelVOFieldConstant;
 import cn.foxtech.common.rpc.redis.channel.client.RedisListChannelClient;
 import cn.foxtech.common.rpc.redis.device.client.RedisListDeviceClient;
 import cn.foxtech.common.status.ServiceStatus;
-import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
@@ -42,10 +41,14 @@ public class RedisListClientService {
 
 
     public ChannelRespondVO executeChannel(Map<String, Object> request) throws InterruptedException, IOException {
-        // 转换消息 结构
+        ChannelRequestVO requestVO = ChannelRequestVO.buildVO(request);
+
+        // 旧版本的消息结构：channelType
         String channelType = (String) request.remove(ChannelVOFieldConstant.field_channel_type);
-        ChannelRequestVO requestVO = JsonUtils.buildObject(request, ChannelRequestVO.class);
-        requestVO.setType(channelType);
+        if (!MethodUtils.hasEmpty(channelType)) {
+            requestVO.setType(channelType);
+        }
+
 
         return executeChannel(requestVO);
     }

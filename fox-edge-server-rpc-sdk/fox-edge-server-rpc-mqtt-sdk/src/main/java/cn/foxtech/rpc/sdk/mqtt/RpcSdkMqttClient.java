@@ -37,6 +37,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * MQTT远程操作组件
+ * 注意：要在远端的Fox-Edge上，打开manager-service的mqttConfig开关enable参数，并重启manager-service，
+ * 保证它已经连接到MQTT服务器
+ */
 @Component
 public class RpcSdkMqttClient {
     @Autowired

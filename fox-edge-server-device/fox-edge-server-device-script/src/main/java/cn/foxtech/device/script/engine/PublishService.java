@@ -24,10 +24,16 @@ public class PublishService {
     @Autowired
     private ScriptEngineOperator engineOperator;
 
+    @Autowired
+    private ScriptEngineModel engineModel;
+
     public void publish(String deviceName, String manufacturer, String deviceType, OperateEntity operateEntity, Map<String, Object> params, int timeout, FoxEdgeChannelService channelService) throws ProtocolException {
         try {
             // 取出ScriptEngine
             ScriptEngine engine = this.engineService.getScriptEngine(manufacturer, deviceType);
+
+            // 取出：设备模型信息
+            String modelName = (String) operateEntity.getEngineParam().getOrDefault("modelName", "");
 
             // 取出编码/解码信息
             Map<String, Object> encode = (Map<String, Object>) operateEntity.getEngineParam().getOrDefault("encode", new HashMap<>());
@@ -47,6 +53,9 @@ public class PublishService {
 
 
             try {
+                // 为ScriptEngine填入设备模型
+                this.engineModel.setEnvDeviceModel(manufacturer, deviceType, modelName, params);
+
                 // 为ScriptEngine填入全局变量
                 this.engineOperator.setSendEnvValue(engine, params);
 

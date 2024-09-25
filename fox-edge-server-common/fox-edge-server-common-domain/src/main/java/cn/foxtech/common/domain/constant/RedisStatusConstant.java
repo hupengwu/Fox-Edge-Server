@@ -47,8 +47,6 @@ public class RedisStatusConstant {
      * 配置数据：这是一个Map结构，告诉system-manage服务，它有哪些数据，作为初始化配置，放到它的configEntity中
      */
     public static final String field_config_entity = "configEntity";
-
-    public static final String value_model_type_link = "link";
     public static final String value_model_type_channel = "channel";
     public static final String value_model_type_device = "device";
     public static final String value_model_name_device = "device";

@@ -14,8 +14,8 @@
 
     <properties>
         <!-- fox-edge-server version -->
-        <revision>1.1.9</revision>
-        <fox-edge-server.version>1.1.9</fox-edge-server.version>
+        <revision>1.2.0</revision>
+        <fox-edge-server.version>1.2.0</fox-edge-server.version>
         <!-- java version -->
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -43,7 +43,7 @@
         <nashorn.version>15.0</nashorn.version>
         <!-- other version -->
         <apache.commons.version>3.12.0</apache.commons.version>
-        <jna.version>5.10.0</jna.version>
+        <jna.version>5.14.0</jna.version>
         <jackson.version>2.9.0</jackson.version>
         <lombok.version>1.18.28</lombok.version>
         <mica-mqtt.version>2.1.2</mica-mqtt.version>

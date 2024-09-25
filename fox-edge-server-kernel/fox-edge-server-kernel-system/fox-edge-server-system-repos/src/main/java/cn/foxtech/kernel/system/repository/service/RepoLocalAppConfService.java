@@ -60,6 +60,8 @@ public class RepoLocalAppConfService {
         String confFiles = getParam(lineList, "confFiles");
         String pyName = getParam(lineList, "pyName");
         String pythonParam = getParam(lineList, "pythonParam");
+        String nativeName = getParam(lineList, "nativeName");
+        String nativeParam = getParam(lineList, "nativeParam");
 
         // 验证数据
         if (MethodUtils.hasEmpty(appType) || MethodUtils.hasEmpty(appName)) {
@@ -98,6 +100,16 @@ public class RepoLocalAppConfService {
             data.put(ServiceVOFieldConstant.field_path_name, pathName);
             data.put(ServiceVOFieldConstant.field_file_name, pyName);
             data.put(ServiceVOFieldConstant.field_user_param, pythonParam);
+        } else if (appEngine.equals("native")) {
+            // native程序：必填项目nativeName, nativeParam
+            if (MethodUtils.hasEmpty(nativeName, nativeParam)) {
+                throw new ServiceException("配置文件内容，缺失配置项: nativeName, nativeParam");
+            }
+            String pathName = this.pathNameService.getPathName4LocalBin2MainFile(appType, appName, nativeName);
+
+            data.put(ServiceVOFieldConstant.field_path_name, pathName);
+            data.put(ServiceVOFieldConstant.field_file_name, nativeName);
+            data.put(ServiceVOFieldConstant.field_user_param, nativeParam);
         } else {
             throw new ServiceException("配置文件内容，尚未支持的程序类型: " + appEngine);
         }

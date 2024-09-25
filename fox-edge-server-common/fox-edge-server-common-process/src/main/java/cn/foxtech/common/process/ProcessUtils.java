@@ -71,11 +71,6 @@ public class ProcessUtils {
             // ps -aux返回的格式: 0~10是linux的固定信息项目
             Map<String, Object> map = makeShellParam(items);
 
-            // 检查：该命令是否为java/python/python3命令
-            String appEngine = items[10];
-            if (!"java".equals(appEngine) && !"python".equals(appEngine) && !"python3".equals(appEngine)) {
-                continue;
-            }
 
             // 从命令行信息中取出 用户参数
             List<String> params = splitLinuxShellParam(items);
@@ -83,6 +78,18 @@ public class ProcessUtils {
             // 从fox-edge格式的用户参数中，取出用户参数
             Map<String, Object> foxParam = splitFoxEdgeParam(params, path);
             map.putAll(foxParam);
+
+            // 确认引擎类型
+            String appEngine = items[10];
+            if (foxParam.containsKey(ServiceVOFieldConstant.field_app_engine)) {
+                appEngine = (String) foxParam.getOrDefault(ServiceVOFieldConstant.field_app_engine, "java");
+            }
+            if (!"java".equals(appEngine) //
+                    && !"python".equals(appEngine) //
+                    && !"python3".equals(appEngine)//
+                    && !"native".equals(appEngine)) {
+                continue;
+            }
 
             map.put(ServiceVOFieldConstant.field_app_type, appType);
             map.put(ServiceVOFieldConstant.field_app_engine, appEngine);
@@ -278,7 +285,7 @@ public class ProcessUtils {
      */
     private static List<String> splitLinuxShellParam(String[] items) {
         List<String> params = new ArrayList<>();
-        for (int i = 11; i < items.length; i++) {
+        for (int i = 10; i < items.length; i++) {
             params.add(items[i]);
         }
 
@@ -314,6 +321,7 @@ public class ProcessUtils {
         }
 
 
+        String appEngine = findParam(params, "--app_engine=");
         String appName = findParam(params, "--app_name=");
         String springRedisHost = findParam(params, "--spring.redis.host=");
         String springRedisPort = findParam(params, "--spring.redis.port=");
@@ -324,6 +332,9 @@ public class ProcessUtils {
         }
 
 
+        if (appEngine != null && !appEngine.isEmpty()) {
+            result.put(ServiceVOFieldConstant.field_app_engine, appEngine);
+        }
         if (appName != null && !appName.isEmpty()) {
             result.put(ServiceVOFieldConstant.field_app_name, appName);
         }

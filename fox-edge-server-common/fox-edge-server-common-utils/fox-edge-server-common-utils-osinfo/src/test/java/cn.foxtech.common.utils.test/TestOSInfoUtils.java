@@ -9,6 +9,7 @@ import cn.foxtech.common.utils.osinfo.OSInfoUtils;
 public class TestOSInfoUtils {
     public static void main(String[] args) {
         String result = "";
+        result = OSInfoUtils.getArch();
         result = OSInfoUtils.getOSName();
         result =  OSInfoUtils.getCPUID();
         result =  OSInfoUtils.getMAC();

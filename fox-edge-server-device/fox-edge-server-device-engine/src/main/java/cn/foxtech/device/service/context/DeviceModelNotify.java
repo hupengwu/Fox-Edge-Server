@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 @Component
-public class DeviceTemplateNotify implements BaseConsumerTypeNotify {
+public class DeviceModelNotify implements BaseConsumerTypeNotify {
     private Map<String, Object> context;
 
     public void bindContext(Map<String, Object> context) {

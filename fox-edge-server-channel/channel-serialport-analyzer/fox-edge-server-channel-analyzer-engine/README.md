@@ -1,4 +1,4 @@
-# fox-serialport
+# channel-serialport-analyzer
 
 #### 介绍
 linux下的串口服务器

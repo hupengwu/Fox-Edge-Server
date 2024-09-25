@@ -63,7 +63,6 @@ public class ZSKJReadTemperatureAndHumidity {
             throw new ProtocolException("输入参数不能为空:devAddr, modbusMode");
         }
 
-
         // 准备参数
         param.put(ModBusConstants.ADDR, devAddr);
         param.put(ModBusConstants.REG_ADDR, 0);

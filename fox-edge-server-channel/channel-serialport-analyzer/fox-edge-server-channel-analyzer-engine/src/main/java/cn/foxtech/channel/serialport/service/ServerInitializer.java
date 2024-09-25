@@ -207,14 +207,14 @@ public class ServerInitializer {
                                 this.reportService.push(channelName, message);
 
                                 if (this.openLogger) {
-                                    this.console.info("上报报文:\n" + message);
+                                    this.console.info("上报报文:" + channelName + "\n" + message);
                                 }
 
                             } else {
                                 this.reportService.push(channelName, data);
 
                                 if (this.openLogger) {
-                                    this.console.info("串口接收到数据:\n" + HexUtils.byteArrayToHexString(data));
+                                    this.console.info("串口接收到数据:" + channelName + "\n" + HexUtils.byteArrayToHexString(data));
                                 }
                             }
 

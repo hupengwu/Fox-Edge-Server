@@ -40,7 +40,6 @@ public class EntityManageService extends EntityServiceManager {
         consumer.add(ChannelEntity.class.getSimpleName());
         consumer.add(OperateEntity.class.getSimpleName());
         consumer.add(ConfigEntity.class.getSimpleName());
-        consumer.add(OperateEntity.class.getSimpleName());
         consumer.add(DeviceModelEntity.class.getSimpleName());
 
         // 数据的发布模式

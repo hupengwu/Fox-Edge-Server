@@ -55,6 +55,9 @@ spring_param=$springParam
 #python的参数
 py_name=$pyName
 py_param=$pyParam
+#native的参数
+native_name=$nativeName
+native_param=$nativeParam
 
 
 #检查：配置参数是否读取成功
@@ -83,6 +86,11 @@ elif [[ $app_engine == python3 ]]; then
 		echo "读取$app_home/shell/$model_name/service.conf的pyName配置参数失败！"
 		exit
 	fi
+elif [[ $app_engine == native ]]; then
+	if [ -z ${native_name:1:1} ]; then 
+		echo "读取$app_home/shell/$model_name/service.conf的nativeName配置参数失败！"
+		exit
+	fi
 else
 	echo "读取$app_home/shell/$model_name/service.conf的jarName配置参数失败：不支持的appEngine：$app_engine"
 	exit
@@ -106,6 +114,14 @@ fi
 
 #复制py:if [[]],双中括号，处理空格的问题:python的项目，是多个py文件组成的，所以要复制目录
 if [[ -n ${py_name:1:1} ]]; then 
+	#删除旧的目录
+	rm -rf $app_home/bin/$component/$model_name
+	#复制新的目录
+	cp -rf $app_home/repository/service/$model_name/$version/$stage/$component/tar/bin/$component/$model_name $app_home/bin/$component
+fi
+
+#复制native:if [[]],双中括号，处理空格的问题:native的项目，是多个native文件组成的，所以要复制目录
+if [[ -n ${native_name:1:1} ]]; then 
 	#删除旧的目录
 	rm -rf $app_home/bin/$component/$model_name
 	#复制新的目录

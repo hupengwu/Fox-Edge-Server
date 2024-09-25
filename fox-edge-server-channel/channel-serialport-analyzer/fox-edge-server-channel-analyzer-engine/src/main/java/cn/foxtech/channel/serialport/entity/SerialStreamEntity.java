@@ -32,7 +32,33 @@ public class SerialStreamEntity {
     }
 
     public synchronized void movHead(byte[] data) {
-        System.arraycopy(buff, data.length, buff, 0, buff.length - data.length);
-        this.end -= data.length;
+        if (this.buff.length < data.length) {
+            return;
+        }
+
+        // 寻找data在buff中的位置，因为前面可能有其他垃圾数据
+        int index = -1;
+        for (int i = 0; i < this.buff.length - data.length; i++) {
+            boolean finded = true;
+            for (int j = 0; j < data.length; j++) {
+                if (data[j] == this.buff[i + j]) {
+                    continue;
+                }
+                finded = false;
+                break;
+            }
+
+            if (finded) {
+                index = i;
+                break;
+            }
+        }
+        if (index < 0) {
+            index = 0;
+        }
+
+        // 截取数据：就是移动后面的数据到前面去
+        System.arraycopy(this.buff, data.length + index, this.buff, 0, this.buff.length - (data.length+ index));
+        this.end -= (data.length + index);
     }
 }

@@ -29,7 +29,7 @@ public class DeviceModelContext implements IApplicationContext {
     private EntityManageService entityManageService;
 
     @Autowired
-    private DeviceTemplateNotify typeNotify;
+    private DeviceModelNotify typeNotify;
 
     public void initialize() {
         ApplicationContext.initialize(this);

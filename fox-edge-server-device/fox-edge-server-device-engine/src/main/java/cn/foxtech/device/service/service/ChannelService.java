@@ -60,13 +60,13 @@ public class ChannelService implements FoxEdgeChannelService {
         // 进一步获取通道的详细信息
         DeviceEntity deviceEntity = this.entityManageService.getDeviceEntity(deviceName);
         if (deviceEntity == null) {
-            throw new ServiceException("在数据库找不大该设备实体：" + deviceName);
+            throw new ServiceException("在数据库找不到该设备实体：" + deviceName);
         }
 
         // 通道实体
         ChannelEntity channelEntity = this.entityManageService.getChannelEntity(deviceEntity.getChannelName(), deviceEntity.getChannelType());
         if (channelEntity == null) {
-            throw new ServiceException("在数据库找不大该设备实体对应的ChannelEntity：" + deviceEntity.getDeviceName());
+            throw new ServiceException("在数据库找不到该设备实体对应的ChannelEntity：" + deviceEntity.getDeviceName());
         }
 
         // 与设备交换数据

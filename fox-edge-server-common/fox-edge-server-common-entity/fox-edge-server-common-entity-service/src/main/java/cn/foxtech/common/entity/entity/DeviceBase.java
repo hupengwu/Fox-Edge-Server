@@ -32,7 +32,7 @@ public class DeviceBase extends BaseEntity {
 
 
     /**
-     * 通道名称：连接设备的服务名，比如"serialport"
+     * 通道类型名：连接设备的服务名，比如"serialport"
      */
     private String channelType;
 

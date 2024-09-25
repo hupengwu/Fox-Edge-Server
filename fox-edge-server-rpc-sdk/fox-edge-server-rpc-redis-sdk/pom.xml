@@ -39,6 +39,5 @@
             <artifactId>fox-edge-server-protocol-anno</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
-
     </dependencies>
 </project>

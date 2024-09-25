@@ -62,9 +62,6 @@ public class CommonInitialize {
         // 启动同步线程
         this.entityManageScheduler.schedule();
 
-        // 启动周期任务线程
-        this.periodTasksScheduler.schedule();
-
         // 添加周期任务
         this.createPeriodTask();
 
@@ -74,6 +71,9 @@ public class CommonInitialize {
     }
 
     private void createPeriodTask() {
+        // 启动周期任务线程
+        this.periodTasksScheduler.schedule();
+        
         // 检查：本地工作模式下，向gateway服务手动注册路由
         if ("local".equals(this.routerMode)) {
             this.periodTasksScheduler.insertPeriodTask(this.gateWayRouteUpdateTask);
