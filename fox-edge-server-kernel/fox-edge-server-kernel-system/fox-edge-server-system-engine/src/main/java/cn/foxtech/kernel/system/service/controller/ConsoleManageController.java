@@ -73,7 +73,7 @@ public class ConsoleManageController {
             // 用户没有填写过滤条件，那么直接在redis分页取数据
             Long total = this.consoleService.size();
             long pageEndId = total - 1 - pageSize * (pageNum - 1);
-            long pageStartId = total - 1 - pageSize - pageSize * (pageNum - 1);
+            long pageStartId = total - pageSize - pageSize * (pageNum - 1);
             if (pageStartId < 0) {
                 pageStartId = 0;
             }
