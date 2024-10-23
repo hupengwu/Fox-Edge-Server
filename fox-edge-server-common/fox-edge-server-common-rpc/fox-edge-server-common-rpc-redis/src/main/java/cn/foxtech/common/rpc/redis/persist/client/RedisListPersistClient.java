@@ -26,8 +26,8 @@ public class RedisListPersistClient {
     @Autowired
     private RedisListPersistClientValueRequest valueRequest;
 
-    public RestFulRespondVO popManageRespond(long timeout, TimeUnit unit) {
-        return this.manageRespond.popRespond(timeout, unit);
+    public RestFulRespondVO popManageRespond(String hashKey, long timeout) {
+        return this.manageRespond.get(hashKey, timeout);
     }
 
 

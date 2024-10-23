@@ -8,8 +8,10 @@ app_home=${shell_path%/*}
 #命令行说明： 
 #    参数1：模块/业务，例如 system/controller-service
 #    参数2：带-p的服务端口或者-d的调试端口，例如 -p9001 -d192.168.3.133:5005
-#命令行范例：
+#命令行范例（JAVA）：
 #./restart.sh system/controller-service -p9001 -d192.168.3.133:5005
+#命令行范例（GO）：
+#./restart.sh system/controller-native -p9001 -g2345
 
 #======================================================命令行参数=================================================#
 #用户参数，例如：system/controller-service
@@ -141,7 +143,17 @@ funcParam()
 		funcValue=${str:2}
 		return 0
 	fi
+	
+		#检查：参数的前缀是否为g
+	if [ ${str:0:2} = "-g" ]; then  		
+		funcValue=${str:2}
+		return 0
+	fi
 }
+
+#初始化默认值
+debugPort=""
+debugEnv=""
 
 #提取参数1
 str=$service_port1
@@ -152,6 +164,12 @@ fi
 if [ -n "$str" ] && [ ${str:0:2} = "-d" ]; then  
   funcParam $str
   debugPort=$funcValue
+  debugEnv="java"
+fi
+if [ -n "$str" ] && [ ${str:0:2} = "-g" ]; then  
+  funcParam $str
+  debugPort=$funcValue
+  debugEnv="go"
 fi
 
 
@@ -164,9 +182,17 @@ fi
 if [ -n "$str" ] && [ ${str:0:2} = "-d" ]; then  
   funcParam $str
   debugPort=$funcValue
+  debugEnv="java"
+fi
+if [ -n "$str" ] && [ ${str:0:2} = "-g" ]; then  
+  funcParam $str
+  debugPort=$funcValue
+  debugEnv="go"
 fi
 
+
 #==========================================提取调试参数d 和端口参数p =============================================#
+
 
 
 #=======================================生成变量server_port和dubeg_param==========================================#
@@ -177,15 +203,6 @@ if [ -n "$serverPort" ]; then
 else
   #如果用户没有输入了端口参数，那么生成个空参数，也就是默认使用jar自己预制的端口参数
   server_port= 
-fi
-
-#如果配置了debugPort
-if [ -n "$debugPort" ]; then  
-  #如果用户输入了端口参数，那么生成--server.port=###的配置参数
-  dubeg_param=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=$debugPort 
-else
-  #如果用户没有输入了端口参数，那么生成个空参数，也就是默认使用jar自己预制的端口参数
-  dubeg_param= 
 fi
 #=======================================生成变量server_port和dubeg_param==========================================#
 
@@ -202,6 +219,17 @@ cd $app_home
 
 #执行JAVA的JAR程序
 if [[ $app_engine == java ]]; then
+
+
+	#如果配置了debugPort
+	if [ -n "$debugPort" ]; then  
+		#如果用户输入了端口参数，那么生成--server.port=###的配置参数
+		dubeg_param=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=$debugPort 
+	else
+		#如果用户没有输入了端口参数，那么生成个空参数，也就是默认使用jar自己预制的端口参数
+		dubeg_param= 
+	fi
+	
 
 	#启动进程
 	nohup \
@@ -252,9 +280,23 @@ fi
 #执行native的native程序
 if [[ $app_engine == native ]]; then
 
+
+	#如果配置了debugPort
+	if [ -n "$debugPort" ]  && [ $debugEnv = "go" ]; then  
+		#如果用户输入了端口参数，那么生成--server.port=###的配置参数
+		dubeg_head="dlv --listen=:$debugPort --headless=true --api-version=2 --accept-multiclient exec "
+		dubeg_args=" -- "
+	else
+		#如果用户没有输入了端口参数，那么生成个空参数，也就是默认使用jar自己预制的端口参数
+		dubeg_head=" "
+		dubeg_args=" -- "
+	fi
+
 	#启动进程
 	nohup \
+	$dubeg_head \
 	$app_home/bin/$app_type/$app_name/$native_name \
+	$dubeg_args \
 	--app_engine=$app_engine \
 	--app_type=$app_type \
 	--app_name=$app_name \

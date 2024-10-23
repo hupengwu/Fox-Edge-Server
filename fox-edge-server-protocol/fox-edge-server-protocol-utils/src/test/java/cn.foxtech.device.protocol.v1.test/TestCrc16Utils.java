@@ -24,7 +24,12 @@ import cn.foxtech.device.protocol.v1.utils.enums.CrcType;
 
 public class TestCrc16Utils {
     public static void main(String[] args) {
-        byte[] pdu = HexUtils.hexStringToByteArray("01 7F 03 01 81 1F E1");
+        byte[] pdu = HexUtils.hexStringToByteArray("FC CF 01 05 00 00 02 C0 30 C3");
+        int sum = 0;
+        for (int i=0; i<pdu.length-1; i++){
+            sum += pdu[i] & 0xff;
+        }
+
        // int crc = Crc16Utils.getCRC16(pdu, 0, pdu.length - 2, CrcType.CRC16MODBUS);
         int crc = Crc16Utils.getCRC16(pdu, 0, pdu.length - 2, 0x8005,0xFFFF,0x0000,true);
 

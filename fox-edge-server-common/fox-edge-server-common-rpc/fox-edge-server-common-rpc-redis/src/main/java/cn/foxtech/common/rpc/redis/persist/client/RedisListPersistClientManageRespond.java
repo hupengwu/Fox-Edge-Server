@@ -5,12 +5,11 @@
 package cn.foxtech.common.rpc.redis.persist.client;
 
 import cn.foxtech.common.domain.vo.RestFulRespondVO;
-import cn.foxtech.common.utils.redis.list.RedisListService;
+import cn.foxtech.common.utils.redis.value.RedisValueService;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 接收列表
@@ -18,13 +17,13 @@ import java.util.concurrent.TimeUnit;
  * 发送者： persist
  */
 @Component
-public class RedisListPersistClientManageRespond extends RedisListService {
+public class RedisListPersistClientManageRespond extends RedisValueService {
     @Getter
     private final String key = "fox.edge.list:persist:manage:respond";
 
-    public RestFulRespondVO popRespond(long timeout, TimeUnit unit) {
+    public RestFulRespondVO get(String hashKey, long timeout) {
         try {
-            Object map = super.pop(timeout, unit);
+            Object map = super.get(hashKey, timeout);
             if (map == null) {
                 return null;
             }

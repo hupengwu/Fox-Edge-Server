@@ -4,7 +4,8 @@
 
 package cn.foxtech.common.rpc.redis.persist.server;
 
-import cn.foxtech.common.utils.redis.list.RedisListService;
+import cn.foxtech.common.domain.vo.RestFulRespondVO;
+import cn.foxtech.common.utils.redis.value.RedisValueService;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
@@ -14,13 +15,11 @@ import org.springframework.stereotype.Component;
  * 发送者：persist
  */
 @Component
-public class RedisListPersistServerManageRespond extends RedisListService {
+public class RedisListPersistServerManageRespond extends RedisValueService {
     @Getter
     private final String key = "fox.edge.list:persist:manage:respond";
 
-    @Override
-    public void push(Object value) {
-        super.push(value);
+    public void pushRespond(RestFulRespondVO value) {
+        super.set(value.getUuid(), value);
     }
-
 }

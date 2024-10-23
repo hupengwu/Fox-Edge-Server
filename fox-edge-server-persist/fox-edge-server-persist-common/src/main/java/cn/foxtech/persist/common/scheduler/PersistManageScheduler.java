@@ -47,7 +47,8 @@ public class PersistManageScheduler extends PeriodTaskService {
     /**
      * 上次处理时间
      */
-    private long lastTime = 0;
+    private long lastTimeHistory = 0;
+    private long lastTimeOperate = 0;
 
     @Override
     public void execute(long threadId) throws Exception {
@@ -85,10 +86,10 @@ public class PersistManageScheduler extends PeriodTaskService {
 
             // 检查：执行周期是否到达
             long currentTime = System.currentTimeMillis();
-            if ((currentTime - this.lastTime) < period * 1000) {
+            if ((currentTime - this.lastTimeOperate) < period * 1000) {
                 return;
             }
-            this.lastTime = currentTime;
+            this.lastTimeOperate = currentTime;
 
             // 除了最近的maxCount条数据，旧数据全部删除
             this.entityManageService.getOperateRecordEntityService().delete(maxCount);

@@ -59,8 +59,6 @@ public class OperateService {
         if (OperateVOFieldConstant.value_engine_javascript.equals(operateEntity.getEngineType())) {
             this.scriptEngineExecutor.publish(deviceName, deviceEntity.getManufacturer(), deviceEntity.getDeviceType(), operateEntity, param, timeout, channelService);
         }
-
-        throw new ServiceException("不支持该编码引擎类型：" + operateEntity.getEngineType());
     }
 
     /**

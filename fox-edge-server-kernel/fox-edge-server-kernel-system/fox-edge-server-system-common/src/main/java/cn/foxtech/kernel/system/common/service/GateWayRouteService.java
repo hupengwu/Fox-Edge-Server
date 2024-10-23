@@ -59,12 +59,12 @@ public class GateWayRouteService {
             shortAppName = shortAppName.substring(0, shortAppName.length() - "-service".length());
         }
 
-        Map<String, Object> args = new HashMap<>();
-        args.put("_genkey_0", "/" + appType + "/" + shortAppName + "/**");
+        Map<String, Object> predicateArgs = new HashMap<>();
+        predicateArgs.put("_genkey_0", "/" + appType + "/" + shortAppName + "/**");
 
         Map<String, Object> predicate = new HashMap<>();
         predicate.put("name", "Path");
-        predicate.put("args", args);
+        predicate.put("args", predicateArgs);
 
         List<Map<String, Object>> predicates = new ArrayList<>();
         predicates.add(predicate);
@@ -73,8 +73,15 @@ public class GateWayRouteService {
         String uri = this.buildUri(appName, appType, port);
 
         // 构造过滤器
-        List<String> filters = new ArrayList<>();
-        filters.add("StripPrefix=2");
+        Map<String, Object> filterArgs = new HashMap<>();
+        filterArgs.put("_genkey_0", "2");
+
+        Map<String, Object> filter = new HashMap<>();
+        filter.put("name", "StripPrefix");
+        filter.put("args", filterArgs);
+
+        List<Map<String, Object>> filters = new ArrayList<>();
+        filters.add(filter);
 
         Map<String, Object> body = new HashMap<>();
         body.put("id", this.buildId(appName, appType));
@@ -82,6 +89,8 @@ public class GateWayRouteService {
         body.put("uri", uri);
         body.put("filters", filters);
         body.put("order", 0);
+        body.put("metadata", new HashMap<>());
+
 
         return body;
     }

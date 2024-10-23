@@ -39,8 +39,6 @@ public class RedisListPersistServer {
     }
 
     public void pushManageRequest(RestFulRespondVO respondVO) {
-        this.manageRespond.push(respondVO);
+        this.manageRespond.pushRespond(respondVO);
     }
-
-
 }

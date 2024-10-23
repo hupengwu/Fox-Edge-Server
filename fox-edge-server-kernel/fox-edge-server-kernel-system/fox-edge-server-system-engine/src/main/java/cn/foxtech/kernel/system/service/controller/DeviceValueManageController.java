@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/device/value")
@@ -199,7 +198,7 @@ public class DeviceValueManageController {
         this.persistService.pushManageRequest(requestVO);
 
         // 等待消息的到达：根据动态key
-        RestFulRespondVO respond = this.persistService.popManageRespond(10, TimeUnit.SECONDS);
+        RestFulRespondVO respond = this.persistService.popManageRespond(requestVO.getUuid(), 10 * 1000);
         if (respond == null) {
             throw new ServiceException("服务响应超时！");
         }

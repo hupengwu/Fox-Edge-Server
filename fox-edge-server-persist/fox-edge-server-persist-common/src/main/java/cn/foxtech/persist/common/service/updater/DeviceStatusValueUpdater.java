@@ -254,12 +254,7 @@ public class DeviceStatusValueUpdater {
         Set<String> dbServiceKeys = new HashSet<>();
         List<BaseEntity> entityList = this.entityManageService.getDeviceObjectEntityService().selectEntityList((QueryWrapper) deviceObjectEntity.makeDeviceWrapperKey());
         for (BaseEntity entity : entityList) {
-            deviceObjectEntity = (DeviceObjectEntity) entity;
-            deviceObjectEntity.setDeviceName(valueEntity.getDeviceName());
-            deviceObjectEntity.setManufacturer(valueEntity.getManufacturer());
-            deviceObjectEntity.setDeviceType(valueEntity.getDeviceType());
-            deviceObjectEntity.setObjectName(deviceObjectEntity.getObjectName());
-            dbServiceKeys.add(deviceObjectEntity.makeServiceKey());
+            dbServiceKeys.add(entity.makeServiceKey());
         }
 
         // 将新增的数据，作为对象保存到数据库
