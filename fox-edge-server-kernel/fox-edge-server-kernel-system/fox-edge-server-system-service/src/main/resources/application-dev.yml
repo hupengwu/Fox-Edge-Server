@@ -32,7 +32,7 @@ spring:
       router: "local"               # 本地模式：是否为本地工作模式
 
   redis:
-    host: localhost
+    host: 192.168.1.23
     port: 6379
     password: 12345678
     jedis:

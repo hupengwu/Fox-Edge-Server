@@ -79,6 +79,5 @@
             <artifactId>fox-edge-server-common-utils-osinfo</artifactId>
             <version>${fox-edge-server.version}</version>
         </dependency>
-
     </dependencies>
 </project>

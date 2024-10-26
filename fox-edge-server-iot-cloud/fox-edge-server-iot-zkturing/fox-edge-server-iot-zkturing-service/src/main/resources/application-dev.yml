@@ -4,7 +4,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.1.5:3306/fox_edge?useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://192.168.1.23:3306/fox_edge?useUnicode=true&characterEncoding=utf8
     username: fox-edge
     password: 12345678
 
@@ -18,7 +18,7 @@ spring:
 
   redis:
     database: 0
-    host: 192.168.1.5
+    host: 192.168.1.23
     port: 6379
     password: 12345678
     pool:

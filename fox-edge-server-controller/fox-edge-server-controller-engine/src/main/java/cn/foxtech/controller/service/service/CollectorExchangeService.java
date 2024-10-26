@@ -151,8 +151,7 @@ public class CollectorExchangeService extends PeriodTaskService {
 
             // 将批量操作发送给设备
             TaskRespondVO taskRespondVO = this.deviceOperateService.execute(taskRequestVO);
-            List<OperateRespondVO> respondVOS = taskRespondVO.getRespondVOS();
-            if (respondVOS == null || respondVOS.isEmpty()) {
+            if (!isValid(taskRespondVO)){
                 return;
             }
 
@@ -167,6 +166,23 @@ public class CollectorExchangeService extends PeriodTaskService {
             logger.info(e);
         }
 
+    }
+
+    private boolean isValid(TaskRespondVO taskRespondVO) {
+        List<OperateRespondVO> respondVOS = taskRespondVO.getRespondVOS();
+        if (respondVOS == null || respondVOS.isEmpty()) {
+            return false;
+        }
+
+        for (OperateRespondVO operateRespondVO : respondVOS) {
+            if (operateRespondVO.getData() == null) {
+                continue;
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

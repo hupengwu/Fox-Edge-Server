@@ -99,14 +99,14 @@ public class DeviceManageController {
         return this.selectEntityListPage(filter, "DESC", pageNum, pageSize);
     }
 
-    private AjaxResult selectEntityListPage(String filter, String order, long pageNmu, long pageSize) {
+    private AjaxResult selectEntityListPage(String filter, String order, long pageNum, long pageSize) {
         try {
             // 从数据库的deviceObject中查询总数
             String selectCount = PageUtils.makeSelectCountSQL("tb_device", filter);
             Integer total = this.entityService.getMapper().executeSelectCount(selectCount);
 
             // 分页查询数据
-            String selectPage = PageUtils.makeSelectSQLPage("tb_device", filter, order, total, pageNmu, pageSize);
+            String selectPage = PageUtils.makeSelectSQLPage("tb_device", filter, order, total, pageNum, pageSize);
             List<DevicePo> poList = this.entityService.getMapper().executeSelectData(selectPage);
             List<BaseEntity> entityList = DeviceEntityMaker.makePoList2EntityList(poList);
             List<Map<String, Object>> mapList = EntityVOBuilder.buildVOList(entityList);

@@ -12,7 +12,7 @@ import cn.foxtech.common.utils.syncobject.SyncFlagObjectMap;
 import cn.foxtech.common.utils.uuid.UuidUtils;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.iot.common.remote.RemoteMqttService;
-import cn.foxtech.zkturing.service.service.ZKTuringlService;
+import cn.foxtech.zkturing.service.service.ZKTuringService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +26,7 @@ public class RemoteService {
     @Autowired
     private RemoteMqttService remoteMqttService;
     @Autowired
-    private ZKTuringlService turinglService;
+    private ZKTuringService turinglService;
 
     private Map<String, Object> executePost(String topic, Map<String, Object> body) throws InterruptedException {
         // 补齐uuid

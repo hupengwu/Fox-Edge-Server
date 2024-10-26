@@ -9,7 +9,7 @@ import cn.foxtech.common.entity.entity.*;
 import cn.foxtech.iot.common.initialize.InitializeCommon;
 import cn.foxtech.zkturing.service.scheduler.DeviceRecordPushScheduler;
 import cn.foxtech.zkturing.service.scheduler.DeviceValuePushScheduler;
-import cn.foxtech.zkturing.service.service.ZKTuringlService;
+import cn.foxtech.zkturing.service.service.ZKTuringService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -33,7 +33,7 @@ public class Initialize implements CommandLineRunner {
     private DeviceRecordPushScheduler deviceRecordPushScheduler;
 
     @Autowired
-    private ZKTuringlService turinglService;
+    private ZKTuringService turinglService;
 
     @Override
     public void run(String... args) {

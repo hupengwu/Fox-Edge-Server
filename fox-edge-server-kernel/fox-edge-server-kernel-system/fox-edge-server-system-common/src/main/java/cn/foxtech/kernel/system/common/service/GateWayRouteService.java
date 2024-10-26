@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * --------------------------------------------------------------------------- */
- 
+
 package cn.foxtech.kernel.system.common.service;
 
 import cn.foxtech.common.domain.constant.RedisTopicConstant;
@@ -134,11 +134,6 @@ public class GateWayRouteService {
         restFulRequestVO.setUuid(UUID.randomUUID().toString());
 
         this.publisher.sendMessage(RedisTopicConstant.topic_gateway_request, restFulRequestVO);
-    }
-
-    public void unregisterRouter(String appName, String appType) {
-        String id = this.buildId(appName, appType);
-        this.unregisterRouter(id);
     }
 
     public void unregisterRouter(String id) {

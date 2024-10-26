@@ -37,8 +37,8 @@ public class InitialConfigNotifier {
                 continue;
             }
 
-            Map<String, Object> publishEntity = (Map<String, Object>) value.get(RedisStatusConstant.field_config_entity);
-            if (publishEntity == null) {
+            Map<String, Object> configEntity = (Map<String, Object>) value.get(RedisStatusConstant.field_config_entity);
+            if (configEntity == null) {
                 continue;
             }
 

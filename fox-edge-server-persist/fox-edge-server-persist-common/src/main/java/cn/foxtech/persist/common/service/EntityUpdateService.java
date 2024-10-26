@@ -56,6 +56,10 @@ public class EntityUpdateService {
     @SuppressWarnings("unchecked")
     public void updateDeviceRespond(OperateRespondVO operateRespondVO, String clientName) {
         try {
+            if (operateRespondVO.getData() == null){
+                return;
+            }
+
             String deviceName = operateRespondVO.getDeviceName();
             String deviceType = operateRespondVO.getDeviceType();
             String manufacturer = operateRespondVO.getManufacturer();
@@ -70,7 +74,6 @@ public class EntityUpdateService {
             if (deviceMap == null) {
                 return;
             }
-
 
             // 取出ID，后面需要用到
             deviceEntity.setId(NumberUtils.makeLong(deviceMap.get(DeviceVOFieldConstant.field_id)));

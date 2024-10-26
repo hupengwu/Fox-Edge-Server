@@ -14,7 +14,7 @@ import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import cn.foxtech.iot.common.remote.RemoteMqttService;
 import cn.foxtech.iot.common.service.EntityManageService;
-import cn.foxtech.zkturing.service.service.ZKTuringlService;
+import cn.foxtech.zkturing.service.service.ZKTuringService;
 import cn.foxtech.zkturing.service.vo.DeviceValueNotifyVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,13 +28,22 @@ public class DeviceValuePushScheduler extends PeriodTaskService {
     private RemoteMqttService remoteMqttService;
 
     @Autowired
-    private ZKTuringlService turinglService;
+    private ZKTuringService turingService;
 
     @Autowired
     private EntityManageService entityManageService;
 
+    private long lastTime = 0;
+
     @Override
     public void execute(long threadId) throws Exception {
+        // 周期性执行
+        long currentTime = System.currentTimeMillis();
+        if ((currentTime - this.lastTime) / 1000 <= this.turingService.getTimeSpan()) {
+            return;
+        }
+        this.lastTime = currentTime;
+
         // 弹出全部数据
         List<Object> voList = this.notifyDeviceValues();
 
@@ -45,7 +54,7 @@ public class DeviceValuePushScheduler extends PeriodTaskService {
         for (List<Object> list : lists) {
             List<Map<String, Object>> mapList = this.extendDeviceParam(list);
             String body = JsonUtils.buildJson(mapList);
-            this.remoteMqttService.getClient().publish(this.turinglService.getPublish() + "/device/value", body.getBytes(StandardCharsets.UTF_8));
+            this.remoteMqttService.getClient().publish(this.turingService.getPublish() + "/device/value", body.getBytes(StandardCharsets.UTF_8));
         }
     }
 
