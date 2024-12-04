@@ -134,9 +134,6 @@ public class OperateMonitorTaskManageController {
                 if (body.containsKey(OperateMonitorTaskVOFieldConstant.field_manufacturer)) {
                     result &= entity.getManufacturer().equals(body.get(OperateMonitorTaskVOFieldConstant.field_manufacturer));
                 }
-                if (body.containsKey(OperateMonitorTaskVOFieldConstant.field_manufacturer)) {
-                    result &= entity.getManufacturer().equals(body.get(OperateMonitorTaskVOFieldConstant.field_manufacturer));
-                }
 
                 return result;
             });
@@ -164,6 +161,7 @@ public class OperateMonitorTaskManageController {
 
     @PostMapping("entity")
     public AjaxResult insertEntity(@RequestBody Map<String, Object> params) {
+        params.remove("id");
         return this.insertOrUpdate(params);
     }
 

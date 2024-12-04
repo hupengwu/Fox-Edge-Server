@@ -64,12 +64,12 @@ public class RepoLocalCompService {
                     || RepoCompVOFieldConstant.value_comp_type_jsp_decoder.equals(compType) // jsp-decoder
                     || RepoCompVOFieldConstant.value_comp_type_file_template.equals(compType)// file-template
             ) {
-                String manufacturer = (String) compEntity.getCompParam().getOrDefault(OperateVOFieldConstant.field_manufacturer, "");
-                String deviceType = (String) compEntity.getCompParam().getOrDefault(OperateVOFieldConstant.field_device_type, "");
-
                 if (MethodUtils.hasEmpty(keyWord)) {
                     return true;
                 }
+
+                String manufacturer = (String) compEntity.getCompParam().getOrDefault(OperateVOFieldConstant.field_manufacturer, "");
+                String deviceType = (String) compEntity.getCompParam().getOrDefault(OperateVOFieldConstant.field_device_type, "");
 
                 if (manufacturer.toLowerCase().contains(keyWord.toLowerCase())) {
                     return true;
@@ -147,7 +147,7 @@ public class RepoLocalCompService {
         throw new ServiceException("该组件类型，不支持本地上传");
     }
 
-    private Map<String, Object> installJspDecoderEntity(Map<String, Object> data) throws IOException {
+    private Map<String, Object> installJspDecoderEntity(Map<String, Object> data)  {
         String deviceType = (String) data.get(OperateVOFieldConstant.field_device_type);
         String manufacturer = (String) data.get(OperateVOFieldConstant.field_manufacturer);
         String scriptId = (String) data.get(OperateVOFieldConstant.field_script_id);
@@ -176,6 +176,16 @@ public class RepoLocalCompService {
             repoCompEntity = existCompEntity;
         }
 
+        // 组织成天MAP关系
+        Map<String, OperateEntity> dstOperateMap = new HashMap<>();
+        for (Map<String, Object> operate : operates) {
+            OperateEntity operateEntity = new OperateEntity();
+            operateEntity.bind(operate);
+            operateEntity.setManufacturer(manufacturer);
+            operateEntity.setDeviceType(deviceType);
+
+            dstOperateMap.put(operateEntity.getOperateName(), operateEntity);
+        }
 
         // 获得已经存在的操作列表
         List<BaseEntity> operateList = this.entityManageService.getEntityList(OperateEntity.class, (Object value) -> {
@@ -190,16 +200,6 @@ public class RepoLocalCompService {
             return entity.getDeviceType().equals(deviceType);
         });
 
-        // 组织成天MAP关系
-        Map<String, OperateEntity> dstOperateMap = new HashMap<>();
-        for (Map<String, Object> operate : operates) {
-            OperateEntity operateEntity = new OperateEntity();
-            operateEntity.bind(operate);
-            operateEntity.setManufacturer(manufacturer);
-            operateEntity.setDeviceType(deviceType);
-
-            dstOperateMap.put(operateEntity.getOperateName(), operateEntity);
-        }
 
         Map<String, BaseEntity> srcOperateMap = ContainerUtils.buildMapByKey(operateList, OperateEntity::getOperateName);
 
@@ -247,7 +247,7 @@ public class RepoLocalCompService {
         return null;
     }
 
-    private Map<String, Object> installJsnDecoderEntity(Map<String, Object> data) throws IOException {
+    private Map<String, Object> installJsnDecoderEntity(Map<String, Object> data)  {
         String deviceType = (String) data.get(DeviceModelVOFieldConstant.field_device_type);
         String manufacturer = (String) data.get(DeviceModelVOFieldConstant.field_manufacturer);
         String modelId = (String) data.get(DeviceModelVOFieldConstant.field_model_id);
@@ -276,17 +276,6 @@ public class RepoLocalCompService {
             repoCompEntity = existCompEntity;
         }
 
-
-        // 获得已经存在的操作列表
-        List<BaseEntity> objectList = this.entityManageService.getEntityList(DeviceModelEntity.class, (Object value) -> {
-            DeviceModelEntity entity = (DeviceModelEntity) value;
-
-            if (!entity.getManufacturer().equals(manufacturer)) {
-                return false;
-            }
-            return entity.getDeviceType().equals(deviceType);
-        });
-
         // 组织成天MAP关系
         Map<String, DeviceModelEntity> dstOperateMap = new HashMap<>();
         for (Map<String, Object> object : objects) {
@@ -297,6 +286,17 @@ public class RepoLocalCompService {
 
             dstOperateMap.put(modelEntity.getModelName(), modelEntity);
         }
+
+
+        // 获得已经存在的操作列表
+        List<BaseEntity> objectList = this.entityManageService.getEntityList(DeviceModelEntity.class, (Object value) -> {
+            DeviceModelEntity entity = (DeviceModelEntity) value;
+
+            if (!entity.getManufacturer().equals(manufacturer)) {
+                return false;
+            }
+            return entity.getDeviceType().equals(deviceType);
+        });
 
         Map<String, BaseEntity> srcOperateMap = ContainerUtils.buildMapByKey(objectList, DeviceModelEntity::getModelName);
 

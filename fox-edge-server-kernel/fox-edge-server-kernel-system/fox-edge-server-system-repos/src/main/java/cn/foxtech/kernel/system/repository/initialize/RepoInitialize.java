@@ -6,10 +6,10 @@ package cn.foxtech.kernel.system.repository.initialize;
 
 
 import cn.foxtech.common.domain.constant.ServiceVOFieldConstant;
-import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.kernel.common.service.EdgeService;
 import cn.foxtech.kernel.system.common.scheduler.PeriodTasksScheduler;
+import cn.foxtech.kernel.system.common.service.ManageConfigService;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
 import cn.foxtech.kernel.system.repository.service.*;
 import cn.foxtech.kernel.system.repository.task.*;
@@ -34,7 +34,7 @@ public class RepoInitialize {
     private ProcessGcTask processGcTask;
 
     @Autowired
-    private RepoCloudFIleInstallService installService;
+    private RepoCloudFileInstallService installService;
 
     @Autowired
     private RepoCloudFileInstallStatus installStatus;
@@ -65,7 +65,7 @@ public class RepoInitialize {
      * 初始化配置：需要感知运行期的用户动态输入的配置，所以直接使用这个组件
      */
     @Autowired
-    private InitialConfigService configService;
+    private ManageConfigService configService;
 
     public void initialize() {
         this.engineParamService.initialize();
@@ -73,6 +73,7 @@ public class RepoInitialize {
         this.configService.initialize("kernelEnableConfig", "kernelEnableConfig.json");
         this.configService.initialize("repositoryConfig", "repositoryConfig.json");
         this.configService.initialize("systemProcessConfig", "systemProcessConfig.json");
+        this.configService.initialize("serviceStartConfig", "serviceStartConfig.json");
 
         // 创建周期性任务
         this.createPeriodTask();

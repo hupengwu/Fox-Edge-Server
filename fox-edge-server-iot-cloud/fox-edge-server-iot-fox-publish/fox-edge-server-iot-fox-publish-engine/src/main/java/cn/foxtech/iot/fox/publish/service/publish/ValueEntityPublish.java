@@ -4,7 +4,10 @@
 
 package cn.foxtech.iot.fox.publish.service.publish;
 
+import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.DeviceEntity;
+import cn.foxtech.common.entity.entity.ExtendConfigEntity;
+import cn.foxtech.common.entity.utils.ExtendConfigUtils;
 import cn.foxtech.common.utils.SplitUtils;
 import cn.foxtech.common.utils.bean.BeanMapUtils;
 import cn.foxtech.common.utils.json.JsonUtils;
@@ -69,26 +72,46 @@ public class ValueEntityPublish {
     private List<Map<String, Object>> extendDeviceParam(List<EntityChangedNotifyVO> entityList) {
         List<Map<String, Object>> resultList = new ArrayList<>();
 
+        List<BaseEntity> extendConfigList = this.entityManageService.getEntityList(ExtendConfigEntity.class);
+        Map<String, ExtendConfigEntity> extendMap = ExtendConfigUtils.getExtendConfigList(extendConfigList, DeviceEntity.class);
+
         for (Object object : entityList) {
             EntityChangedNotifyVO entityChangedNotifyVO = (EntityChangedNotifyVO) object;
-
-            Map<String, Object> result = BeanMapUtils.objectToMap(entityChangedNotifyVO);
-            resultList.add(result);
-
             if (entityChangedNotifyVO.getEntity() == null) {
                 continue;
             }
 
-            Map<String, Object> map = BeanMapUtils.objectToMap(entityChangedNotifyVO.getEntity());
-            result.put("entity", map);
+            Map<String, Object> result = JsonUtils.buildObjectWithoutException(entityChangedNotifyVO,Map.class);
 
+            // 查询相关设备
             DeviceEntity exist = this.entityManageService.getEntity(entityChangedNotifyVO.getEntity().makeServiceKey(), DeviceEntity.class);
             if (exist == null) {
                 continue;
             }
 
-            map.put("deviceParam", exist.getDeviceParam());
-            map.put("extendParam", exist.getExtendParam());
+            Map<String, Object> deviceMap = JsonUtils.buildObjectWithoutException(exist,Map.class);
+            if (deviceMap == null) {
+                continue;
+            }
+
+            // 扩展配置
+            ExtendConfigUtils.extendMapList(deviceMap, extendMap);
+
+            // 从扩展配置中，取出是否上传的标记
+            Map<String,Object> extendParam = (Map<String,Object>)deviceMap.get("extendParam");
+            Object extendField = extendParam.get(this.iotFoxPublishService.getExtendField());
+
+            // 检测：是否配置了上传属性
+            if (extendField != null && !Boolean.TRUE.equals(extendField)){
+                continue;
+            }
+
+
+            Map<String,Object> map = (Map<String,Object>)result.get("entity");
+            map.put("deviceParam", deviceMap.get("deviceParam"));
+            map.put("extendParam", deviceMap.get("extendParam"));
+
+            resultList.add(result);
         }
 
         return resultList;

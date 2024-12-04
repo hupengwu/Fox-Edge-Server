@@ -10,7 +10,7 @@ import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.common.service.EdgeService;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
 import cn.foxtech.kernel.system.repository.constants.RepoStatusConstant;
-import cn.foxtech.kernel.system.repository.service.RepoCloudFIleInstallService;
+import cn.foxtech.kernel.system.repository.service.RepoCloudFileInstallService;
 import cn.foxtech.kernel.system.repository.service.RepoLocalAppLoadService;
 import cn.foxtech.kernel.system.repository.service.RepoLocalJarFileConfigService;
 import cn.foxtech.kernel.system.repository.service.RepoProductService;
@@ -31,7 +31,7 @@ public class RepoProductManageController {
      * 仓库服务
      */
     @Autowired
-    private RepoCloudFIleInstallService installService;
+    private RepoCloudFileInstallService installService;
 
 
     @Autowired
@@ -92,12 +92,12 @@ public class RepoProductManageController {
         List<Map<String, Object>> comps = (List<Map<String, Object>>) entity.get("comps");
         for (Map<String, Object> comp : comps) {
             // 提取业务参数
-            String modelName = (String) comp.get(RepoCompConstant.filed_model_name);
-            String modelType = (String) comp.get(RepoCompConstant.filed_model_type);
+            String modelName = (String) comp.get(RepoCompConstant.field_model_name);
+            String modelType = (String) comp.get(RepoCompConstant.field_model_type);
 
             // 取出最新的文件版本信息
-            Map<String, Object> lastVersion = (Map<String, Object>) comp.get(RepoCompConstant.filed_last_version);
-            List<Map<String, Object>> versions = (List<Map<String, Object>>) comp.get(RepoCompConstant.filed_versions);
+            Map<String, Object> lastVersion = (Map<String, Object>) comp.get(RepoCompConstant.field_last_version);
+            List<Map<String, Object>> versions = (List<Map<String, Object>>) comp.get(RepoCompConstant.field_versions);
 
             // 立即扫描本地仓库中的组件状态，并将状态保存到缓存
             this.installService.scanLocalStatusAndMd5(modelType, modelName, lastVersion, versions);
@@ -112,25 +112,25 @@ public class RepoProductManageController {
 
     private void extendModelStatus(Map<String, Object> comp) {
         // 提取业务参数
-        String modelName = (String) comp.get(RepoCompConstant.filed_model_name);
-        String modelType = (String) comp.get(RepoCompConstant.filed_model_type);
+        String modelName = (String) comp.get(RepoCompConstant.field_model_name);
+        String modelType = (String) comp.get(RepoCompConstant.field_model_type);
 
-        Map<String, Object> usedVersion = (Map<String, Object>) comp.get(RepoCompConstant.filed_used_version);
+        Map<String, Object> usedVersion = (Map<String, Object>) comp.get(RepoCompConstant.field_used_version);
         if (usedVersion != null) {
             return;
         }
 
         usedVersion = new HashMap<>();
-        usedVersion.put(RepoCompConstant.filed_version, "unknown");
+        usedVersion.put(RepoCompConstant.field_version, "unknown");
 
         // 扫描已经安装的模块状态
         Map<String, Object> modelStatus = this.installService.scanModelStatus(modelType, modelName);
         if (!MethodUtils.hasEmpty(modelStatus)) {
-            usedVersion.put(RepoCompConstant.filed_version, modelStatus.get(RepoCompConstant.filed_version));
-            usedVersion.put(RepoCompConstant.filed_status, RepoStatusConstant.status_installed);
+            usedVersion.put(RepoCompConstant.field_version, modelStatus.get(RepoCompConstant.field_version));
+            usedVersion.put(RepoCompConstant.field_status, RepoStatusConstant.status_installed);
         }
 
-        comp.put(RepoCompConstant.filed_used_version, usedVersion);
+        comp.put(RepoCompConstant.field_used_version, usedVersion);
 
 
     }
@@ -142,8 +142,8 @@ public class RepoProductManageController {
         List<Map<String, Object>> comps = (List<Map<String, Object>>) entity.get("comps");
         for (Map<String, Object> comp : comps) {
             // 提取业务参数
-            String modelName = (String) comp.get(RepoCompConstant.filed_model_name);
-            String modelType = (String) comp.get(RepoCompConstant.filed_model_type);
+            String modelName = (String) comp.get(RepoCompConstant.field_model_name);
+            String modelType = (String) comp.get(RepoCompConstant.field_model_type);
 
             // 检查参数是否为空
             if (MethodUtils.hasEmpty(modelName, modelType)) {
@@ -160,7 +160,7 @@ public class RepoProductManageController {
             }
 
             if (RepoCompConstant.repository_type_service.equals(modelType)) {
-                String component = (String) comp.get(RepoCompConstant.filed_component);
+                String component = (String) comp.get(RepoCompConstant.field_component);
                 if (MethodUtils.hasEmpty(component)) {
                     continue;
                 }

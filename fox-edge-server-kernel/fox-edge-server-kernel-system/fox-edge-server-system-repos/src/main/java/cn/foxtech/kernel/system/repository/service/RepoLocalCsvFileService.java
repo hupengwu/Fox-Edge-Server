@@ -59,12 +59,12 @@ public class RepoLocalCsvFileService {
     }
 
     public List<Map<String, Object>> queryFileList(RepoCompEntity compEntity) {
-        String modelName = (String) compEntity.getCompParam().get(RepoCompConstant.filed_model_name);
+        String modelName = (String) compEntity.getCompParam().get(RepoCompConstant.field_model_name);
         if (MethodUtils.hasEmpty(modelName)) {
             throw new ServiceException("找不到对应的模块名称:" + modelName);
         }
 
-        String version = (String) compEntity.getCompParam().get(RepoCompConstant.filed_version);
+        String version = (String) compEntity.getCompParam().get(RepoCompConstant.field_version);
         if (MethodUtils.hasEmpty(version)) {
             throw new ServiceException("找不到对应的版本:" + version);
         }
@@ -76,11 +76,11 @@ public class RepoLocalCsvFileService {
         List<Map<String, Object>> resultList = this.queryTemplateFileList(modelName);
         for (Map<String, Object> map : resultList) {
             if (modelName != null) {
-                map.put(RepoCompConstant.filed_model_name, modelName);
+                map.put(RepoCompConstant.field_model_name, modelName);
             }
 
             if (version != null) {
-                map.put(RepoCompConstant.filed_version, version);
+                map.put(RepoCompConstant.field_version, version);
             }
 
             if (manufacturer != null) {
@@ -106,8 +106,8 @@ public class RepoLocalCsvFileService {
             throw new ServiceException("找不到对应的组件:" + compId);
         }
 
-        String modelName = (String) compEntity.getCompParam().get(RepoCompConstant.filed_model_name);
-        String version = (String) compEntity.getCompParam().get(RepoCompConstant.filed_version);
+        String modelName = (String) compEntity.getCompParam().get(RepoCompConstant.field_model_name);
+        String version = (String) compEntity.getCompParam().get(RepoCompConstant.field_version);
         if (MethodUtils.hasEmpty(modelName, version)) {
             throw new ServiceException("找不到对应的模块信息: modelName, version");
         }
@@ -193,9 +193,9 @@ public class RepoLocalCsvFileService {
     private Map<String, Object> getFileNameInfo(String modelName, String modelVer, String version, File childFile) {
         Map<String, Object> data = new HashMap<>();
 
-        data.put(RepoCompConstant.filed_model_name, modelName);
-        data.put(RepoCompConstant.filed_version, version);
-        data.put(RepoCompConstant.filed_component, RepoCompConstant.repository_type_template);
+        data.put(RepoCompConstant.field_model_name, modelName);
+        data.put(RepoCompConstant.field_version, version);
+        data.put(RepoCompConstant.field_component, RepoCompConstant.repository_type_template);
         data.put("fileName", childFile.getName());
 
         // 乱码文件的异常处理
@@ -213,7 +213,7 @@ public class RepoLocalCsvFileService {
     private Map<String, Object> getFileNameInfo(File childFile) {
         Map<String, Object> data = new HashMap<>();
 
-        data.put(RepoCompConstant.filed_component, RepoCompConstant.repository_type_template);
+        data.put(RepoCompConstant.field_component, RepoCompConstant.repository_type_template);
         data.put("fileName", childFile.getName());
 
         // 乱码文件的异常处理

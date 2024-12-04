@@ -127,12 +127,15 @@ public class GateWayRouteUpdateTask extends PeriodTask {
                 }
 
                 // 检查：是否为gateway进程，它本身管路由，不需要配置路由
-                if (ServiceVOFieldConstant.field_type_kernel.equals(appType) && ServiceVOFieldConstant.field_app_gateway.equals(appName)) {
+                if (this.isGateWay(appType,appName)){
                     continue;
                 }
 
+                // 重置appName：将manager-native 改名为manager-service
+                appName = this.getAppName(appType, appName);
+
                 // 检查：该进程是否在gateway这边进行了注册动态路由
-                String id = this.gateWayRouteService.buildId(appName, appType);
+                String id =  this.gateWayRouteService.buildId(appName, appType);
                 if (routes.containsKey(id)) {
                     // 场景1：路由内容一致，不需要处理
                     String uri = this.gateWayRouteService.buildUri(appName,appType,appPort);
@@ -219,5 +222,16 @@ public class GateWayRouteUpdateTask extends PeriodTask {
         });
 
         return result;
+    }
+
+    private boolean isGateWay(String appType,String appName) {
+        return "kernel".equals(appType) && (appName.equals("gateway-service") || appName.equals("gateway-native"));
+    }
+    private String getAppName(String appType,String appName) {
+        if ("kernel".equals(appType) && (appName.equals("manager-service") || appName.equals("manager-native"))){
+            appName = "manager-service";
+        }
+
+        return appName;
     }
 }

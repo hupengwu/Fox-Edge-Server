@@ -5,8 +5,8 @@
 package cn.foxtech.channel.domain;
 
 public class ChannelVOConstant {
-    public static final String filed_operate = "operate";
-    public static final String filed_param = "param";
+    public static final String field_operate = "operate";
+    public static final String field_param = "param";
 
     public static final String value_operate_get_status = "getStatus";
 

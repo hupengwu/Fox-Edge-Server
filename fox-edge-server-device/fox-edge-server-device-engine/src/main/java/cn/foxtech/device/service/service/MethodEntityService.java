@@ -7,8 +7,8 @@ package cn.foxtech.device.service.service;
 import cn.foxtech.common.entity.constant.Constants;
 import cn.foxtech.common.entity.constant.OperateVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
-import cn.foxtech.common.entity.entity.ConfigEntity;
 import cn.foxtech.common.entity.entity.OperateMethodEntity;
+import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.ContainerUtils;
 import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,19 +37,26 @@ public class MethodEntityService {
     @Autowired
     private EntityManageService entityManageService;
 
+    @Autowired
+    private InitialConfigService configService;
+
 
     /**
      * 扫描解码器
      */
     public void scanJarFile() {
         // 读取解码器配置信息：这个配置是跟system服务约定的名称，尽管实际使用者，可能是device-service或者device-graavm
-        ConfigEntity configEntity = this.entityManageService.getConfigEntity("device-service", "system", "decoderConfig");
-        if (configEntity == null) {
+        Map<String, Object> configValue = this.configService.getConfigParam("decoderConfig");
+        if (configValue == null) {
             logger.error("找不到decoderConfig的配置信息");
             return;
         }
 
-        List<Map<String, Object>> configList = (List<Map<String, Object>>) configEntity.getConfigValue().get("list");
+        List<Map<String, Object>> configList = (List<Map<String, Object>>) configValue.getOrDefault("list",new ArrayList<>());
+        if (configList == null) {
+            logger.error("找不到decoderConfig的配置信息");
+            return;
+        }
 
         // 取出需要加载的文件名
         List<String> jarFileList = new ArrayList<>();

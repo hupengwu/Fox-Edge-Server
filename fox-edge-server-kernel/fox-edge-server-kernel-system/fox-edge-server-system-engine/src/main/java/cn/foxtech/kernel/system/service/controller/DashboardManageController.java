@@ -74,7 +74,7 @@ public class DashboardManageController {
         indicators.put("deviceTypeCount", deviceType.size());
     }
 
-    private void getDeviceStatusEntityIndicator(Map<String, Object> indicators) throws JsonParseException {
+    private void getDeviceStatusEntityIndicator(Map<String, Object> indicators) {
         RedisReader redisReader = this.entityManageService.getRedisReader(DeviceStatusEntity.class);
         Map<String, Object> dataMap = redisReader.readHashMap();
 
@@ -151,7 +151,7 @@ public class DashboardManageController {
 
         indicators.put("swapTotalTxt", memInfo.get("swapTotalTxt"));
         indicators.put("swapTotal", memInfo.getOrDefault("swapTotal", 1));
-        indicators.put("swapUsed", memInfo.getOrDefault("swapUsed", 1));
+        indicators.put("swapUsed", memInfo.getOrDefault("swapUsed", 0));
         indicators.put("swapFree", memInfo.getOrDefault("swapFree", 1));
 
 

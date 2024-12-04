@@ -85,6 +85,10 @@ public abstract class EntityBaseManager {
         this.entityRedisComponent.getReader().add(entityType);
     }
 
+    public void addWriter(String entityType) {
+        this.entityRedisComponent.getWriter().add(entityType);
+    }
+
     public void addReader(Set<String> entityTypes) {
         this.entityRedisComponent.getReader().addAll(entityTypes);
     }

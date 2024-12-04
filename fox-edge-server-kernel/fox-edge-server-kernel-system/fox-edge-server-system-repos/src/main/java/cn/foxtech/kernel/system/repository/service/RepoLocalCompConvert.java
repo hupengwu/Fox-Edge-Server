@@ -35,8 +35,8 @@ public class RepoLocalCompConvert {
      * @return
      */
     public Map<String, Object> convertCloud2Local(Map<String, Object> cloud) {
-        String modelType = (String) cloud.get(RepoCompConstant.filed_model_type);
-        String modelName = (String) cloud.get(RepoCompConstant.filed_model_name);
+        String modelType = (String) cloud.get(RepoCompConstant.field_model_type);
+        String modelName = (String) cloud.get(RepoCompConstant.field_model_name);
         String manufacturer = (String) cloud.get(OperateVOFieldConstant.field_manufacturer);
         String deviceType = (String) cloud.get(OperateVOFieldConstant.field_device_type);
         String compId = (String) cloud.get(RepoCompVOFieldConstant.field_id);
@@ -66,8 +66,8 @@ public class RepoLocalCompConvert {
             compParam.put(OperateVOFieldConstant.field_manufacturer, manufacturer);
             compParam.put(OperateVOFieldConstant.field_device_type, deviceType);
             compParam.put(RepoCompVOFieldConstant.field_comp_id, compId);
-            compParam.put(RepoCompConstant.filed_model_name, modelName);
-            compParam.put(RepoCompConstant.filed_file_name, fileName);
+            compParam.put(RepoCompConstant.field_model_name, modelName);
+            compParam.put(RepoCompConstant.field_file_name, fileName);
 
             return localMap;
         }
@@ -86,7 +86,7 @@ public class RepoLocalCompConvert {
             compParam.put(OperateVOFieldConstant.field_manufacturer, manufacturer);
             compParam.put(OperateVOFieldConstant.field_device_type, deviceType);
             compParam.put(RepoCompVOFieldConstant.field_comp_id, compId);
-            compParam.put(RepoCompConstant.filed_model_name, modelName);
+            compParam.put(RepoCompConstant.field_model_name, modelName);
 
             return localMap;
         }
@@ -155,8 +155,8 @@ public class RepoLocalCompConvert {
         Map<String, Object> compParam = (Map<String, Object>) localMap.get(RepoCompVOFieldConstant.field_comp_param);
         compParam.put(OperateVOFieldConstant.field_manufacturer, manufacturer);
         compParam.put(OperateVOFieldConstant.field_device_type, deviceType);
-        compParam.put(RepoCompConstant.filed_model_name, modelName);
-        compParam.put(RepoCompConstant.filed_file_name, fileName);
+        compParam.put(RepoCompConstant.field_model_name, modelName);
+        compParam.put(RepoCompConstant.field_file_name, fileName);
 
         return localMap;
     }
@@ -187,8 +187,8 @@ public class RepoLocalCompConvert {
         Map<String, Object> compParam = (Map<String, Object>) localMap.get(RepoCompVOFieldConstant.field_comp_param);
         compParam.put(OperateVOFieldConstant.field_manufacturer, operateEntity.getManufacturer());
         compParam.put(OperateVOFieldConstant.field_device_type, operateEntity.getDeviceType());
-        compParam.put(RepoCompConstant.filed_model_name, modelName);
-        compParam.put(RepoCompConstant.filed_file_name, fileName);
+        compParam.put(RepoCompConstant.field_model_name, modelName);
+        compParam.put(RepoCompConstant.field_file_name, fileName);
 
         return localMap;
     }

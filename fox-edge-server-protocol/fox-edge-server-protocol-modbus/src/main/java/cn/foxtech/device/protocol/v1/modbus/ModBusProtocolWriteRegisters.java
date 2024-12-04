@@ -70,6 +70,7 @@ public class ModBusProtocolWriteRegisters {
         if (writeRegistersRequest == null) {
             throw new ProtocolException("编码失败");
         }
+        writeRegistersRequest.getEntity().setDevAddr(devAddr.byteValue());
 
         // 准备参数
         param.put(ModBusConstants.ADDR, devAddr);

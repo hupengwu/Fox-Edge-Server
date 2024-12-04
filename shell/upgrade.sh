@@ -5,7 +5,7 @@ shell_path=$(cd `dirname $0`; pwd)
 app_home=${shell_path%/*}
 
 #命令行范例：
-#./upgrade.sh kernel manager-service 1.0.0 master 9000
+#./upgrade.sh kernel manager-native 1.2.0 master 9101
 
 #======================================================命令行参数=================================================#
 #用户参数，例如：./upgrade.sh kernel manager-service 1.0.0 master 9000
@@ -109,6 +109,7 @@ mkdir -p $app_home/bin/$component/$model_name
 #复制jar:if [[]],双中括号，处理空格的问题
 if [[ -n ${jar_name:1:1} ]]; then 
 	cp -rf $app_home/repository/service/$model_name/$version/$stage/$component/tar/bin/$component/$model_name/$jar_name $app_home/bin/$component/$model_name
+	#修改权限
 	chmod 755 $app_home/bin/$component/$model_name/$jar_name
 fi
 
@@ -126,6 +127,8 @@ if [[ -n ${native_name:1:1} ]]; then
 	rm -rf $app_home/bin/$component/$model_name
 	#复制新的目录
 	cp -rf $app_home/repository/service/$model_name/$version/$stage/$component/tar/bin/$component/$model_name $app_home/bin/$component
+	#修改权限
+	chmod 755 $app_home/bin/$component/$model_name/$native_name
 fi
  
 #复制loader:if [[]],双中括号，处理空格的问题

@@ -1,0 +1,26 @@
+{
+  "configValue": {
+    "list": [
+      {
+        "load": true,
+        "fileName": "fox-edge-server-protocol-anno.jar",
+        "createTime": 1715591370021,
+        "updateTime": 1715591370021
+      },
+      {
+        "load": true,
+        "fileName": "fox-edge-server-protocol-core.jar",
+        "createTime": 1696654997304,
+        "updateTime": 1696654997304
+      },
+      {
+        "load": true,
+        "fileName": "fox-edge-server-protocol-utils.jar",
+        "createTime": 1715571004981,
+        "updateTime": 1715571004981
+      }
+    ]
+  },
+  "configParam": {},
+  "remark": "设备服务的解码器加载配置。这是管理服务的配置界面自动化生成的数据，不要去手动编辑，请通过配置界面来设置。\n\n\"load\": 是否启用该解码器,\n\"fileName\": 解码器JAR包的文件名称,\n\"createTime\": 配置项的创建时间,\n\"updateTime\": 1配置项的修改时间,"
+}

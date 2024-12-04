@@ -50,7 +50,7 @@ public class RepoLocalJarFileCompScanner {
                 return false;
             }
 
-            String fileName = (String) compEntity.getCompParam().get(RepoCompConstant.filed_file_name);
+            String fileName = (String) compEntity.getCompParam().get(RepoCompConstant.field_file_name);
             if (fileName == null) {
                 return false;
             }

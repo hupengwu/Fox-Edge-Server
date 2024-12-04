@@ -1,6 +1,6 @@
 value_name,value_index,bit_index,bit_length,value_type,magnification,determine,remark
 系统输出电压,1070,0,16,int,1,,
-系统输出电流,1071,0,16,float,0.1,,
+系统输出电流,1071,0,16,fix-float,0.1,,
 系统输出功率,1072,0,16,int,1,,
 系统输出频率,1073,0,16,float,0.1,,
 负载比,1074,0,16,int,1,,

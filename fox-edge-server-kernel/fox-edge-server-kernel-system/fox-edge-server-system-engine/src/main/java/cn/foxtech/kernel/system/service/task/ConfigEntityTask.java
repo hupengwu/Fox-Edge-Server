@@ -11,6 +11,7 @@ import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTask;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTaskType;
+import cn.foxtech.kernel.common.service.KernelServiceName;
 import cn.foxtech.kernel.system.common.service.EntityManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,6 +29,9 @@ public class ConfigEntityTask extends PeriodTask {
 
     @Autowired
     private EntityManageService entityManageService;
+
+    @Autowired
+    private KernelServiceName kernelServiceName;
 
     @Override
     public int getTaskType() {
@@ -54,6 +58,12 @@ public class ConfigEntityTask extends PeriodTask {
                 String serviceType = (String) map.get(RedisStatusConstant.field_service_type);
                 String serviceName = (String) map.get(RedisStatusConstant.field_service_name);
                 Map<String, Object> configMap = (Map<String, Object>) map.get(RedisStatusConstant.field_config_entity);
+
+                // 检查：是否为会引起冲突的manager-native，如果是，那么在JAVA版本中需要自动忽略
+                if (this.kernelServiceName.isManagerNative(serviceType, serviceName)) {
+                    continue;
+                }
+
                 for (String key : configMap.keySet()) {
                     Object serverConfig = configMap.get(key);
                     if (!(serverConfig instanceof Map)) {

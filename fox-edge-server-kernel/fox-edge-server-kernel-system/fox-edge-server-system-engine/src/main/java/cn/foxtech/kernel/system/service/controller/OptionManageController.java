@@ -80,7 +80,7 @@ public class OptionManageController {
         String camelField = (String) params.get("field");
 
         if (MethodUtils.hasEmpty(entityType, camelField)) {
-            throw new ServiceException("缺少参数：entityType, camelField");
+            throw new ServiceException("缺少参数：entityType, field");
         }
 
 
@@ -184,7 +184,6 @@ public class OptionManageController {
         if (this.entityOptionManager.isNumberField(entityType, underField1)) {
             fieldValue1 = Long.parseLong(value1);
         }
-
 
         // 检查：第三个字段是否允许
         if (!this.entityOptionManager.isPermit(entityType, underValue)) {

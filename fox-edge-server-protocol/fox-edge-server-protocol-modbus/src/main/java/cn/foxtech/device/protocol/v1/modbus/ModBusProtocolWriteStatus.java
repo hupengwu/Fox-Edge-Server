@@ -69,6 +69,7 @@ public class ModBusProtocolWriteStatus {
         if (writeStatusRequest == null) {
             throw new ProtocolException("编码失败");
         }
+        writeStatusRequest.getEntity().setDevAddr(devAddr.byteValue());
 
         // 准备参数
         param.put(ModBusConstants.ADDR, devAddr);

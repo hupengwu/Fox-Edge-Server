@@ -4,7 +4,9 @@
 
 package cn.foxtech.iot.fox.publish.service.service;
 
+import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.LocalConfigService;
+import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.osinfo.OSInfoUtils;
 import cn.foxtech.iot.common.remote.RemoteMqttService;
 import cn.foxtech.iot.fox.publish.service.remote.MqttHandler;
@@ -29,15 +31,21 @@ public class IotFoxPublishService {
     @Getter
     private String subscribe = "";
 
+    @Getter
+    private String extendField = "";
+
     @Autowired
     private RemoteMqttService remoteMqttService;
     @Autowired
-    private LocalConfigService localConfigService;
+    private InitialConfigService configService;
 
 
     public void initialize() {
+        Map<String, Object> configValue = configService.getConfigParam("serverConfig");
         // 取出全局配置参数
-        Map<String, Object> topic = (Map<String, Object>) this.localConfigService.getConfig().getOrDefault("topic", new HashMap<>());
+        Map<String, Object> topic = (Map<String, Object>) configValue.getOrDefault("topic", new HashMap<>());
+        Map<String, Object> extendField = (Map<String, Object>) configValue.getOrDefault("extend", new HashMap<>());
+        this.extendField = (String)extendField.getOrDefault("extendField","iot-fox-publish");
 
         String publish = (String) topic.getOrDefault("publish", "");
         String subscribe = (String) topic.getOrDefault("subscribe", "");

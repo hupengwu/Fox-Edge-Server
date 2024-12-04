@@ -35,7 +35,7 @@ import java.util.*;
  * 云端组件的安装
  */
 @Component
-public class RepoCloudFIleInstallService {
+public class RepoCloudFileInstallService {
     private final String siteUri = "http://www.fox-tech.cn";
 
     /**
@@ -112,10 +112,10 @@ public class RepoCloudFIleInstallService {
      */
     public List<Map<String, Object>> queryUriListFile(String modelType) throws IOException {
         Map<String, Object> body = new HashMap<>();
-        body.put(RepoCompConstant.filed_model_type, modelType);
-        body.put(RepoCompConstant.filed_arch, this.edgeService.getArch());
+        body.put(RepoCompConstant.field_model_type, modelType);
+        body.put(RepoCompConstant.field_arch, this.edgeService.getArch());
         if (RepoCompConstant.repository_type_service.equals(modelType)) {
-            body.put(EdgeServiceConstant.filed_work_mode, this.edgeService.getWorkMode());
+            body.put(EdgeServiceConstant.field_work_mode, this.edgeService.getWorkMode());
         }
 
         Map<String, Object> respond = this.cloudRemoteService.queryCloudCompFileList(body);
@@ -130,20 +130,20 @@ public class RepoCloudFIleInstallService {
 
 
     public void extendLocalStatus(Map<String, Object> entity) {
-        String modelType = (String) entity.getOrDefault(RepoCompConstant.filed_model_type, "");
-        String modelName = (String) entity.getOrDefault(RepoCompConstant.filed_model_name, "");
-        Map<String, Object> lastVersion = (Map<String, Object>) entity.getOrDefault(RepoCompConstant.filed_last_version, new HashMap<>());
-        List<Map<String, Object>> versions = (List<Map<String, Object>>) entity.getOrDefault(RepoCompConstant.filed_versions, "");
-        String component = (String) entity.getOrDefault(RepoCompConstant.filed_component, "");
+        String modelType = (String) entity.getOrDefault(RepoCompConstant.field_model_type, "");
+        String modelName = (String) entity.getOrDefault(RepoCompConstant.field_model_name, "");
+        Map<String, Object> lastVersion = (Map<String, Object>) entity.getOrDefault(RepoCompConstant.field_last_version, new HashMap<>());
+        List<Map<String, Object>> versions = (List<Map<String, Object>>) entity.getOrDefault(RepoCompConstant.field_versions, "");
+        String component = (String) entity.getOrDefault(RepoCompConstant.field_component, "");
 
 
         // 验证last版本的破损状态
         int status = this.installStatus.verifyMd5Status(modelType, modelName, component, lastVersion);
         if (RepoStatusConstant.status_damaged_package == status) {
-            lastVersion.put(RepoCompConstant.filed_status, status);
+            lastVersion.put(RepoCompConstant.field_status, status);
         } else {
             if (this.installStatus.verifyUpgradeStatus(modelType, modelName, lastVersion, versions)) {
-                lastVersion.put(RepoCompConstant.filed_status, RepoStatusConstant.status_need_upgrade);
+                lastVersion.put(RepoCompConstant.field_status, RepoStatusConstant.status_need_upgrade);
             }
         }
 
@@ -151,11 +151,11 @@ public class RepoCloudFIleInstallService {
         // 验证明细包的破损状态
         for (Map<String, Object> verEntity : versions) {
             status = this.installStatus.verifyMd5Status(modelType, modelName, component, verEntity);
-            verEntity.put(RepoCompConstant.filed_status, status);
+            verEntity.put(RepoCompConstant.field_status, status);
 
             // 检查：该版本是否为【已安装】版本，如果是，则该版本为当前版本，因为【已安装】版本为正在使用的唯一版本
             if (RepoStatusConstant.status_installed == status) {
-                entity.put(RepoCompConstant.filed_used_version, verEntity);
+                entity.put(RepoCompConstant.field_used_version, verEntity);
             }
         }
     }
@@ -163,8 +163,8 @@ public class RepoCloudFIleInstallService {
     public void insertRepoCompEntity(String modelType, String modelName) throws IOException {
         // 向云端查询组件信息
         Map<String, Object> body = new HashMap<>();
-        body.put(RepoCompConstant.filed_model_type, modelType);
-        body.put(RepoCompConstant.filed_model_name, modelName);
+        body.put(RepoCompConstant.field_model_type, modelType);
+        body.put(RepoCompConstant.field_model_name, modelName);
         Map<String, Object> respond = this.cloudRemoteService.queryCloudCompFileList(body);
 
         // 取出组件信息
@@ -225,9 +225,9 @@ public class RepoCloudFIleInstallService {
     }
 
     public void scanLocalStatusAndMd5(String modelType, String modelName, Map<String, Object> versionMap) {
-        String version = (String) versionMap.get(RepoCompConstant.filed_version);
-        String stage = (String) versionMap.get(RepoCompConstant.filed_stage);
-        String component = (String) versionMap.get(RepoCompConstant.filed_component);
+        String version = (String) versionMap.get(RepoCompConstant.field_version);
+        String stage = (String) versionMap.get(RepoCompConstant.field_stage);
+        String component = (String) versionMap.get(RepoCompConstant.field_component);
 
         // 扫描本地的状态
         this.installStatus.scanLocalStatus(modelType, modelName, version, stage, component);
@@ -272,7 +272,7 @@ public class RepoCloudFIleInstallService {
 
         if (RepoCompConstant.repository_type_decoder.equals(modelType)) {
             String fileName = modelName + ".jar";
-            Map<String, Object> jarInfoMap = this.jarFileService.readJarFiles(fileName);
+            Map<String, Object> jarInfoMap = this.jarFileService.readJarFile(fileName);
             return jarInfoMap;
         }
         if (RepoCompConstant.repository_type_template.equals(modelType)) {
@@ -306,12 +306,12 @@ public class RepoCloudFIleInstallService {
      * @return
      */
     public boolean testUrlFileCanBeOpen(String modelType, String modelName, String version, String pathName) {
-        String host = (String) this.configService.getConfigValueOrDefault(RepoConfigConstant.filed_config_name, RepoConfigConstant.filed_config_file, this.siteUri);
+        String host = (String) this.configService.getConfigValueOrDefault(RepoConfigConstant.field_config_name, RepoConfigConstant.field_config_file, this.siteUri);
         if (MethodUtils.hasEmpty(host)) {
             throw new ServiceException("尚未配置仓库的uri，请先配置仓库的uri");
         }
 
-        String urlStr = host + "/" + modelType + "/" + modelName + "/" + RepoCompConstant.filed_value_model_version_default + "/" + version + "/" + pathName;
+        String urlStr = host + "/" + modelType + "/" + modelName + "/" + RepoCompConstant.field_value_model_version_default + "/" + version + "/" + pathName;
 
         return DownLoadUtil.testUrlFileCanBeOpen(urlStr, "");
     }
@@ -328,16 +328,27 @@ public class RepoCloudFIleInstallService {
             throw new ServiceException("参数不能为空:modelType, modelName, version, stage, pathName, component");
         }
 
-        String fileName = this.pathNameService.getFileName4LocalRepoTarFile(modelName, version);
+        // 根据线上的文件扩展名，确定本地的文件扩展名
+        String fileName = "";
+        if (pathName.endsWith(".tar")) {
+            fileName = this.pathNameService.getFileName4LocalRepoTarFile(modelName, version, ".tar");
+        }
+        if (pathName.endsWith(".gz")) {
+            fileName = this.pathNameService.getFileName4LocalRepoTarFile(modelName, version, ".tar.gz");
+        }
+        if (fileName.equals("")) {
+            throw new ServiceException("参数不能为空: 不支持的文件压缩包格式");
+        }
 
-        String host = (String) this.configService.getConfigValueOrDefault(RepoConfigConstant.filed_config_name, RepoConfigConstant.filed_config_file, this.siteUri);
+        String host = (String) this.configService.getConfigValueOrDefault(RepoConfigConstant.field_config_name, RepoConfigConstant.field_config_file, this.siteUri);
         if (MethodUtils.hasEmpty(host)) {
             throw new ServiceException("尚未配置仓库的uri，请先配置仓库的uri");
         }
 
-        if (!fileName.endsWith(".tar")) {
-            throw new ServiceException("文件必须为tar格式!");
+        if (!fileName.endsWith(".tar") && !fileName.endsWith(".tar.gz")) {
+            throw new ServiceException("文件必须为tar或者gz格式");
         }
+
         Set<String> components = new HashSet<>();
         components.add("bin");
         components.add(RepoCompConstant.repository_type_template);
@@ -350,7 +361,7 @@ public class RepoCloudFIleInstallService {
         }
 
         // 下载tar文件
-        String url = host + "/" + modelType + "/" + modelName + "/" + RepoCompConstant.filed_value_model_version_default + "/" + version + "/" + pathName;
+        String url = host + "/" + modelType + "/" + modelName + "/" + RepoCompConstant.field_value_model_version_default + "/" + version + "/" + pathName;
         String localPath = this.pathNameService.getPathName4LocalRepo2component(modelType, modelName, version, stage, component);
         DownLoadUtil.downLoadFromHttpUrl(url, fileName, localPath, "");
 
@@ -480,9 +491,9 @@ public class RepoCloudFIleInstallService {
             // 安装某个文件版本后，其他文件版本的状态，都会联动变化，所以要扫描整个大版本
             List<Map<String, Object>> versions = this.pathNameService.findRepoLocalModel(modelType, modelName);
             for (Map<String, Object> map : versions) {
-                String subVersion = (String) map.get(RepoCompConstant.filed_version);
-                String subStage = (String) map.get(RepoCompConstant.filed_stage);
-                String subComponent = (String) map.get(RepoCompConstant.filed_component);
+                String subVersion = (String) map.get(RepoCompConstant.field_version);
+                String subStage = (String) map.get(RepoCompConstant.field_stage);
+                String subComponent = (String) map.get(RepoCompConstant.field_component);
 
                 // 将状态保存起来
                 this.installStatus.scanLocalStatus(modelType, modelName, subVersion, subStage, subComponent);
@@ -640,7 +651,7 @@ public class RepoCloudFIleInstallService {
             if (!appType.equals(map.get(ServiceVOFieldConstant.field_app_type))) {
                 continue;
             }
-            if (appType.equals(map.get(ServiceVOFieldConstant.field_type_kernel))) {
+            if (appType.equals(ServiceVOFieldConstant.field_type_kernel)) {
                 continue;
             }
 
@@ -652,14 +663,14 @@ public class RepoCloudFIleInstallService {
                 ShellUtils.executeShell("kill -9 " + pid);
             }
 
-            // 下载tar文件
-            File file = new File("");
-            String fileName = (String) map.get(ServiceVOFieldConstant.field_file_name);
 
             // 检查：文件的合法性
+            String fileName = (String) map.get(ServiceVOFieldConstant.field_file_name);
             if (MethodUtils.hasEmpty(fileName)) {
                 continue;
             }
+
+            File file = new File("");
 
             // 删除bin目录
             String binDir = file.getAbsolutePath() + "/bin/" + appType + "/" + appName;
@@ -668,6 +679,10 @@ public class RepoCloudFIleInstallService {
             // 删除shell目录
             String shellDir = file.getAbsolutePath() + "/shell/" + appType + "/" + appName;
             ShellUtils.executeShell("rm -r  '" + shellDir + "'");
+
+            // 删除conf目录
+            String confDir = file.getAbsolutePath() + "/conf/" + appType + "/" + appName;
+            ShellUtils.executeShell("rm -r  '" + confDir + "'");
 
             // 删除temp目录
             String tempDir = file.getAbsolutePath() + "/temp/" + appType + "/" + appName;

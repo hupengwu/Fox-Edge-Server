@@ -95,6 +95,7 @@ public class ExtendConfigManageController {
 
     @PostMapping("entity")
     public AjaxResult insertEntity(@RequestBody Map<String, Object> params) {
+        params.remove("id");
         return this.insertOrUpdate(params);
     }
 

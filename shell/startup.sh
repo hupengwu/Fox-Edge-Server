@@ -20,12 +20,16 @@ function readINI()
 #环境变量
 app_env_kernel=$(readINI $app_home/shell/fox-edge.ini environment kernel)
 
+
 #启动核心进程
 if [[ $app_env_kernel == compose ]]; then	
 	$app_home/shell/restart.sh kernel/manager-compose -p9000
+elif [[ $app_env_kernel == native ]]; then	
+	$app_home/shell/restart.sh kernel/gateway-native -p9000
+	$app_home/shell/restart.sh kernel/manager-native -p9101
 else
 	$app_home/shell/restart.sh kernel/gateway-service -p9000
-	$app_home/shell/restart.sh kernel/manager-service -p9101		
+	$app_home/shell/restart.sh kernel/manager-service -p9101	
 fi
 
 

@@ -67,8 +67,8 @@ public class EntityOptionManager {
     public void setOptionEntity(String entityType, String tableName, List<String> fieldNames) {
         Map<String, Object> publishEntity = (Map<String, Object>) this.serviceStatus.getProducerData().computeIfAbsent(RedisStatusConstant.field_option_entity, k -> new HashMap<>());
         Map<String, Object> entity = (Map<String, Object>) publishEntity.computeIfAbsent(entityType, k -> new HashMap<>());
-        entity.put(EntityOptionConstant.filed_option_table_name, tableName);
-        entity.put(EntityOptionConstant.filed_option_field_name, fieldNames);
+        entity.put(EntityOptionConstant.field_option_table_name, tableName);
+        entity.put(EntityOptionConstant.field_option_field_name, fieldNames);
     }
 
     /**
@@ -122,13 +122,13 @@ public class EntityOptionManager {
         }
 
         // 检查：表名称是否存在
-        String tableName = (String) map.get(EntityOptionConstant.filed_option_table_name);
+        String tableName = (String) map.get(EntityOptionConstant.field_option_table_name);
         if (tableName == null || tableName.isEmpty()) {
             return null;
         }
 
         // 检查：表字段是否存在
-        return (List<String>) map.get(EntityOptionConstant.filed_option_field_name);
+        return (List<String>) map.get(EntityOptionConstant.field_option_field_name);
     }
 
     /**
@@ -145,7 +145,7 @@ public class EntityOptionManager {
         }
 
         // 提取表名称
-        return (String) map.get(EntityOptionConstant.filed_option_table_name);
+        return (String) map.get(EntityOptionConstant.field_option_table_name);
     }
 
 

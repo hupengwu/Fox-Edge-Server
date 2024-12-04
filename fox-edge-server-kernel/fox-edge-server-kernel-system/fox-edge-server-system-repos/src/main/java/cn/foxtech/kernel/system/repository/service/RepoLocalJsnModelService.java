@@ -174,11 +174,11 @@ public class RepoLocalJsnModelService {
                 return false;
             }
 
-            if (!manufacturer.equals(entity.getCompParam().get(RepoCompConstant.filed_manufacturer))) {
+            if (!manufacturer.equals(entity.getCompParam().get(RepoCompConstant.field_manufacturer))) {
                 return false;
             }
 
-            return deviceType.equals(entity.getCompParam().get(RepoCompConstant.filed_device_type));
+            return deviceType.equals(entity.getCompParam().get(RepoCompConstant.field_device_type));
         });
 
         return compEntity;

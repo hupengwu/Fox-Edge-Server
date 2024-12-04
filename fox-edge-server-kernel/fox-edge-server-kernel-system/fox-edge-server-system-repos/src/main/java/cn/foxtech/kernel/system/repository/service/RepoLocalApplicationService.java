@@ -39,7 +39,7 @@ public class RepoLocalApplicationService {
     @Autowired
     private RedisConsoleService logger;
 
-    public void updateRepoCompEntity(String appType, String appName) throws IOException {
+    public void updateRepoCompEntity(String appType, String appName) {
         File file = new File("");
         Map<String, Object> serviceConf = this.appConfigService.readConfFile(file.getAbsolutePath(), appType, appName);
         if (serviceConf == null) {

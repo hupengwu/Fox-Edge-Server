@@ -60,13 +60,14 @@ public class ProcessUtils {
         List<String> shellLineList = ShellUtils.executeShell("ps -aux|grep " + path);
         for (String shellLine : shellLineList) {
             String[] items = shellLine.split("\\s+");
-            if (items.length < 14) {
+            if (items.length < 18) {
                 continue;
             }
 
 
             // 剔除掉DEBUG的干扰信息
-            items = filterDebug(items);
+            items = filterJavaDebug(items);
+            items = filterGoDebug(items);
 
             // ps -aux返回的格式: 0~10是linux的固定信息项目
             Map<String, Object> map = makeShellParam(items);
@@ -108,12 +109,13 @@ public class ProcessUtils {
         List<String> shellLineList = ShellUtils.executeShell("ps -aux|grep " + feature);
         for (String shellLine : shellLineList) {
             String[] items = shellLine.split("\\s+");
-            if (items.length < 11) {
+            if (items.length < 18) {
                 continue;
             }
 
             // 剔除掉DEBUG的干扰信息
-            items = filterDebug(items);
+            items = filterJavaDebug(items);
+            items = filterGoDebug(items);
 
             // ps -aux返回的格式: 0~10是linux的固定信息项目
             Map<String, Object> map = makeShellParam(items);
@@ -221,12 +223,13 @@ public class ProcessUtils {
 
     private static Map<String, Object> findJavaInf(String shellLine) {
         String[] items = shellLine.split("\\s+");
-        if (items.length < 14) {
+        if (items.length < 18) {
             return null;
         }
 
         // 剔除掉DEBUG的干扰信息
-        items = filterDebug(items);
+        items = filterJavaDebug(items);
+        items = filterGoDebug(items);
 
         // ps -aux返回的格式
         // 0~10是linux的固定信息项目
@@ -246,12 +249,13 @@ public class ProcessUtils {
 
     private static Map<String, Object> findLoaderInf(String shellLine) {
         String[] items = shellLine.split("\\s+");
-        if (items.length < 14) {
+        if (items.length < 18) {
             return null;
         }
 
         // 剔除掉DEBUG的干扰信息
-        items = filterDebug(items);
+        items = filterJavaDebug(items);
+        items = filterGoDebug(items);
 
         // ps -aux返回的格式
         // 0~10是linux的固定信息项目
@@ -326,11 +330,17 @@ public class ProcessUtils {
         String springRedisHost = findParam(params, "--spring.redis.host=");
         String springRedisPort = findParam(params, "--spring.redis.port=");
         String serverPort = findParam(params, "--server.port=");
-        if (serverPort == null || serverPort.equals("")) {
-            // python/python3的命令行参数是server.port=，java版的命令行参数--server.port=
+
+        // // python/python3的命令行参数是server.port=，java版的命令行参数--server.port=
+        if (springRedisHost == null || "".equals(springRedisHost)) {
+            springRedisHost = findParam(params, "redis.host=");
+        }
+        if (springRedisPort == null || "".equals(springRedisPort)) {
+            springRedisPort = findParam(params, "redis.port=");
+        }
+        if (serverPort == null || "".equals(serverPort)) {
             serverPort = findParam(params, "server.port=");
         }
-
 
         if (appEngine != null && !appEngine.isEmpty()) {
             result.put(ServiceVOFieldConstant.field_app_engine, appEngine);
@@ -380,7 +390,7 @@ public class ProcessUtils {
         return ShellUtils.executeShell("jmap -histo:live " + pid + " | head -10");
     }
 
-    private static String[] filterDebug(String[] items) {
+    private static String[] filterJavaDebug(String[] items) {
         List<String> list = new ArrayList<>();
         for (String item : items) {
             // 过滤掉idea的调试信息
@@ -392,6 +402,24 @@ public class ProcessUtils {
 
         return list.toArray(new String[list.size()]);
     }
+
+    private static String[] filterGoDebug(String[] items) {
+        if (!items[10].equals("dlv") || !items[15].equals("exec")|| !items[17].equals("--")) {
+            return items;
+        }
+
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            list.add(items[i]);
+        }
+        list.add(items[16]);
+        for (int i = 18; i < items.length; i++) {
+            list.add(items[i]);
+        }
+
+        return list.toArray(new String[list.size()]);
+    }
+
 
     /**
      * 通过linux的netstat命令，根据端口号，查找进程ID

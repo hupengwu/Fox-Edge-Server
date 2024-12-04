@@ -11,7 +11,6 @@ import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.common.utils.shell.ShellUtils;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.system.common.service.ManageConfigService;
-import cn.foxtech.kernel.system.repository.constants.ServiceConfigConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +39,7 @@ public class RepoLocalAppPortService {
      * @throws InterruptedException
      */
     private Integer getServicePort(String applicationName, String applicationType, Long appPid) throws IOException, InterruptedException {
-        Map<String, Object> serviceStartConfig = this.configService.getConfigValue(ServiceConfigConstant.field_service_start_config);
+        Map<String, Object> serviceStartConfig = this.configService.getConfigValue("serviceStartConfig");
         List<Map<String, Object>> services = (List<Map<String, Object>>) serviceStartConfig.getOrDefault("services", new ArrayList<>());
 
         Map<String, Object> appMap = null;
@@ -79,12 +78,12 @@ public class RepoLocalAppPortService {
                 // 如果已经被占用，则重新分配一个端口
                 appPort = this.newServicePort();
                 appMap.put(ServiceVOFieldConstant.field_app_port, this.newServicePort());
-                this.configService.saveConfigValue(ServiceConfigConstant.field_service_start_config, serviceStartConfig);
+                this.configService.saveConfigValue("serviceStartConfig", serviceStartConfig);
                 return appPort;
             } else {
                 Integer appPort = this.newServicePort();
                 appMap.put(ServiceVOFieldConstant.field_app_port, this.newServicePort());
-                this.configService.saveConfigValue(ServiceConfigConstant.field_service_start_config, serviceStartConfig);
+                this.configService.saveConfigValue("serviceStartConfig", serviceStartConfig);
                 return appPort;
             }
         } else {
@@ -96,7 +95,7 @@ public class RepoLocalAppPortService {
             appMap.put(ServiceVOFieldConstant.field_app_port, appPort);
             services.add(appMap);
 
-            this.configService.saveConfigValue(ServiceConfigConstant.field_service_start_config, serviceStartConfig);
+            this.configService.saveConfigValue("serviceStartConfig", serviceStartConfig);
             return appPort;
         }
     }
@@ -108,7 +107,7 @@ public class RepoLocalAppPortService {
      * @throws InterruptedException 异常信息
      */
     private Integer newServicePort() throws IOException, InterruptedException {
-        Map<String, Object> serviceStartConfig = this.configService.getConfigValue(ServiceConfigConstant.field_service_start_config);
+        Map<String, Object> serviceStartConfig = this.configService.getConfigValue("serviceStartConfig");
         List<Map<String, Object>> services = (List<Map<String, Object>>) serviceStartConfig.getOrDefault("services", new ArrayList<>());
 
         // 统计：已经分配给服务的端口

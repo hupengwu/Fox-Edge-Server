@@ -134,10 +134,6 @@ public class UserManageController {
             return AjaxResult.error("userRoleEntity, userPermissionEntity实体不存在");
         }
 
-        List<String> filterKeys = EntityVOBuilder.getFilterKeys();
-        filterKeys.add("password");
-        Map data = BeanMapUtils.objectToMap(userEntity, filterKeys);
-
         Map<String, Object> result = new HashMap<>();
         result.put("nickname", userEntity.getUsername());
         result.put("roles", userRoleEntity.getParams());
@@ -358,6 +354,7 @@ public class UserManageController {
 
     @PostMapping("entity")
     public AjaxResult insertEntity(@RequestBody Map<String, Object> params) {
+        params.remove("id");
         return this.insertOrUpdate(params);
     }
 

@@ -33,28 +33,48 @@ cpdir=bin/kernel
 mkdir -p $cpdir
 if [[ $app_env_kernel == compose ]]; then
 	cp -r $app_home/$cpdir/manager-compose bin/kernel/manager-compose
+elif [[ $app_env_kernel == native ]]; then
+	cp -r $app_home/$cpdir/gateway-native bin/kernel/gateway-native
+	cp -r $app_home/$cpdir/manager-native bin/kernel/manager-native
 else
 	cp -r $app_home/$cpdir/gateway-service bin/kernel/gateway-service
 	cp -r $app_home/$cpdir/manager-service bin/kernel/manager-service
 fi
 
+
 #复制一级目录并清理service和system目录
 cpdir=shell
 mkdir -p $cpdir
 cp -r $app_home/$cpdir .
-rm -rf shell/service
+rm -rf shell/kernel
 rm -rf shell/system
+rm -rf shell/service
+rm -rf shell/logs
+mkdir -p shell/kernel
+
 if [[ $app_env_kernel == compose ]]; then
-	rm -rf shell/service shell/kernel/gateway-service
-	rm -rf shell/service shell/kernel/manager-service	
+	cp -r $app_home/$cpdir/kernel/manager-compose shell/kernel
+elif [[ $app_env_kernel == native ]]; then	
+	cp -r $app_home/$cpdir/kernel/gateway-native shell/kernel
+	cp -r $app_home/$cpdir/kernel/manager-native shell/kernel	
 else
-	rm -rf shell/service shell/kernel/manager-compose
+	cp -r $app_home/$cpdir/kernel/gateway-service shell/kernel
+	cp -r $app_home/$cpdir/kernel/manager-service shell/kernel
 fi
 
 #复制一级目录
 cpdir=conf
 mkdir -p $cpdir
-cp -r $app_home/$cpdir .
+if [[ $app_env_kernel == compose ]]; then
+	mkdir -p conf/kernel/manager-compose
+	cp -r $app_home/$cpdir/kernel/manager-compose conf/kernel
+elif [[ $app_env_kernel == native ]]; then	
+	mkdir -p conf/kernel/manager-native	
+	cp -r $app_home/$cpdir/kernel/manager-native conf/kernel
+else
+	mkdir -p conf/kernel
+	cp -r $app_home/$cpdir/kernel/manager-service conf/kernel
+fi
 
 #复制一级目录
 cpdir=dist
@@ -95,6 +115,11 @@ cp -r $app_home/$cpdir/serviceList.jsn $cpdir
 cpdir=sql
 mkdir -p $cpdir
 cp -r $app_home/$cpdir .
+
+#复制一级目录
+cpdir=data
+mkdir -p $cpdir
+#cp -r $app_home/$cpdir .
 
 #复制一级目录
 cpdir=nacos

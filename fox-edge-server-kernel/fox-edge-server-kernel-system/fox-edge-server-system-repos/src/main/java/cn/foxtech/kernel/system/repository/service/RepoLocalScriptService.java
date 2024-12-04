@@ -40,8 +40,8 @@ public class RepoLocalScriptService {
 
             Map<String, Object> compParam = (Map<String, Object>) map.get(RepoCompVOFieldConstant.field_comp_param);
 
-            String manufacturer = (String) compEntity.getCompParam().get(RepoCompConstant.filed_manufacturer);
-            String deviceType = (String) compEntity.getCompParam().get(RepoCompConstant.filed_device_type);
+            String manufacturer = (String) compEntity.getCompParam().get(RepoCompConstant.field_manufacturer);
+            String deviceType = (String) compEntity.getCompParam().get(RepoCompConstant.field_device_type);
             List<OperateEntity> list = operateEntityMap.get(manufacturer + "|" + deviceType);
             if (list == null) {
                 compParam.put("operateCount", 0);
@@ -84,11 +84,11 @@ public class RepoLocalScriptService {
                 return false;
             }
 
-            if (!manufacturer.equals(entity.getCompParam().get(RepoCompConstant.filed_manufacturer))) {
+            if (!manufacturer.equals(entity.getCompParam().get(RepoCompConstant.field_manufacturer))) {
                 return false;
             }
 
-            return deviceType.equals(entity.getCompParam().get(RepoCompConstant.filed_device_type));
+            return deviceType.equals(entity.getCompParam().get(RepoCompConstant.field_device_type));
         });
 
         return compEntity;

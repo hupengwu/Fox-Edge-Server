@@ -66,7 +66,7 @@ public class RepoLocalCompUpload {
     }
 
     private Map<String, Object> uploadJarDecoderEntity(Map<String, Object> compParam, String commitKey) throws IOException {
-        String modelName = (String) compParam.get(RepoCompConstant.filed_model_name);
+        String modelName = (String) compParam.get(RepoCompConstant.field_model_name);
         String deviceType = (String) compParam.get(OperateVOFieldConstant.field_device_type);
         String manufacturer = (String) compParam.get(OperateVOFieldConstant.field_manufacturer);
         String fileName = (String) compParam.get("fileName");
@@ -82,13 +82,13 @@ public class RepoLocalCompUpload {
 
 
         Map<String, Object> formData = new HashMap<>();
-        formData.put(RepoCompConstant.filed_model_type, RepoCompConstant.repository_type_decoder);
-        formData.put(RepoCompConstant.filed_model_name, modelName);
-        formData.put(RepoCompConstant.filed_model_version, RepoCompConstant.filed_value_model_version_default);
-        formData.put(RepoCompConstant.filed_component, "service");
-        formData.put(RepoCompConstant.filed_work_mode, "");
+        formData.put(RepoCompConstant.field_model_type, RepoCompConstant.repository_type_decoder);
+        formData.put(RepoCompConstant.field_model_name, modelName);
+        formData.put(RepoCompConstant.field_model_version, RepoCompConstant.field_value_model_version_default);
+        formData.put(RepoCompConstant.field_component, "service");
+        formData.put(RepoCompConstant.field_work_mode, "");
         formData.put("file", file);
-        formData.put(RepoCompConstant.filed_commit_key, commitKey);
+        formData.put(RepoCompConstant.field_commit_key, commitKey);
 
         return this.remoteService.executeUpload("/manager/repository/component/upload", formData);
 
@@ -170,7 +170,7 @@ public class RepoLocalCompUpload {
     }
 
     private Map<String, Object> uploadCsvTemplateEntity(Map<String, Object> compParam, String commitKey) throws IOException, InterruptedException {
-        String modelName = (String) compParam.get(RepoCompConstant.filed_model_name);
+        String modelName = (String) compParam.get(RepoCompConstant.field_model_name);
         String deviceType = (String) compParam.get(OperateVOFieldConstant.field_device_type);
         String manufacturer = (String) compParam.get(OperateVOFieldConstant.field_manufacturer);
         if (MethodUtils.hasEmpty(modelName, deviceType, manufacturer, commitKey)) {
@@ -192,13 +192,13 @@ public class RepoLocalCompUpload {
             }
 
             Map<String, Object> formData = new HashMap<>();
-            formData.put(RepoCompConstant.filed_model_type, RepoCompConstant.repository_type_template);
-            formData.put(RepoCompConstant.filed_model_name, modelName);
-            formData.put(RepoCompConstant.filed_model_version, RepoCompConstant.filed_value_model_version_default);
-            formData.put(RepoCompConstant.filed_component, "service");
-            formData.put(RepoCompConstant.filed_work_mode, "");
+            formData.put(RepoCompConstant.field_model_type, RepoCompConstant.repository_type_template);
+            formData.put(RepoCompConstant.field_model_name, modelName);
+            formData.put(RepoCompConstant.field_model_version, RepoCompConstant.field_value_model_version_default);
+            formData.put(RepoCompConstant.field_component, "service");
+            formData.put(RepoCompConstant.field_work_mode, "");
             formData.put("file", file);
-            formData.put(RepoCompConstant.filed_commit_key, commitKey);
+            formData.put(RepoCompConstant.field_commit_key, commitKey);
 
 
             return this.remoteService.executeUpload("/manager/repository/component/upload", formData);

@@ -19,5 +19,9 @@ public class EntityChangedNotifyVO {
     /**
      * 变更的内容
      */
+    private String key;
+    /**
+     * 变更的内容
+     */
     private BaseEntity entity;
 }

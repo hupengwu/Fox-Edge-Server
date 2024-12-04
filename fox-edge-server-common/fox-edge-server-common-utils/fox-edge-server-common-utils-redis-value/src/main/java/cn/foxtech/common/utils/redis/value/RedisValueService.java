@@ -29,8 +29,11 @@ public abstract class RedisValueService {
         // 临时key
         String mainKey = this.getKey() + ":" + hashKey;
 
-        this.redisTemplate.opsForValue().set(mainKey, value);
-        this.expire(mainKey, this.timeout);
+        if (timeout == -1) {
+            this.redisTemplate.opsForValue().set(mainKey, value);
+        } else {
+            this.redisTemplate.opsForValue().set(mainKey, value, timeout, TimeUnit.MILLISECONDS);
+        }
     }
 
     protected Object get(String hashKey, long timeout) {

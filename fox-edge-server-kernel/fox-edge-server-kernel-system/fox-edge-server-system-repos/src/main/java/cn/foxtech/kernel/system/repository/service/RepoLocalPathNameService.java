@@ -93,11 +93,11 @@ public class RepoLocalPathNameService {
                     String component = componentDir.getName();
 
                     Map<String, Object> map = new HashMap<>();
-                    map.put(RepoCompConstant.filed_model_type, modelType);
-                    map.put(RepoCompConstant.filed_model_name, modelName);
-                    map.put(RepoCompConstant.filed_version, version);
-                    map.put(RepoCompConstant.filed_stage, stage);
-                    map.put(RepoCompConstant.filed_component, component);
+                    map.put(RepoCompConstant.field_model_type, modelType);
+                    map.put(RepoCompConstant.field_model_name, modelName);
+                    map.put(RepoCompConstant.field_version, version);
+                    map.put(RepoCompConstant.field_stage, stage);
+                    map.put(RepoCompConstant.field_component, component);
 
                     resultList.add(map);
                 }
@@ -180,8 +180,27 @@ public class RepoLocalPathNameService {
      *
      * @return \opt\fox-edge\repository\decoder\fox-edge-server-protocol-s7plc\v1\1.0.4\master\service\fox-edge-server-protocol-s7plc-v1-1.0.4.tar
      */
-    public String getPathName4LocalRepo2tarFile(String modelType, String modelName, String version, String stage, String component) {
-        return FileNameUtils.getOsFilePath(this.getPathName4LocalRepo2component(modelType, modelName, version, stage, component) + "/" + this.getFileName4LocalRepoTarFile(modelName, version));
+    public String getPathName4LocalRepo2tarFile(String modelType, String modelName, String version, String stage, String component, String ext) {
+        return FileNameUtils.getOsFilePath(this.getPathName4LocalRepo2component(modelType, modelName, version, stage, component) + "/" + this.getFileName4LocalRepoTarFile(modelName, version, ext));
+    }
+
+    public String findRepoLocalRepoTarFile(String modelType, String modelName, String version, String stage, String component) {
+        String packFile = "";
+
+        String tarFile = this.getPathName4LocalRepo2tarFile(modelType, modelName, version, stage, component, ".tar");
+        String tarGzFile = this.getPathName4LocalRepo2tarFile(modelType, modelName, version, stage, component, ".tar.gz");
+
+        File exist = new File(tarGzFile);
+        if (exist.exists() && exist.isFile()) {
+            packFile = tarGzFile;
+        }
+
+        exist = new File(tarFile);
+        if (exist.exists() && exist.isFile()) {
+            packFile = tarFile;
+        }
+
+        return packFile;
     }
 
 
@@ -190,8 +209,8 @@ public class RepoLocalPathNameService {
      *
      * @return fox-edge-server-protocol-s7plc-v1-1.0.4.tar
      */
-    public String getFileName4LocalRepoTarFile(String modelName, String version) {
-        return modelName + "-" + version + ".tar";
+    public String getFileName4LocalRepoTarFile(String modelName, String version, String ext) {
+        return modelName + "-" + version + ext;
     }
 
     /**

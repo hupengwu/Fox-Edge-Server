@@ -187,7 +187,7 @@ public class DeviceValueManageController {
      * @throws IOException
      * @throws InterruptedException
      */
-    private RestFulRespondVO deleteDeviceValue(List<Map<String, Object>> deviceValueList) throws IOException, InterruptedException {
+    private RestFulRespondVO deleteDeviceValue(List<Map<String, Object>> deviceValueList) {
         RestFulRequestVO requestVO = new RestFulRequestVO();
         requestVO.setUuid(UUID.randomUUID().toString());
         requestVO.setUri(RestFulManagerVOConstant.uri_device_value);

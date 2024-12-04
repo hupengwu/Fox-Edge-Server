@@ -70,16 +70,16 @@ public class RepoLocalCompSync {
     private Map<String, Object> syncCsvTemplateEntity(RepoCompEntity entity) throws IOException {
         Map<String, Object> compParam = entity.getCompParam();
 
-        String modelName = (String) compParam.get(RepoCompConstant.filed_model_name);
+        String modelName = (String) compParam.get(RepoCompConstant.field_model_name);
         if (MethodUtils.hasEmpty(modelName)) {
             throw new ServiceException("缺少参数： modelName");
         }
 
 
         Map<String, Object> body = new HashMap<>();
-        body.put(RepoCompConstant.filed_model_type, "template");
-        body.put(RepoCompConstant.filed_model_name, modelName);
-        body.put(RepoCompConstant.filed_model_version, RepoCompConstant.filed_value_model_version_default);
+        body.put(RepoCompConstant.field_model_type, "template");
+        body.put(RepoCompConstant.field_model_name, modelName);
+        body.put(RepoCompConstant.field_model_version, RepoCompConstant.field_value_model_version_default);
 
         // 获得云端的信息
         Map<String, Object> respond = this.remoteService.executePost("/manager/repository/component/groupName", body);
@@ -109,16 +109,16 @@ public class RepoLocalCompSync {
     private Map<String, Object> syncJarDecoderEntity(RepoCompEntity entity) throws IOException {
         Map<String, Object> compParam = entity.getCompParam();
 
-        String modelName = (String) compParam.get(RepoCompConstant.filed_model_name);
+        String modelName = (String) compParam.get(RepoCompConstant.field_model_name);
         if (MethodUtils.hasEmpty(modelName)) {
             throw new ServiceException("缺少参数： modelName");
         }
 
 
         Map<String, Object> body = new HashMap<>();
-        body.put(RepoCompConstant.filed_model_name, modelName);
-        body.put(RepoCompConstant.filed_model_type, "decoder");
-        body.put(RepoCompConstant.filed_model_version,RepoCompConstant.filed_value_model_version_default);
+        body.put(RepoCompConstant.field_model_name, modelName);
+        body.put(RepoCompConstant.field_model_type, "decoder");
+        body.put(RepoCompConstant.field_model_version,RepoCompConstant.field_value_model_version_default);
 
         // 获得云端的信息
         Map<String, Object> respond = this.remoteService.executePost("/manager/repository/component/groupName", body);

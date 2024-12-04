@@ -53,7 +53,7 @@ public class RedisListClientService {
         return executeChannel(requestVO);
     }
 
-    public ChannelRespondVO executeChannel(ChannelRequestVO requestVO) throws InterruptedException, IOException {
+    public ChannelRespondVO executeChannel(ChannelRequestVO requestVO)  {
         String channelType = requestVO.getType();
 
         // 检查：参数是否为空

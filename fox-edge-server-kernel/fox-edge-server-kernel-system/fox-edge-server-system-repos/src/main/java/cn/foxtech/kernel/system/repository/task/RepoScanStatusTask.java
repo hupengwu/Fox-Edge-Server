@@ -10,7 +10,7 @@ import cn.foxtech.common.utils.scheduler.multitask.PeriodTask;
 import cn.foxtech.common.utils.scheduler.multitask.PeriodTaskType;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
 import cn.foxtech.kernel.system.repository.service.RepoCloudCacheService;
-import cn.foxtech.kernel.system.repository.service.RepoCloudFIleInstallService;
+import cn.foxtech.kernel.system.repository.service.RepoCloudFileInstallService;
 import cn.foxtech.kernel.system.repository.service.RepoCloudFileInstallStatus;
 import cn.foxtech.kernel.system.repository.service.RepoLocalPathNameService;
 
@@ -20,7 +20,7 @@ import java.util.*;
  * 启动其他进程的一次性任务
  */
 public class RepoScanStatusTask extends PeriodTask {
-    private final RepoCloudFIleInstallService installService;
+    private final RepoCloudFileInstallService installService;
 
     private final RepoCloudFileInstallStatus installStatus;
 
@@ -30,7 +30,7 @@ public class RepoScanStatusTask extends PeriodTask {
     private final RedisConsoleService logger;
 
 
-    public RepoScanStatusTask(RepoCloudFIleInstallService installService, RepoCloudFileInstallStatus installStatus, RepoCloudCacheService cacheService, RepoLocalPathNameService pathNameService, RedisConsoleService logger, String modelType) {
+    public RepoScanStatusTask(RepoCloudFileInstallService installService, RepoCloudFileInstallStatus installStatus, RepoCloudCacheService cacheService, RepoLocalPathNameService pathNameService, RedisConsoleService logger, String modelType) {
         this.installService = installService;
         this.installStatus = installStatus;
         this.cacheService = cacheService;
@@ -73,13 +73,13 @@ public class RepoScanStatusTask extends PeriodTask {
             List<Map<String, Object>> localList = this.cacheService.readList(modelType);
             Set<String> tables = new HashSet<>();
             for (Map<String, Object> map : localList) {
-                String modelName = (String) map.getOrDefault(RepoCompConstant.filed_model_name, "");
-                String component = (String) map.getOrDefault(RepoCompConstant.filed_component, "");
-                List<Map<String, Object>> versions = (List<Map<String, Object>>) map.getOrDefault(RepoCompConstant.filed_versions, new ArrayList<>());
+                String modelName = (String) map.getOrDefault(RepoCompConstant.field_model_name, "");
+                String component = (String) map.getOrDefault(RepoCompConstant.field_component, "");
+                List<Map<String, Object>> versions = (List<Map<String, Object>>) map.getOrDefault(RepoCompConstant.field_versions, new ArrayList<>());
 
                 for (Map<String, Object> entity : versions) {
-                    String version = (String) entity.get(RepoCompConstant.filed_version);
-                    String stage = (String) entity.get(RepoCompConstant.filed_stage);
+                    String version = (String) entity.get(RepoCompConstant.field_version);
+                    String stage = (String) entity.get(RepoCompConstant.field_stage);
                     if (MethodUtils.hasEmpty(version, stage)) {
                         continue;
                     }
@@ -97,10 +97,10 @@ public class RepoScanStatusTask extends PeriodTask {
             // 文件列表
             List<Map<String, Object>> modelList = this.pathNameService.findRepoLocalModel(modelType);
             for (Map<String, Object> map : modelList) {
-                String modelName = (String) map.getOrDefault(RepoCompConstant.filed_model_name, "");
-                String component = (String) map.getOrDefault(RepoCompConstant.filed_component, "");
-                String version = (String) map.getOrDefault(RepoCompConstant.filed_version, "");
-                String stage = (String) map.getOrDefault(RepoCompConstant.filed_stage, "");
+                String modelName = (String) map.getOrDefault(RepoCompConstant.field_model_name, "");
+                String component = (String) map.getOrDefault(RepoCompConstant.field_component, "");
+                String version = (String) map.getOrDefault(RepoCompConstant.field_version, "");
+                String stage = (String) map.getOrDefault(RepoCompConstant.field_stage, "");
 
                 StringBuilder sb = new StringBuilder();
                 sb.append(modelName);

@@ -78,6 +78,7 @@ public class DeviceValuePushScheduler extends PeriodTaskService {
             for (String key : addMap.keySet()) {
                 DeviceValueNotifyVO vo = new DeviceValueNotifyVO();
                 vo.setMethod("insert");
+                vo.setKey(key);
                 vo.setEntity(addMap.get(key));
 
                 voList.add(vo);
@@ -85,6 +86,7 @@ public class DeviceValuePushScheduler extends PeriodTaskService {
             for (String key : mdyMap.keySet()) {
                 DeviceValueNotifyVO vo = new DeviceValueNotifyVO();
                 vo.setMethod("update");
+                vo.setKey(key);
                 vo.setEntity(mdyMap.get(key));
 
                 voList.add(vo);
@@ -92,6 +94,7 @@ public class DeviceValuePushScheduler extends PeriodTaskService {
             for (String key : delSet) {
                 DeviceValueNotifyVO vo = new DeviceValueNotifyVO();
                 vo.setMethod("delete");
+                vo.setKey(key);
 
                 voList.add(vo);
             }

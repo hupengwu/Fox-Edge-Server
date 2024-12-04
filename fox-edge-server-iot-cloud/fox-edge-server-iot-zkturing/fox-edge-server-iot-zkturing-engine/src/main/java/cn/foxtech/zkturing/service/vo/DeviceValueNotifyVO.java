@@ -17,6 +17,10 @@ public class DeviceValueNotifyVO {
      */
     private String method;
     /**
+     * 执行的动作
+     */
+    private String key;
+    /**
      * 变更的内容
      */
     private BaseEntity entity;

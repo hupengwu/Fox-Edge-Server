@@ -12,6 +12,10 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /*
  * MD5，Message Digest Algorithm 5，是一种被广泛使用的信息摘要算法，
@@ -100,5 +104,75 @@ public class MD5Utils {
         md5.reset();
 
         return result;
+    }
+
+    public static String getMapMD5Text(Map data) throws NoSuchAlgorithmException {
+        String str = getMapString(data);
+
+        str = MD5Utils.getMD5Txt(str);
+        return str;
+    }
+
+    public static String getListMD5Text(List data) throws NoSuchAlgorithmException {
+        String str = getListString(data);
+
+        str = MD5Utils.getMD5Txt(str);
+        return str;
+    }
+
+    public static String getMapString(Map data) {
+        List keys = new ArrayList<>();
+        keys.addAll(data.keySet());
+
+        Collections.sort(keys);
+
+        StringBuilder str = new StringBuilder();
+        str.append("[");
+        for (Object key : keys) {
+            Object value = data.get(key);
+
+            str.append(key);
+            str.append("=");
+
+            if (value instanceof Map) {
+                str.append(getMapString((Map) value));
+            } else if (value instanceof List) {
+                str.append(getListString((List) value));
+            } else {
+                str.append(value);
+            }
+
+            str.append(",");
+        }
+
+        if (str.length() > 1) {
+            str.deleteCharAt(str.length() - 1);
+        }
+        str.append("]");
+
+        return str.toString();
+    }
+
+    public static String getListString(List data) {
+        Collections.sort(data);
+
+        StringBuilder str = new StringBuilder();
+        for (Object value : data) {
+            if (value instanceof Map) {
+                str.append(getMapString((Map) value));
+            } else if (value instanceof List) {
+                str.append(getListString((List) value));
+            } else {
+                str.append(value);
+            }
+
+            str.append(",");
+        }
+
+        if (str.length() > 1) {
+            str.deleteCharAt(str.length() - 1);
+        }
+
+        return str.toString();
     }
 }

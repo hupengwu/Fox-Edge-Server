@@ -57,7 +57,7 @@ public class RpcMqttSdkTester {
     private void initialize() {
         // 生成一个缺省的mqtt配置参数，你也可以自己构造一个相同格式的MQTT参数
         Map<String, Object> mqttConfig = this.mqttClient.buildMqttDefaultConfig();
-        mqttConfig.put("host", "39.108.137.38");// 这是默认的配置，建议自行管理mqttConfig
+        mqttConfig.put("host", "broker.emqx.io");// 这是默认的配置，建议自行管理mqttConfig
 
 
         // 生成一个接收MQTT消息的handler，指明要订阅的消息

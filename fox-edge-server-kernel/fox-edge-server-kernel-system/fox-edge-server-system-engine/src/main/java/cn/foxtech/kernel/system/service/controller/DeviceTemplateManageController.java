@@ -60,9 +60,9 @@ public class DeviceTemplateManageController {
 
             for (Map<String, Object> map : list) {
                 // 提取业务参数
-                String modelName = (String) map.get(RepoCompConstant.filed_model_name);
-                String version = (String) map.get(RepoCompConstant.filed_version);
-                String component = (String) map.get(RepoCompConstant.filed_component);
+                String modelName = (String) map.get(RepoCompConstant.field_model_name);
+                String version = (String) map.get(RepoCompConstant.field_version);
+                String component = (String) map.get(RepoCompConstant.field_component);
                 String fileName = (String) map.get("fileName");
 
                 // 简单验证
@@ -88,9 +88,9 @@ public class DeviceTemplateManageController {
     public void downloadEntityList(@RequestBody Map<String, Object> body) {
         try {
             // 提取业务参数
-            String modelName = (String) body.get(RepoCompConstant.filed_model_name);
-            String version = (String) body.get(RepoCompConstant.filed_version);
-            String component = (String) body.get(RepoCompConstant.filed_component);
+            String modelName = (String) body.get(RepoCompConstant.field_model_name);
+            String version = (String) body.get(RepoCompConstant.field_version);
+            String component = (String) body.get(RepoCompConstant.field_component);
             String fileName = (String) body.get("fileName");
 
             // 简单验证

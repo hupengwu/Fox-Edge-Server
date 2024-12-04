@@ -107,7 +107,6 @@ public class JspEngine {
         keyNotify.reset();
         consumerRedisService.bindEntityNotify(keyNotify);
 
-
         ChannelHandler channelHandler = new ChannelHandler();
         channelHandler.setServiceKeyHandler(keyNotify.getServiceKeyHandler());
         channelHandler.setChannelManager(this.channelManager);

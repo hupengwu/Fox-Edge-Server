@@ -182,7 +182,7 @@ public class ChannelService extends ChannelServerAPI {
             throw new ServiceException("send参数不能为空!");
         }
 
-        String operate = (String) requestParam.get(ChannelVOConstant.filed_operate);
+        String operate = (String) requestParam.get(ChannelVOConstant.field_operate);
         if (MethodUtils.hasEmpty(operate)) {
             throw new ServiceException("operate参数不能为空!");
         }
@@ -190,7 +190,7 @@ public class ChannelService extends ChannelServerAPI {
         Object recv = null;
         if (operate.equals(ChannelVOConstant.value_operate_get_status)) {
             Map<String, Object> result = new HashMap<>();
-            List<String> channelNameList = (List<String>) requestParam.get(ChannelVOConstant.filed_param);
+            List<String> channelNameList = (List<String>) requestParam.get(ChannelVOConstant.field_param);
             for (String channelName : channelNameList) {
                 SerialChannelEntity channelEntity = this.channelEntityMap.get(channelName);
                 if (channelEntity == null || channelEntity.getSerialPort() == null || !channelEntity.getSerialPort().isOpen()) {

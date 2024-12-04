@@ -78,6 +78,7 @@ public class Initialize implements CommandLineRunner {
 
         // 初始化配置参数
         this.configService.initialize("serverConfig", "serverConfig.json");
+        this.configService.initialize("decoderConfig", "decoderConfig.json");
 
         // 从第三方jar扫描解码器，并生成redis记录
         this.methodEntityService.scanJarFile();

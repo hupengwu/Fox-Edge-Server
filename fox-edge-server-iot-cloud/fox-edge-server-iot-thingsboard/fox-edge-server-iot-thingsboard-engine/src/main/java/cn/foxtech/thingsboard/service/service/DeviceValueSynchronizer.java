@@ -13,7 +13,7 @@ import cn.foxtech.common.entity.utils.ExtendConfigUtils;
 import cn.foxtech.common.utils.bean.BeanMapUtils;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
-import cn.foxtech.iot.common.remote.RemoteHttpProxyService;
+import cn.foxtech.iot.common.remote.RemoteHttpService;
 import cn.foxtech.iot.common.service.EntityManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,7 +29,7 @@ public class DeviceValueSynchronizer {
     private EntityManageService entityManageService;
 
     @Autowired
-    private RemoteHttpProxyService httpProxyService;
+    private RemoteHttpService httpProxyService;
 
     @Autowired
     private LocalConfigService localConfigService;

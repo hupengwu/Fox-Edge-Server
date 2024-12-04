@@ -20,8 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @Getter(value = AccessLevel.PUBLIC)
-public class RemoteHttpProxyService {
-    private static final Logger logger = Logger.getLogger(RemoteHttpProxyService.class);
+public class RemoteHttpService {
+    private static final Logger logger = Logger.getLogger(RemoteHttpService.class);
 
     /**
      * header
@@ -41,7 +41,6 @@ public class RemoteHttpProxyService {
         if (this.header.isEmpty()) {
             this.header.put("Content-Type", "application/json");
         }
-
 
         HttpResponse response = HttpClientUtils.executeRestful(this.uri + res, method, this.header, requestJson);
         return response.getStatus();

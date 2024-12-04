@@ -39,6 +39,7 @@ public class RedisEntityService {
             for (String key : addMap.keySet()) {
                 EntityChangedNotifyVO vo = new EntityChangedNotifyVO();
                 vo.setMethod("insert");
+                vo.setKey(key);
                 vo.setEntity(addMap.get(key));
 
                 voList.add(vo);
@@ -46,6 +47,7 @@ public class RedisEntityService {
             for (String key : mdyMap.keySet()) {
                 EntityChangedNotifyVO vo = new EntityChangedNotifyVO();
                 vo.setMethod("update");
+                vo.setKey(key);
                 vo.setEntity(mdyMap.get(key));
 
                 voList.add(vo);
@@ -53,6 +55,7 @@ public class RedisEntityService {
             for (String key : delSet) {
                 EntityChangedNotifyVO vo = new EntityChangedNotifyVO();
                 vo.setMethod("delete");
+                vo.setKey(key);
 
                 voList.add(vo);
             }

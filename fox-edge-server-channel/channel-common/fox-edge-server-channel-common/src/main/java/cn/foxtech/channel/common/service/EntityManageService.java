@@ -29,8 +29,6 @@ public class EntityManageService extends EntityServiceManager {
         this.addConsumer(ChannelEntity.class.getSimpleName());
         this.addConsumer(others);
 
-        this.addProducer(ChannelStatusEntity.class.getSimpleName());
-
-        this.getSourceRedis().add(ChannelStatusEntity.class.getSimpleName());
+        this.addWriter(ChannelStatusEntity.class.getSimpleName());
     }
 }

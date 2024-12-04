@@ -42,6 +42,7 @@ public class FileNameUtils {
         if (!dir.exists() || !dir.isDirectory()) {// 判断是否存在目录
             return;
         }
+
         String[] files = dir.list();// 读取目录下的所有目录文件信息
         for (int i = 0; i < files.length; i++) {
             // 循环，添加文件名或回调自身

@@ -7,6 +7,7 @@ package cn.foxtech.kernel.system.service.restfullike.mqtt;
 import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.mqtt.MqttClientService;
 import cn.foxtech.kernel.common.service.EdgeService;
+import cn.foxtech.kernel.system.common.service.ManageConfigService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,7 @@ public class MqttRestfulLikeService {
     private MqttClientService mqttClientService;
 
     @Autowired
-    private InitialConfigService configService;
+    private ManageConfigService configService;
 
     @Setter
     private Map<String, Object> mqttConfig = new HashMap<>();
@@ -35,7 +36,7 @@ public class MqttRestfulLikeService {
     public void initialize() {
         // 读取配置参数
         this.configService.initialize("mqttConfig", "mqttConfig.json");
-        Map<String, Object> configValue = this.configService.getConfigParam("mqttConfig");
+        Map<String, Object> configValue = this.configService.getConfigValue("mqttConfig");
         this.mqttConfig = (Map<String, Object>) configValue.getOrDefault("mqtt", new HashMap<>());
         Boolean enable = (Boolean) configValue.getOrDefault("enable", false);
 

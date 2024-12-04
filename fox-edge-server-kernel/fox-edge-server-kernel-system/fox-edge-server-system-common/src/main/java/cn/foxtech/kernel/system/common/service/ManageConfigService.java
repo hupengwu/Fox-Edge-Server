@@ -4,11 +4,20 @@
 
 package cn.foxtech.kernel.system.common.service;
 
+import cn.foxtech.common.entity.constant.ConfigVOFieldConstant;
 import cn.foxtech.common.entity.entity.ConfigEntity;
+import cn.foxtech.common.entity.manager.InitialConfigService;
+import cn.foxtech.common.entity.manager.RedisConsoleService;
+import cn.foxtech.common.utils.file.FileTextUtils;
+import cn.foxtech.common.utils.json.JsonUtils;
+import cn.foxtech.core.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,11 +29,46 @@ public class ManageConfigService {
     @Autowired
     private EntityManageService entityManageService;
 
+    /**
+     * 初始化配置：需要感知运行期的用户动态输入的配置，所以直接使用这个组件
+     */
+    @Autowired
+    private InitialConfigService configService;
+
+    @Autowired
+    private RedisConsoleService console;
+
     @Value("${spring.fox-service.service.type}")
     private String foxServiceType = "undefinedServiceType";
 
     @Value("${spring.fox-service.service.name}")
     private String foxServiceName = "undefinedServiceName";
+
+    public void initialize(String configName, String classpathFile) {
+        try {
+            // 初始化配置信息
+            ConfigEntity configEntity = this.entityManageService.getConfigEntity(this.foxServiceName, this.foxServiceType, configName);
+            if (configEntity == null) {
+                ClassPathResource classPathResource = new ClassPathResource(classpathFile);
+                InputStream inputStream = classPathResource.getInputStream();
+                String json = FileTextUtils.readTextFile(inputStream, StandardCharsets.UTF_8);
+                Map<String,Object> defaultConfig = JsonUtils.buildObject(json, Map.class);
+
+                configEntity = new ConfigEntity();
+                configEntity.setServiceName(this.foxServiceName);
+                configEntity.setServiceType(this.foxServiceType);
+                configEntity.setConfigName(configName);
+                configEntity.setConfigParam(defaultConfig);
+                this.entityManageService.insertEntity(configEntity);
+            }
+
+            // 在通用配置这边，也形成一份后期通告的配置
+            this.configService.initialize(configName,classpathFile);
+
+        } catch (Exception e) {
+            this.console.error("初始化参数失败:"+e.getMessage());
+        }
+    }
 
     public Map<String, Object> getConfigValue(String configName) {
         return this.getConfigValue(this.foxServiceName, this.foxServiceType, configName);
@@ -49,6 +93,10 @@ public class ManageConfigService {
     }
 
     public void saveConfigValue(String serviceName, String serviceType, String configName, Map<String, Object> configValue) {
+        if (configValue==null){
+            return;
+        }
+
         ConfigEntity configEntity = this.entityManageService.getConfigEntity(serviceName, serviceType, configName);
         if (configEntity == null) {
             configEntity = new ConfigEntity();

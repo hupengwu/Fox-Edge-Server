@@ -19,7 +19,7 @@ public class RemoteProxyService {
     private LocalConfigService localConfigService;
 
     @Autowired
-    private RemoteHttpProxyService httpProxyService;
+    private RemoteHttpService httpProxyService;
 
     @Autowired
     private RemoteMqttService mqttService;

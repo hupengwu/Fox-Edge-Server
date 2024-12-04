@@ -44,7 +44,7 @@ public class EdgeService {
      * @return
      */
     public Map<String, Object> getOSInfo() {
-        if (!this.map.containsKey(EdgeServiceConstant.filed_cpu_id)) {
+        if (!this.map.containsKey(EdgeServiceConstant.field_cpu_id)) {
             String cpuId = this.getAppArg("--env_cpu_id=", "");
             if (MethodUtils.hasEmpty(cpuId)) {
                 cpuId = OSInfoUtils.getCPUID();
@@ -52,13 +52,13 @@ public class EdgeService {
 
             this.map.put("cpuId", cpuId);
         }
-        if (!this.map.containsKey(EdgeServiceConstant.filed_env_type)) {
+        if (!this.map.containsKey(EdgeServiceConstant.field_env_type)) {
             String envType = this.getAppArg("--env_type=", EdgeServiceConstant.value_env_type_device);
-            this.map.put(EdgeServiceConstant.filed_env_type, envType);
+            this.map.put(EdgeServiceConstant.field_env_type, envType);
         }
-        if (!this.map.containsKey(EdgeServiceConstant.filed_work_mode)) {
+        if (!this.map.containsKey(EdgeServiceConstant.field_work_mode)) {
             String workMode = this.getAppArg("--work_mode", EdgeServiceConstant.value_work_mode_local);
-            this.map.put(EdgeServiceConstant.filed_work_mode, workMode);
+            this.map.put(EdgeServiceConstant.field_work_mode, workMode);
         }
 
         return this.map;
@@ -106,7 +106,7 @@ public class EdgeService {
      * @return
      */
     public String getCPUID() {
-        return this.getOSInfo().get(EdgeServiceConstant.filed_cpu_id).toString();
+        return this.getOSInfo().get(EdgeServiceConstant.field_cpu_id).toString();
     }
 
     /**
@@ -115,11 +115,11 @@ public class EdgeService {
      * @return
      */
     public boolean isDockerEnv() {
-        return EdgeServiceConstant.value_env_type_docker.equals(this.getOSInfo().get(EdgeServiceConstant.filed_env_type));
+        return EdgeServiceConstant.value_env_type_docker.equals(this.getOSInfo().get(EdgeServiceConstant.field_env_type));
     }
 
     public String getEnvType() {
-        return (String) this.getOSInfo().get(EdgeServiceConstant.filed_env_type);
+        return (String) this.getOSInfo().get(EdgeServiceConstant.field_env_type);
     }
 
     public void testDockerEnv() {

@@ -1,7 +1,7 @@
 {
   "configValue": {
     "mqtt": {
-      "host": "39.108.137.38",
+      "host": "broker.emqx.io",
       "name": "Mica-Mqtt-Client",
       "port": 1883,
       "enabled": true,

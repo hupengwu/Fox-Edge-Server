@@ -34,7 +34,7 @@ public class RepoLocalOperateService {
             boolean result = true;
 
             if (body.containsKey(OperateVOFieldConstant.field_device_type)) {
-                result = entity.getDeviceType().contains((String) body.get(OperateVOFieldConstant.field_device_type));
+                result = entity.getDeviceType().equals(body.get(OperateVOFieldConstant.field_device_type));
             }
             if (body.containsKey(OperateVOFieldConstant.field_manufacturer)) {
                 result &= entity.getManufacturer().equals(body.get(OperateVOFieldConstant.field_manufacturer));
@@ -210,7 +210,7 @@ public class RepoLocalOperateService {
         String manufacturer = (String) body.get(OperateVOFieldConstant.field_manufacturer);
         String operateName = (String) body.get(OperateVOFieldConstant.field_operate_name);
         if (MethodUtils.hasEmpty(manufacturer)) {
-            throw new ServiceException("参数缺失：deviceType, manufacturer");
+            throw new ServiceException("参数缺失：manufacturer");
         }
 
         Set<String> operateModes = new HashSet<>();
@@ -238,13 +238,16 @@ public class RepoLocalOperateService {
                 Map<String, Object> result = new HashMap<>();
 
                 if (deviceType != null && operateName == null) {
-                    result.put("value", operateEntity.getOperateName());
-                    result.put("label", operateEntity.getOperateName());
+                    if (operateName == null){
+                        result.put("value", operateEntity.getOperateName());
+                        result.put("label", operateEntity.getOperateName());
+                    }
+                    else {
+                        result.put("value", operateEntity.getOperateMode());
+                        result.put("label", operateEntity.getOperateMode());
+                    }
                 }
-                if (deviceType != null && operateName != null) {
-                    result.put("value", operateEntity.getOperateMode());
-                    result.put("label", operateEntity.getOperateMode());
-                }
+
 
                 resultList.add(result);
             }

@@ -37,7 +37,7 @@ public class RepoCloudCompController {
      * 仓库服务
      */
     @Autowired
-    private RepoCloudFIleInstallService installService;
+    private RepoCloudFileInstallService installService;
 
     @Autowired
     private RepoCloudCacheService cacheService;
@@ -66,7 +66,7 @@ public class RepoCloudCompController {
         try {
             // 提取业务参数
             String source = (String) body.get("source");
-            String modelType = (String) body.get(RepoCompConstant.filed_model_type);
+            String modelType = (String) body.get(RepoCompConstant.field_model_type);
 
             // 简单验证
             if (MethodUtils.hasEmpty(modelType)) {
@@ -102,30 +102,30 @@ public class RepoCloudCompController {
                 String fieldName = "";
 
                 // 模糊搜索
-                fieldName = RepoCompConstant.filed_keyword;
+                fieldName = RepoCompConstant.field_keyword;
                 if (body.containsKey(fieldName)) {
                     boolean fuzzy = false;
-                    fuzzy |= ((String) value.getOrDefault(RepoCompConstant.filed_model_name, "")).toLowerCase().contains(((String) body.get(fieldName)).toLowerCase());
-                    fuzzy |= ((String) value.getOrDefault(RepoCompConstant.filed_model_type, "")).toLowerCase().contains(((String) body.get(fieldName)).toLowerCase());
-                    fuzzy |= ((String) value.getOrDefault(RepoCompConstant.filed_description, "")).toLowerCase().contains(((String) body.get(fieldName)).toLowerCase());
-                    fuzzy |= ((String) value.getOrDefault(RepoCompConstant.filed_manufacturer, "")).toLowerCase().contains(((String) body.get(fieldName)).toLowerCase());
-                    fuzzy |= ((String) value.getOrDefault(RepoCompConstant.filed_device_type, "")).toLowerCase().contains(((String) body.get(fieldName)).toLowerCase());
+                    fuzzy |= ((String) value.getOrDefault(RepoCompConstant.field_model_name, "")).toLowerCase().contains(((String) body.get(fieldName)).toLowerCase());
+                    fuzzy |= ((String) value.getOrDefault(RepoCompConstant.field_model_type, "")).toLowerCase().contains(((String) body.get(fieldName)).toLowerCase());
+                    fuzzy |= ((String) value.getOrDefault(RepoCompConstant.field_description, "")).toLowerCase().contains(((String) body.get(fieldName)).toLowerCase());
+                    fuzzy |= ((String) value.getOrDefault(RepoCompConstant.field_manufacturer, "")).toLowerCase().contains(((String) body.get(fieldName)).toLowerCase());
+                    fuzzy |= ((String) value.getOrDefault(RepoCompConstant.field_device_type, "")).toLowerCase().contains(((String) body.get(fieldName)).toLowerCase());
 
                     result &= fuzzy;
                 }
 
                 // 后面是精确匹配
-                fieldName = RepoCompConstant.filed_version;
+                fieldName = RepoCompConstant.field_version;
                 if (body.containsKey(fieldName)) {
                     result &= ((String) value.getOrDefault(fieldName, "")).contains((String) body.get(fieldName));
                 }
-                fieldName = RepoCompConstant.filed_component;
+                fieldName = RepoCompConstant.field_component;
                 if (body.containsKey(fieldName)) {
                     result &= value.getOrDefault(fieldName, "").equals(body.get(fieldName));
                 }
-                fieldName = RepoCompConstant.filed_status;
+                fieldName = RepoCompConstant.field_status;
                 if (body.containsKey(fieldName)) {
-                    Map<String, Object> lastVersion = (Map<String, Object>) value.getOrDefault(RepoCompConstant.filed_last_version, new HashMap<>());
+                    Map<String, Object> lastVersion = (Map<String, Object>) value.getOrDefault(RepoCompConstant.field_last_version, new HashMap<>());
                     result &= lastVersion.getOrDefault(fieldName, 0).equals(body.get(fieldName));
                 }
 
@@ -160,12 +160,12 @@ public class RepoCloudCompController {
 
             for (Map<String, Object> map : list) {
                 // 提取业务参数
-                String modelType = (String) map.get(RepoCompConstant.filed_model_type);
-                String modelName = (String) map.get(RepoCompConstant.filed_model_name);
-                String version = (String) map.get(RepoCompConstant.filed_version);
-                String stage = (String) map.get(RepoCompConstant.filed_stage);
-                String pathName = (String) map.get(RepoCompConstant.filed_path_name);
-                String component = (String) map.get(RepoCompConstant.filed_component);
+                String modelType = (String) map.get(RepoCompConstant.field_model_type);
+                String modelName = (String) map.get(RepoCompConstant.field_model_name);
+                String version = (String) map.get(RepoCompConstant.field_version);
+                String stage = (String) map.get(RepoCompConstant.field_stage);
+                String pathName = (String) map.get(RepoCompConstant.field_path_name);
+                String component = (String) map.get(RepoCompConstant.field_component);
 
                 // 简单验证
                 if (MethodUtils.hasEmpty(modelType, modelName, version, stage, pathName, component)) {
@@ -186,12 +186,12 @@ public class RepoCloudCompController {
     }
 
     @PostMapping("/scan")
-    public AjaxResult deleteDecoderFile(@RequestBody Map<String, Object> body) {
+    public AjaxResult scanFile(@RequestBody Map<String, Object> body) {
         try {
             this.edgeService.testDockerEnv();
 
             // 提取业务参数
-            String modelType = (String) body.get(RepoCompConstant.filed_model_type);
+            String modelType = (String) body.get(RepoCompConstant.field_model_type);
 
             // 简单验证
             if (MethodUtils.hasEmpty(modelType)) {
@@ -211,11 +211,11 @@ public class RepoCloudCompController {
             this.edgeService.testDockerEnv();
 
             // 提取业务参数
-            String modelType = (String) body.get(RepoCompConstant.filed_model_type);
-            String modelName = (String) body.get(RepoCompConstant.filed_model_name);
-            String version = (String) body.get(RepoCompConstant.filed_version);
-            String stage = (String) body.get(RepoCompConstant.filed_stage);
-            String component = (String) body.get(RepoCompConstant.filed_component);
+            String modelType = (String) body.get(RepoCompConstant.field_model_type);
+            String modelName = (String) body.get(RepoCompConstant.field_model_name);
+            String version = (String) body.get(RepoCompConstant.field_version);
+            String stage = (String) body.get(RepoCompConstant.field_stage);
+            String component = (String) body.get(RepoCompConstant.field_component);
 
             // 简单验证
             if (MethodUtils.hasEmpty(modelType, modelName, version, stage, component)) {
@@ -250,11 +250,11 @@ public class RepoCloudCompController {
 
             for (Map<String, Object> map : list) {
                 // 提取业务参数
-                String modelType = (String) map.get(RepoCompConstant.filed_model_type);
-                String modelName = (String) map.get(RepoCompConstant.filed_model_name);
-                String version = (String) map.get(RepoCompConstant.filed_version);
-                String stage = (String) map.get(RepoCompConstant.filed_stage);
-                String component = (String) map.get(RepoCompConstant.filed_component);
+                String modelType = (String) map.get(RepoCompConstant.field_model_type);
+                String modelName = (String) map.get(RepoCompConstant.field_model_name);
+                String version = (String) map.get(RepoCompConstant.field_version);
+                String stage = (String) map.get(RepoCompConstant.field_stage);
+                String component = (String) map.get(RepoCompConstant.field_component);
 
                 // 简单验证
                 if (MethodUtils.hasEmpty(modelType, modelName, version, stage, component)) {

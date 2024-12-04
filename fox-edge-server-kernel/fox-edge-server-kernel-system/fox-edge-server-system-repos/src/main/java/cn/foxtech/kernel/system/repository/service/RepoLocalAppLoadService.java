@@ -9,7 +9,6 @@ import cn.foxtech.common.utils.ContainerUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.system.common.service.ManageConfigService;
-import cn.foxtech.kernel.system.repository.constants.ServiceConfigConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +30,7 @@ public class RepoLocalAppLoadService {
     private RepoLocalAppConfService confService;
 
     public void extendStartConfig(List<Map<String, Object>> serviceIniFileInfoList) {
-        Map<String, Object> configValue = this.configService.getConfigValue(ServiceConfigConstant.field_service_start_config);
+        Map<String, Object> configValue = this.configService.getConfigValue("serviceStartConfig");
 
         // 从配置信息中，取出启动列表信息
         List<Map<String, Object>> serviceList = (List<Map<String, Object>>) configValue.get("services");
@@ -64,7 +63,7 @@ public class RepoLocalAppLoadService {
 
     public Boolean queryServiceLoad(String appName, String appType, Boolean defaultValue) {
         // 获得启动配置
-        Map<String, Object> configValue = this.configService.getConfigValue(ServiceConfigConstant.field_service_start_config);
+        Map<String, Object> configValue = this.configService.getConfigValue("serviceStartConfig");
         if (configValue.isEmpty()) {
             return defaultValue;
         }
@@ -104,7 +103,7 @@ public class RepoLocalAppLoadService {
                 }
 
                 // 获得启动配置
-                Map<String, Object> configValue = this.configService.getConfigValue(ServiceConfigConstant.field_service_start_config);
+                Map<String, Object> configValue = this.configService.getConfigValue("serviceStartConfig");
 
 
                 // 从配置信息中，取出启动列表信息
@@ -124,7 +123,7 @@ public class RepoLocalAppLoadService {
                 serviceList = new ArrayList<>();
                 serviceList.addAll(appName2ConfigStatus.values());
                 configValue.put("services", serviceList);
-                this.configService.saveConfigValue(ServiceConfigConstant.field_service_start_config, configValue);
+                this.configService.saveConfigValue("serviceStartConfig", configValue);
 
             }
         } catch (Exception e) {

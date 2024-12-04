@@ -53,7 +53,7 @@ app_env_type=$(readINI $app_home/shell/fox-edge.ini environment type)
 app_env_mode=$(readINI $app_home/shell/fox-edge.ini environment mode)
 app_env_cpu_id=$(readINI $app_home/shell/fox-edge.ini environment cpu_id)
 app_env_kernel=$(readINI $app_home/shell/fox-edge.ini environment kernel)
-
+app_env_database=$(readINI $app_home/shell/fox-edge.ini environment database)
 
 #cloud参数
 nacos_param=''
@@ -243,6 +243,7 @@ if [[ $app_engine == java ]]; then
 	--app_name=$app_name \
 	--env_type=$app_env_type \
 	--env_cpu_id=$app_env_cpu_id \
+	--env_database=$app_env_database \
 	--work_mode=$app_env_mode \
 	--kernel_mode=$app_env_kernel \
 	--spring.profiles.active=prod \
@@ -267,7 +268,9 @@ if [[ $app_engine == python3  || $app_engine == python ]]; then
 	--app_name=$app_name \
 	--env_type=$app_env_type \
 	--env_cpu_id=$app_env_cpu_id \
+	--env_database=$app_env_database \
 	--work_mode=$app_env_mode \
+	--kernel_mode=$app_env_kernel \
 	server.port=$serverPort \
 	redis.host=$app_param_redis_host redis.port=$app_param_redis_port redis.password=$app_param_redis_password \
 	mysql.host=$app_param_mysql_host mysql.port=$app_param_mysql_port mysql.username=$app_param_mysql_username  mysql.password=$app_param_mysql_password mysql.database=fox_edge \
@@ -292,6 +295,7 @@ if [[ $app_engine == native ]]; then
 		dubeg_args=" -- "
 	fi
 
+
 	#启动进程
 	nohup \
 	$dubeg_head \
@@ -302,7 +306,9 @@ if [[ $app_engine == native ]]; then
 	--app_name=$app_name \
 	--env_type=$app_env_type \
 	--env_cpu_id=$app_env_cpu_id \
+	--env_database=$app_env_database \
 	--work_mode=$app_env_mode \
+	--kernel_mode=$app_env_kernel \
 	server.port=$serverPort \
 	redis.host=$app_param_redis_host redis.port=$app_param_redis_port redis.password=$app_param_redis_password \
 	mysql.host=$app_param_mysql_host mysql.port=$app_param_mysql_port mysql.username=$app_param_mysql_username  mysql.password=$app_param_mysql_password mysql.database=fox_edge \

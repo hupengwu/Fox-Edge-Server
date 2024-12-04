@@ -4,6 +4,7 @@
 
 package cn.foxtech.iot.fox.publish.service.service;
 
+import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.LocalConfigService;
 import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.common.utils.time.interval.TimeIntervalMap;
@@ -20,12 +21,14 @@ public class TimeIntervalService {
      */
     private final TimeIntervalMap timeIntervalMap = new TimeIntervalMap();
     @Autowired
-    private LocalConfigService localConfigService;
+    private InitialConfigService configService;
 
     public boolean testLastTime(String entityType) {
         try {
+            Map<String, Object> configValue = configService.getConfigParam("serverConfig");
+
             // 取出全局配置参数
-            Map<String, Object> entities = (Map<String, Object>) this.localConfigService.getConfig().getOrDefault("entities", new HashMap<>());
+            Map<String, Object> entities = (Map<String, Object>) configValue.getOrDefault("entities", new HashMap<>());
 
             Map<String, Object> map = (Map<String, Object>) entities.get(entityType);
             if (map == null) {

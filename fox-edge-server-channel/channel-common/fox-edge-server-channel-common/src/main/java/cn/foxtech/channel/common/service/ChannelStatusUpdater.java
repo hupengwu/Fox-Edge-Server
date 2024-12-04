@@ -45,7 +45,7 @@ public class ChannelStatusUpdater {
         entity.setUpdateTime(channelEntity.getUpdateTime());
         entity.setOpen(isOpen);
 
-        this.entityManageService.insertRDEntity(entity);
+        this.entityManageService.writeEntity(entity);
     }
 
     public void updateParamStatus(String channelName, String key, Object value) {
@@ -61,6 +61,6 @@ public class ChannelStatusUpdater {
 
         // 更新信息到redis
         exist.getChannelParam().put(key, value);
-        this.entityManageService.updateRDEntity(exist);
+        this.entityManageService.writeEntity(exist);
     }
 }

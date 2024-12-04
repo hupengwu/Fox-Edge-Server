@@ -22,6 +22,7 @@ public class NettyUdpServerHandler extends SimpleChannelInboundHandler<DatagramP
     /**
      * 接收到UDP报文
      * 注意：UDP的地址信息，不在ctx，而是在msg这边
+     * 注意：这边必须终止异常的继续抛出，否则netty将终止数据的接收
      *
      * @param ctx 上下文
      * @param msg 报文
@@ -29,8 +30,10 @@ public class NettyUdpServerHandler extends SimpleChannelInboundHandler<DatagramP
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket msg) throws Exception {
-        // 通知给派生类
-        this.channelHandler.channelRead0(ctx, msg);
+        try {
+            this.channelHandler.channelRead0(ctx, msg);
+        } catch (Throwable e) {
+        }
     }
 
     @Override

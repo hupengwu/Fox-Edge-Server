@@ -215,6 +215,7 @@ public class DeviceManageController {
 
     @PostMapping("entity")
     public AjaxResult insertEntity(@RequestBody Map<String, Object> params) {
+        params.remove("id");
         return this.insertOrUpdate(params);
     }
 
@@ -278,6 +279,8 @@ public class DeviceManageController {
 
                 // 修改数据
                 entity.setId(id);
+                entity.setCreateTime(exist.getCreateTime());
+                entity.setUpdateTime(exist.getUpdateTime());
                 this.entityManageService.updateEntity(entity);
                 return AjaxResult.success();
             }

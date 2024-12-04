@@ -89,6 +89,7 @@ public class RepoLocalOperateListController {
     @PostMapping("entity")
     public AjaxResult insertEntity(@RequestBody Map<String, Object> params) {
         try {
+            params.remove("id");
             this.operateService.insertOrUpdate(params);
             return AjaxResult.success();
         } catch (Exception e) {

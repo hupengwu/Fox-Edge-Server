@@ -41,7 +41,7 @@ public class RepoLocalApplicationController {
     private RepoLocalAppConfService appConfService;
 
     @Autowired
-    private RepoCloudFIleInstallService installService;
+    private RepoCloudFileInstallService installService;
 
 
     @Autowired

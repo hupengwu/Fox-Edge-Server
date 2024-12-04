@@ -118,7 +118,7 @@ public class RepoLocalJarFileInfoService {
         return result;
     }
 
-    public Map<String, Object> readJarFiles(String jarFileName) {
+    public Map<String, Object> readJarFile(String jarFileName) {
         // 读取jar文件信息
         String modelName = this.fileNameService.getModelName(jarFileName);
         if (MethodUtils.hasEmpty(modelName)) {
@@ -132,7 +132,7 @@ public class RepoLocalJarFileInfoService {
 
         Map<String, Object> result = new HashMap<>();
         result.putAll(jarFileInfo);
-        result.put(RepoCompConstant.filed_model_name, modelName);
+        result.put(RepoCompConstant.field_model_name, modelName);
 
         return result;
     }
@@ -322,8 +322,8 @@ public class RepoLocalJarFileInfoService {
             }
 
             Map<String, Object> map = new HashMap<>();
-            map.put(RepoCompConstant.filed_model_name, modelName);
-            map.put(RepoCompConstant.filed_file_name, jarFileName);
+            map.put(RepoCompConstant.field_model_name, modelName);
+            map.put(RepoCompConstant.field_file_name, jarFileName);
             mapList.add(map);
         }
 
@@ -338,7 +338,7 @@ public class RepoLocalJarFileInfoService {
         for (BaseEntity entity : compEntityList) {
             RepoCompEntity compEntity = (RepoCompEntity) entity;
 
-            String fileName = (String) compEntity.getCompParam().get(RepoCompConstant.filed_file_name);
+            String fileName = (String) compEntity.getCompParam().get(RepoCompConstant.field_file_name);
             if (fileName == null) {
                 continue;
             }
@@ -352,7 +352,7 @@ public class RepoLocalJarFileInfoService {
             Map<String, Object> map = BeanMapUtils.objectToMap(compEntity);
 
             Map<String, Object> compParam = (Map<String, Object>) map.get(RepoCompVOFieldConstant.field_comp_param);
-            compParam.put(RepoCompConstant.filed_version, jarInfo.get(RepoCompConstant.filed_version));
+            compParam.put(RepoCompConstant.field_version, jarInfo.get(RepoCompConstant.field_version));
             compParam.put("size", jarInfo.get("size"));
             compParam.put(DeviceDecoderVOFieldConstant.field_load, loadJars.contains(fileName));
 

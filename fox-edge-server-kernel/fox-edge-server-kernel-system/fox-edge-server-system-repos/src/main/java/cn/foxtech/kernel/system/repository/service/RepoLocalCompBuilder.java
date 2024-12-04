@@ -69,7 +69,7 @@ public class RepoLocalCompBuilder {
 
         String manufacturer = (String) compParam.get(OperateVOFieldConstant.field_manufacturer);
         String deviceType = (String) compParam.get(OperateVOFieldConstant.field_device_type);
-        String fileName = (String) compParam.get(RepoCompConstant.filed_file_name);
+        String fileName = (String) compParam.get(RepoCompConstant.field_file_name);
         if (MethodUtils.hasNull(manufacturer, deviceType, fileName)) {
             throw new ServiceException("参数不能为空: manufacturer, deviceType, fileName");
         }
@@ -178,7 +178,7 @@ public class RepoLocalCompBuilder {
 
         String manufacturer = (String) compParam.get(OperateVOFieldConstant.field_manufacturer);
         String deviceType = (String) compParam.get(OperateVOFieldConstant.field_device_type);
-        String modelName = (String) compParam.get(RepoCompConstant.filed_model_name);
+        String modelName = (String) compParam.get(RepoCompConstant.field_model_name);
         if (MethodUtils.hasNull(manufacturer, deviceType, modelName)) {
             throw new ServiceException("参数不能为空: manufacturer, deviceType, modelName");
         }
@@ -191,8 +191,8 @@ public class RepoLocalCompBuilder {
         entity.setCompParam(compParam);
 
         // 填写固定参数
-        entity.getCompParam().put(RepoCompConstant.filed_model_version, RepoCompConstant.filed_value_model_version_default);
-        entity.getCompParam().put(RepoCompConstant.filed_version, "1.0.0");
+        entity.getCompParam().put(RepoCompConstant.field_model_version, RepoCompConstant.field_value_model_version_default);
+        entity.getCompParam().put(RepoCompConstant.field_version, "1.0.0");
 
         return entity;
     }

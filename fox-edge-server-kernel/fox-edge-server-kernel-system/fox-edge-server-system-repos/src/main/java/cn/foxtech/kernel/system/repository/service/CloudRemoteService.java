@@ -89,10 +89,10 @@ public class CloudRemoteService {
         }
 
         // 取出信息
-        this.host = (String) valueConfig.getOrDefault(RepoConfigConstant.filed_config_host, "http://localhost:8080");
-        this.username = (String) valueConfig.getOrDefault(RepoConfigConstant.filed_config_username, "username");
-        this.password = (String) valueConfig.getOrDefault(RepoConfigConstant.filed_config_password, "");
-        this.lockdown = (Integer) valueConfig.getOrDefault(RepoConfigConstant.filed_config_lockdown, 60);
+        this.host = (String) valueConfig.getOrDefault(RepoConfigConstant.field_config_host, "http://localhost:8080");
+        this.username = (String) valueConfig.getOrDefault(RepoConfigConstant.field_config_username, "username");
+        this.password = (String) valueConfig.getOrDefault(RepoConfigConstant.field_config_password, "");
+        this.lockdown = (Integer) valueConfig.getOrDefault(RepoConfigConstant.field_config_lockdown, 60);
 
         Map<String, Object> request = new HashMap<>();
         request.put("username", this.username);

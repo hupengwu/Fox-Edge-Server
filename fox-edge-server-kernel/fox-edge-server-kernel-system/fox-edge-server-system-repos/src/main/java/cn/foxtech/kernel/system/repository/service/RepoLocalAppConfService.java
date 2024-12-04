@@ -154,18 +154,23 @@ public class RepoLocalAppConfService {
         if (appEngine.equals("java")) {
             sb.append("jarName=" + fileName + "\r\n");
             sb.append("springParam=\"" + userParam + "\"" + "\r\n");
+            sb.append("loaderName=" + loaderName + "\r\n");
+            sb.append("confFiles=\"");
+            for (String line : confFiles) {
+                sb.append(line + ";");
+            }
+            sb.append("\"");
         }
         if (appEngine.equals("python") || appEngine.equals("python3")) {
             sb.append("pyName=" + fileName + "\r\n");
             sb.append("pythonParam=\"" + userParam + "\"" + "\r\n");
         }
-
-        sb.append("loaderName=" + loaderName + "\r\n");
-        sb.append("confFiles=\"");
-        for (String line : confFiles) {
-            sb.append(line + ";");
+        if (appEngine.equals("native")) {
+            sb.append("nativeName=" + fileName + "\r\n");
+            sb.append("nativeParam=\"" + userParam + "\"" + "\r\n");
         }
-        sb.append("\"" + "\r\n");
+
+        sb.append("\r\n");
 
         // 把文本内容写入文件
         FileTextUtils.writeTextFile(filePath, sb.toString(), "");
@@ -226,9 +231,9 @@ public class RepoLocalAppConfService {
 
         List<Map<String, Object>> result = new ArrayList<>();
         for (Map<String, Object> map : appList) {
-            String appType = (String) map.getOrDefault(RepoCompConstant.filed_component, "");
-            String appName = (String) map.getOrDefault(RepoCompConstant.filed_model_name, "");
-            String key = appType + ":" + appName;
+            String component = (String) map.getOrDefault(RepoCompConstant.field_component, "");
+            String modelName = (String) map.getOrDefault(RepoCompConstant.field_model_name, "");
+            String key = component + ":" + modelName;
 
             if (disables.contains(key)) {
                 continue;
@@ -283,7 +288,7 @@ public class RepoLocalAppConfService {
         return result;
     }
 
-    public Map<String, Object> readConfFile(String absolutePath, String appType, String appName) throws IOException {
+    public Map<String, Object> readConfFile(String absolutePath, String appType, String appName) {
         try {
             File file = new File(absolutePath + "/shell/" + appType + "/" + appName + "/service.conf");
             if (!file.isFile()) {
