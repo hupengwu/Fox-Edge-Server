@@ -71,9 +71,6 @@ if [[ $app_env_kernel == compose ]]; then
 elif [[ $app_env_kernel == native ]]; then	
 	mkdir -p conf/kernel/manager-native	
 	cp -r $app_home/$cpdir/kernel/manager-native conf/kernel
-else
-	mkdir -p conf/kernel
-	cp -r $app_home/$cpdir/kernel/manager-service conf/kernel
 fi
 
 #复制一级目录
@@ -106,9 +103,9 @@ mkdir -p $cpdir
 cp -r $app_home/$cpdir/decoderList.jsn $cpdir
 
 #创建目录并复制文件
-cpdir=repository/service
-mkdir -p $cpdir
-cp -r $app_home/$cpdir/serviceList.jsn $cpdir
+#cpdir=repository/service
+#mkdir -p $cpdir
+#cp -r $app_home/$cpdir/serviceList.jsn $cpdir
 
 
 #复制一级目录

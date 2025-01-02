@@ -4,6 +4,7 @@
 
 package cn.foxtech.iot.common.service;
 
+import cn.foxtech.common.entity.entity.ConfigEntity;
 import cn.foxtech.common.entity.manager.EntityServiceManager;
 import cn.foxtech.utils.common.utils.redis.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ public class EntityManageService extends EntityServiceManager {
     private RedisService redisService;
 
     public void instance() {
+        this.addConsumer(ConfigEntity.class.getSimpleName());
         this.instance(this.redisService);
     }
 }

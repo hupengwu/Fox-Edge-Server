@@ -26,7 +26,6 @@ public class OperateVOFieldConstant extends BaseVOFieldConstant {
     public static final String field_polling = "polling";
     public static final String field_timeout = "timeout";
     public static final String field_description = "description";
-    public static final String field_file = "file";
 
     public static final String value_engine_java = "Java";
 

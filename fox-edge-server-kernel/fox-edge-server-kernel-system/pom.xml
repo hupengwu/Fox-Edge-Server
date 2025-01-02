@@ -21,8 +21,5 @@
         <module>fox-edge-server-system-engine</module>
         <module>fox-edge-server-system-nacos</module>
         <module>fox-edge-server-system-service</module>
-        <module>fox-edge-server-system-compose</module>
     </modules>
-
-
 </project>

@@ -95,7 +95,6 @@ public class RepoInitialize {
 
         // 一次性任务
         this.periodTasksScheduler.insertPeriodTask(new RepoScanStatusTask(this.installService, this.installStatus, this.cacheService, this.pathNameService, this.logger, RepoCompConstant.repository_type_decoder));
-        this.periodTasksScheduler.insertPeriodTask(new RepoScanStatusTask(this.installService, this.installStatus, this.cacheService, this.pathNameService, this.logger, RepoCompConstant.repository_type_template));
         this.periodTasksScheduler.insertPeriodTask(new RepoScanStatusTask(this.installService, this.installStatus, this.cacheService, this.pathNameService, this.logger, RepoCompConstant.repository_type_webpack));
         this.periodTasksScheduler.insertPeriodTask(new RepoScanStatusTask(this.installService, this.installStatus, this.cacheService, this.pathNameService, this.logger, RepoCompConstant.repository_type_service));
 

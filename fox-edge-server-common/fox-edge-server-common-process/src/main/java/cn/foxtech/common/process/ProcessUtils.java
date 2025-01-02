@@ -109,7 +109,7 @@ public class ProcessUtils {
         List<String> shellLineList = ShellUtils.executeShell("ps -aux|grep " + feature);
         for (String shellLine : shellLineList) {
             String[] items = shellLine.split("\\s+");
-            if (items.length < 18) {
+            if (items.length < 11) {
                 continue;
             }
 
@@ -404,6 +404,10 @@ public class ProcessUtils {
     }
 
     private static String[] filterGoDebug(String[] items) {
+        if (items.length < 18){
+            return items;
+        }
+
         if (!items[10].equals("dlv") || !items[15].equals("exec")|| !items[17].equals("--")) {
             return items;
         }

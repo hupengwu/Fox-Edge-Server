@@ -71,25 +71,6 @@ public class RepoLocalCompConvert {
 
             return localMap;
         }
-        if (modelType.equals(RepoCompConstant.repository_type_template)) {
-            localMap.put(RepoCompVOFieldConstant.field_comp_repo, RepoCompVOFieldConstant.value_comp_repo_local);
-            localMap.put(RepoCompVOFieldConstant.field_comp_type, RepoCompVOFieldConstant.value_comp_type_file_template);
-            localMap.put(RepoCompVOFieldConstant.field_comp_param, new HashMap<>());
-
-            // 必选参数
-            if (MethodUtils.hasEmpty(modelName, manufacturer, deviceType)) {
-                throw new ServiceException("参数不能为空: modelName, manufacturer, deviceType");
-            }
-
-            // 可选参数
-            Map<String, Object> compParam = (Map<String, Object>) localMap.get(RepoCompVOFieldConstant.field_comp_param);
-            compParam.put(OperateVOFieldConstant.field_manufacturer, manufacturer);
-            compParam.put(OperateVOFieldConstant.field_device_type, deviceType);
-            compParam.put(RepoCompVOFieldConstant.field_comp_id, compId);
-            compParam.put(RepoCompConstant.field_model_name, modelName);
-
-            return localMap;
-        }
 
         return null;
     }

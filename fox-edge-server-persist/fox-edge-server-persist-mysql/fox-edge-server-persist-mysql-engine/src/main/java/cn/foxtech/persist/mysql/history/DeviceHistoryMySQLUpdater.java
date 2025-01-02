@@ -12,7 +12,6 @@ import cn.foxtech.common.entity.entity.DeviceValueEntity;
 import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.service.devicehistory.DeviceHistoryEntityMaker;
 import cn.foxtech.persist.common.history.IDeviceHistoryUpdater;
-import cn.foxtech.persist.common.service.PersistEnvService;
 import cn.foxtech.persist.common.service.PersistManageService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +32,6 @@ public class DeviceHistoryMySQLUpdater implements IDeviceHistoryUpdater {
 
     @Autowired
     private InitialConfigService configService;
-
-    @Autowired
-    private PersistEnvService persistEnvService;
 
     /**
      * 上次处理时间
@@ -125,8 +121,7 @@ public class DeviceHistoryMySQLUpdater implements IDeviceHistoryUpdater {
                 return;
             }
 
-            String serverConfig = this.persistEnvService.getServerConfig();
-            Map<String, Object> configs = this.configService.getConfigParam(serverConfig);
+            Map<String, Object> configs = this.configService.getConfigParam("serverConfig");
             Map<String, Object> params = (Map<String, Object>) configs.getOrDefault("deviceHistory", new HashMap<>());
 
             Integer maxCount = (Integer) params.getOrDefault("maxCount", 1000000);

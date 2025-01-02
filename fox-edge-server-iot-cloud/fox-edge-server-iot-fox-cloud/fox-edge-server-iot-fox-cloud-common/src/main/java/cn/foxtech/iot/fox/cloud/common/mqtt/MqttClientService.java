@@ -27,6 +27,7 @@ import cn.foxtech.core.exception.ServiceException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import net.dreamlu.iot.mqtt.codec.MqttPublishMessage;
+import net.dreamlu.iot.mqtt.codec.MqttVersion;
 import net.dreamlu.iot.mqtt.core.client.MqttClient;
 import net.dreamlu.iot.mqtt.core.client.MqttClientCreator;
 import org.slf4j.Logger;
@@ -37,6 +38,7 @@ import org.tio.core.ChannelContext;
 import org.tio.utils.buffer.ByteBufferUtil;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -62,8 +64,7 @@ public class MqttClientService {
     /**
      * 配置服务：从redis中获得配置信息
      */
-    @Autowired
-    private MqttConfigService mqttConfigService;
+    private MqttConfigService mqttConfigService = new MqttConfigService();
     /**
      * 客户端连接
      */
@@ -96,7 +97,7 @@ public class MqttClientService {
         Map<String, Object> mqttConfig = (Map<String, Object>) remoteConfig.getOrDefault("mqtt", new HashMap<>());
 
         // 初始化配置
-        this.mqttConfigService.initialize(mqttConfig);
+        this.mqttConfigService.instance(mqttConfig);
 
 
         String clientId = this.mqttConfigService.getClientId() + ":" + UUID.randomUUID().toString().replace("-", "");
@@ -111,7 +112,19 @@ public class MqttClientService {
         logger.info("mqtt topic publish2aggregate:  " + this.publish2aggregate);
         logger.info("mqtt topic publish2forward:  " + this.publish2forward);
 
+        MqttVersion mqttVersion = MqttVersion.MQTT_3_1_1;
+        if (this.mqttConfigService.getVersion().equalsIgnoreCase("MQTT_3_1")) {
+            mqttVersion = MqttVersion.MQTT_3_1;
+        }
+        if (this.mqttConfigService.getVersion().equalsIgnoreCase("MQTT_3_1_1")) {
+            mqttVersion = MqttVersion.MQTT_3_1_1;
+        }
+        if (this.mqttConfigService.getVersion().equalsIgnoreCase("MQTT_5")) {
+            mqttVersion = MqttVersion.MQTT_5;
+        }
+
         // 从把配置参数填入组件当中
+        this.creator.version(mqttVersion);
         this.creator.ip(this.mqttConfigService.getIp());
         this.creator.port(this.mqttConfigService.getPort());
         this.creator.name(this.mqttConfigService.getName());
@@ -132,8 +145,8 @@ public class MqttClientService {
         return true;
     }
 
-    public void onMessage(ChannelContext context, String topic, MqttPublishMessage message, ByteBuffer payload) {
-        String messageTxt = ByteBufferUtil.toString(payload);
+    public void onMessage(ChannelContext context, String topic, MqttPublishMessage message, byte[] payload) {
+        String messageTxt = new String(payload, StandardCharsets.UTF_8);
 
         if (this.subscribeAggregate.equals(topic)) {
             this.receiveAggregate(messageTxt);

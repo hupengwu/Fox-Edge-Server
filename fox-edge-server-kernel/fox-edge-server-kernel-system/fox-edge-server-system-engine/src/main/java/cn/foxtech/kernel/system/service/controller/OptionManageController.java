@@ -59,6 +59,9 @@ public class OptionManageController {
             if ("Option3".equals(mode)) {
                 return AjaxResult.success(this.selectOption3(params));
             }
+            if ("Option4".equals(mode)) {
+                return AjaxResult.success(this.selectOption4(params));
+            }
 
             // 不正确的参数
             return AjaxResult.error("不支持的操作模式!");
@@ -193,6 +196,43 @@ public class OptionManageController {
         // 用field1/field2/value作为distinct的条件，value1作为筛选条件
         List<Map<String, Object>> mapList = this.foxSqlService.selectOptionList(tableName, underField1, underField2, underValue, fieldValue1, true);
         return this.getOptionList(mapList, value, label);
+    }
+
+    private List<Object> selectOption4(Map<String, Object> params) {
+        String entityType = (String) params.get("entityType");
+        String field = (String) params.get("field");
+        List<Map<String, Object>> filters = (List<Map<String, Object>>) params.get("filters");
+
+        // 优先查询双参数
+        if (MethodUtils.hasEmpty(entityType, field, filters)) {
+            throw new ServiceException("缺少参数：entityType, field, filters ");
+        }
+
+        String underField = StringUtils.camelToUnderline(field);
+        if (!this.entityOptionManager.isPermit(entityType, underField)) {
+            throw new ServiceException("不允许该操作！");
+        }
+
+        Map<String, Object> where = new HashMap<>();
+        for (Map<String, Object> filter : filters) {
+            String filterField = StringUtils.camelToUnderline((String) filter.get("field"));
+            Object value = filter.get("value");
+
+            if (!this.entityOptionManager.isPermit(entityType, filterField)) {
+                throw new ServiceException("不允许该操作！");
+            }
+
+            where.put(filterField, value);
+        }
+
+        String tableName = this.entityOptionManager.getTableName(entityType);
+        if (MethodUtils.hasEmpty(tableName)) {
+            throw new ServiceException("表名称为空！");
+        }
+
+        // 用field1/field2/value作为distinct的条件，value1作为筛选条件
+        List<Map<String, Object>> mapList = this.foxSqlService.selectOptionList(tableName, underField, where, true);
+        return this.getOptionList(mapList, field, field);
     }
 
     @PostMapping("tree")

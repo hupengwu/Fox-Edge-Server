@@ -30,12 +30,20 @@ public class RepoCloudRemoteService {
         return this.cloudRemoteService.executePost("/manager/repository/component/model/page", body);
     }
 
+    public Map<String, Object> queryCloudCompTemplatePage(Map<String, Object> body) throws IOException {
+        return this.cloudRemoteService.executePost("/manager/repository/component/template/page", body);
+    }
+
     public Map<String, Object> queryCloudScriptVersionPage(Map<String, Object> body) throws IOException {
         return this.cloudRemoteService.executePost("/manager/repository/component/script/version/page", body);
     }
 
     public Map<String, Object> queryCloudModelVersionPage(Map<String, Object> body) throws IOException {
         return this.cloudRemoteService.executePost("/manager/repository/component/model/version/page", body);
+    }
+
+    public Map<String, Object> queryCloudTemplateVersionPage(Map<String, Object> body) throws IOException {
+        return this.cloudRemoteService.executePost("/manager/repository/component/template/version/page", body);
     }
 
     public Map<String, Object> queryCloudScriptVersionList(Map<String, Object> body) throws IOException {
@@ -46,6 +54,10 @@ public class RepoCloudRemoteService {
         return this.cloudRemoteService.executePost("/manager/repository/component/model/version/entities", body);
     }
 
+    public Map<String, Object> queryCloudTemplateVersionList(Map<String, Object> body) throws IOException {
+        return this.cloudRemoteService.executePost("/manager/repository/component/template/version/entities", body);
+    }
+
     public Map<String, Object> queryCloudScriptOperateList(Map<String, Object> body) throws IOException {
         return this.cloudRemoteService.executePost("/manager/repository/component/script/version/operate/entities", body);
     }
@@ -54,11 +66,19 @@ public class RepoCloudRemoteService {
         return this.cloudRemoteService.executePost("/manager/repository/component/model/version/object/entities", body);
     }
 
+    public Map<String, Object> queryCloudTemplateObjectList(Map<String, Object> body) throws IOException {
+        return this.cloudRemoteService.executePost("/manager/repository/component/template/version/object/entities", body);
+    }
+
     public Map<String, Object> queryCloudScriptOperateEntity(Map<String, Object> body) throws IOException {
         return this.cloudRemoteService.executePost("/manager/repository/component/script/version/operate/entity", body);
     }
 
     public Map<String, Object> queryCloudModelObjectEntity(Map<String, Object> body) throws IOException {
         return this.cloudRemoteService.executePost("/manager/repository/component/model/version/object/entity", body);
+    }
+
+    public Map<String, Object> queryCloudTemplateObjectEntity(Map<String, Object> body) throws IOException {
+        return this.cloudRemoteService.executePost("/manager/repository/component/template/version/object/entity", body);
     }
 }

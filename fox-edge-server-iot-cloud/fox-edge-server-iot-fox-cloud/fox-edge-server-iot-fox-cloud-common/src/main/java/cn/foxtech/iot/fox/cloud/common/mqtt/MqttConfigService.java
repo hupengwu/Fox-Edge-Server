@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-@Component
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
 public class MqttConfigService {
@@ -47,7 +46,7 @@ public class MqttConfigService {
 
     private Integer reInterval = 5000;
 
-    public void initialize(Map<String, Object> configs) {
+    public void instance(Map<String, Object> configs) {
         // 从redis中装载配置：如果redis没有，则默认采用application.yml的配置数据
         this.ip = MapUtils.getOrDefault(configs, String.class, "ip", this.ip);
         this.port = MapUtils.getOrDefault(configs, Integer.class, "port", this.port);

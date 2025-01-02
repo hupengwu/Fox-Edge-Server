@@ -79,6 +79,13 @@ public class EntityObjectManager extends EntityBaseManager {
         return this.entityRedisComponent.getBaseRedisService(clazz.getSimpleName());
     }
 
+    public <T> void bind(Class<T> clazz,BaseConsumerTypeNotify notify) {
+        BaseRedisService redisService = this.entityRedisComponent.getBaseRedisService(clazz.getSimpleName());
+        if (redisService instanceof ConsumerRedisService){
+            ((ConsumerRedisService) redisService).bind(notify);
+        }
+    }
+
     public BaseRedisService getBaseRedisService(String entityType) {
         return this.entityRedisComponent.getBaseRedisService(entityType);
     }

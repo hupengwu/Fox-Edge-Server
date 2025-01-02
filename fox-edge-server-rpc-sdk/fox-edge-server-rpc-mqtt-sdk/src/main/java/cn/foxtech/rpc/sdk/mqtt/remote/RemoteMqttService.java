@@ -5,7 +5,7 @@
 package cn.foxtech.rpc.sdk.mqtt.remote;
 
 import cn.foxtech.common.mqtt.MqttClientHandler;
-import cn.foxtech.common.mqtt.MqttClientService;
+import cn.foxtech.common.mqtt.MqttCompService;
 import lombok.Setter;
 import net.dreamlu.iot.mqtt.core.client.MqttClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,19 +17,17 @@ import java.util.Map;
 @Component
 public class RemoteMqttService {
     @Autowired
-    private MqttClientService mqttClientService;
+    private MqttCompService mqttClientService;
 
     @Setter
     private Map<String, Object> mqttConfig = new HashMap<>();
 
-    public void initialize(MqttClientHandler clientHandler) {
-        // 绑定当前的handler
-        this.mqttClientService.getMqttClientListener().setClientHandler(clientHandler);
-        this.mqttClientService.Initialize(this.mqttConfig);
+    public void initialize(MqttClientHandler handler) {
+        this.mqttClientService.createClientEntity("", this.mqttConfig, handler);
     }
 
     public MqttClient getClient() {
-        return this.mqttClientService.getMqttClient();
+        return this.mqttClientService.getClientEntity("").getClient();
     }
 
     /**
@@ -41,7 +39,7 @@ public class RemoteMqttService {
         long startTime = System.currentTimeMillis();
         while (true) {
             // 检查：是否连接成功
-            if (this.mqttClientService.getMqttClient().isConnected()) {
+            if (this.mqttClientService.getClientEntity("").getClient().isConnected()) {
                 return;
             }
 

@@ -15,6 +15,7 @@ import org.tio.core.ChannelContext;
 import org.tio.utils.buffer.ByteBufferUtil;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class MqttHandler extends MqttClientHandler {
@@ -23,8 +24,8 @@ public class MqttHandler extends MqttClientHandler {
     private String topic;
 
     @Override
-    public void onMessage(ChannelContext context, String topic, MqttPublishMessage message, ByteBuffer payload) {
-        String messageTxt = ByteBufferUtil.toString(payload);
+    public void onMessage(ChannelContext context, String topic, MqttPublishMessage message, byte[] payload) {
+        String messageTxt = new String(payload, StandardCharsets.UTF_8);
 
         // DeviceRecordEntity要求的时间戳
         if (topic.toLowerCase().endsWith("/timestamp".toLowerCase())) {

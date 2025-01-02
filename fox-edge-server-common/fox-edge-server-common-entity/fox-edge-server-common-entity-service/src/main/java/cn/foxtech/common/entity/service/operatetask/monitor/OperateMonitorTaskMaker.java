@@ -27,68 +27,68 @@ public class OperateMonitorTaskMaker {
      * @return 实体列表
      */
     public static List<BaseEntity> makePoList2EntityList(List<BaseEntity> poList) {
-        List<BaseEntity> operateRecordList = new ArrayList<>();
-        for (BaseEntity entity : poList) {
-            OperateMonitorTaskPo po = (OperateMonitorTaskPo) entity;
+        List<BaseEntity> entityList = new ArrayList<>();
+        for (BaseEntity base : poList) {
+            OperateMonitorTaskPo po = (OperateMonitorTaskPo) base;
 
-            OperateMonitorTaskEntity config = OperateMonitorTaskMaker.makePo2Entity(po);
-            operateRecordList.add(config);
+            OperateMonitorTaskEntity entity = OperateMonitorTaskMaker.makePo2Entity(po);
+            entityList.add(entity);
         }
 
-        return operateRecordList;
+        return entityList;
     }
 
     public static OperateMonitorTaskPo makeEntity2Po(OperateMonitorTaskEntity entity) {
-        OperateMonitorTaskPo result = new OperateMonitorTaskPo();
-        result.bind(entity);
+        OperateMonitorTaskPo po = new OperateMonitorTaskPo();
+        po.bind(entity);
 
-        result.setDeviceIds(JsonUtils.buildJsonWithoutException(entity.getDeviceIds()));
-        result.setTemplateParam(JsonUtils.buildJsonWithoutException(entity.getTemplateParam()));
-        result.setTaskParam(JsonUtils.buildJsonWithoutException(entity.getTaskParam()));
+        po.setDeviceIds(JsonUtils.buildJsonWithoutException(entity.getDeviceIds()));
+        po.setTemplateParam(JsonUtils.buildJsonWithoutException(entity.getTemplateParam()));
+        po.setTaskParam(JsonUtils.buildJsonWithoutException(entity.getTaskParam()));
 
-        return result;
+        return po;
     }
 
-    public static OperateMonitorTaskEntity makePo2Entity(OperateMonitorTaskPo entity) {
-        OperateMonitorTaskEntity result = new OperateMonitorTaskEntity();
-        result.bind(entity);
+    public static OperateMonitorTaskEntity makePo2Entity(OperateMonitorTaskPo po) {
+        OperateMonitorTaskEntity entity = new OperateMonitorTaskEntity();
+        entity.bind(po);
 
         try {
-            List<Map<String, Object>> params = JsonUtils.buildObject(entity.getTemplateParam(), List.class);
+            List<Map<String, Object>> params = JsonUtils.buildObject(po.getTemplateParam(), List.class);
             if (params != null) {
-                result.setTemplateParam(params);
+                entity.setTemplateParam(params);
             } else {
-                logger.error("设备配置参数转换Json对象失败：" + entity.getTemplateName() + ":" + entity.getTemplateParam());
+                logger.error("设备配置参数转换Json对象失败：" + po.getTemplateName() + ":" + po.getTemplateParam());
             }
         } catch (Exception e) {
-            logger.error("设备配置参数转换Json对象失败：" + entity.getTemplateName() + ":" + entity.getTemplateParam());
+            logger.error("设备配置参数转换Json对象失败：" + po.getTemplateName() + ":" + po.getTemplateParam());
         }
 
         try {
-            List<Long> deviceIds = JsonUtils.buildObject(entity.getDeviceIds(), List.class);
+            List<Long> deviceIds = JsonUtils.buildObject(po.getDeviceIds(), List.class);
             if (deviceIds != null) {
-                result.getDeviceIds().addAll(deviceIds);
+                entity.getDeviceIds().addAll(deviceIds);
             } else {
-                logger.error("设备配置参数转换Json对象失败：" + entity.getTemplateName() + ":" + entity.getDeviceIds());
+                logger.error("设备配置参数转换Json对象失败：" + po.getTemplateName() + ":" + po.getDeviceIds());
             }
         } catch (Exception e) {
-            logger.error("设备配置参数转换Json对象失败：" + entity.getTemplateName() + ":" + entity.getDeviceIds());
+            logger.error("设备配置参数转换Json对象失败：" + po.getTemplateName() + ":" + po.getDeviceIds());
         }
 
         try {
-            Map<String, Object> taskParam = JsonUtils.buildObject(entity.getTaskParam(), Map.class);
+            Map<String, Object> taskParam = JsonUtils.buildObject(po.getTaskParam(), Map.class);
             if (taskParam != null) {
-                result.getTaskParam().putAll(taskParam);
+                entity.getTaskParam().putAll(taskParam);
             } else {
-                logger.error("设备配置参数转换Json对象失败：" + entity.getTemplateName() + ":" + entity.getTaskParam());
+                logger.error("设备配置参数转换Json对象失败：" + po.getTemplateName() + ":" + po.getTaskParam());
             }
         } catch (Exception e) {
-            logger.error("设备配置参数转换Json对象失败：" + entity.getTemplateName() + ":" + entity.getTaskParam());
+            logger.error("设备配置参数转换Json对象失败：" + po.getTemplateName() + ":" + po.getTaskParam());
         }
 
         // 补充缺省值
-        result.setDefaultValue();
+        entity.setDefaultValue();
 
-        return result;
+        return entity;
     }
 }

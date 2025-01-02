@@ -8,7 +8,6 @@ package cn.foxtech.controller.service.initialize;
 import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
 import cn.foxtech.controller.common.initialize.ControllerInitialize;
-import cn.foxtech.controller.common.service.ControllerEnvService;
 import cn.foxtech.controller.service.service.CollectorExchangeService;
 import cn.foxtech.controller.service.service.CollectorSubscribeService;
 import org.slf4j.Logger;
@@ -44,9 +43,6 @@ public class ControllerEngineInitialize {
     @Autowired
     private InitialConfigService configService;
 
-    @Autowired
-    private ControllerEnvService controllerEnvService;
-
 
     public void initialize() {
         String message = "------------------------ControllerEngine 初始化开始！------------------------";
@@ -55,8 +51,7 @@ public class ControllerEngineInitialize {
 
         this.controllerInitialize.initialize();
 
-        String serverConfig = this.controllerEnvService.getServerConfig();
-        this.configService.initialize(serverConfig, "controllerServerConfig.json");
+        this.configService.initialize("serverConfig", "controllerServerConfig.json");
 
         // 调度设备数据采集任务
         this.exchangeService.schedule();

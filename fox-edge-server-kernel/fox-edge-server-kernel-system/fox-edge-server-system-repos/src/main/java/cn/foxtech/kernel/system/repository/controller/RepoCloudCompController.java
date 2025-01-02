@@ -87,8 +87,11 @@ public class RepoCloudCompController {
                 this.cacheService.saveList(modelType, list);
             }
 
-            // 过滤掉配置文件中指定的项目
-            list = this.appConfService.filterModelList(list);
+            // 如果是服务类型，那么进行一次规则过滤
+            if (RepoCompConstant.repository_type_service.equals(modelType)) {
+                list = this.appConfService.filter(list);
+            }
+
 
             // 分析本地的安装状态
             for (Map<String, Object> map : list) {

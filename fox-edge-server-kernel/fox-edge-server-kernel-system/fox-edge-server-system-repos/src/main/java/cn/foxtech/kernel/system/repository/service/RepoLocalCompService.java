@@ -6,12 +6,10 @@ package cn.foxtech.kernel.system.repository.service;
 
 import cn.foxtech.common.domain.constant.ServiceVOFieldConstant;
 import cn.foxtech.common.entity.constant.DeviceModelVOFieldConstant;
+import cn.foxtech.common.entity.constant.DeviceTemplateVOFieldConstant;
 import cn.foxtech.common.entity.constant.OperateVOFieldConstant;
 import cn.foxtech.common.entity.constant.RepoCompVOFieldConstant;
-import cn.foxtech.common.entity.entity.BaseEntity;
-import cn.foxtech.common.entity.entity.DeviceModelEntity;
-import cn.foxtech.common.entity.entity.OperateEntity;
-import cn.foxtech.common.entity.entity.RepoCompEntity;
+import cn.foxtech.common.entity.entity.*;
 import cn.foxtech.common.utils.ContainerUtils;
 import cn.foxtech.common.utils.DifferUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
@@ -38,6 +36,9 @@ public class RepoLocalCompService {
     @Autowired
     private RepoLocalJsnModelService modelService;
 
+    @Autowired
+    private RepoLocalDevTemplateService templateService;
+
     public List<BaseEntity> getCompEntityList(Map<String, Object> body) {
         String compRepo = (String) body.get(RepoCompVOFieldConstant.field_comp_repo);
         String compType = (String) body.get(RepoCompVOFieldConstant.field_comp_type);
@@ -62,7 +63,6 @@ public class RepoLocalCompService {
 
             if (RepoCompVOFieldConstant.value_comp_type_jar_decoder.equals(compType) // jar-decoder
                     || RepoCompVOFieldConstant.value_comp_type_jsp_decoder.equals(compType) // jsp-decoder
-                    || RepoCompVOFieldConstant.value_comp_type_file_template.equals(compType)// file-template
             ) {
                 if (MethodUtils.hasEmpty(keyWord)) {
                     return true;
@@ -120,7 +120,15 @@ public class RepoLocalCompService {
 
         // 检查：实体中的依赖关系，避免数据之间依赖关系失效
         if (RepoCompVOFieldConstant.value_comp_type_jsn_decoder.equals(compEntity.getCompType())) {
-            List<BaseEntity> operateList = this.modelService.getDeviceTemplateEntityList(compEntity);
+            List<BaseEntity> operateList = this.modelService.getDeviceModelEntityList(compEntity);
+            if (!operateList.isEmpty()) {
+                throw new ServiceException("该组件下面，已经定义了操作方法，请先删除这些操作方法后，再删除组件!");
+            }
+        }
+
+        // 检查：实体中的依赖关系，避免数据之间依赖关系失效
+        if (RepoCompVOFieldConstant.value_comp_type_device_template.equals(compEntity.getCompType())) {
+            List<BaseEntity> operateList = this.templateService.getDeviceTemplateEntityList(compEntity);
             if (!operateList.isEmpty()) {
                 throw new ServiceException("该组件下面，已经定义了操作方法，请先删除这些操作方法后，再删除组件!");
             }
@@ -134,7 +142,6 @@ public class RepoLocalCompService {
         return this.entityManageService.getEntity(Long.parseLong(compId.toString()), RepoCompEntity.class);
     }
 
-
     public Map<String, Object> installVersion(String compType, Map<String, Object> data) throws IOException, InterruptedException {
 
         if (compType.equals(RepoCompVOFieldConstant.value_comp_type_jsp_decoder)) {
@@ -143,11 +150,14 @@ public class RepoLocalCompService {
         if (compType.equals(RepoCompVOFieldConstant.value_comp_type_jsn_decoder)) {
             return this.installJsnDecoderEntity(data);
         }
+        if (compType.equals(RepoCompVOFieldConstant.value_comp_type_device_template)) {
+            return this.installDevTemplateEntity(data);
+        }
 
         throw new ServiceException("该组件类型，不支持本地上传");
     }
 
-    private Map<String, Object> installJspDecoderEntity(Map<String, Object> data)  {
+    private Map<String, Object> installJspDecoderEntity(Map<String, Object> data) {
         String deviceType = (String) data.get(OperateVOFieldConstant.field_device_type);
         String manufacturer = (String) data.get(OperateVOFieldConstant.field_manufacturer);
         String scriptId = (String) data.get(OperateVOFieldConstant.field_script_id);
@@ -247,7 +257,7 @@ public class RepoLocalCompService {
         return null;
     }
 
-    private Map<String, Object> installJsnDecoderEntity(Map<String, Object> data)  {
+    private Map<String, Object> installJsnDecoderEntity(Map<String, Object> data) {
         String deviceType = (String) data.get(DeviceModelVOFieldConstant.field_device_type);
         String manufacturer = (String) data.get(DeviceModelVOFieldConstant.field_manufacturer);
         String modelId = (String) data.get(DeviceModelVOFieldConstant.field_model_id);
@@ -307,6 +317,109 @@ public class RepoLocalCompService {
 
         for (String key : addList) {
             DeviceModelEntity modelEntity = dstOperateMap.get(key);
+            modelEntity.setId(null);
+            this.entityManageService.insertEntity(modelEntity);
+        }
+        for (String key : delList) {
+            BaseEntity modelEntity = srcOperateMap.get(key);
+            this.entityManageService.deleteEntity(modelEntity);
+        }
+        for (String key : eqlList) {
+            BaseEntity dstEntity = dstOperateMap.get(key);
+            BaseEntity srcEntity = srcOperateMap.get(key);
+            if (dstEntity.makeServiceValue().equals(srcEntity.makeServiceValue())) {
+                continue;
+            }
+
+            dstEntity.setId(srcEntity.getId());
+            this.entityManageService.updateEntity(dstEntity);
+        }
+
+        // 获得版本日期
+        Long updateTime = Long.valueOf(data.getOrDefault("updateTime", "0").toString());
+        String format = "yyyy-MM-dd HH:mm:ss";
+        SimpleDateFormat SDF = new SimpleDateFormat(format);
+        String timer = SDF.format(new Date(updateTime));
+
+        // 更新：安装版本的信息
+        Map<String, Object> install = new HashMap<>();
+        install.put("updateTime", timer);
+        install.put("description", data.get("description"));
+        install.put("id", data.get("id"));
+
+        // 更新版本信息
+        repoCompEntity.getCompParam().put("installVersion", install);
+        this.entityManageService.updateEntity(repoCompEntity);
+
+        return null;
+    }
+
+    private Map<String, Object> installDevTemplateEntity(Map<String, Object> data) {
+        String deviceType = (String) data.get(DeviceTemplateVOFieldConstant.field_device_type);
+        String manufacturer = (String) data.get(DeviceTemplateVOFieldConstant.field_manufacturer);
+        String subsetName = (String) data.get(DeviceTemplateVOFieldConstant.field_subset_name);
+        String templateId = (String) data.get(DeviceTemplateVOFieldConstant.field_template_id);
+        String groupName = (String) data.get(DeviceTemplateVOFieldConstant.field_group_name);
+        List<Map<String, Object>> objects = (List<Map<String, Object>>) data.get("objects");
+        if (MethodUtils.hasEmpty(deviceType, manufacturer, subsetName, templateId, groupName, objects)) {
+            throw new ServiceException("缺少参数： deviceType, manufacturer, subsetName, templateId, groupName, objects");
+        }
+
+        RepoCompEntity repoCompEntity = new RepoCompEntity();
+        repoCompEntity.setCompRepo(RepoCompVOFieldConstant.value_comp_repo_local);
+        repoCompEntity.setCompType(RepoCompVOFieldConstant.value_comp_type_device_template);
+        repoCompEntity.setCompName(manufacturer + ":" + deviceType + ":" + subsetName);
+
+        // 如果组件对象不存在，那么就创建一个新的组件对象
+        RepoCompEntity existCompEntity = this.entityManageService.getEntity(repoCompEntity.makeServiceKey(), RepoCompEntity.class);
+        if (existCompEntity == null) {
+            Map<String, Object> compParam = repoCompEntity.getCompParam();
+            compParam.put(DeviceTemplateVOFieldConstant.field_comp_id, templateId);
+            compParam.put(DeviceTemplateVOFieldConstant.field_group_name, groupName);
+            compParam.put(DeviceTemplateVOFieldConstant.field_manufacturer, manufacturer);
+            compParam.put(DeviceTemplateVOFieldConstant.field_device_type, deviceType);
+            compParam.put(DeviceTemplateVOFieldConstant.field_subset_name, subsetName);
+
+            this.entityManageService.insertEntity(repoCompEntity);
+        } else {
+            repoCompEntity = existCompEntity;
+        }
+
+        // 组织成天MAP关系
+        Map<String, DeviceTemplateEntity> dstOperateMap = new HashMap<>();
+        for (Map<String, Object> object : objects) {
+            DeviceTemplateEntity modelEntity = new DeviceTemplateEntity();
+            modelEntity.bind(object);
+            modelEntity.setManufacturer(manufacturer);
+            modelEntity.setDeviceType(deviceType);
+            modelEntity.setSubsetName(subsetName);
+
+            dstOperateMap.put(modelEntity.makeServiceKey(), modelEntity);
+        }
+
+
+        // 获得已经存在的操作列表
+        List<BaseEntity> objectList = this.entityManageService.getEntityList(DeviceTemplateEntity.class, (Object value) -> {
+            DeviceTemplateEntity entity = (DeviceTemplateEntity) value;
+
+            if (!manufacturer.equals(entity.getManufacturer())) {
+                return false;
+            }
+            if (!deviceType.equals(entity.getDeviceType())) {
+                return false;
+            }
+            return subsetName.equals(entity.getSubsetName());
+        });
+
+        Map<String, BaseEntity> srcOperateMap = ContainerUtils.buildMapByKey(objectList, DeviceTemplateEntity::makeServiceKey);
+
+        Set<String> addList = new HashSet<>();
+        Set<String> delList = new HashSet<>();
+        Set<String> eqlList = new HashSet<>();
+        DifferUtils.differByValue(srcOperateMap.keySet(), dstOperateMap.keySet(), addList, delList, eqlList);
+
+        for (String key : addList) {
+            DeviceTemplateEntity modelEntity = dstOperateMap.get(key);
             modelEntity.setId(null);
             this.entityManageService.insertEntity(modelEntity);
         }

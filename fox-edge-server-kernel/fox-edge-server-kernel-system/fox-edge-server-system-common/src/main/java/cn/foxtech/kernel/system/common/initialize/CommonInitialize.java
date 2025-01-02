@@ -73,7 +73,7 @@ public class CommonInitialize {
     private void createPeriodTask() {
         // 启动周期任务线程
         this.periodTasksScheduler.schedule();
-        
+
         // 检查：本地工作模式下，向gateway服务手动注册路由
         if ("local".equals(this.routerMode)) {
             this.periodTasksScheduler.insertPeriodTask(this.gateWayRouteUpdateTask);

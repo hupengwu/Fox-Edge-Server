@@ -5,31 +5,34 @@
 package cn.foxtech.iot.common.remote;
 
 import cn.foxtech.common.mqtt.MqttClientHandler;
-import cn.foxtech.common.mqtt.MqttClientService;
-import lombok.Setter;
+import cn.foxtech.common.mqtt.MqttClientEntity;
+import cn.foxtech.common.mqtt.MqttCompService;
+import lombok.AccessLevel;
+import lombok.Getter;
 import net.dreamlu.iot.mqtt.core.client.MqttClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Component
+@Getter(value = AccessLevel.PUBLIC)
 public class RemoteMqttService {
+
     @Autowired
-    private MqttClientService mqttClientService;
+    private MqttCompService service;
 
-    @Setter
-    private Map<String, Object> mqttConfig = new HashMap<>();
+    @Autowired
+    private RemoteMqttConfig config;
 
-
-    public void initialize(MqttClientHandler clientHandler) {
-        // 绑定当前的handler
-        this.mqttClientService.getMqttClientListener().setClientHandler(clientHandler);
-        this.mqttClientService.Initialize(this.mqttConfig);
+    public void initialize(MqttClientHandler handler) {
+        this.service.createClientEntity("", this.config, handler);
     }
 
     public MqttClient getClient() {
-        return this.mqttClientService.getMqttClient();
+        MqttClientEntity clientService = this.service.getClientEntity("");
+        if (clientService == null) {
+            return null;
+        }
+
+        return clientService.getClient();
     }
 }

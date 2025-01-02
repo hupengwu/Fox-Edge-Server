@@ -22,6 +22,7 @@
         <module>fox-edge-server-iot-zkturing</module>
         <module>fox-edge-server-iot-fox-cloud</module>
         <module>fox-edge-server-iot-fox-publish</module>
+        <module>fox-edge-server-iot-fastbee</module>
     </modules>
 
 

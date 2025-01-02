@@ -126,7 +126,7 @@ public class OSInfo {
      * @return 操作系统名
      */
 
-    public static EPlatform getOSname() {
+    public static EPlatform getOSName() {
 
         if (isAix()) {
 

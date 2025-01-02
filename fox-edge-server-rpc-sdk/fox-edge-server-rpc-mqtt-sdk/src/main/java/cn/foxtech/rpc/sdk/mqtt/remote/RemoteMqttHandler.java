@@ -15,6 +15,7 @@ import org.tio.core.ChannelContext;
 import org.tio.utils.buffer.ByteBufferUtil;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 默认的handler实现
@@ -25,8 +26,8 @@ public class RemoteMqttHandler extends MqttClientHandler {
     private String topic = "/fox/manager/e2c/forward/#";
 
     @Override
-    public void onMessage(ChannelContext context, String topic, MqttPublishMessage message, ByteBuffer payload) {
-        String json = ByteBufferUtil.toString(payload);
+    public void onMessage(ChannelContext context, String topic, MqttPublishMessage message, byte[] payload) {
+        String json = new String(payload, StandardCharsets.UTF_8);
 
         this.notifyRespond(topic, json);
     }

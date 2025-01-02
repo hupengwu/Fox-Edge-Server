@@ -14,8 +14,8 @@
 
     <properties>
         <!-- fox-edge-server version -->
-        <revision>1.2.1</revision>
-        <fox-edge-server.version>1.2.1</fox-edge-server.version>
+        <revision>1.2.2</revision>
+        <fox-edge-server.version>1.2.2</fox-edge-server.version>
         <!-- java version -->
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -46,7 +46,7 @@
         <jna.version>5.14.0</jna.version>
         <jackson.version>2.9.0</jackson.version>
         <lombok.version>1.18.28</lombok.version>
-        <mica-mqtt.version>2.1.2</mica-mqtt.version>
+        <mica-mqtt.version>2.3.9</mica-mqtt.version>
         <californium-coap.version>3.9.1</californium-coap.version>
         <cn.hutool.version>5.8.3</cn.hutool.version>
         <log4j.version>1.3.8.RELEASE</log4j.version>

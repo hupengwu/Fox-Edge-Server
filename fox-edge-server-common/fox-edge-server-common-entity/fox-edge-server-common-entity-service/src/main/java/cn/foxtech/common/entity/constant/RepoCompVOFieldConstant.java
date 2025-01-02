@@ -24,7 +24,7 @@ public class RepoCompVOFieldConstant  extends BaseVOFieldConstant {
     public static final String value_comp_type_jar_decoder = "jar-decoder";
     public static final String value_comp_type_jsp_decoder = "jsp-decoder";
     public static final String value_comp_type_jsn_decoder = "jsn-decoder";
-    public static final String value_comp_type_file_template = "file-template";
+    public static final String value_comp_type_device_template = "device-template";
 
     public static final String value_comp_type_app_service = "app-service";
 }

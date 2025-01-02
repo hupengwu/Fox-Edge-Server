@@ -6,6 +6,7 @@ package cn.foxtech.kernel.common.service;
 
 
 import cn.foxtech.common.utils.method.MethodUtils;
+import cn.foxtech.common.utils.osinfo.OSInfo;
 import cn.foxtech.common.utils.osinfo.OSInfoUtils;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.common.constants.EdgeServiceConstant;
@@ -94,10 +95,16 @@ public class EdgeService {
 
     /**
      * 获得架构信息
+     *
      * @return
      */
     public String getArch() {
-        return System.getProperty("os.arch");
+        String arch = System.getProperty("os.arch");
+        if ("aarch64".equals(arch)) {
+            return "arm64";
+        }
+
+        return arch;
     }
 
     /**
@@ -116,6 +123,30 @@ public class EdgeService {
      */
     public boolean isDockerEnv() {
         return EdgeServiceConstant.value_env_type_docker.equals(this.getOSInfo().get(EdgeServiceConstant.field_env_type));
+    }
+
+    public boolean isDevEnv() {
+        if (!this.map.containsKey("devEnv")) {
+            String devEnv = this.getAppArg("--env_dev", "false");
+
+            this.map.put("devEnv", devEnv.equalsIgnoreCase("true"));
+        }
+
+        return (boolean) this.map.getOrDefault("devEnv", false);
+    }
+
+
+    public String getOSType() {
+        if (!this.map.containsKey("osType")) {
+            if (OSInfo.isWindows()) {
+                this.map.put("osType", "windows");
+            }
+            if (OSInfo.isLinux()) {
+                this.map.put("osType", "linux");
+            }
+        }
+
+        return (String) this.map.getOrDefault("osType", "");
     }
 
     public String getEnvType() {

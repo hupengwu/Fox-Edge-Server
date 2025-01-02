@@ -15,7 +15,6 @@ import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import cn.foxtech.common.utils.time.interval.TimeIntervalMap;
-import cn.foxtech.controller.common.service.ControllerEnvService;
 import cn.foxtech.controller.common.service.ControllerManageService;
 import cn.foxtech.controller.common.service.DeviceOperateService;
 import cn.foxtech.device.domain.vo.OperateRequestVO;
@@ -55,9 +54,6 @@ public class CollectorExchangeService extends PeriodTaskService {
     private String controllerModel = "system_controller";
     @Autowired
     private ServiceStatus serviceStatus;
-
-    @Autowired
-    private ControllerEnvService controllerEnvService;
 
     @Autowired
     private InitialConfigService configService;
@@ -151,7 +147,7 @@ public class CollectorExchangeService extends PeriodTaskService {
 
             // 将批量操作发送给设备
             TaskRespondVO taskRespondVO = this.deviceOperateService.execute(taskRequestVO);
-            if (!isValid(taskRespondVO)){
+            if (!isValid(taskRespondVO)) {
                 return;
             }
 
@@ -236,8 +232,7 @@ public class CollectorExchangeService extends PeriodTaskService {
      * @throws InterruptedException
      */
     private void sleep(long startTime, long timeInterval, int deviceCount, int index) throws InterruptedException {
-        String serverConfig = this.controllerEnvService.getServerConfig();
-        Map<String, Object> configs = this.configService.getConfigParam(serverConfig);
+        Map<String, Object> configs = this.configService.getConfigParam("serverConfig");
         Boolean average = (Boolean) configs.getOrDefault("average", false);
         if (!average) {
             return;
@@ -261,19 +256,9 @@ public class CollectorExchangeService extends PeriodTaskService {
                 return -1;
             }
 
+
             if (timeMode.equals("interval")) {
-                if (timeUnit.equals("second")) {
-                    return timeInterval * 1000;
-                }
-                if (timeUnit.equals("minute")) {
-                    return timeInterval * 1000 * 60;
-                }
-                if (timeUnit.equals("hour")) {
-                    return timeInterval * 1000 * 3600;
-                }
-                if (timeUnit.equals("day")) {
-                    return timeInterval * 1000 * 3600 * 24;
-                }
+                return TimeIntervalMap.calculate(timeInterval, timeUnit);
             }
 
             return -1;

@@ -42,7 +42,7 @@ public class RemoteProxyService {
         }
         if ("mqtt".equals(this.mode)) {
             Map<String, Object> mqtt = (Map<String, Object>) remote.getOrDefault("mqtt", new HashMap<>());
-            this.mqttService.setMqttConfig(mqtt);
+            this.mqttService.getConfig().instance(mqtt);
         }
     }
 }

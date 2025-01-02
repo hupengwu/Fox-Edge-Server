@@ -13,7 +13,6 @@ import cn.foxtech.persist.common.scheduler.RedisListRecordScheduler;
 import cn.foxtech.persist.common.scheduler.RedisListValueScheduler;
 import cn.foxtech.persist.common.service.DeviceObjectMapper;
 import cn.foxtech.persist.common.service.EntityVerifyService;
-import cn.foxtech.persist.common.service.PersistEnvService;
 import cn.foxtech.persist.common.service.PersistManageService;
 import lombok.Data;
 import org.slf4j.Logger;
@@ -70,8 +69,6 @@ public class PersistCommonInitialize {
     @Autowired
     private InitialConfigService configService;
 
-    @Autowired
-    private PersistEnvService persistEnvService;
 
     public void initialize() {
         String message = "------------------------PersistCommon 初始化开始！------------------------";
@@ -79,10 +76,9 @@ public class PersistCommonInitialize {
         logger.info(message);
 
         // 微服务模式：启动独立的状态发布进程
-        if (!this.persistEnvService.isCompose()) {
-            this.serviceStatusScheduler.initialize();
-            this.serviceStatusScheduler.schedule();
-        }
+        this.serviceStatusScheduler.initialize();
+        this.serviceStatusScheduler.schedule();
+
 
         // 注册
         this.entityManageService.instance();
@@ -97,8 +93,7 @@ public class PersistCommonInitialize {
         this.deviceObjectMapper.syncEntity();
 
         // 初始化全局配置参数
-        String serverConfig = this.persistEnvService.getServerConfig();
-        this.configService.initialize(serverConfig, "persistServerConfig.json");
+        this.configService.initialize("serverConfig", "persistServerConfig.json");
 
         // 设备记录的上报接收任务
         this.listValueScheduler.schedule();

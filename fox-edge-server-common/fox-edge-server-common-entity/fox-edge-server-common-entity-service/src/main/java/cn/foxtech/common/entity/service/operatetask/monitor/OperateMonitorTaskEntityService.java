@@ -40,27 +40,27 @@ public class OperateMonitorTaskEntityService extends BaseEntityService {
      */
     @Override
     public void insertEntity(BaseEntity entity) {
-        OperateMonitorTaskPo deviceConfigPo = OperateMonitorTaskMaker.makeEntity2Po((OperateMonitorTaskEntity) entity);
-        super.insertEntity(deviceConfigPo);
+        OperateMonitorTaskPo po = OperateMonitorTaskMaker.makeEntity2Po((OperateMonitorTaskEntity) entity);
+        super.insertEntity(po);
 
-        entity.setId(deviceConfigPo.getId());
-        entity.setCreateTime(deviceConfigPo.getCreateTime());
-        entity.setUpdateTime(deviceConfigPo.getUpdateTime());
+        entity.setId(po.getId());
+        entity.setCreateTime(po.getCreateTime());
+        entity.setUpdateTime(po.getUpdateTime());
     }
 
     @Override
     public void updateEntity(BaseEntity entity) {
-        OperateMonitorTaskPo userPo = OperateMonitorTaskMaker.makeEntity2Po((OperateMonitorTaskEntity) entity);
-        super.updateEntity(userPo);
+        OperateMonitorTaskPo po = OperateMonitorTaskMaker.makeEntity2Po((OperateMonitorTaskEntity) entity);
+        super.updateEntity(po);
 
-        entity.setId(userPo.getId());
-        entity.setCreateTime(userPo.getCreateTime());
-        entity.setUpdateTime(userPo.getUpdateTime());
+        entity.setId(po.getId());
+        entity.setCreateTime(po.getCreateTime());
+        entity.setUpdateTime(po.getUpdateTime());
     }
 
     @Override
     public int deleteEntity(BaseEntity entity) {
-        OperateMonitorTaskPo deviceConfigPo = OperateMonitorTaskMaker.makeEntity2Po((OperateMonitorTaskEntity) entity);
-        return super.deleteEntity(deviceConfigPo);
+        OperateMonitorTaskPo po = OperateMonitorTaskMaker.makeEntity2Po((OperateMonitorTaskEntity) entity);
+        return super.deleteEntity(po);
     }
 }

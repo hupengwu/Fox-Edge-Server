@@ -8,7 +8,6 @@ import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.utils.iotdb.IoTDBSessionPool;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.exception.ServiceException;
-import cn.foxtech.persist.common.service.PersistEnvService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,12 +19,9 @@ public class IoTDBSessionService extends IoTDBSessionPool {
     @Autowired
     private InitialConfigService configService;
 
-    @Autowired
-    private PersistEnvService persistEnvService;
 
     public void initialize() {
-        String serverConfig = this.persistEnvService.getServerConfig();
-        Map<String, Object> configs = this.configService.getConfigParam(serverConfig);
+        Map<String, Object> configs = this.configService.getConfigParam("serverConfig");
         Map<String, Object> params = (Map<String, Object>) configs.getOrDefault("deviceHistory", new HashMap<>());
 
         String host = (String) params.get("host");

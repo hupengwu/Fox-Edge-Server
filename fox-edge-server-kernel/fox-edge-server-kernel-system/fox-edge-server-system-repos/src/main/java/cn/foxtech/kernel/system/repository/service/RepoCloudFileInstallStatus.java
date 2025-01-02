@@ -191,10 +191,6 @@ public class RepoCloudFileInstallStatus {
                 srcFileName = tarDir + "/" + tarFileName;
                 jarFileName = absolutePath + "/jar/decoder/" + modelName + ".jar";
             }
-            if (RepoCompConstant.repository_type_template.equals(modelType)) {
-                srcFileName = tarDir + "/" + tarFileName;
-                jarFileName = absolutePath + "/template/" + modelName + "/" + tarFileName;
-            }
             if (RepoCompConstant.repository_type_service.equals(modelType)) {
                 srcFileName = tarDir + "/" + tarFileName;
                 jarFileName = absolutePath + "/" + tarFileName;

@@ -10,7 +10,6 @@ public class RepoCompConstant {
 
     public static final String repository_type_webpack = "webpack";
 
-    public static final String repository_type_template = "template";
 
     public static final String field_model_name = "modelName";
     public static final String field_model_version = "modelVersion";

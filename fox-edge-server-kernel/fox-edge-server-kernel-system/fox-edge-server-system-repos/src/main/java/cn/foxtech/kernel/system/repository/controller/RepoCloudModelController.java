@@ -52,7 +52,7 @@ public class RepoCloudModelController {
     }
 
     @PostMapping("/version/object/entities")
-    public Map<String, Object> selectOperateList(@RequestBody Map<String, Object> body) {
+    public Map<String, Object> selectVersionList(@RequestBody Map<String, Object> body) {
         try {
             Map<String, Object> result = this.remoteService.queryCloudModelObjectList(body);
             return result;

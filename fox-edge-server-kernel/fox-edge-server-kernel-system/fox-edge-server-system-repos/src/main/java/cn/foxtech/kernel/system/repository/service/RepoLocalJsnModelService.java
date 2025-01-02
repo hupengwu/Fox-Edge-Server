@@ -48,7 +48,7 @@ public class RepoLocalJsnModelService {
         });
     }
 
-    public List<BaseEntity> getDeviceTemplateEntityList(RepoCompEntity compEntity) {
+    public List<BaseEntity> getDeviceModelEntityList(RepoCompEntity compEntity) {
         return this.entityManageService.getEntityList(DeviceModelEntity.class, (Object value) -> {
             DeviceModelEntity entity = (DeviceModelEntity) value;
 

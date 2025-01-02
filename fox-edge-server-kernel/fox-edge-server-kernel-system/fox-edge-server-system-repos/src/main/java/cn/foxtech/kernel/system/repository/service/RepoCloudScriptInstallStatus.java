@@ -9,13 +9,17 @@ import cn.foxtech.common.entity.entity.RepoCompEntity;
 import cn.foxtech.common.utils.MapUtils;
 import cn.foxtech.common.utils.md5.MD5Utils;
 import cn.foxtech.common.utils.method.MethodUtils;
+import cn.foxtech.common.utils.string.StringSort;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
 import cn.foxtech.kernel.system.repository.constants.RepoStatusConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -162,10 +166,10 @@ public class RepoCloudScriptInstallStatus {
         values.add(entity.getOperateMode());
         values.add(entity.getEngineType());
         values.add(entity.getTimeout());
-        values.add(MapUtils.castMap(entity.getEngineParam(), TreeMap.class));
-        values.add(MapUtils.castMap(entity.getExtendParam(), TreeMap.class));
+        values.add(entity.getEngineParam());
+        values.add(entity.getExtendParam());
 
-        return values.toString();
+        return StringSort.getListString(values);
     }
 
 

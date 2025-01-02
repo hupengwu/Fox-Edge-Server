@@ -16,6 +16,7 @@ import org.tio.core.ChannelContext;
 import org.tio.utils.buffer.ByteBufferUtil;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
@@ -28,9 +29,9 @@ public class MqttHandler extends MqttClientHandler {
     private ReportService reportService;
 
     @Override
-    public void onMessage(ChannelContext context, String topic, MqttPublishMessage message, ByteBuffer payload) {
+    public void onMessage(ChannelContext context, String topic, MqttPublishMessage message, byte[] payload) {
         try {
-            String messageTxt = ByteBufferUtil.toString(payload);
+            String messageTxt = new String(payload, StandardCharsets.UTF_8);
 
             // 保存PDU到接收缓存
             this.reportService.push(topic, messageTxt);

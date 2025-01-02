@@ -319,8 +319,6 @@ public abstract class EntityBaseManager {
         logger.info("------------------initLoadEntity开始！------------------");
         while (!this.isInitialized) {
             try {
-                Thread.sleep(1000);
-
                 // 没有初始化成功，那么等一会，再来一次上述操作
                 boolean isInitialized = true;
 
@@ -341,6 +339,13 @@ public abstract class EntityBaseManager {
                 }
             } catch (Exception e) {
                 logger.warn(e.getMessage());
+
+                try {
+                    Thread.sleep(1000);
+                } catch (Exception e1) {
+
+                }
+
             }
         }
         logger.info("------------------initLoadEntity结束！------------------");

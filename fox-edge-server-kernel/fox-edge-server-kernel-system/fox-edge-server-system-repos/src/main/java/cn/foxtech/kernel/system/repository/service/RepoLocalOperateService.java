@@ -237,7 +237,7 @@ public class RepoLocalOperateService {
 
                 Map<String, Object> result = new HashMap<>();
 
-                if (deviceType != null && operateName == null) {
+                if (deviceType != null) {
                     if (operateName == null){
                         result.put("value", operateEntity.getOperateName());
                         result.put("label", operateEntity.getOperateName());

@@ -50,8 +50,6 @@ public class RepoLocalCompListController {
     @Autowired
     private RepoLocalApplicationService appService;
 
-    @Autowired
-    private RepoLocalCsvFileService csvFileService;
 
     @Autowired
     private RepoLocalJarFileInfoService jarFileService;
@@ -79,11 +77,9 @@ public class RepoLocalCompListController {
                 entityList = this.appService.sort(entityList);
 
                 mapList = BeanMapUtils.objectToMap(entityList);
-            } else if (compType.equals(RepoCompVOFieldConstant.value_comp_type_file_template)) {
-                mapList = this.csvFileService.extendCompFileCount(entityList);
             } else if (compType.equals(RepoCompVOFieldConstant.value_comp_type_jar_decoder)) {
                 mapList = this.jarFileService.extendCompJarInfo(entityList);
-            }else if (compType.equals(RepoCompVOFieldConstant.value_comp_type_jsp_decoder)) {
+            } else if (compType.equals(RepoCompVOFieldConstant.value_comp_type_jsp_decoder)) {
                 mapList = this.jspModelService.extendCompOperateInfo(entityList);
             } else {
                 mapList = BeanMapUtils.objectToMap(entityList);

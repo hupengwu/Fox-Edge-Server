@@ -78,7 +78,7 @@ public class RepoDownLoadTask extends PeriodTask {
             }
 
             // 删除旧的下载文件
-            if (RepoCompConstant.repository_type_service.equals(modelType) || RepoCompConstant.repository_type_decoder.equals(modelType) || RepoCompConstant.repository_type_webpack.equals(modelType) || RepoCompConstant.repository_type_template.equals(modelType)) {
+            if (RepoCompConstant.repository_type_service.equals(modelType) || RepoCompConstant.repository_type_decoder.equals(modelType) || RepoCompConstant.repository_type_webpack.equals(modelType)) {
                 this.installService.deletePackageFile(modelType, modelName, version, stage, component);
             }
 

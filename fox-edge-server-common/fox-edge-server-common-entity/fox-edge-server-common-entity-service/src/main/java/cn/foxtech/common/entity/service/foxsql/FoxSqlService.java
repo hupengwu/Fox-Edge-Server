@@ -475,5 +475,26 @@ public class FoxSqlService {
         return this.selectMapList(sb.toString(), toCamelCase, new HashSet<>());
     }
 
+    public List<Map<String, Object>> selectOptionList(String tableName, String underField1, Map<String,Object> filters, boolean toCamelCase) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT DISTINCT ").append(underField1).append(" FROM ").append(tableName).append(" WHERE 1=1 ");
+        for (String key : filters.keySet()){
+            Object value = filters.get(key);
+
+            sb.append(" AND ");
+
+            if (value == null) {
+                sb.append(key).append(" IS NULL");
+            } else if (value instanceof String) {
+                sb.append(key).append(" = '").append(value).append("'");
+            } else {
+                sb.append(key).append(" = ").append(value);
+            }
+        }
+
+
+        return this.selectMapList(sb.toString(), toCamelCase, new HashSet<>());
+    }
+
     // "SELECT DISTINCT " + underField1 + ", " + underField2 + " FROM " + tableName + " WHERE " + underField1 + "=" + value1
 }

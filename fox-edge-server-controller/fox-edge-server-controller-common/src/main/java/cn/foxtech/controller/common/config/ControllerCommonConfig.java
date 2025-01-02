@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
         "cn.foxtech.common.entity.manager",//
         "cn.foxtech.utils.common.utils.redis.*",//
         "cn.foxtech.common.rpc.redis.*",//
-        "cn.foxtech.common.rpc.cache",//
         "cn.foxtech.common.status",//
 })
 public class ControllerCommonConfig {

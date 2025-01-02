@@ -24,41 +24,41 @@ public class OperateManualTaskMaker {
      * @return 实体列表
      */
     public static List<BaseEntity> makePoList2EntityList(List<BaseEntity> poList) {
-        List<BaseEntity> operateRecordList = new ArrayList<>();
-        for (BaseEntity entity : poList) {
-            OperateManualTaskPo po = (OperateManualTaskPo) entity;
+        List<BaseEntity> entityList = new ArrayList<>();
+        for (BaseEntity base : poList) {
+            OperateManualTaskPo po = (OperateManualTaskPo) base;
 
-            OperateManualTaskEntity config = OperateManualTaskMaker.makePo2Entity(po);
-            operateRecordList.add(config);
+            OperateManualTaskEntity entity = OperateManualTaskMaker.makePo2Entity(po);
+            entityList.add(entity);
         }
 
-        return operateRecordList;
+        return entityList;
     }
 
     public static OperateManualTaskPo makeEntity2Po(OperateManualTaskEntity entity) {
-        OperateManualTaskPo result = new OperateManualTaskPo();
-        result.bind(entity);
+        OperateManualTaskPo po = new OperateManualTaskPo();
+        po.bind(entity);
 
-        result.setTaskParam(JsonUtils.buildJsonWithoutException(entity.getTaskParam()));
-        return result;
+        po.setTaskParam(JsonUtils.buildJsonWithoutException(entity.getTaskParam()));
+        return po;
     }
 
-    public static OperateManualTaskEntity makePo2Entity(OperateManualTaskPo entity) {
-        OperateManualTaskEntity result = new OperateManualTaskEntity();
-        result.bind(entity);
+    public static OperateManualTaskEntity makePo2Entity(OperateManualTaskPo po) {
+        OperateManualTaskEntity entity = new OperateManualTaskEntity();
+        entity.bind(po);
 
         try {
-            List<Map<String, Object>> params = JsonUtils.buildObject(entity.getTaskParam(), List.class);
+            List<Map<String, Object>> params = JsonUtils.buildObject(po.getTaskParam(), List.class);
             if (params != null) {
-                result.setTaskParam(params);
+                entity.setTaskParam(params);
             } else {
-                System.out.println("设备配置参数转换Json对象失败：" + entity.getTaskParam() + ":" + entity.getTaskParam());
+                System.out.println("设备配置参数转换Json对象失败：" + po.getTaskName() + ":" + po.getTaskParam());
             }
         } catch (Exception e) {
-            System.out.println("设备配置参数转换Json对象失败：" + entity.getTaskParam() + ":" + entity.getTaskParam());
+            System.out.println("设备配置参数转换Json对象失败：" + po.getTaskName() + ":" + po.getTaskParam());
             e.printStackTrace();
         }
 
-        return result;
+        return entity;
     }
 }

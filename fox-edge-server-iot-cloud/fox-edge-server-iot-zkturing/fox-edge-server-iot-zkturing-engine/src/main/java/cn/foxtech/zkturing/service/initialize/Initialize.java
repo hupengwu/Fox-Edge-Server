@@ -33,7 +33,7 @@ public class Initialize implements CommandLineRunner {
     private DeviceRecordPushScheduler deviceRecordPushScheduler;
 
     @Autowired
-    private ZKTuringService turinglService;
+    private ZKTuringService turingService;
 
     @Override
     public void run(String... args) {
@@ -49,7 +49,7 @@ public class Initialize implements CommandLineRunner {
         this.initializeCommon.initialize();
 
         // 初始化华为组件
-        this.turinglService.initialize();
+        this.turingService.initialize();
 
         // 设备信息的推送
         this.deviceValuePushScheduler.schedule();

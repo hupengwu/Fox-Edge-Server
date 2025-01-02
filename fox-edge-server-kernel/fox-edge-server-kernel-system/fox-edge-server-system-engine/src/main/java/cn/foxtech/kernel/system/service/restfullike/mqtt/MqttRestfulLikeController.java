@@ -6,7 +6,7 @@ package cn.foxtech.kernel.system.service.restfullike.mqtt;
 
 import cn.foxtech.common.domain.vo.RestfulLikeRequestVO;
 import cn.foxtech.common.domain.vo.RestfulLikeRespondVO;
-import cn.foxtech.common.mqtt.MqttClientService;
+import cn.foxtech.common.mqtt.MqttCompService;
 import cn.foxtech.kernel.system.service.restfullike.redis.RedisRestfulLikeController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ public class MqttRestfulLikeController {
 
 
     @Autowired
-    private MqttClientService clientService;
+    private MqttCompService clientService;
 
 
     public RestfulLikeRespondVO execute(RestfulLikeRequestVO requestVO) {
@@ -44,7 +44,7 @@ public class MqttRestfulLikeController {
 
 
     public void publish(String pubTopic, String rspContext) {
-        this.clientService.getMqttClient().publish(pubTopic, rspContext.getBytes(StandardCharsets.UTF_8));
+        this.clientService.getClientEntity("").getClient().publish(pubTopic, rspContext.getBytes(StandardCharsets.UTF_8));
 
     }
 }

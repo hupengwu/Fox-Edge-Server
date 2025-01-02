@@ -6,7 +6,6 @@ package cn.foxtech.controller.common.initialize;
 
 import cn.foxtech.common.status.ServiceStatusScheduler;
 import cn.foxtech.controller.common.scheduler.ControllerManageScheduler;
-import cn.foxtech.controller.common.service.ControllerEnvService;
 import cn.foxtech.controller.common.service.ControllerManageService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,16 +35,11 @@ public class ControllerInitialize {
     @Autowired
     private ServiceStatusScheduler serviceStatusScheduler;
 
-    @Autowired
-    private ControllerEnvService controllerEnvService;
-
 
     public void initialize() {
         // 进程状态
-        if (!this.controllerEnvService.isCompose()) {
-            this.serviceStatusScheduler.initialize();
-            this.serviceStatusScheduler.schedule();
-        }
+        this.serviceStatusScheduler.initialize();
+        this.serviceStatusScheduler.schedule();
 
         // 装载数据实体，并启动同步线程
         this.entityManageService.instance();

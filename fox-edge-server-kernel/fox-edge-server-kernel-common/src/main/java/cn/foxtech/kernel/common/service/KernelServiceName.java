@@ -12,6 +12,10 @@ public class KernelServiceName {
         return "kernel".equals(appType) && "manager-native".equals(appName);
     }
 
+    public boolean isDisable(String appType, String appName) {
+        return "kernel".equals(appType) && ("gateway-native".equals(appName) || "manager-native".equals(appName));
+    }
+
     public String getAppName(String appType, String appName) {
         if ("kernel".equals(appType) && (appName.equals("gateway-service") || appName.equals("gateway-native"))) {
             return this.getGatewayName();

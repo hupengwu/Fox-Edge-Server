@@ -275,23 +275,6 @@ public class RepoCloudFileInstallService {
             Map<String, Object> jarInfoMap = this.jarFileService.readJarFile(fileName);
             return jarInfoMap;
         }
-        if (RepoCompConstant.repository_type_template.equals(modelType)) {
-            String modelPathName = this.pathNameService.getPathName4LocalTemplate2version(modelName);
-            File file = new File(modelPathName);
-            if (!file.exists() || file.isFile()) {
-                return null;
-            }
-
-            List<String> fileNames = Arrays.asList(file.list());
-            Collections.sort(fileNames);
-            if (fileNames.isEmpty()) {
-                return null;
-            }
-
-            Map<String, Object> result = new HashMap<>();
-            result.put("version", fileNames.get(fileNames.size() - 1));
-            return result;
-        }
 
         return null;
     }
@@ -351,7 +334,6 @@ public class RepoCloudFileInstallService {
 
         Set<String> components = new HashSet<>();
         components.add("bin");
-        components.add(RepoCompConstant.repository_type_template);
         components.add(ServiceVOFieldConstant.field_type_service);
         components.add(ServiceVOFieldConstant.field_type_system);
         components.add(ServiceVOFieldConstant.field_type_kernel);
@@ -467,9 +449,6 @@ public class RepoCloudFileInstallService {
                 String jarFileName = modelName + ".jar";
                 this.jarConfigService.updateConfig(jarFileName, true);
             }
-            if (modelType.equals(RepoCompConstant.repository_type_template)) {
-                this.installTemplateFile(tarDir, file.getAbsolutePath() + "/template/" + modelName);
-            }
             if (modelType.equals(RepoCompConstant.repository_type_service)) {
                 if (ServiceVOFieldConstant.field_type_kernel.equals(component) || ServiceVOFieldConstant.field_type_system.equals(component) || ServiceVOFieldConstant.field_type_service.equals(component)) {
                     // 安装文件
@@ -537,22 +516,6 @@ public class RepoCloudFileInstallService {
         }
         if (OSInfo.isLinux()) {
             ShellUtils.executeShell("cp -f '" + installFileDir + "/" + fileName + "' '" + destFileDir + "/" + destFileName + "'");
-        }
-    }
-
-    private void installTemplateFile(String installFileDir, String destFileDir) throws IOException, InterruptedException {
-        // 获得所有bin下的所有文件名
-        List<String> fileList = FileNameUtils.findFileList(installFileDir, false, false);
-        if (fileList.isEmpty()) {
-            throw new ServiceException(installFileDir + " 没有文件");
-        }
-
-        // 预创建目录
-        this.mkdirDir(destFileDir);
-
-        // 拷贝文件
-        for (String fileName : fileList) {
-            this.copyFile(installFileDir, fileName, destFileDir);
         }
     }
 

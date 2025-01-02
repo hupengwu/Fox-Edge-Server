@@ -27,9 +27,13 @@ public class ConsumerRedisService extends BaseConsumerRedisService {
     }
 
     public static synchronized <T> ConsumerRedisService getInstanceBySimpleName(String clazzSimpleName, RedisService redisService) {
-        // 如果已经存在，那么取出该实例
+         // 如果已经存在，那么取出该实例
         if (map.containsKey(clazzSimpleName)) {
-            return map.get(clazzSimpleName);
+            ConsumerRedisService instance = map.get(clazzSimpleName);
+            if (instance.redisService == null && redisService != null) {
+                instance.redisService = redisService;
+            }
+            return instance;
         }
 
         // 分配并保存实例

@@ -40,27 +40,27 @@ public class OperateChannelTaskEntityService extends BaseEntityService {
      */
     @Override
     public void insertEntity(BaseEntity entity) {
-        OperateChannelTaskPo deviceConfigPo = OperateChannelTaskMaker.makeEntity2Po((OperateChannelTaskEntity) entity);
-        super.insertEntity(deviceConfigPo);
+        OperateChannelTaskPo po = OperateChannelTaskMaker.makeEntity2Po((OperateChannelTaskEntity) entity);
+        super.insertEntity(po);
 
-        entity.setId(deviceConfigPo.getId());
-        entity.setCreateTime(deviceConfigPo.getCreateTime());
-        entity.setUpdateTime(deviceConfigPo.getUpdateTime());
+        entity.setId(po.getId());
+        entity.setCreateTime(po.getCreateTime());
+        entity.setUpdateTime(po.getUpdateTime());
     }
 
     @Override
     public void updateEntity(BaseEntity entity) {
-        OperateChannelTaskPo userPo = OperateChannelTaskMaker.makeEntity2Po((OperateChannelTaskEntity) entity);
-        super.updateEntity(userPo);
+        OperateChannelTaskPo po = OperateChannelTaskMaker.makeEntity2Po((OperateChannelTaskEntity) entity);
+        super.updateEntity(po);
 
-        entity.setId(userPo.getId());
-        entity.setCreateTime(userPo.getCreateTime());
-        entity.setUpdateTime(userPo.getUpdateTime());
+        entity.setId(po.getId());
+        entity.setCreateTime(po.getCreateTime());
+        entity.setUpdateTime(po.getUpdateTime());
     }
 
     @Override
     public int deleteEntity(BaseEntity entity) {
-        OperateChannelTaskPo deviceConfigPo = OperateChannelTaskMaker.makeEntity2Po((OperateChannelTaskEntity) entity);
-        return super.deleteEntity(deviceConfigPo);
+        OperateChannelTaskPo po = OperateChannelTaskMaker.makeEntity2Po((OperateChannelTaskEntity) entity);
+        return super.deleteEntity(po);
     }
 }

@@ -24,7 +24,11 @@ public class RedisWriterService {
     public static synchronized <T> RedisWriter getInstanceBySimpleName(String clazzSimpleName, RedisTemplate redisTemplate) {
         // 如果已经存在，那么取出该实例
         if (map.containsKey(clazzSimpleName)) {
-            return map.get(clazzSimpleName);
+            RedisWriter instance = map.get(clazzSimpleName);
+            if (instance.getRedisTemplate() == null && redisTemplate != null) {
+                instance.setRedisTemplate(redisTemplate);
+            }
+            return instance;
         }
 
         // 分配并保存实例

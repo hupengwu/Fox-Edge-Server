@@ -18,6 +18,7 @@ import org.tio.core.ChannelContext;
 import org.tio.utils.buffer.ByteBufferUtil;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 @Getter(value = AccessLevel.PUBLIC)
 @Setter(value = AccessLevel.PUBLIC)
@@ -32,8 +33,8 @@ public class MqttRestfulLikeHandler extends MqttClientHandler {
     }
 
     @Override
-    public void onMessage(ChannelContext context, String topic, MqttPublishMessage message, ByteBuffer payload) {
-        String messageTxt = ByteBufferUtil.toString(payload);
+    public void onMessage(ChannelContext context, String topic, MqttPublishMessage message, byte[] payload) {
+        String messageTxt = new String(payload, StandardCharsets.UTF_8);
 
         // 执行请求
         RestfulLikeRespondVO respondVO = this.execute(messageTxt);

@@ -10,7 +10,6 @@ import cn.foxtech.common.tags.RedisTagService;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import cn.foxtech.persist.common.history.IDeviceHistoryUpdater;
 import cn.foxtech.persist.common.service.DeviceObjectMapper;
-import cn.foxtech.persist.common.service.PersistEnvService;
 import cn.foxtech.persist.common.service.PersistManageService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,13 +40,10 @@ public class PersistManageScheduler extends PeriodTaskService {
     @Autowired
     private RedisTagService redisTagService;
 
-    @Autowired
-    private PersistEnvService persistEnvService;
-
     /**
      * 上次处理时间
      */
-    private long lastTimeHistory = 0;
+    private final long lastTimeHistory = 0;
     private long lastTimeOperate = 0;
 
     @Override
@@ -76,8 +72,7 @@ public class PersistManageScheduler extends PeriodTaskService {
                 return;
             }
 
-            String serverConfig = this.persistEnvService.getServerConfig();
-            Map<String, Object> configs = this.configService.getConfigParam(serverConfig);
+            Map<String, Object> configs = this.configService.getConfigParam("serverConfig");
             Map<String, Object> params = (Map<String, Object>) configs.getOrDefault("operateRecord", new HashMap<>());
 
             Integer maxCount = (Integer) params.getOrDefault("maxCount", 10000);

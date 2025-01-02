@@ -37,7 +37,11 @@ public class RedisReaderService {
     public static synchronized <T> RedisReader getInstanceBySimpleName(String clazzSimpleName, RedisTemplate redisTemplate) {
         // 如果已经存在，那么取出该实例
         if (map.containsKey(clazzSimpleName)) {
-            return map.get(clazzSimpleName);
+            RedisReader instance = map.get(clazzSimpleName);
+            if (instance.getRedisTemplate() == null && redisTemplate != null) {
+                instance.setRedisTemplate(redisTemplate);
+            }
+            return instance;
         }
 
         // 分配并保存实例

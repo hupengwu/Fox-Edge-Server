@@ -69,9 +69,9 @@ public class ScriptEngineOperator {
             } else if (recv instanceof String) {
                 engine.put("fox_edge_data", recv);
                 return;
+            } else {
+                engine.put("fox_edge_data", "");
             }
-
-            throw new ServiceException("对通道返回的数据，只支持String、Map、List三种数据结构！");
         } catch (Exception e) {
             // 打印日志
             this.printLogger(e.getMessage());

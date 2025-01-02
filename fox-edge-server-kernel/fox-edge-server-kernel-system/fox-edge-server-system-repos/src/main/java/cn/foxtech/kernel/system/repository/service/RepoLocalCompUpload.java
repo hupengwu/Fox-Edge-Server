@@ -4,12 +4,10 @@
 
 package cn.foxtech.kernel.system.repository.service;
 
+import cn.foxtech.common.entity.constant.DeviceTemplateVOFieldConstant;
 import cn.foxtech.common.entity.constant.OperateVOFieldConstant;
 import cn.foxtech.common.entity.constant.RepoCompVOFieldConstant;
-import cn.foxtech.common.entity.entity.BaseEntity;
-import cn.foxtech.common.entity.entity.DeviceModelEntity;
-import cn.foxtech.common.entity.entity.OperateEntity;
-import cn.foxtech.common.entity.entity.RepoCompEntity;
+import cn.foxtech.common.entity.entity.*;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
@@ -48,9 +46,6 @@ public class RepoLocalCompUpload {
             throw new ServiceException("实体不存在");
         }
 
-        if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_file_template)) {
-            return this.uploadCsvTemplateEntity(entity.getCompParam(), commitKey);
-        }
         if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_jar_decoder)) {
             return this.uploadJarDecoderEntity(entity.getCompParam(), commitKey);
         }
@@ -59,6 +54,9 @@ public class RepoLocalCompUpload {
         }
         if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_jsn_decoder)) {
             return this.uploadJsnDecoderEntity(entity, commitKey, description);
+        }
+        if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_device_template)) {
+            return this.uploadDevTemplateEntity(entity, commitKey, description);
         }
 
 
@@ -169,45 +167,43 @@ public class RepoLocalCompUpload {
         return respond;
     }
 
-    private Map<String, Object> uploadCsvTemplateEntity(Map<String, Object> compParam, String commitKey) throws IOException, InterruptedException {
-        String modelName = (String) compParam.get(RepoCompConstant.field_model_name);
-        String deviceType = (String) compParam.get(OperateVOFieldConstant.field_device_type);
-        String manufacturer = (String) compParam.get(OperateVOFieldConstant.field_manufacturer);
-        if (MethodUtils.hasEmpty(modelName, deviceType, manufacturer, commitKey)) {
-            throw new ServiceException("缺少参数： modelName, deviceType, manufacturer, commitKey");
+    private Map<String, Object> uploadDevTemplateEntity(RepoCompEntity repoCompEntity, String commitKey, String description) throws IOException {
+        Map<String, Object> compParam = repoCompEntity.getCompParam();
+
+        String compId = (String) compParam.get(RepoCompVOFieldConstant.field_comp_id);
+        String deviceType = (String) compParam.get(DeviceTemplateVOFieldConstant.field_device_type);
+        String manufacturer = (String) compParam.get(DeviceTemplateVOFieldConstant.field_manufacturer);
+        String subsetName = (String) compParam.get(DeviceTemplateVOFieldConstant.field_subset_name);
+        if (MethodUtils.hasEmpty(compId, deviceType, manufacturer, subsetName)) {
+            throw new ServiceException("缺少参数： compId, deviceType, manufacturer, subsetName");
         }
 
-        File file = null;
-        try {
-            // 打包成tar文件
-            String tarFileName = modelName + ".tar";
-            this.shellService.packCsvTemplate2TarFile(tarFileName, modelName);
+        List<BaseEntity> entityList = this.entityManageService.getEntityList(DeviceTemplateEntity.class, (Object value) -> {
+            DeviceTemplateEntity entity = (DeviceTemplateEntity) value;
 
-
-            // 打开tar文件
-            String pathName = this.pathNameService.getPathName4LocalTemplate2version(modelName);
-            file = new File(pathName + "\\" + tarFileName);
-            if (!file.exists() || !file.isFile()) {
-                throw new ServiceException("文件不存在！");
+            if (!entity.getManufacturer().equals(manufacturer)) {
+                return false;
+            }
+            if (!entity.getDeviceType().equals(deviceType)) {
+                return false;
             }
 
-            Map<String, Object> formData = new HashMap<>();
-            formData.put(RepoCompConstant.field_model_type, RepoCompConstant.repository_type_template);
-            formData.put(RepoCompConstant.field_model_name, modelName);
-            formData.put(RepoCompConstant.field_model_version, RepoCompConstant.field_value_model_version_default);
-            formData.put(RepoCompConstant.field_component, "service");
-            formData.put(RepoCompConstant.field_work_mode, "");
-            formData.put("file", file);
-            formData.put(RepoCompConstant.field_commit_key, commitKey);
+            return entity.getSubsetName().equals(subsetName);
+        });
 
 
-            return this.remoteService.executeUpload("/manager/repository/component/upload", formData);
-        } finally {
-            if (file != null && file.exists()) {
-                file.delete();
-            }
+        Map<String, Object> body = JsonUtils.clone(compParam);
+        body.put(RepoCompVOFieldConstant.field_comp_id, compId);
+        body.put(RepoCompVOFieldConstant.field_commit_key, commitKey);
+        body.put(RepoCompVOFieldConstant.field_description, description);
+        body.put("objects", entityList);
 
-        }
+        Map<String, Object> respond = this.remoteService.executePost("/manager/repository/component/template/version/entity", body);
+
+        // 更新版本信息
+        this.updateVersion(repoCompEntity, respond);
+
+        return respond;
     }
 
     private void updateVersion(RepoCompEntity repoCompEntity, Map<String, Object> respond) {

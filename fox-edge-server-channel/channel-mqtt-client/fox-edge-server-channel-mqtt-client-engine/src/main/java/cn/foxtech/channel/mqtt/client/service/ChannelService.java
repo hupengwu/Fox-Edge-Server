@@ -8,7 +8,7 @@ import cn.foxtech.channel.common.api.ChannelServerAPI;
 import cn.foxtech.channel.domain.ChannelRespondVO;
 import cn.foxtech.channel.mqtt.client.handler.MqttHandler;
 import cn.foxtech.common.entity.manager.LocalConfigService;
-import cn.foxtech.common.mqtt.MqttClientService;
+import cn.foxtech.common.mqtt.MqttCompService;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class ChannelService extends ChannelServerAPI {
     private final Map<String, List<String>> channelName2ServiceKey = new ConcurrentHashMap<>();
 
     @Autowired
-    private MqttClientService mqttClientService;
+    private MqttCompService mqttClientService;
 
     @Autowired
     private LocalConfigService localConfigService;
@@ -52,10 +52,7 @@ public class ChannelService extends ChannelServerAPI {
             mqttConfig.put("clientId", clientId);
         }
 
-        // 绑定当前的handler
-        this.mqttClientService.getMqttClientListener().setClientHandler(handler);
-
-        this.mqttClientService.Initialize(mqttConfig);
+        this.mqttClientService.createClientEntity("", mqttConfig, handler);
     }
 
     @Override

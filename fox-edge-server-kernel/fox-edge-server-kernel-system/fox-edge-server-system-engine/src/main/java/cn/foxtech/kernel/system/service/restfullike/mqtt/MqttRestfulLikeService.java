@@ -4,8 +4,7 @@
 
 package cn.foxtech.kernel.system.service.restfullike.mqtt;
 
-import cn.foxtech.common.entity.manager.InitialConfigService;
-import cn.foxtech.common.mqtt.MqttClientService;
+import cn.foxtech.common.mqtt.MqttCompService;
 import cn.foxtech.kernel.common.service.EdgeService;
 import cn.foxtech.kernel.system.common.service.ManageConfigService;
 import lombok.Setter;
@@ -18,7 +17,7 @@ import java.util.Map;
 @Component
 public class MqttRestfulLikeService {
     @Autowired
-    private MqttClientService mqttClientService;
+    private MqttCompService mqttClientService;
 
     @Autowired
     private ManageConfigService configService;
@@ -59,7 +58,6 @@ public class MqttRestfulLikeService {
         handler.setController(this.controller);
 
         // 初始化MQTT
-        this.mqttClientService.getMqttClientListener().setClientHandler(handler);
-        this.mqttClientService.Initialize(this.mqttConfig);
+        this.mqttClientService.createClientEntity("", this.mqttConfig, handler);
     }
 }

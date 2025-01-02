@@ -56,7 +56,7 @@ public class RepoLocalJsnModelListController {
             }
 
             // 查询数据
-            List<BaseEntity> entityList = this.modelService.getDeviceTemplateEntityList(compEntity);
+            List<BaseEntity> entityList = this.modelService.getDeviceModelEntityList(compEntity);
 
 
             // 分页查询

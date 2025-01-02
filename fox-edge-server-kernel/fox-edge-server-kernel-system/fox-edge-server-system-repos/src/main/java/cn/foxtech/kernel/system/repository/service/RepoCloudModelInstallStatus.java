@@ -7,16 +7,18 @@ package cn.foxtech.kernel.system.repository.service;
 import cn.foxtech.common.entity.entity.DeviceModelEntity;
 import cn.foxtech.common.entity.entity.RepoCompEntity;
 import cn.foxtech.common.utils.MapUtils;
-import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.md5.MD5Utils;
 import cn.foxtech.common.utils.method.MethodUtils;
+import cn.foxtech.common.utils.string.StringSort;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
 import cn.foxtech.kernel.system.repository.constants.RepoStatusConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -156,9 +158,9 @@ public class RepoCloudModelInstallStatus {
         // 注意：不要调整代码顺序，这是跟fox-cloud保持一致的算法，两边要同步修改
         List<Object> values = new ArrayList<>();
         values.add(entity.getModelName());
-        values.add(MapUtils.castMap(entity.getModelParam(), TreeMap.class));
-        values.add(MapUtils.castMap(entity.getExtendParam(), TreeMap.class));
+        values.add(entity.getModelParam());
+        values.add(entity.getExtendParam());
 
-        return values.toString();
+        return StringSort.getListString(values);
     }
 }
