@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.util.Arrays;
+import java.util.Map;
 
 @Component
 public class UdpSocketService extends ChannelServerAPI {
@@ -30,27 +31,20 @@ public class UdpSocketService extends ChannelServerAPI {
     @Override
     public synchronized ChannelRespondVO execute(ChannelRequestVO requestVO) throws ServiceException {
         try {
-            String name = requestVO.getName();
-            String sendData = (String) requestVO.getSend();
+            Map<String,Object> param = (Map<String,Object>) requestVO.getSend();
             int timeout = requestVO.getTimeout();
 
-            // 检查：数据是否为空
-            if (sendData == null || sendData.isEmpty()) {
-                throw new ServiceException("发送数据不能为空");
-            }
+            String host = (String)param.get("host");
+            Integer port = (Integer)param.get("port");
+            String data = (String)param.get("data");
 
-            // 地址格式转换
-            String[] host = name.split(":");
-            if (host.length != 2) {
-                throw new ServiceException("必须为IP:PORT格式！");
-            }
 
-            InetAddress remoteIp = InetAddress.getByName(host[0]);
-            Integer remotePort = Integer.parseInt(host[1]);
+            InetAddress remoteIp = InetAddress.getByName(host);
+            Integer remotePort = port;
 
 
             // 格式转换
-            byte[] send = HexUtils.hexStringToByteArray(sendData);
+            byte[] send = HexUtils.hexStringToByteArray(data);
 
             // 打开socket
 

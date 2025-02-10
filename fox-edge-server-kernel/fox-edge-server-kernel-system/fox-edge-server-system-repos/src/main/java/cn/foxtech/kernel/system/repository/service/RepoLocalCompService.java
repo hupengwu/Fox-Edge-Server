@@ -63,6 +63,7 @@ public class RepoLocalCompService {
 
             if (RepoCompVOFieldConstant.value_comp_type_jar_decoder.equals(compType) // jar-decoder
                     || RepoCompVOFieldConstant.value_comp_type_jsp_decoder.equals(compType) // jsp-decoder
+                    || RepoCompVOFieldConstant.value_comp_type_device_template.equals(compType) // jsp-decoder
             ) {
                 if (MethodUtils.hasEmpty(keyWord)) {
                     return true;

@@ -46,8 +46,8 @@ public class DeviceSubscribeScheduler extends PeriodTaskService {
             DeviceEntity deviceEntity = (DeviceEntity) entity;
 
             // 取出注册参数
-            Object productId = deviceEntity.getDeviceParam().getOrDefault(this.fastBeeService.getProductId(), "");
-            Object deviceNum = deviceEntity.getDeviceParam().getOrDefault(this.fastBeeService.getDeviceNum(), "");
+            Object productId = deviceEntity.getExtendParam().getOrDefault(this.fastBeeService.getProductId(), "");
+            Object deviceNum = deviceEntity.getExtendParam().getOrDefault(this.fastBeeService.getDeviceNum(), "");
             if (MethodUtils.hasEmpty(productId, deviceNum)) {
                 continue;
             }

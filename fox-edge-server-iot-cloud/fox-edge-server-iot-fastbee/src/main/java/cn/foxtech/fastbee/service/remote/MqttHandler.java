@@ -139,8 +139,8 @@ public class MqttHandler extends MqttClientHandler {
         return this.entityManageService.getEntity(DeviceEntity.class, (Object value) -> {
             DeviceEntity entity = (DeviceEntity) value;
 
-            Object prodId = entity.getDeviceParam().getOrDefault(this.fastBeeService.getProductId(), "");
-            Object devNum = entity.getDeviceParam().getOrDefault(this.fastBeeService.getDeviceNum(), "");
+            Object prodId = entity.getExtendParam().getOrDefault(this.fastBeeService.getProductId(), "");
+            Object devNum = entity.getExtendParam().getOrDefault(this.fastBeeService.getDeviceNum(), "");
             if (MethodUtils.hasEmpty(prodId, devNum)) {
                 return false;
             }

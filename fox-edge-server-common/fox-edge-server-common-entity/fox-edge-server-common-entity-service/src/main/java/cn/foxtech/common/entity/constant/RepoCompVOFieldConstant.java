@@ -12,7 +12,6 @@ public class RepoCompVOFieldConstant  extends BaseVOFieldConstant {
     public static final String field_comp_param = "compParam";
     public static final String field_key_word = "keyWord";
 
-    public static final String field_file = "file";
     public static final String field_group_name = "groupName";
     public static final String field_comp_id = "compId";
     public static final String field_commit_key = "commitKey";

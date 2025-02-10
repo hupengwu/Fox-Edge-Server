@@ -29,7 +29,7 @@
         <module>channel-serialport-analyzer</module>
         <module>channel-simulator</module>
         <module>channel-snmp-client</module>
-        <module>channel-s7plc-client</module>
+        <module>channel-s7-client</module>
         <module>channel-tcp-client</module>
         <module>channel-tcp-server</module>
         <module>channel-udp-server</module>
