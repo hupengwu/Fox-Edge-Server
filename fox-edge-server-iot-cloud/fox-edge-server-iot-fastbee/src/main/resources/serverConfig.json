@@ -26,6 +26,8 @@
       }
     },
     "fast-bee": {
+      "iotName": "FastBee",
+      "subsetName": "default",
       "productId": "productId",
       "deviceNum": "serialNumber",
       "timeInterval": 5,

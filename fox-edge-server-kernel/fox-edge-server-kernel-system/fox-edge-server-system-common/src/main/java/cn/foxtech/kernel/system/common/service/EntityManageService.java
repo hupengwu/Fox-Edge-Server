@@ -20,6 +20,7 @@ import cn.foxtech.common.entity.service.devicetemplate.DeviceTemplateEntityServi
 import cn.foxtech.common.entity.service.devicevalue.task.DeviceValueExTaskEntityService;
 import cn.foxtech.common.entity.service.extendconfig.ExtendConfigEntityService;
 import cn.foxtech.common.entity.service.iotdevicemodel.IotDeviceModelEntityService;
+import cn.foxtech.common.entity.service.iottemplate.IotTemplateEntityService;
 import cn.foxtech.common.entity.service.mybatis.BaseEntityService;
 import cn.foxtech.common.entity.service.operate.OperateEntityService;
 import cn.foxtech.common.entity.service.operaterecord.OperateRecordEntityService;
@@ -55,6 +56,9 @@ public class EntityManageService extends EntityServiceManager {
 
     @Autowired
     protected IotDeviceModelEntityService iotDeviceModelEntityService;
+
+    @Autowired
+    protected IotTemplateEntityService iotTemplateEntityService;
 
     @Autowired
     protected DeviceMapperEntityService deviceMapperEntityService;
@@ -165,6 +169,7 @@ public class EntityManageService extends EntityServiceManager {
         dBService.put(DeviceTemplateEntity.class.getSimpleName(), this.deviceTemplateEntityService);
         dBService.put(OperateEntity.class.getSimpleName(), this.operateEntityService);
         dBService.put(IotDeviceModelEntity.class.getSimpleName(), this.iotDeviceModelEntityService);
+        dBService.put(IotTemplateEntity.class.getSimpleName(), this.iotTemplateEntityService);
         dBService.put(RepoCompEntity.class.getSimpleName(), this.repoCompEntityService);
 
 
@@ -186,6 +191,7 @@ public class EntityManageService extends EntityServiceManager {
         this.getSourceMySQL().add(DeviceMapperEntity.class.getSimpleName());
         this.getSourceMySQL().add(DeviceModelEntity.class.getSimpleName());
         this.getSourceMySQL().add(IotDeviceModelEntity.class.getSimpleName());
+        this.getSourceMySQL().add(IotTemplateEntity.class.getSimpleName());
         this.getSourceMySQL().add(RepoCompEntity.class.getSimpleName());
 
         // 注册消费者
@@ -207,6 +213,8 @@ public class EntityManageService extends EntityServiceManager {
         writer.add(RepoCompEntity.class.getSimpleName());
         reader.add(IotDeviceModelEntity.class.getSimpleName());
         writer.add(IotDeviceModelEntity.class.getSimpleName());
+        reader.add(IotTemplateEntity.class.getSimpleName());
+        writer.add(IotTemplateEntity.class.getSimpleName());
         reader.add(DeviceModelEntity.class.getSimpleName());
         writer.add(DeviceModelEntity.class.getSimpleName());
         reader.add(DeviceMapperEntity.class.getSimpleName());
@@ -258,6 +266,7 @@ public class EntityManageService extends EntityServiceManager {
         this.entityPublishManager.setPublishEntityUpdateTime(DeviceMapperEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, DeviceMapperEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(DeviceModelEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, DeviceModelEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(IotDeviceModelEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, IotDeviceModelEntity.class.getSimpleName());
+        this.entityPublishManager.setPublishEntityUpdateTime(IotTemplateEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, IotTemplateEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(RepoCompEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, RepoCompEntity.class.getSimpleName());
     }
 

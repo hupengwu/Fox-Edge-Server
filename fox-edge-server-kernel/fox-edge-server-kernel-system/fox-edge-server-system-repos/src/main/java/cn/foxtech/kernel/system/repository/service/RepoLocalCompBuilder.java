@@ -6,6 +6,7 @@ package cn.foxtech.kernel.system.repository.service;
 
 import cn.foxtech.common.domain.constant.ServiceVOFieldConstant;
 import cn.foxtech.common.entity.constant.DeviceTemplateVOFieldConstant;
+import cn.foxtech.common.entity.constant.IotTemplateVOFieldConstant;
 import cn.foxtech.common.entity.constant.OperateVOFieldConstant;
 import cn.foxtech.common.entity.constant.RepoCompVOFieldConstant;
 import cn.foxtech.common.entity.entity.RepoCompEntity;
@@ -49,8 +50,12 @@ public class RepoLocalCompBuilder {
             return this.buildAppService(params);
         }
 
-        if (compRepo.equals(RepoCompVOFieldConstant.value_comp_repo_local) && compType.equals(RepoCompVOFieldConstant.value_comp_type_device_template)) {
-            return this.buildDeviceTemplate(params);
+        if (compRepo.equals(RepoCompVOFieldConstant.value_comp_repo_local) && compType.equals(RepoCompVOFieldConstant.value_comp_type_dev_template)) {
+            return this.buildDevTemplate(params);
+        }
+
+        if (compRepo.equals(RepoCompVOFieldConstant.value_comp_repo_local) && compType.equals(RepoCompVOFieldConstant.value_comp_type_iot_template)) {
+            return this.buildIotTemplate(params);
         }
 
         throw new ServiceException("不支持的类型:" + compRepo + "," + compType);
@@ -139,7 +144,7 @@ public class RepoLocalCompBuilder {
         return entity;
     }
 
-    private RepoCompEntity buildDeviceTemplate(Map<String, Object> params) {
+    private RepoCompEntity buildDevTemplate(Map<String, Object> params) {
         // 提取业务参数
         String compType = (String) params.get(RepoCompVOFieldConstant.field_comp_type);
         String compRepo = (String) params.get(RepoCompVOFieldConstant.field_comp_repo);
@@ -163,6 +168,34 @@ public class RepoLocalCompBuilder {
         entity.setCompRepo(compRepo);
         entity.setCompType(compType);
         entity.setCompName(manufacturer + ":" + deviceType + ":" + subsetName);
+        entity.setCompParam(compParam);
+
+        return entity;
+    }
+
+    private RepoCompEntity buildIotTemplate(Map<String, Object> params) {
+        // 提取业务参数
+        String compType = (String) params.get(RepoCompVOFieldConstant.field_comp_type);
+        String compRepo = (String) params.get(RepoCompVOFieldConstant.field_comp_repo);
+        Map<String, Object> compParam = (Map<String, Object>) params.get(RepoCompVOFieldConstant.field_comp_param);
+
+        // 简单校验参数
+        if (MethodUtils.hasNull(compType, compRepo, compParam)) {
+            throw new ServiceException("参数不能为空: compType, compRepo, compParam");
+        }
+
+        String iotName = (String) compParam.get(IotTemplateVOFieldConstant.field_iot_name);
+        String subsetName = (String) compParam.get(IotTemplateVOFieldConstant.field_subset_name);
+        if (MethodUtils.hasNull(iotName, subsetName)) {
+            throw new ServiceException("参数不能为空: iotName, subsetName");
+        }
+
+
+        // 构造作为参数的实体
+        RepoCompEntity entity = new RepoCompEntity();
+        entity.setCompRepo(compRepo);
+        entity.setCompType(compType);
+        entity.setCompName(iotName + ":" + subsetName);
         entity.setCompParam(compParam);
 
         return entity;

@@ -5,10 +5,7 @@
 package cn.foxtech.kernel.system.repository.service;
 
 import cn.foxtech.common.domain.constant.ServiceVOFieldConstant;
-import cn.foxtech.common.entity.constant.DeviceModelVOFieldConstant;
-import cn.foxtech.common.entity.constant.DeviceTemplateVOFieldConstant;
-import cn.foxtech.common.entity.constant.OperateVOFieldConstant;
-import cn.foxtech.common.entity.constant.RepoCompVOFieldConstant;
+import cn.foxtech.common.entity.constant.*;
 import cn.foxtech.common.entity.entity.*;
 import cn.foxtech.common.utils.ContainerUtils;
 import cn.foxtech.common.utils.DifferUtils;
@@ -63,7 +60,7 @@ public class RepoLocalCompService {
 
             if (RepoCompVOFieldConstant.value_comp_type_jar_decoder.equals(compType) // jar-decoder
                     || RepoCompVOFieldConstant.value_comp_type_jsp_decoder.equals(compType) // jsp-decoder
-                    || RepoCompVOFieldConstant.value_comp_type_device_template.equals(compType) // jsp-decoder
+                    || RepoCompVOFieldConstant.value_comp_type_dev_template.equals(compType) // jsp-decoder
             ) {
                 if (MethodUtils.hasEmpty(keyWord)) {
                     return true;
@@ -128,7 +125,7 @@ public class RepoLocalCompService {
         }
 
         // 检查：实体中的依赖关系，避免数据之间依赖关系失效
-        if (RepoCompVOFieldConstant.value_comp_type_device_template.equals(compEntity.getCompType())) {
+        if (RepoCompVOFieldConstant.value_comp_type_dev_template.equals(compEntity.getCompType())) {
             List<BaseEntity> operateList = this.templateService.getDeviceTemplateEntityList(compEntity);
             if (!operateList.isEmpty()) {
                 throw new ServiceException("该组件下面，已经定义了操作方法，请先删除这些操作方法后，再删除组件!");
@@ -151,8 +148,11 @@ public class RepoLocalCompService {
         if (compType.equals(RepoCompVOFieldConstant.value_comp_type_jsn_decoder)) {
             return this.installJsnDecoderEntity(data);
         }
-        if (compType.equals(RepoCompVOFieldConstant.value_comp_type_device_template)) {
+        if (compType.equals(RepoCompVOFieldConstant.value_comp_type_dev_template)) {
             return this.installDevTemplateEntity(data);
+        }
+        if (compType.equals(RepoCompVOFieldConstant.value_comp_type_iot_template)) {
+            return this.installIotTemplateEntity(data);
         }
 
         throw new ServiceException("该组件类型，不支持本地上传");
@@ -368,7 +368,7 @@ public class RepoLocalCompService {
 
         RepoCompEntity repoCompEntity = new RepoCompEntity();
         repoCompEntity.setCompRepo(RepoCompVOFieldConstant.value_comp_repo_local);
-        repoCompEntity.setCompType(RepoCompVOFieldConstant.value_comp_type_device_template);
+        repoCompEntity.setCompType(RepoCompVOFieldConstant.value_comp_type_dev_template);
         repoCompEntity.setCompName(manufacturer + ":" + deviceType + ":" + subsetName);
 
         // 如果组件对象不存在，那么就创建一个新的组件对象
@@ -421,6 +421,103 @@ public class RepoLocalCompService {
 
         for (String key : addList) {
             DeviceTemplateEntity modelEntity = dstOperateMap.get(key);
+            modelEntity.setId(null);
+            this.entityManageService.insertEntity(modelEntity);
+        }
+        for (String key : delList) {
+            BaseEntity modelEntity = srcOperateMap.get(key);
+            this.entityManageService.deleteEntity(modelEntity);
+        }
+        for (String key : eqlList) {
+            BaseEntity dstEntity = dstOperateMap.get(key);
+            BaseEntity srcEntity = srcOperateMap.get(key);
+            if (dstEntity.makeServiceValue().equals(srcEntity.makeServiceValue())) {
+                continue;
+            }
+
+            dstEntity.setId(srcEntity.getId());
+            this.entityManageService.updateEntity(dstEntity);
+        }
+
+        // 获得版本日期
+        Long updateTime = Long.valueOf(data.getOrDefault("updateTime", "0").toString());
+        String format = "yyyy-MM-dd HH:mm:ss";
+        SimpleDateFormat SDF = new SimpleDateFormat(format);
+        String timer = SDF.format(new Date(updateTime));
+
+        // 更新：安装版本的信息
+        Map<String, Object> install = new HashMap<>();
+        install.put("updateTime", timer);
+        install.put("description", data.get("description"));
+        install.put("id", data.get("id"));
+
+        // 更新版本信息
+        repoCompEntity.getCompParam().put("installVersion", install);
+        this.entityManageService.updateEntity(repoCompEntity);
+
+        return null;
+    }
+
+    private Map<String, Object> installIotTemplateEntity(Map<String, Object> data) {
+        String iotName = (String) data.get(IotTemplateVOFieldConstant.field_iot_name);
+        String subsetName = (String) data.get(IotTemplateVOFieldConstant.field_subset_name);
+        String templateId = (String) data.get(IotTemplateVOFieldConstant.field_template_id);
+        String groupName = (String) data.get(IotTemplateVOFieldConstant.field_group_name);
+        List<Map<String, Object>> objects = (List<Map<String, Object>>) data.get("objects");
+        if (MethodUtils.hasEmpty(iotName, subsetName, templateId, groupName, objects)) {
+            throw new ServiceException("缺少参数： iotName, subsetName, templateId, groupName, objects");
+        }
+
+        RepoCompEntity repoCompEntity = new RepoCompEntity();
+        repoCompEntity.setCompRepo(RepoCompVOFieldConstant.value_comp_repo_local);
+        repoCompEntity.setCompType(RepoCompVOFieldConstant.value_comp_type_iot_template);
+        repoCompEntity.setCompName(iotName + ":" + subsetName);
+
+        // 如果组件对象不存在，那么就创建一个新的组件对象
+        RepoCompEntity existCompEntity = this.entityManageService.getEntity(repoCompEntity.makeServiceKey(), RepoCompEntity.class);
+        if (existCompEntity == null) {
+            Map<String, Object> compParam = repoCompEntity.getCompParam();
+            compParam.put(IotTemplateVOFieldConstant.field_comp_id, templateId);
+            compParam.put(IotTemplateVOFieldConstant.field_group_name, groupName);
+            compParam.put(IotTemplateVOFieldConstant.field_iot_name, iotName);
+            compParam.put(IotTemplateVOFieldConstant.field_subset_name, subsetName);
+
+            this.entityManageService.insertEntity(repoCompEntity);
+        } else {
+            repoCompEntity = existCompEntity;
+        }
+
+        // 组织成天MAP关系
+        Map<String, IotTemplateEntity> dstOperateMap = new HashMap<>();
+        for (Map<String, Object> object : objects) {
+            IotTemplateEntity modelEntity = new IotTemplateEntity();
+            modelEntity.bind(object);
+            modelEntity.setIotName(iotName);
+            modelEntity.setSubsetName(subsetName);
+
+            dstOperateMap.put(modelEntity.makeServiceKey(), modelEntity);
+        }
+
+
+        // 获得已经存在的操作列表
+        List<BaseEntity> objectList = this.entityManageService.getEntityList(IotTemplateEntity.class, (Object value) -> {
+            IotTemplateEntity entity = (IotTemplateEntity) value;
+
+            if (!iotName.equals(entity.getIotName())) {
+                return false;
+            }
+            return subsetName.equals(entity.getSubsetName());
+        });
+
+        Map<String, BaseEntity> srcOperateMap = ContainerUtils.buildMapByKey(objectList, IotTemplateEntity::makeServiceKey);
+
+        Set<String> addList = new HashSet<>();
+        Set<String> delList = new HashSet<>();
+        Set<String> eqlList = new HashSet<>();
+        DifferUtils.differByValue(srcOperateMap.keySet(), dstOperateMap.keySet(), addList, delList, eqlList);
+
+        for (String key : addList) {
+            IotTemplateEntity modelEntity = dstOperateMap.get(key);
             modelEntity.setId(null);
             this.entityManageService.insertEntity(modelEntity);
         }

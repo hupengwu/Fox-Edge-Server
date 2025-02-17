@@ -119,12 +119,14 @@ public class MqttHandler extends MqttClientHandler {
             return null;
         }
 
+        String iotName = this.fastBeeService.getIotName();
+        String subsetName = this.fastBeeService.getSubsetName();
+
         // 构造操作请求
-        TaskRequestVO requestVO = this.dictService.buildTaskRequestVO(deviceEntity, id, value);
+        TaskRequestVO requestVO = this.dictService.buildTaskRequestVO(deviceEntity, iotName, subsetName, id, value);
         if (requestVO == null) {
             return null;
         }
-
 
         // 向设备服务，发出操作请求
         this.redisClient.getDeviceClient().pushDeviceRequest(requestVO);

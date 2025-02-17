@@ -254,6 +254,28 @@ CREATE TABLE IF NOT EXISTS `tb_iot_device_model` (
 
 -- 数据导出被取消选择。
 
+
+-- 导出  表 fox_edge.tb_iot_template 结构
+DROP TABLE IF EXISTS `tb_iot_template`;
+CREATE TABLE IF NOT EXISTS `tb_iot_template` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '序号',
+  `iot_name` varchar(50) COMMENT '云端平台',
+  `subset_name` varchar(50) COMMENT '子集名称',
+  `template_type` varchar(50) COMMENT '模板类型',
+  `template_name` varchar(50) COMMENT '实例名称',
+  `template_param` json COMMENT '操作参数',
+  `extend_param` json COMMENT '扩展参数',
+  `create_time` bigint COMMENT '创建时间',
+  `update_time` bigint COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `iot_name_subset_name_template_type_template_name` (`iot_name`,`subset_name`,`template_type`,`template_name`),
+  KEY `template_name` (`template_name`) USING BTREE,
+  KEY `subset` (`subset_name`) USING BTREE,
+  KEY `template_type` (`template_type`) USING BTREE,
+  KEY `iot_name` (`iot_name`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='iot模板，可用于设备操作任务的复制源';
+
+
 -- 导出  表 fox_edge.tb_link 结构
 DROP TABLE IF EXISTS `tb_link`;
 CREATE TABLE IF NOT EXISTS `tb_link` (

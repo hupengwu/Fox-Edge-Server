@@ -253,7 +253,7 @@ public class RepoLocalDevTemplateService {
         RepoCompEntity compEntity = this.entityManageService.getEntity(RepoCompEntity.class, (Object value) -> {
             RepoCompEntity entity = (RepoCompEntity) value;
 
-            if (!entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_device_template)) {
+            if (!entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_dev_template)) {
                 return false;
             }
 

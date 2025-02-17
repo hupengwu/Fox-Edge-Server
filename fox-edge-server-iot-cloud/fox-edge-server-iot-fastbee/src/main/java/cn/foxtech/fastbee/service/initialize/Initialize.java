@@ -5,9 +5,7 @@
 package cn.foxtech.fastbee.service.initialize;
 
 
-import cn.foxtech.common.entity.entity.ConfigEntity;
-import cn.foxtech.common.entity.entity.DeviceEntity;
-import cn.foxtech.common.entity.entity.DeviceValueEntity;
+import cn.foxtech.common.entity.entity.*;
 import cn.foxtech.fastbee.service.scheduler.DeviceSubscribeScheduler;
 import cn.foxtech.fastbee.service.scheduler.DeviceValuePushScheduler;
 import cn.foxtech.fastbee.service.service.FastBeeService;
@@ -51,6 +49,9 @@ public class Initialize implements CommandLineRunner {
         this.initializeCommon.getEntityManageService().addConsumer(ConfigEntity.class.getSimpleName());
         this.initializeCommon.getEntityManageService().addConsumer(DeviceEntity.class.getSimpleName());
         this.initializeCommon.getEntityManageService().addReader(DeviceValueEntity.class.getSimpleName());
+        this.initializeCommon.getEntityManageService().addReader(DeviceTemplateEntity.class.getSimpleName());
+        this.initializeCommon.getEntityManageService().addReader(IotTemplateEntity.class.getSimpleName());
+
         this.initializeCommon.initialize();
 
         // 初始化华为组件

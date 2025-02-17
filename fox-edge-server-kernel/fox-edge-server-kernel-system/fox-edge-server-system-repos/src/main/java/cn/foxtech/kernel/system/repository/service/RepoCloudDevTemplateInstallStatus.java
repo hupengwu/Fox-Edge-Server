@@ -12,7 +12,6 @@ import cn.foxtech.common.utils.MapUtils;
 import cn.foxtech.common.utils.md5.MD5Utils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.string.StringSort;
-import cn.foxtech.common.utils.string.StringUtils;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.system.repository.constants.RepoCompConstant;
 import cn.foxtech.kernel.system.repository.constants.RepoStatusConstant;
@@ -22,14 +21,13 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 安装状态的管理
  */
 @Component
-public class RepoCloudTemplateInstallStatus {
+public class RepoCloudDevTemplateInstallStatus {
     /**
      * 本地组件的安装状态列表：通过缓存安装状态，用于优化磁盘扫描安装包的长时间卡顿问题
      */

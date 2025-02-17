@@ -6,6 +6,7 @@ package cn.foxtech.kernel.system.repository.service;
 
 import cn.foxtech.common.constant.HttpStatus;
 import cn.foxtech.common.entity.constant.DeviceTemplateVOFieldConstant;
+import cn.foxtech.common.entity.constant.IotTemplateVOFieldConstant;
 import cn.foxtech.common.entity.constant.OperateVOFieldConstant;
 import cn.foxtech.common.entity.constant.RepoCompVOFieldConstant;
 import cn.foxtech.common.entity.entity.RepoCompEntity;
@@ -53,8 +54,11 @@ public class RepoLocalCompSync {
         if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_jsn_decoder)) {
             return this.syncJsnDecoderEntity(entity);
         }
-        if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_device_template)) {
+        if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_dev_template)) {
             return this.syncDevTemplateEntity(entity);
+        }
+        if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_iot_template)) {
+            return this.syncIotTemplateEntity(entity);
         }
 
         throw new ServiceException("该组件类型，不支持从云端同步！");
@@ -200,7 +204,7 @@ public class RepoLocalCompSync {
         body.put(DeviceTemplateVOFieldConstant.field_subset_name, subsetName);
 
         // 获得云端的信息
-        Map<String, Object> respond = this.remoteService.executePost("/manager/repository/component/template/title/list", body);
+        Map<String, Object> respond = this.remoteService.executePost("/manager/repository/component/dev-template/title/list", body);
         Object code = respond.get(AjaxResult.CODE_TAG);
         Object data = respond.get(AjaxResult.DATA_TAG);
         if (!HttpStatus.SUCCESS.equals(code) || data == null) {
@@ -211,6 +215,48 @@ public class RepoLocalCompSync {
         List<Map<String, Object>> list = (List<Map<String, Object>>) data;
         if (list.isEmpty()) {
             throw new ServiceException("云端没有这个组件，请先去云端仓库为本账号:" + this.remoteService.getUsername() + "归属的群组，注册这个组件:" + deviceType);
+        }
+
+        // 找到了云端的组件信息
+        Map<String, Object> map = list.get(0);
+
+        // 克隆一个副本，防止修改影响到了原本
+        entity = JsonUtils.clone(entity);
+        entity.getCompParam().put(RepoCompVOFieldConstant.field_group_name, map.get("groupName"));
+        entity.getCompParam().put(RepoCompVOFieldConstant.field_comp_id, map.get("id"));
+
+        // 保存数据
+        this.entityManageService.updateEntity(entity);
+
+        return respond;
+    }
+
+    private Map<String, Object> syncIotTemplateEntity(RepoCompEntity entity) throws IOException {
+        Map<String, Object> compParam = entity.getCompParam();
+
+        String iotName = (String) compParam.get(IotTemplateVOFieldConstant.field_iot_name);
+        String subsetName = (String) compParam.get(IotTemplateVOFieldConstant.field_subset_name);
+        if (MethodUtils.hasEmpty(iotName, subsetName)) {
+            throw new ServiceException("缺少参数： iotName, subsetName");
+        }
+
+
+        Map<String, Object> body = new HashMap<>();
+        body.put(IotTemplateVOFieldConstant.field_iot_name, iotName);
+        body.put(IotTemplateVOFieldConstant.field_subset_name, subsetName);
+
+        // 获得云端的信息
+        Map<String, Object> respond = this.remoteService.executePost("/manager/repository/component/iot-template/title/list", body);
+        Object code = respond.get(AjaxResult.CODE_TAG);
+        Object data = respond.get(AjaxResult.DATA_TAG);
+        if (!HttpStatus.SUCCESS.equals(code) || data == null) {
+            throw new ServiceException("从云端查询信息失败！" + respond);
+        }
+
+        // 如果空列表：云端没有这个组件
+        List<Map<String, Object>> list = (List<Map<String, Object>>) data;
+        if (list.isEmpty()) {
+            throw new ServiceException("云端没有这个组件，请先去云端仓库为本账号:" + this.remoteService.getUsername() + "归属的群组，注册这个组件:" + iotName);
         }
 
         // 找到了云端的组件信息

@@ -4,17 +4,17 @@
 
 package cn.foxtech.kernel.system.repository.controller;
 
-import cn.foxtech.common.entity.constant.DeviceTemplateVOFieldConstant;
+import cn.foxtech.common.entity.constant.IotTemplateVOFieldConstant;
 import cn.foxtech.common.entity.constant.RepoCompVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
-import cn.foxtech.common.entity.entity.DeviceTemplateEntity;
+import cn.foxtech.common.entity.entity.IotTemplateEntity;
 import cn.foxtech.common.entity.entity.RepoCompEntity;
 import cn.foxtech.common.entity.utils.PageUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.core.domain.AjaxResult;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.kernel.system.repository.service.RepoLocalCompService;
-import cn.foxtech.kernel.system.repository.service.RepoLocalDevTemplateService;
+import cn.foxtech.kernel.system.repository.service.RepoLocalIotTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,8 +26,8 @@ import java.util.Map;
  * 操作方法列表管理：包括JSP方法和JAR方法
  */
 @RestController
-@RequestMapping("/repository/local/dev-template-list")
-public class RepoLocalDevTemplateController {
+@RequestMapping("/repository/local/iot-template-list")
+public class RepoLocalIotTemplateController {
     /**
      * 仓库服务
      */
@@ -35,7 +35,7 @@ public class RepoLocalDevTemplateController {
     private RepoLocalCompService componentService;
 
     @Autowired
-    private RepoLocalDevTemplateService templateService;
+    private RepoLocalIotTemplateService templateService;
 
     @PostMapping("page")
     public Map<String, Object> selectEntityPage(@RequestBody Map<String, Object> body) {
@@ -43,7 +43,7 @@ public class RepoLocalDevTemplateController {
             Integer id = (Integer) body.get(RepoCompVOFieldConstant.field_id);
             Integer pageNum = (Integer) body.get(RepoCompVOFieldConstant.field_page_num);
             Integer pageSize = (Integer) body.get(RepoCompVOFieldConstant.field_page_size);
-            String templateType = (String) body.get(DeviceTemplateVOFieldConstant.field_template_type);
+            String templateType = (String) body.get(IotTemplateVOFieldConstant.field_template_type);
 
 
             // 简单验证
@@ -58,7 +58,7 @@ public class RepoLocalDevTemplateController {
             }
 
             // 查询数据
-            List<BaseEntity> entityList = this.templateService.getDeviceTemplateEntityList(compEntity, templateType);
+            List<BaseEntity> entityList = this.templateService.getIotTemplateEntityList(compEntity, templateType);
 
             // 分页查询
             return AjaxResult.success(PageUtils.getPageList(entityList, pageNum, pageSize));
@@ -81,7 +81,7 @@ public class RepoLocalDevTemplateController {
 
     @GetMapping("entity")
     public AjaxResult queryEntity(@QueryParam("id") Long id) {
-        DeviceTemplateEntity exist = this.templateService.queryEntity(id);
+        IotTemplateEntity exist = this.templateService.queryEntity(id);
         if (exist == null) {
             return AjaxResult.error("实体不存在");
         }

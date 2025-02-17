@@ -5,6 +5,7 @@
 package cn.foxtech.kernel.system.repository.service;
 
 import cn.foxtech.common.entity.constant.DeviceTemplateVOFieldConstant;
+import cn.foxtech.common.entity.constant.IotTemplateVOFieldConstant;
 import cn.foxtech.common.entity.constant.OperateVOFieldConstant;
 import cn.foxtech.common.entity.constant.RepoCompVOFieldConstant;
 import cn.foxtech.common.entity.entity.*;
@@ -55,8 +56,11 @@ public class RepoLocalCompUpload {
         if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_jsn_decoder)) {
             return this.uploadJsnDecoderEntity(entity, commitKey, description);
         }
-        if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_device_template)) {
+        if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_dev_template)) {
             return this.uploadDevTemplateEntity(entity, commitKey, description);
+        }
+        if (entity.getCompRepo().equals(RepoCompVOFieldConstant.value_comp_repo_local) && entity.getCompType().equals(RepoCompVOFieldConstant.value_comp_type_iot_template)) {
+            return this.uploadIotTemplateEntity(entity, commitKey, description);
         }
 
 
@@ -198,7 +202,42 @@ public class RepoLocalCompUpload {
         body.put(RepoCompVOFieldConstant.field_description, description);
         body.put("objects", entityList);
 
-        Map<String, Object> respond = this.remoteService.executePost("/manager/repository/component/template/version/entity", body);
+        Map<String, Object> respond = this.remoteService.executePost("/manager/repository/component/dev-template/version/entity", body);
+
+        // 更新版本信息
+        this.updateVersion(repoCompEntity, respond);
+
+        return respond;
+    }
+
+    private Map<String, Object> uploadIotTemplateEntity(RepoCompEntity repoCompEntity, String commitKey, String description) throws IOException {
+        Map<String, Object> compParam = repoCompEntity.getCompParam();
+
+        String compId = (String) compParam.get(RepoCompVOFieldConstant.field_comp_id);
+        String iotName = (String) compParam.get(IotTemplateVOFieldConstant.field_iot_name);
+        String subsetName = (String) compParam.get(IotTemplateVOFieldConstant.field_subset_name);
+        if (MethodUtils.hasEmpty(compId, iotName, subsetName)) {
+            throw new ServiceException("缺少参数： compId, deviceType, manufacturer, subsetName");
+        }
+
+        List<BaseEntity> entityList = this.entityManageService.getEntityList(IotTemplateEntity.class, (Object value) -> {
+            IotTemplateEntity entity = (IotTemplateEntity) value;
+
+            if (!entity.getIotName().equals(iotName)) {
+                return false;
+            }
+
+            return entity.getSubsetName().equals(subsetName);
+        });
+
+
+        Map<String, Object> body = JsonUtils.clone(compParam);
+        body.put(RepoCompVOFieldConstant.field_comp_id, compId);
+        body.put(RepoCompVOFieldConstant.field_commit_key, commitKey);
+        body.put(RepoCompVOFieldConstant.field_description, description);
+        body.put("objects", entityList);
+
+        Map<String, Object> respond = this.remoteService.executePost("/manager/repository/component/iot-template/version/entity", body);
 
         // 更新版本信息
         this.updateVersion(repoCompEntity, respond);
