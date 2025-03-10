@@ -58,7 +58,7 @@ public class RepoLocalDevTemplateController {
             }
 
             // 查询数据
-            List<BaseEntity> entityList = this.templateService.getDeviceTemplateEntityList(compEntity, templateType);
+            List<BaseEntity> entityList = this.templateService.getDevTemplateEntityList(compEntity, templateType);
 
             // 分页查询
             return AjaxResult.success(PageUtils.getPageList(entityList, pageNum, pageSize));

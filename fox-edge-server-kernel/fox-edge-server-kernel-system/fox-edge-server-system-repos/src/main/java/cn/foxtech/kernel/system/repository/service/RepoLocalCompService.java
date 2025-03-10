@@ -34,7 +34,10 @@ public class RepoLocalCompService {
     private RepoLocalJsnModelService modelService;
 
     @Autowired
-    private RepoLocalDevTemplateService templateService;
+    private RepoLocalDevTemplateService devTemplateService;
+
+    @Autowired
+    private RepoLocalIotTemplateService iotTemplateService;
 
     public List<BaseEntity> getCompEntityList(Map<String, Object> body) {
         String compRepo = (String) body.get(RepoCompVOFieldConstant.field_comp_repo);
@@ -73,6 +76,20 @@ public class RepoLocalCompService {
                     return true;
                 }
                 if (deviceType.toLowerCase().contains(keyWord.toLowerCase())) {
+                    return true;
+                }
+                return compEntity.getCompName().toLowerCase().contains(keyWord.toLowerCase());
+            }
+
+            if (RepoCompVOFieldConstant.value_comp_type_iot_template.equals(compType)
+            ) {
+                if (MethodUtils.hasEmpty(keyWord)) {
+                    return true;
+                }
+
+                String iotName = (String) compEntity.getCompParam().getOrDefault(IotTemplateVOFieldConstant.field_iot_name, "");
+
+                if (iotName.toLowerCase().contains(keyWord.toLowerCase())) {
                     return true;
                 }
                 return compEntity.getCompName().toLowerCase().contains(keyWord.toLowerCase());
@@ -126,7 +143,15 @@ public class RepoLocalCompService {
 
         // 检查：实体中的依赖关系，避免数据之间依赖关系失效
         if (RepoCompVOFieldConstant.value_comp_type_dev_template.equals(compEntity.getCompType())) {
-            List<BaseEntity> operateList = this.templateService.getDeviceTemplateEntityList(compEntity);
+            List<BaseEntity> operateList = this.devTemplateService.getDevTemplateEntityList(compEntity);
+            if (!operateList.isEmpty()) {
+                throw new ServiceException("该组件下面，已经定义了操作方法，请先删除这些操作方法后，再删除组件!");
+            }
+        }
+
+        // 检查：实体中的依赖关系，避免数据之间依赖关系失效
+        if (RepoCompVOFieldConstant.value_comp_type_iot_template.equals(compEntity.getCompType())) {
+            List<BaseEntity> operateList = this.iotTemplateService.getIotTemplateEntityList(compEntity);
             if (!operateList.isEmpty()) {
                 throw new ServiceException("该组件下面，已经定义了操作方法，请先删除这些操作方法后，再删除组件!");
             }

@@ -53,7 +53,7 @@ public class RepoLocalDevTemplateService {
         });
     }
 
-    public List<BaseEntity> getDeviceTemplateEntityList(RepoCompEntity compEntity, String templateType) {
+    public List<BaseEntity> getDevTemplateEntityList(RepoCompEntity compEntity, String templateType) {
         return this.entityManageService.getEntityList(DeviceTemplateEntity.class, (Object value) -> {
             DeviceTemplateEntity entity = (DeviceTemplateEntity) value;
 
@@ -100,7 +100,7 @@ public class RepoLocalDevTemplateService {
         });
     }
 
-    public List<BaseEntity> getDeviceTemplateEntityList(String manufacturer, String deviceType, String subsetName) {
+    public List<BaseEntity> getDevTemplateEntityList(String manufacturer, String deviceType, String subsetName) {
         return this.entityManageService.getEntityList(DeviceTemplateEntity.class, (Object value) -> {
             DeviceTemplateEntity entity = (DeviceTemplateEntity) value;
 
@@ -115,13 +115,13 @@ public class RepoLocalDevTemplateService {
         });
     }
 
-    public List<BaseEntity> getDeviceTemplateEntityList(RepoCompEntity compEntity) {
+    public List<BaseEntity> getDevTemplateEntityList(RepoCompEntity compEntity) {
         String manufacturer = (String) compEntity.getCompParam().get(DeviceTemplateVOFieldConstant.field_manufacturer);
         String deviceType = (String) compEntity.getCompParam().get(DeviceTemplateVOFieldConstant.field_device_type);
         String subsetName = (String) compEntity.getCompParam().get(DeviceTemplateVOFieldConstant.field_subset_name);
 
 
-        return this.getDeviceTemplateEntityList(manufacturer, deviceType, subsetName);
+        return this.getDevTemplateEntityList(manufacturer, deviceType, subsetName);
     }
 
     public void insertOrUpdate(Map<String, Object> params) {
@@ -155,7 +155,7 @@ public class RepoLocalDevTemplateService {
         if (!templateType.equals(DeviceTemplateVOFieldConstant.value_device_param) && !templateType.equals(DeviceTemplateVOFieldConstant.value_operate_param) && !templateType.equals(DeviceTemplateVOFieldConstant.value_channel_param)) {
             throw new ServiceException("类型不正确");
         }
-        if (templateType.equals(DeviceTemplateVOFieldConstant.value_device_param) && params.get("id") == null && this.getDeviceTemplateEntityList(compEntity, templateType).size() > 0) {
+        if (templateType.equals(DeviceTemplateVOFieldConstant.value_device_param) && params.get("id") == null && this.getDevTemplateEntityList(compEntity, templateType).size() > 0) {
             throw new ServiceException("设备参数在同一个子集中，最多只能创建一个");
         }
         if (templateType.equals(DeviceTemplateVOFieldConstant.value_channel_param) && params.get("id") == null && this.getDeviceTemplateChannelList(compEntity, (String) templateParam.getOrDefault("channelType", "")).size() > 0) {

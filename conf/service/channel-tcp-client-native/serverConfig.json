@@ -1,0 +1,9 @@
+{
+	"configValue": {
+		"logger": false,
+		"channelName": "",
+		"recvBuffSize": 4096
+	},
+	"configParam": {},
+	"remark": "配置说明：记录某个通道的通信日志\n{\n\t\"logger\": false,-----------------------------------是否记录后台日志\n\t\"channelName\": \"\",------------------------------通道名称\n\t\"recvBuffSize\": 4096-----------------------------接收缓存大小\n}"
+}

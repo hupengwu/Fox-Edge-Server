@@ -147,6 +147,11 @@ mkdir -p $app_home/shell/$component/$model_name
 #复制service.conf文件
 cp -f $app_home/repository/service/$model_name/$version/$stage/$component/tar/shell/$component/$model_name/service.conf $app_home/shell/$component/$model_name
 
+#创建sql目录
+mkdir -p $app_home/sql
+#复制sql目录
+cp -rf $app_home/repository/service/$model_name/$version/$stage/$component/tar/sql $app_home
+
 #重启服务
 $app_home/shell/restart.sh $component/$model_name -p$server_port
 

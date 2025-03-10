@@ -1,0 +1,17 @@
+{
+	"configValue": {
+		"services": [{
+			"appLoad": true,
+			"appName": "gateway-native",
+			"appPort": 9000,
+			"appType": "kernel"
+		}, {
+			"appLoad": true,
+			"appName": "manager-native",
+			"appPort": 9101,
+			"appType": "kernel"
+		}]
+	},
+	"configParam": {},
+	"remark": "服务的启动配置信息，指明每个服务是否启动时加载，还有它们的服务端口。\n这是管理服务的配置界面自动化生成的数据，不要去手动编辑，请通过配置界面来设置。\n\n\"appLoad\": 服务是否被启动加载,\n\"appName\": 服务的名称,\n\"appPort\": 服务的端口号,\n\"appType\": 服务的类型"
+}

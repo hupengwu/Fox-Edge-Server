@@ -1,0 +1,45 @@
+[{
+	"nbi": [{
+		"paraKey": "fengji_speed",
+		"dataKey": "fengji_speed",
+		"dataType": "int"
+	}, {
+		"paraKey": "objectName",
+		"dataKey": "objectName",
+		"dataType": "string"
+	}, {
+		"paraKey": "objectName1",
+		"dataKey": "objectName1",
+		"dataType": "enum",
+		"enumPara": {
+			"keyType": "bool",
+			"valType": "string",
+			"enum": {
+				"true": "开",
+				"false": "关"
+			}
+		}
+	}],
+	"task":      {
+          "operateMode": "exchange",
+          "operateName": "写数据",
+          "deviceName": "科龙2",
+          "deviceType": "科龙空调(Ver-1.0)",
+          "manufacturer": "科龙空调有限公司",
+          "timeout": 10000,
+          "param": {
+               "id": "switch1",
+               "ADR": 1,
+               "VER": 48,
+               "CID1": 96,
+               "CID2": 69,
+               "INFO": [
+                    31
+               ],
+               "LENID": 0,
+               "remark": "空调关机",
+               "modbusMode": "RTU",
+               "operateName": "读数据"
+          }
+     }
+}]

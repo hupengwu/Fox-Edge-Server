@@ -25,7 +25,7 @@
         "max-bytes-in-message": "10MB"
       }
     },
-    "fast-bee": {
+    "fastbee": {
       "iotName": "FastBee",
       "subsetName": "default",
       "productId": "productId",

@@ -23,6 +23,7 @@ import cn.foxtech.common.entity.entity.ConfigEntity;
 import cn.foxtech.common.entity.manager.EntityServiceManager;
 import cn.foxtech.common.status.ServiceStatus;
 import cn.foxtech.common.utils.method.MethodUtils;
+import cn.foxtech.utils.common.utils.redis.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +40,12 @@ public class EntityManageService extends EntityServiceManager {
     @Autowired
     private ServiceStatus serviceStatus;
 
+    @Autowired
+    private RedisService redisService;
+
     public void instance() {
+        this.instance(this.redisService);
+
         // 注册消费者：里面的ConfigEntity，这是proxy-cloud自己需要用到的消费者
         this.instanceConsumer();
 

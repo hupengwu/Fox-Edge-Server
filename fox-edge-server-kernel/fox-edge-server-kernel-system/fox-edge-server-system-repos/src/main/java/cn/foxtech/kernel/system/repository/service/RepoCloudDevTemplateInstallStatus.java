@@ -123,7 +123,7 @@ public class RepoCloudDevTemplateInstallStatus {
 
     private String getMD5Txt(String manufacturer, String deviceType, String subsetName) {
         try {
-            List<BaseEntity> entityList = this.modelService.getDeviceTemplateEntityList(manufacturer, deviceType, subsetName);
+            List<BaseEntity> entityList = this.modelService.getDevTemplateEntityList(manufacturer, deviceType, subsetName);
             String txt = this.getOrderText(entityList);
             String md5 = MD5Utils.getMD5Txt(txt);
             return md5;

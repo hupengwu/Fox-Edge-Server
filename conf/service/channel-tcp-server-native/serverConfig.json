@@ -1,0 +1,38 @@
+{
+	"configValue": {
+		"logger": true,
+		"servers": [{
+			"engine": {
+				"engineType": "JavaScript",
+				"keyHandler": {
+					"deviceType": "HJ212-2017",
+					"format": "TXT",
+					"manufacturer": "中国环境保护设备"
+				},
+				"register": {
+					"channelName": "HJ212-2017",
+					"deviceName": "HJ212-2017",
+					"deviceType": "HJ212-2017",
+					"manufacturer": "中国环境保护设备"
+				},
+				"returnText": "GB2312",
+				"splitHandler": {
+					"deviceType": "HJ212-2017",
+					"format": "TXT",
+					"manufacturer": "中国环境保护设备"
+				}
+			},
+			"serverPort": 9303
+		}]
+	},
+	"configParam": {
+		"list": [{
+			"saveMode": "Raw",
+			"showMode": "Security",
+			"fieldName": "remote.mqtt.password",
+			"valueType": "string",
+			"defaultValue": ""
+		}]
+	},
+	"remark": "tcp-server通道的配置信息：\n\n\n支持JavaScript拆包和身份识别引擎引擎\n\nsplitHandler：拆包类的完整名称\nkeyHandler：提取设备身份信息的完整名称\n\nJavaScript引擎时候，要配置JSP通道操作方法，并以对象的方式指明厂商和设备类型\nformat，指明的是收到的报文，以TXT格式还是以HEX格式的方式，传递给JavaScript脚本\nTXT，指的是TCP上传输的是一段文本流报文\nHEX，指的是TCP上传输的是一段二进制报文\n\nreturnText，要求返回数据时，进行文本化处理，主要是有些协议的内容，实际上是一个文本流\n"
+}

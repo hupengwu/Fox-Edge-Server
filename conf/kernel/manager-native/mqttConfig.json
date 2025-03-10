@@ -1,0 +1,38 @@
+{
+	"configValue": {
+		"enable": true,
+		"mqtt": {
+			"host": "broker.emqx.io",
+			"name": "Mica-Mqtt-Client",
+			"port": 1883,
+			"enabled": true,
+			"timeout": 5,
+			"use-ssl": false,
+			"version": "mqtt_3_1_1",
+			"clientId": "",
+			"password": "12345678",
+			"reconnect": true,
+			"user-name": "mica",
+			"re-interval": 5000,
+			"clean-session": true,
+			"keep-alive-secs": 60,
+			"buffer-allocator": "heap",
+			"read-buffer-size": "8KB",
+			"max-bytes-in-message": "10MB"
+		},
+		"topic": {
+			"request": "/fox/manager/c2e/{edgeId}/forward",
+			"respond": "/fox/manager/e2c/forward/{edgeId}"
+		}
+	},
+	"configParam": {
+		"list": [{
+			"saveMode": "Raw",
+			"showMode": "Security",
+			"fieldName": "mqtt.password",
+			"valueType": "string",
+			"defaultValue": ""
+		}]
+	},
+	"remark": "mqtt：mqtt的连接参数\n\ntopic/request：请求topic，fox-edge订阅了这个接口，云端服务可以向这个topic发出请求\ntopic/respond：响应topic，云端服务可以订阅这个接口，fox-edge会通过该topic返回对应的操作结果\n\nedgeId：这是fox-edge的设备ID，可以通过首页查看这个ID\n"
+}

@@ -38,10 +38,9 @@ public class FastBeeService {
     public void initialize() {
         Map<String, Object> configValue = this.configService.getConfigParam("serverConfig");
         // 取出全局配置参数：扩展字段的名称
-        Map<String, Object> params = (Map<String, Object>) configValue.getOrDefault("fast-bee", new HashMap<>());
+        Map<String, Object> params = (Map<String, Object>) configValue.getOrDefault("fastbee", new HashMap<>());
         this.iotName = (String) params.getOrDefault("iotName", "FastBee");
         this.subsetName = (String) params.getOrDefault("subsetName", "default");
-        this.productId = (String) params.getOrDefault("productId", "productId");
         this.productId = (String) params.getOrDefault("productId", "productId");
         this.deviceNum = (String) params.getOrDefault("deviceNum", "deviceNum");
         this.timeUnit = (String) params.getOrDefault("timeUnit", "minute");

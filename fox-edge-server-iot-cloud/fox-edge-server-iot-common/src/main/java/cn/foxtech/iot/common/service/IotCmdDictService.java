@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -28,55 +27,6 @@ public class IotCmdDictService {
     @Autowired
     private EntityManageService entityManageService;
 
-    private OperateManualTaskEntity buildOperateTaskEntity(String manufacturer, String deviceType, String iotName, String subsetName, String paraKey) {
-        IotTemplateEntity templateEntity = this.findIotTemplateEntity(manufacturer, deviceType, iotName, subsetName, paraKey);
-        if (templateEntity == null) {
-            throw new ServiceException("找不到指定的北向模板：iotName=" + iotName + ",subsetName=" + subsetName + ",paraKey=" + paraKey);
-        }
-
-        Map<String, Object> operateParam = (Map<String, Object>) templateEntity.getTemplateParam().get("operateParam");
-        if (operateParam == null) {
-            throw new ServiceException("北向模板参数格式不正确：iotName=" + iotName + ",subsetName=" + subsetName + ",paraKey=" + paraKey);
-        }
-
-        // 取出参数
-        String templateName = (String) operateParam.get("templateName");
-        String templateType = (String) operateParam.get("templateType");
-        if (MethodUtils.hasEmpty(manufacturer, deviceType, subsetName, templateName, templateType)) {
-            throw new ServiceException("北向模板参数格式不正确：iotName=" + iotName + ",subsetName=" + subsetName + ",paraKey=" + paraKey);
-        }
-
-        DeviceTemplateEntity find = new DeviceTemplateEntity();
-        find.setSubsetName(subsetName);
-        find.setTemplateType(templateType);
-        find.setTemplateName(templateName);
-        find.setManufacturer(manufacturer);
-        find.setDeviceType(deviceType);
-        DeviceTemplateEntity exist = this.entityManageService.getEntity(find.makeServiceKey(), DeviceTemplateEntity.class);
-        if (exist == null) {
-            throw new ServiceException("北向模板找不到绑定的设备模板：iotName=" + iotName + ",subsetName=" + subsetName + ",paraKey=" + paraKey);
-        }
-
-        String operateMode = (String) exist.getTemplateParam().get("operateMode");
-        String operateName = (String) exist.getTemplateParam().get("operateName");
-        Integer timeout = (Integer) exist.getTemplateParam().get("timeout");
-        Map<String, Object> param = (Map<String, Object>) exist.getTemplateParam().get("param");
-
-        // 参数检查
-        if (MethodUtils.hasEmpty(manufacturer, deviceType, operateMode, operateName, timeout)) {
-            throw new ServiceException("北向模板绑定的设备模板，参数格式不正确：iotName=" + iotName + ",subsetName=" + subsetName + ",paraKey=" + paraKey);
-        }
-        if (param == null) {
-            throw new ServiceException("北向模板绑定的设备模板，参数格式不正确：iotName=" + iotName + ",subsetName=" + subsetName + ",paraKey=" + paraKey);
-        }
-
-        OperateManualTaskEntity operateManualTaskEntity = new OperateManualTaskEntity();
-        operateManualTaskEntity.setManufacturer(manufacturer);
-        operateManualTaskEntity.setDeviceType(deviceType);
-        operateManualTaskEntity.getTaskParam().add(exist.getTemplateParam());
-
-        return operateManualTaskEntity;
-    }
 
     private OperateManualTaskEntity buildOperateTaskEntity(IotTemplateEntity templateEntity) {
         String iotName = templateEntity.getIotName();
@@ -202,7 +152,6 @@ public class IotCmdDictService {
                 return null;
             }
 
-            // 将
             OperateManualTaskEntity taskEntity = this.buildOperateTaskEntity(templateEntity);
 
 
@@ -275,13 +224,19 @@ public class IotCmdDictService {
     }
 
     private Object buildValue(String dataType, Object value) {
-        if ("int".equalsIgnoreCase(dataType)) {
+        if ("int".equalsIgnoreCase(dataType) || "int32".equalsIgnoreCase(dataType)) {
             value = Integer.parseInt(value.toString());
         }
-        if ("long".equalsIgnoreCase(dataType)) {
+        if ("long".equalsIgnoreCase(dataType) || "int64".equalsIgnoreCase(dataType)) {
             value = Long.parseLong(value.toString());
         }
-        if ("bool".equalsIgnoreCase(dataType)) {
+        if ("float".equalsIgnoreCase(dataType) || "float32".equalsIgnoreCase(dataType)) {
+            value = Float.parseFloat(value.toString());
+        }
+        if ("double".equalsIgnoreCase(dataType) || "float64".equalsIgnoreCase(dataType)) {
+            value = Double.parseDouble(value.toString());
+        }
+        if ("bool".equalsIgnoreCase(dataType) || "boolean".equalsIgnoreCase(dataType)) {
             value = Boolean.parseBoolean(value.toString());
         }
         if ("string".equalsIgnoreCase(dataType)) {
@@ -291,7 +246,7 @@ public class IotCmdDictService {
         return value;
     }
 
-    private Map<String, Object> buildOperateParam(IotCmdNbiEntity nbi, Map<String, Object> param, Object value) throws UnsupportedEncodingException {
+    private Map<String, Object> buildOperateParam(IotCmdNbiEntity nbi, Map<String, Object> param, Object value) {
         Map<String, Object> operateParam = JsonUtils.clone(param);
 
         // 对简单参数进行转换
