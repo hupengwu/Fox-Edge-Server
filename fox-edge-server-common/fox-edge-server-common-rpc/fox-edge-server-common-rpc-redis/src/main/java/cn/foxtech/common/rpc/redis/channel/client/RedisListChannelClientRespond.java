@@ -30,7 +30,7 @@ import java.util.Map;
 @Component
 public class RedisListChannelClientRespond extends RedisValueService {
     @Getter
-    private final String key = "fox.edge.list:channel:";
+    private final String key = "fox-edge:list:channel:";
 
     public ChannelRespondVO get(String channelType, String hashKey, long timeout) {
         try {

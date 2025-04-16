@@ -21,10 +21,10 @@ public class ServiceStatusConsumerService extends RedisStatusConsumerService {
     private final Map<String, Object> consumerData = new ConcurrentHashMap<>();
 
     public String getKeySync() {
-        return "fox.edge.service.status.sync";
+        return "fox-edge:service:status:sync";
     }
 
     public String getKeyData() {
-        return "fox.edge.service.status.data";
+        return "fox-edge:service:status:data";
     }
 }

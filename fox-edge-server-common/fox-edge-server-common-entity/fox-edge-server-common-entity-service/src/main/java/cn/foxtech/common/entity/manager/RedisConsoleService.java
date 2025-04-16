@@ -16,7 +16,7 @@ import java.util.Map;
 @Component
 public class RedisConsoleService extends RedisListService {
     @Getter
-    private final String key = "fox.edge.service.console.public";
+    private final String key = "fox-edge:service:console:public";
 
     @Value("${spring.fox-service.service.type}")
     private String foxServiceType = "undefinedServiceType";

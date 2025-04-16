@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RedisListManagerServerRequest extends RedisListService {
     @Getter
-    private final String key = "fox.edge.list:manager:restful:message:request";
+    private final String key = "fox-edge:list:manager:restful:message:request";
 
     public RestFulRequestVO popRequest(long timeout, TimeUnit unit) {
         try {

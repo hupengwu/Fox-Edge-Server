@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedisListPersistClientManageRequest extends RedisListService {
     @Getter
-    private final String key = "fox.edge.list:persist:manage:request";
+    private final String key = "fox-edge:list:persist:manage:request";
 
     @Override
     public void push(Object value) {

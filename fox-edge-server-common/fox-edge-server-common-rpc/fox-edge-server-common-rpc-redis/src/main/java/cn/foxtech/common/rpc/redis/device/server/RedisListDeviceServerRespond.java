@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedisListDeviceServerRespond extends RedisValueService {
     @Getter
-    private final String key = "fox.edge.list:device:task:respond";
+    private final String key = "fox-edge:list:device:task:respond";
 
     @Override
     public void set(String hashKey, Object value) {

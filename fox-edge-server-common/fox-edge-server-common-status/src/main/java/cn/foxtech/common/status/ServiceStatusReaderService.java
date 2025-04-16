@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class ServiceStatusReaderService extends RedisStatusReaderService {
     public String getKeySync() {
-        return "fox.edge.service.status.sync";
+        return "fox-edge:service:status:sync";
     }
 
     public String getKeyData() {
-        return "fox.edge.service.status.data";
+        return "fox-edge:service:status:data";
     }
 }

@@ -17,5 +17,5 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedisListPersistServerValueRequest extends RedisListService {
     @Getter
-    private final String key = "fox.edge.list:persist:value:request";
+    private final String key = "fox-edge:list:persist:value:request";
 }

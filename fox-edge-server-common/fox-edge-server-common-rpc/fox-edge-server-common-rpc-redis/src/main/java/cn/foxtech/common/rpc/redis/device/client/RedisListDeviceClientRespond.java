@@ -17,7 +17,7 @@ import java.util.Map;
 @Component
 public class RedisListDeviceClientRespond extends RedisValueService {
     @Getter
-    private final String key = "fox.edge.list:device:task:respond";
+    private final String key = "fox-edge:list:device:task:respond";
 
     public TaskRespondVO get(String hashKey, long timeout) {
         try {

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedisListManagerClientRequest extends RedisListService {
     @Getter
-    private final String key = "fox.edge.list:manager:restful:message:request";
+    private final String key = "fox-edge:list:manager:restful:message:request";
 
     /**
      * 向管理服务，推送restful风格的消息

@@ -26,7 +26,7 @@ import java.util.*;
  */
 @Component
 public class GateWayRouteUpdateTask extends PeriodTask {
-    public static final String GATEWAY_ROUTES_PREFIX = "fox.edge:gateway.dynamic.route:";
+    public static final String GATEWAY_ROUTES_PREFIX = "fox-edge:gateway:dynamic:route:";
     @Autowired
     private RedisConsoleService logger;
 

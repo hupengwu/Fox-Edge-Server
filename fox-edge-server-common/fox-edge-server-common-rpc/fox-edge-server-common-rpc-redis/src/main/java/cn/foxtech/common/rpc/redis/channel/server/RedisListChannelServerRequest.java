@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class RedisListChannelServerRequest extends RedisListService {
-    private final String key = "fox.edge.list:channel:";
+    private final String key = "fox-edge:list:channel:";
 
     @Setter(value = AccessLevel.PUBLIC)
     private String channelType;

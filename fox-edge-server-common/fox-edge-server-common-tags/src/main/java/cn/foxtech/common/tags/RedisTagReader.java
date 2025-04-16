@@ -30,7 +30,7 @@ public class RedisTagReader {
 
 
     private String getHead() {
-        return "fox.edge.tags.";
+        return "fox-edge:tags:";
     }
 
 

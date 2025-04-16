@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class RedisListChannelServerRespond extends RedisValueService {
-    private final String key = "fox.edge.list:channel:";
+    private final String key = "fox-edge:list:channel:";
     @Setter(value = AccessLevel.PUBLIC)
     private String channelType;
 

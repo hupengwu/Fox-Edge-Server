@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedisListManagerServerRespond extends RedisValueService {
     @Getter
-    private final String key = "fox.edge.list:manager:restful:message:respond";
+    private final String key = "fox-edge:list:manager:restful:message:respond";
 
     public void pushRespond(String uuid, RestFulRespondVO value) {
         super.set(uuid, value);

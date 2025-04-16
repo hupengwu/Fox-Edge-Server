@@ -26,7 +26,7 @@ public class RedisWriter {
     private String entityType;
 
     private String getHead() {
-        return "fox.edge.entity." + this.getEntityType() + ".";
+        return "fox-edge:entity:" + this.getEntityType() + ":";
     }
 
 

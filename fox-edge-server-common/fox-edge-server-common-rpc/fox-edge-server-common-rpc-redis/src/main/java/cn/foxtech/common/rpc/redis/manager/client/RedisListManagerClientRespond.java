@@ -17,7 +17,7 @@ import java.util.Map;
 @Component
 public class RedisListManagerClientRespond extends RedisValueService {
     @Getter
-    private final String key = "fox.edge.list:manager:restful:message:respond";
+    private final String key = "fox-edge:list:manager:restful:message:respond";
 
     /**
      * 查询服务端响应

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedisListPersistServerManageRespond extends RedisValueService {
     @Getter
-    private final String key = "fox.edge.list:persist:manage:respond";
+    private final String key = "fox-edge:list:persist:manage:respond";
 
     public void pushRespond(RestFulRespondVO value) {
         super.set(value.getUuid(), value);

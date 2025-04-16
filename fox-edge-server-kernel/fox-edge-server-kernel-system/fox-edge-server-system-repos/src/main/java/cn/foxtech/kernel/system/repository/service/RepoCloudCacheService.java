@@ -15,7 +15,7 @@ import java.util.Map;
 @Component
 public class RepoCloudCacheService extends RedisValueService {
     @Getter
-    private final String key = "fox.edge.list:manage:repo:cache";
+    private final String key = "fox-edge:list:manage:repo:cache";
 
     /**
      * 初始化为永不过期

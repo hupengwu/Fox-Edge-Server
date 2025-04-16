@@ -122,7 +122,7 @@ public abstract class BaseRedisService {
     }
 
     protected String getHead() {
-        return "fox.edge.entity." + this.getEntityType() + ".";
+        return "fox-edge:entity:" + this.getEntityType() + ":";
     }
 
     /**

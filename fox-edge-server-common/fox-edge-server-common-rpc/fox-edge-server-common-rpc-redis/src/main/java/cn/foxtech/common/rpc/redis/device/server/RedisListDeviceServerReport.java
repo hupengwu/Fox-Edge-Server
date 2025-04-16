@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedisListDeviceServerReport extends RedisListService {
     @Getter
-    private final String key = "fox.edge.list:device:task:report";
+    private final String key = "fox-edge:list:device:task:report";
 
     public void push(Object value) {
         super.push(value);

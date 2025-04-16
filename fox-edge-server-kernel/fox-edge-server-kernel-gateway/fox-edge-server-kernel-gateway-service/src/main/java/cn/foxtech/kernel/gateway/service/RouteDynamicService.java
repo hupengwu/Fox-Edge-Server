@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @Service
 public class RouteDynamicService {
 
-    public static final String GATEWAY_ROUTES_PREFIX = "fox.edge:gateway.dynamic.route:";
+    public static final String GATEWAY_ROUTES_PREFIX = "fox-edge:gateway:dynamic:route:";
 
 
     @Autowired

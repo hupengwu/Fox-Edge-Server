@@ -10,7 +10,7 @@
 所以，Fox-Edge提供另一种解决方案，来供中小企业解决数据如何上云的集中管理需求。
 
 
-![image](https://gitee.com/fierce_wolf/fox-edge-server/raw/master/img/networking.jpg)
+![image](https://gitee.com/fierce_wolf/fox-edge-server/raw/master/img/home.jpg)
 
 Fox-Edge 边缘计算，致力于提供一种在线下管理智能设备的物联网解决方案，帮助各类中小型设备制造企业、系统集成商将现场的智能设备接入到边缘计算设备上后，一站式输送到客户的企业数据中心数据库或者是用户在云端的数据库，方便客户的IT业务团队专注数据的分析和处理。
 

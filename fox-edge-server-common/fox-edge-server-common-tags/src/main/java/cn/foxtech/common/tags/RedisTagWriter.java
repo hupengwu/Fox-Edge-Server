@@ -31,7 +31,7 @@ public class RedisTagWriter {
 
 
     private String getHead() {
-        return "fox.edge.tags.";
+        return "fox-edge:tags:";
     }
 
 

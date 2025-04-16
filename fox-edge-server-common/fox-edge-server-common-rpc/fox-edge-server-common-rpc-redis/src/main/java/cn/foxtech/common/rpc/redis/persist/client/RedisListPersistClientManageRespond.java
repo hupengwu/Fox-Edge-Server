@@ -19,7 +19,7 @@ import java.util.Map;
 @Component
 public class RedisListPersistClientManageRespond extends RedisValueService {
     @Getter
-    private final String key = "fox.edge.list:persist:manage:respond";
+    private final String key = "fox-edge:list:persist:manage:respond";
 
     public RestFulRespondVO get(String hashKey, long timeout) {
         try {

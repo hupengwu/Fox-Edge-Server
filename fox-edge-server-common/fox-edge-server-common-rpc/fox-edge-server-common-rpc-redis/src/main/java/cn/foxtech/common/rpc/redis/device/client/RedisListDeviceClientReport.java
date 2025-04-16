@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RedisListDeviceClientReport extends RedisListService {
     @Getter
-    private final String key = "fox.edge.list:device:task:report";
+    private final String key = "fox-edge:list:device:task:report";
 
     @Override
     public TaskRespondVO pop(long timeout, TimeUnit unit) {

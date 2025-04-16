@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedisListPersistClientValueRequest extends RedisListService {
     @Getter
-    private final String key = "fox.edge.list:persist:value:request";
+    private final String key = "fox-edge:list:persist:value:request";
 
     public RedisListPersistClientValueRequest() {
         // 作为生产者，将Redis的日志队列大小填为4096个消息，毕竟数值数据还是非常多的
