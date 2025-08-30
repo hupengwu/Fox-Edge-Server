@@ -71,7 +71,7 @@ public abstract class RedisListService {
     }
 
     public boolean isBlock() {
-        return this.redisTemplate.opsForList().size(this.getKey()) > this.maxSize;
+        return this.redisTemplate.opsForList().size(this.getKey()) >= this.maxSize;
     }
 
     /**

@@ -114,7 +114,8 @@ public class RedisRestfulLikeController {
         String resource = this.getResource(reqUri);
         String methodName = reqMethod.toUpperCase();
 
-        String methodKey = resource + ":" + methodName;
+        String res = this.getResource(resource);
+        String methodKey = res + ":" + methodName;
         Object bean = MapUtils.getValue(this.controllerMethod, methodKey, "bean");
         Object method = MapUtils.getValue(this.controllerMethod, methodKey, "method");
         if (method == null || bean == null) {
@@ -128,7 +129,7 @@ public class RedisRestfulLikeController {
         } else if (methodName.equals("GET") || methodName.equals("DELETE")) {
             List<Object> params = this.getParams(reqUri, (Method) method);
             if (params.size() == 0) {
-                value = ((Method) method).invoke(bean, params);
+                value = ((Method) method).invoke(bean);
             } else if (params.size() == 1) {
                 value = ((Method) method).invoke(bean, params.get(0));
             } else if (params.size() == 2) {
@@ -147,13 +148,17 @@ public class RedisRestfulLikeController {
     }
 
 
-    private String getResource(String url) {
-        int index = url.indexOf("?");
-        if (index < 0) {
-            return url;
+    private String getResource(String resource) {
+        if (resource.startsWith("/kernel/manager/")){
+            resource = resource.substring("/kernel/manager".length());
         }
 
-        return url.substring(0, index);
+        int index = resource.indexOf("?");
+        if (index < 0) {
+            return resource;
+        }
+
+        return resource.substring(0, index);
     }
 
     private List<Object> getParams(String url, Method method) {
@@ -165,9 +170,9 @@ public class RedisRestfulLikeController {
         String params = url.substring(index + 1);
 
         List<String> lines = new ArrayList<>();
-        index = params.indexOf("&");
-        if (index < 0) {
-            lines.add(params);
+        String[] paras = params.split("&");
+        for (String param : paras){
+            lines.add(param);
         }
 
         List<String> itemList = new ArrayList<>();

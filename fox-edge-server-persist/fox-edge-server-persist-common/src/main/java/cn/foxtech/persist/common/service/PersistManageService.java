@@ -11,6 +11,7 @@ import cn.foxtech.common.entity.manager.EntityPublishManager;
 import cn.foxtech.common.entity.manager.EntityServiceManager;
 import cn.foxtech.common.entity.service.devicehistory.DeviceHistoryEntityService;
 import cn.foxtech.common.entity.service.deviceobject.DeviceObjectEntityService;
+import cn.foxtech.common.entity.service.devicevaluerecord.DeviceValueRecordEntityService;
 import cn.foxtech.common.entity.service.operaterecord.OperateRecordEntityService;
 import cn.foxtech.utils.common.utils.redis.service.RedisService;
 import lombok.AccessLevel;
@@ -31,6 +32,9 @@ public class PersistManageService extends EntityServiceManager {
      */
     @Autowired
     protected DeviceHistoryEntityService deviceHistoryEntityService;
+
+    @Autowired
+    protected DeviceValueRecordEntityService deviceValueRecordEntityService;
     /**
      * 发布注册
      */

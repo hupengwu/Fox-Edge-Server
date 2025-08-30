@@ -93,7 +93,7 @@ public class PersistCommonInitialize {
         this.deviceObjectMapper.syncEntity();
 
         // 初始化全局配置参数
-        this.configService.initialize("serverConfig", "persistServerConfig.json");
+        this.configService.initialize("serverConfig", "serverConfig.json");
 
         // 设备记录的上报接收任务
         this.listValueScheduler.schedule();

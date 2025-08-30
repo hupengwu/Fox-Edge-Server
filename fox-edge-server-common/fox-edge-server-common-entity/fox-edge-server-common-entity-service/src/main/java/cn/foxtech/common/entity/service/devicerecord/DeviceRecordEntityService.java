@@ -5,8 +5,6 @@
 package cn.foxtech.common.entity.service.devicerecord;
 
 
-import cn.foxtech.common.entity.constant.BaseVOFieldConstant;
-import cn.foxtech.common.entity.constant.DeviceRecordVOFieldConstant;
 import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.DeviceRecordEntity;
 import cn.foxtech.common.entity.entity.DeviceRecordPo;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class DeviceRecordEntityService extends BaseEntityService {

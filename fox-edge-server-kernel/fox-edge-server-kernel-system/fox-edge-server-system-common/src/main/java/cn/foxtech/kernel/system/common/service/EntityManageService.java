@@ -18,6 +18,7 @@ import cn.foxtech.common.entity.service.deviceobject.DeviceObjectEntityService;
 import cn.foxtech.common.entity.service.devicerecord.DeviceRecordEntityService;
 import cn.foxtech.common.entity.service.devicetemplate.DeviceTemplateEntityService;
 import cn.foxtech.common.entity.service.devicevalue.task.DeviceValueExTaskEntityService;
+import cn.foxtech.common.entity.service.devicevaluerecord.DeviceValueRecordEntityService;
 import cn.foxtech.common.entity.service.extendconfig.ExtendConfigEntityService;
 import cn.foxtech.common.entity.service.iotdevicemodel.IotDeviceModelEntityService;
 import cn.foxtech.common.entity.service.iottemplate.IotTemplateEntityService;
@@ -27,6 +28,7 @@ import cn.foxtech.common.entity.service.operaterecord.OperateRecordEntityService
 import cn.foxtech.common.entity.service.operatetask.channel.OperateChannelTaskEntityService;
 import cn.foxtech.common.entity.service.operatetask.manual.OperateManualTaskEntityService;
 import cn.foxtech.common.entity.service.operatetask.monitor.OperateMonitorTaskEntityService;
+import cn.foxtech.common.entity.service.periodtask.PeriodTaskEntityService;
 import cn.foxtech.common.entity.service.probe.ProbeEntityService;
 import cn.foxtech.common.entity.service.repocomp.RepoCompEntityService;
 import cn.foxtech.common.entity.service.user.UserEntityService;
@@ -73,6 +75,9 @@ public class EntityManageService extends EntityServiceManager {
     protected DeviceRecordEntityService deviceRecordEntityService;
 
     @Autowired
+    protected DeviceValueRecordEntityService deviceValueRecordEntityService;
+
+    @Autowired
     protected OperateRecordEntityService operateRecordEntityService;
 
     @Autowired
@@ -98,6 +103,9 @@ public class EntityManageService extends EntityServiceManager {
 
     @Autowired
     protected OperateChannelTaskEntityService operateChannelTaskEntityService;
+
+    @Autowired
+    protected PeriodTaskEntityService periodTaskEntityService;
 
     @Autowired
     protected DeviceTemplateEntityService deviceTemplateEntityService;
@@ -160,6 +168,7 @@ public class EntityManageService extends EntityServiceManager {
         dBService.put(DeviceModelEntity.class.getSimpleName(), this.deviceModelEntityService);
         dBService.put(ExtendConfigEntity.class.getSimpleName(), this.extendConfigEntityService);
         dBService.put(DeviceRecordEntity.class.getSimpleName(), this.deviceRecordEntityService);
+        dBService.put(DeviceValueRecordEntity.class.getSimpleName(), this.deviceValueRecordEntityService);
         dBService.put(ProbeEntity.class.getSimpleName(), this.probeEntityService);
         dBService.put(DeviceValueExTaskEntity.class.getSimpleName(), this.deviceValueExTaskEntityService);
         dBService.put(OperateRecordEntity.class.getSimpleName(), this.operateRecordEntityService);
@@ -168,6 +177,7 @@ public class EntityManageService extends EntityServiceManager {
         dBService.put(OperateChannelTaskEntity.class.getSimpleName(), this.operateChannelTaskEntityService);
         dBService.put(DeviceTemplateEntity.class.getSimpleName(), this.deviceTemplateEntityService);
         dBService.put(OperateEntity.class.getSimpleName(), this.operateEntityService);
+        dBService.put(PeriodTaskEntity.class.getSimpleName(), this.periodTaskEntityService);
         dBService.put(IotDeviceModelEntity.class.getSimpleName(), this.iotDeviceModelEntityService);
         dBService.put(IotTemplateEntity.class.getSimpleName(), this.iotTemplateEntityService);
         dBService.put(RepoCompEntity.class.getSimpleName(), this.repoCompEntityService);
@@ -187,6 +197,7 @@ public class EntityManageService extends EntityServiceManager {
         this.getSourceMySQL().add(OperateMonitorTaskEntity.class.getSimpleName());
         this.getSourceMySQL().add(OperateManualTaskEntity.class.getSimpleName());
         this.getSourceMySQL().add(OperateChannelTaskEntity.class.getSimpleName());
+        this.getSourceMySQL().add(PeriodTaskEntity.class.getSimpleName());
         this.getSourceMySQL().add(DeviceTemplateEntity.class.getSimpleName());
         this.getSourceMySQL().add(DeviceMapperEntity.class.getSimpleName());
         this.getSourceMySQL().add(DeviceModelEntity.class.getSimpleName());
@@ -197,7 +208,6 @@ public class EntityManageService extends EntityServiceManager {
         // 注册消费者
         consumer.add(OperateMethodEntity.class.getSimpleName());
         consumer.add(DeviceObjInfEntity.class.getSimpleName());
-
 
         // 注册redis读数据
         reader.add(ChannelStatusEntity.class.getSimpleName());
@@ -220,11 +230,12 @@ public class EntityManageService extends EntityServiceManager {
         reader.add(DeviceMapperEntity.class.getSimpleName());
         writer.add(DeviceMapperEntity.class.getSimpleName());
         reader.add(OperateMonitorTaskEntity.class.getSimpleName());
-        writer.add(OperateMonitorTaskEntity.class.getSimpleName());
         reader.add(OperateManualTaskEntity.class.getSimpleName());
         writer.add(OperateManualTaskEntity.class.getSimpleName());
         reader.add(OperateChannelTaskEntity.class.getSimpleName());
         writer.add(OperateChannelTaskEntity.class.getSimpleName());
+        reader.add(PeriodTaskEntity.class.getSimpleName());
+        writer.add(PeriodTaskEntity.class.getSimpleName());
         reader.add(DeviceTemplateEntity.class.getSimpleName());
         writer.add(DeviceTemplateEntity.class.getSimpleName());
         reader.add(ChannelEntity.class.getSimpleName());
@@ -268,6 +279,8 @@ public class EntityManageService extends EntityServiceManager {
         this.entityPublishManager.setPublishEntityUpdateTime(IotDeviceModelEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, IotDeviceModelEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(IotTemplateEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, IotTemplateEntity.class.getSimpleName());
         this.entityPublishManager.setPublishEntityUpdateTime(RepoCompEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, RepoCompEntity.class.getSimpleName());
+        this.entityPublishManager.setPublishEntityUpdateTime(PeriodTaskEntity.class.getSimpleName(), EntityPublishConstant.value_mode_config, EntityPublishConstant.value_type_cache, PeriodTaskEntity.class.getSimpleName());
+        this.entityPublishManager.setPublishEntityUpdateTime(PeriodRecordEntity.class.getSimpleName(), EntityPublishConstant.value_mode_record, EntityPublishConstant.value_type_mysql, "tb_period_record");
     }
 
     private void instanceOption() {
@@ -275,5 +288,7 @@ public class EntityManageService extends EntityServiceManager {
         this.entityOptionManager.setOptionEntity(OperateEntity.class.getSimpleName(), "tb_operate", new String[]{"manufacturer", "device_type", "operate_name", "engine_type"});
         this.entityOptionManager.setOptionEntity(DeviceEntity.class.getSimpleName(), "tb_device", new String[]{"device_type", "device_name", "channel_type", "channel_name"});
         this.entityOptionManager.setOptionEntity(DeviceTemplateEntity.class.getSimpleName(), "tb_device_template", new String[]{"manufacturer", "device_type", "subset_name", "template_type", "template_name"});
+        this.entityOptionManager.setOptionEntity(PeriodTaskEntity.class.getSimpleName(), "tb_period_task", new String[]{"task_name", "device_type"});
+        this.entityOptionManager.setOptionEntity(PeriodRecordEntity.class.getSimpleName(), "tb_period_record", new String[]{"task_id", "record_batch", "device_id", "object_name"});
     }
 }

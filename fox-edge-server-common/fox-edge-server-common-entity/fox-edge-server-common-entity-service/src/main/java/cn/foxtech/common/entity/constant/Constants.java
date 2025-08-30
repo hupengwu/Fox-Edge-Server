@@ -6,7 +6,6 @@ package cn.foxtech.common.entity.constant;
 
 public class Constants {
     public static final String ChannelEntity = "ChannelEntity";
-    public static final String CollectorEntity = "CollectorEntity";
     public static final String ConfigEntity = "ConfigEntity";
     public static final String DeviceEntity = "DeviceEntity";
     public static final String DeviceStatusEntity = "DeviceStatusEntity";
@@ -19,6 +18,7 @@ public class Constants {
     public static final String OperateEntity = "OperateEntity";
     public static final String UserEntity = "UserEntity";
     public static final String HistoryEntity = "DeviceHistoryEntity";
+    public static final String DeviceValueRecordEntity = "DeviceValueRecordEntity";
 
     public static final String OPERATE_MODE_EXCHANGE = "exchange";
     public static final String OPERATE_MODE_PUBLISH = "publish";

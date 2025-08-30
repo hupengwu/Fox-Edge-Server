@@ -61,7 +61,8 @@ public class RepoLocalCompService {
             }
 
 
-            if (RepoCompVOFieldConstant.value_comp_type_jar_decoder.equals(compType) // jar-decoder
+            if (RepoCompVOFieldConstant.value_comp_type_jsn_decoder.equals(compType) // jar-decoder
+                    || RepoCompVOFieldConstant.value_comp_type_jar_decoder.equals(compType) // jar-decoder
                     || RepoCompVOFieldConstant.value_comp_type_jsp_decoder.equals(compType) // jsp-decoder
                     || RepoCompVOFieldConstant.value_comp_type_dev_template.equals(compType) // jsp-decoder
             ) {
@@ -81,8 +82,7 @@ public class RepoLocalCompService {
                 return compEntity.getCompName().toLowerCase().contains(keyWord.toLowerCase());
             }
 
-            if (RepoCompVOFieldConstant.value_comp_type_iot_template.equals(compType)
-            ) {
+            if (RepoCompVOFieldConstant.value_comp_type_iot_template.equals(compType)) {
                 if (MethodUtils.hasEmpty(keyWord)) {
                     return true;
                 }

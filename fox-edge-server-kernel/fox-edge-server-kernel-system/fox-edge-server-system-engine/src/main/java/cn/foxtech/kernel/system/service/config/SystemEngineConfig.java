@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
         "cn.foxtech.common.entity.manager", //
         "cn.foxtech.common.mqtt",//
         "cn.foxtech.kernel.common.*",//
+        "cn.foxtech.common.exchange",//
         "cn.foxtech.common.status",//
         "cn.foxtech.common.file",//
         "cn.foxtech.kernel.system.common",//

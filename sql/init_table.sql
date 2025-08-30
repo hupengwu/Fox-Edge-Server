@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
--- 主机:                           192.168.1.5
--- 服务器版本:                        8.0.39-0ubuntu0.20.04.1 - (Ubuntu)
+-- 主机:                           192.168.1.23
+-- 服务器版本:                        8.0.42-0ubuntu0.20.04.1 - (Ubuntu)
 -- 服务器操作系统:                      Linux
--- HeidiSQL 版本:                  12.2.0.6576
+-- HeidiSQL 版本:                  12.10.0.7000
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -206,6 +206,25 @@ CREATE TABLE IF NOT EXISTS `tb_device_template` (
 
 -- 数据导出被取消选择。
 
+-- 导出  表 fox_edge.tb_device_value_record 结构
+DROP TABLE IF EXISTS `tb_device_value_record`;
+CREATE TABLE IF NOT EXISTS `tb_device_value_record` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主表ID',
+  `device_name` varchar(50) COMMENT '设备名称',
+  `device_type` varchar(50) COMMENT '设备类型',
+  `manufacturer` varchar(50) COMMENT '设备厂商',
+  `device_value` json COMMENT '设备数值',
+  `create_time` bigint DEFAULT NULL COMMENT '创建时间',
+  `update_time` bigint DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `device_name` (`device_name`),
+  KEY `device_type` (`device_type`),
+  KEY `manufacturer` (`manufacturer`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='设备的数值集合的记录';
+
+
+
+-- 数据导出被取消选择。
 -- 导出  表 fox_edge.tb_device_value_task 结构
 DROP TABLE IF EXISTS `tb_device_value_task`;
 CREATE TABLE IF NOT EXISTS `tb_device_value_task` (
@@ -405,9 +424,6 @@ CREATE TABLE IF NOT EXISTS `tb_operate_record` (
 
 -- 数据导出被取消选择。
 
-
--- 数据导出被取消选择。
-
 -- 导出  表 fox_edge.tb_period_record 结构
 DROP TABLE IF EXISTS `tb_period_record`;
 CREATE TABLE IF NOT EXISTS `tb_period_record` (
@@ -484,6 +500,45 @@ CREATE TABLE IF NOT EXISTS `tb_repo_comp` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='仓库组件信息';
 
 -- 数据导出被取消选择。
+
+-- 导出  表 fox_edge.tb_service_demo_record 结构
+DROP TABLE IF EXISTS `tb_service_demo_record`;
+CREATE TABLE IF NOT EXISTS `tb_service_demo_record` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '序号',
+  `task_id` bigint COMMENT '任务名称',
+  `record_batch` varchar(50) COMMENT '记录批次',
+  `device_id` bigint COMMENT '设备ID',
+  `object_name` varchar(50) COMMENT '对象名称',
+  `object_value` json COMMENT '对象数值',
+  `create_time` bigint COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `task_id` (`task_id`) USING BTREE,
+  KEY `device_id` (`device_id`) USING BTREE,
+  KEY `object_name` (`object_name`) USING BTREE,
+  KEY `record_batch` (`record_batch`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='自建domo工程的演示';
+
+-- 数据导出被取消选择。
+
+-- 导出  表 fox_edge.tb_service_demo_task 结构
+DROP TABLE IF EXISTS `tb_service_demo_task`;
+CREATE TABLE IF NOT EXISTS `tb_service_demo_task` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `task_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin COMMENT '任务名称',
+  `device_type` varchar(50) COMMENT '设备类型',
+  `manufacturer` varchar(50) COMMENT '设备厂商',
+  `task_param` json COMMENT '任务参数（如何工作的信息）',
+  `select_device` int COMMENT '指定设备',
+  `device_ids` json COMMENT '设备列表',
+  `object_ids` json COMMENT '对象列表',
+  `create_time` bigint COMMENT '创建时间',
+  `update_time` bigint COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `device_name` (`task_name`) USING BTREE,
+  KEY `device_type` (`device_type`) USING BTREE,
+  KEY `manufacturer` (`manufacturer`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='自建domo工程的演示';
+
 
 -- 导出  表 fox_edge.tb_user 结构
 DROP TABLE IF EXISTS `tb_user`;

@@ -25,7 +25,11 @@ public class MD5Utils {
     public static String getMD5Txt(String data) throws NoSuchAlgorithmException {
         byte[] md5 = MD5Utils.getMD5Text(data.getBytes(StandardCharsets.UTF_8));
         BigInteger bigInt = new BigInteger(1, md5);
-        return bigInt.toString(16).toUpperCase();
+        String hexString = bigInt.toString(16).toUpperCase();
+        while (hexString.length() < md5.length * 2) {
+            hexString = "0" + hexString;
+        }
+        return hexString;
     }
 
     /**
@@ -64,7 +68,11 @@ public class MD5Utils {
         try {
             byte[] md5 = MD5Utils.getMD5(file);
             BigInteger bigInt = new BigInteger(1, md5);
-            return bigInt.toString(16).toUpperCase();
+            String hexString = bigInt.toString(16).toUpperCase();
+            while (hexString.length() < md5.length * 2) {
+                hexString = "0" + hexString;
+            }
+            return hexString;
         } catch (Exception e) {
             return "";
         }

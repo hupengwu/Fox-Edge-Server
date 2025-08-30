@@ -88,6 +88,14 @@ public class SerialPortWin32 implements ISerialPort {
             return false;
         }
 
+        /**
+         * 设置串口上的发送/接收缓冲区
+         */
+        if (!KERNELPLUS.SetupComm(this.handle, new WinDef.DWORD(4096), new WinDef.DWORD(4096))) {
+            return false;
+        }
+
+
         //设置dcb块
         WinBase.DCB dcb = new WinBase.DCB();
         if (!KERNEL.GetCommState(handle, dcb)) {
@@ -101,6 +109,11 @@ public class SerialPortWin32 implements ISerialPort {
             return false;
         }
 
+        // 设置通信配置
+        if (!KERNEL.SetCommState(handle, dcb)) {
+            return false;
+        }
+
 
         //读写超时设置：ReadIntervalTimeout必须为-1，ReadTotalTimeoutMultiplier/ReadTotalTimeoutConstant为0
         WinBase.COMMTIMEOUTS CommTimeOuts = new WinBase.COMMTIMEOUTS();
@@ -110,19 +123,7 @@ public class SerialPortWin32 implements ISerialPort {
         CommTimeOuts.WriteTotalTimeoutMultiplier = new WinBase.DWORD(0); //总的超时时间(对单个字节)
         CommTimeOuts.WriteTotalTimeoutConstant = new WinBase.DWORD(2500); //多余的超时时间
 
-        if (!KERNEL.SetCommTimeouts(handle, CommTimeOuts)) {
-            return false;
-        }
-
-        // 设置通信配置
-        if (!KERNEL.SetCommState(handle, dcb)) {
-            return false;
-        }
-
-        /**
-         * 设置串口上的发送/接收缓冲区
-         */
-        return KERNELPLUS.SetupComm(this.handle, new WinDef.DWORD(4096), new WinDef.DWORD(4096));
+        return KERNEL.SetCommTimeouts(handle, CommTimeOuts);
     }
 
     /**
@@ -151,18 +152,6 @@ public class SerialPortWin32 implements ISerialPort {
 
 
         this.name = szPort;
-
-        //读写超时设置：关键配置，要注意啊，否则接收不到数据的
-        WinBase.COMMTIMEOUTS CommTimeOuts = new WinBase.COMMTIMEOUTS();
-        CommTimeOuts.ReadIntervalTimeout = new WinBase.DWORD(-1); //字符允许间隔ms 该参数如果为最大值，会使readfile命令立即返回
-        CommTimeOuts.ReadTotalTimeoutMultiplier = new WinBase.DWORD(0); //总的超时时间(对单个字节)
-        CommTimeOuts.ReadTotalTimeoutConstant = new WinBase.DWORD(0); //多余的超时时间ms
-        CommTimeOuts.WriteTotalTimeoutMultiplier = new WinBase.DWORD(0); //总的超时时间(对单个字节)
-        CommTimeOuts.WriteTotalTimeoutConstant = new WinBase.DWORD(2500); //多余的超时时间
-        if (!KERNEL.SetCommTimeouts(handle, CommTimeOuts)) {
-            this.closeHandle();
-            return false;
-        }
 
         return true;
     }

@@ -128,6 +128,7 @@ public class ScriptEngineOperator {
             Map<String, Object> values = JsonUtils.buildObject((String) data, Map.class);
 
             Map<String, Object> result = new HashMap<>();
+            result.put(FoxEdgeConstant.OPERATE_NAME_TAG, operateName);
             result.put(FoxEdgeOperate.status, values);
             return result;
         } catch (InvalidFormatException ife) {

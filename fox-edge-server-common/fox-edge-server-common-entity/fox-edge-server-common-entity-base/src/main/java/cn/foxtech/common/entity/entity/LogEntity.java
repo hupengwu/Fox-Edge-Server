@@ -31,4 +31,9 @@ public abstract class LogEntity implements Serializable {
      */
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private Long createTime;
+
+    public void bind(LogEntity other) {
+        this.setId(other.getId());
+        this.setCreateTime(other.getCreateTime());
+    }
 }

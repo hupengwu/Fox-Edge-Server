@@ -9,6 +9,7 @@ import cn.foxtech.common.entity.entity.*;
 import cn.foxtech.common.entity.manager.EntityPublishManager;
 import cn.foxtech.common.utils.pair.Pair;
 import cn.foxtech.persist.common.history.IDeviceHistoryUpdater;
+import cn.foxtech.persist.common.history.IDeviceValueRecordUpdater;
 import cn.foxtech.persist.common.service.DeviceObjectMapper;
 import cn.foxtech.persist.common.service.PersistManageService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -33,6 +34,8 @@ public class DeviceStatusValueUpdater {
     private PersistManageService entityManageService;
     @Autowired
     private IDeviceHistoryUpdater deviceHistoryEntityUpdater;
+    @Autowired
+    private IDeviceValueRecordUpdater deviceValueRecordUpdater;
     @Autowired
     private DeviceObjectMapper deviceObjectMapper;
 
@@ -70,6 +73,8 @@ public class DeviceStatusValueUpdater {
             // 步骤2：将数值保存到历史记录
             this.deviceHistoryEntityUpdater.saveHistoryEntity(existEntity, statusValues);
 
+            // 步骤3：将数值保存到设备数值记录
+            this.deviceValueRecordUpdater.saveDeviceValueRecord(valueEntity);
         } catch (Exception e) {
             logger.error(e);
         }
@@ -315,9 +320,13 @@ public class DeviceStatusValueUpdater {
                 }
 
                 // 把副本更新到redis中
-                Long time = System.currentTimeMillis();
-                existEntity.setUpdateTime(time);
-                this.entityManageService.writeEntity(existEntity);
+                if (!existEntity.getParams().isEmpty()) {
+                    Long time = System.currentTimeMillis();
+                    existEntity.setUpdateTime(time);
+                    this.entityManageService.writeEntity(existEntity);
+                } else {
+                    this.entityManageService.deleteEntity(existEntity);
+                }
             }
 
 

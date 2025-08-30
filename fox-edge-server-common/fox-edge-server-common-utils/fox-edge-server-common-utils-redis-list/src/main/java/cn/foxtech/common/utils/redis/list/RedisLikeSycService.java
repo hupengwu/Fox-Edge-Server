@@ -39,7 +39,7 @@ public class RedisLikeSycService {
     }
 
     public boolean isBlock() {
-        return this.list.size() > this.maxSize;
+        return this.list.size() >= this.maxSize;
     }
 
     public boolean isBusy(int percentage) {

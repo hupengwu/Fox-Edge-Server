@@ -17,6 +17,7 @@
     <modules>
         <module>fox-edge-service-common</module>
         <module>fox-edge-service-period</module>
+        <module>fox-edge-service-demo</module>
     </modules>
 
 

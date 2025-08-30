@@ -11,6 +11,11 @@
       "password": "root",
       "period": 3600,
       "lifeCycle": 86400
+    },
+    "deviceValueRecord": {
+      "enable": false,
+      "period": 3600,
+      "maxCount": 10000
     }
   },
   "configParam": {

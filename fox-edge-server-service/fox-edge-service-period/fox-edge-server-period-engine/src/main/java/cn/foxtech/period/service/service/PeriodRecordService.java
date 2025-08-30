@@ -4,17 +4,12 @@
 
 package cn.foxtech.period.service.service;
 
-import cn.foxtech.common.entity.entity.BaseEntity;
-import cn.foxtech.common.entity.entity.DeviceEntity;
-import cn.foxtech.common.entity.entity.DeviceObjectValue;
-import cn.foxtech.common.entity.entity.DeviceValueEntity;
+import cn.foxtech.common.entity.entity.*;
+import cn.foxtech.common.entity.service.periodrecord.PeriodRecordEntityMapper;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.common.utils.method.MethodUtils;
 import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
-import cn.foxtech.period.service.entity.PeriodRecordEntity;
-import cn.foxtech.period.service.entity.PeriodTaskEntity;
-import cn.foxtech.period.service.mapper.periodrecord.PeriodRecordEntityMapper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -100,6 +95,11 @@ public class PeriodRecordService extends PeriodTaskService {
                 }
             }
 
+            if (periodRecordEntityList.size() > 0) {
+                this.insert(periodRecordEntityList);
+                periodRecordEntityList.clear();
+            }
+
             // 每个任务最大10W条记录，超过的就删除
             this.deleteOverload(taskEntity.getId(), 10 * 10000);
         }
@@ -136,11 +136,11 @@ public class PeriodRecordService extends PeriodTaskService {
     }
 
     private String makePeriodBatch(PeriodTaskEntity taskEntity, long lastTime) {
-        String mode = (String) taskEntity.getTaskParam().get("mode");
+        String timeMode = (String) taskEntity.getTaskParam().get("timeMode");
         String timeUnit = (String) taskEntity.getTaskParam().get("timeUnit");
         Integer timeInterval = (Integer) taskEntity.getTaskParam().get("timeInterval");
 
-        if (MethodUtils.hasEmpty(mode, timeUnit, timeInterval)) {
+        if (MethodUtils.hasEmpty(timeMode, timeUnit, timeInterval)) {
             return null;
         }
 
@@ -151,7 +151,7 @@ public class PeriodRecordService extends PeriodTaskService {
         /**
          * 按时间间隔模式
          */
-        if (mode.equals("interval")) {
+        if (timeMode.equals("interval")) {
             if (timeUnit.equals("second")) {
                 if ((currentTime - lastTime > timeInterval * 1000)) {
                     SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

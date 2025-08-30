@@ -11,6 +11,7 @@ import cn.foxtech.common.entity.entity.OperateEntity;
 import cn.foxtech.core.exception.ServiceException;
 import cn.foxtech.device.domain.constant.DeviceMethodVOFieldConstant;
 import cn.foxtech.device.domain.vo.OperateRespondVO;
+import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
 import cn.foxtech.device.protocol.v1.core.constants.FoxEdgeConstant;
 import cn.foxtech.device.protocol.v1.core.worker.FoxEdgeExchangeWorker;
 import cn.foxtech.device.protocol.v1.core.worker.FoxEdgePublishWorker;
@@ -129,8 +130,18 @@ public class OperateService {
         Map<String, Object> commStatus = OperateRespondVO.buildCommonStatus(System.currentTimeMillis(), 0, 0);
 
         Map<String, Object> dat = new HashMap<>();
-        dat.put(OperateRespondVO.data_value, data.get(FoxEdgeConstant.DATA_TAG));
         dat.put(OperateRespondVO.data_comm_status, commStatus);
+        if (data.containsKey(FoxEdgeOperate.record)) {
+            // 重新组织成持久化服务要求的数据结构
+            Object val = data.get(FoxEdgeOperate.record);
+            dat.put(OperateRespondVO.data_value, val);
+        }
+        if (data.containsKey(FoxEdgeOperate.status)) {
+            // 重新组织成持久化服务要求的数据结构
+            Map<String, Object> val = new HashMap<>();
+            val.put(FoxEdgeOperate.status, data.get(FoxEdgeOperate.status));
+            dat.put(OperateRespondVO.data_value, val);
+        }
 
         respondVO.setData(dat);
 

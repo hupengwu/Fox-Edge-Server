@@ -1,0 +1,12 @@
+value_name,data_area,area_db_number,data_group,byte_index,byte_count,data_type,remark
+数据测量点1,DB,1,,0,1,BOOL,
+数据测量点2,DB,1,,1,2,UINT16,
+数据测量点1,DB,1,,3,1,BOOL,
+数据测量点2,DB,1,,2,,UINT16,
+数据测量点1,DB,1,,1,1,BOOL,
+数据测量点2,DB,1,,2,,UINT16,
+数据测量点3,CT,,,20,,FLOAT64,
+数据测量点4,EB,,,28,,BYTE,
+数据测量点5,MB,,,31,,STRING,
+数据测量点6,TM,,,43,,TIME,
+数据测量点6,AB,,,43,,TIME,

@@ -13,6 +13,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan(basePackages = {"cn.foxtech.service.common.*"})
-@MapperScan("cn.foxtech.period.service")
+@MapperScan("cn.foxtech.common.entity.service")
 public class PeriodEngineConfig {
 }
