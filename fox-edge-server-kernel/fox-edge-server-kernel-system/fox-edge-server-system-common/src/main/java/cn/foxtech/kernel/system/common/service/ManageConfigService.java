@@ -8,6 +8,7 @@ import cn.foxtech.common.entity.constant.ConfigVOFieldConstant;
 import cn.foxtech.common.entity.entity.ConfigEntity;
 import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.entity.manager.RedisConsoleService;
+import cn.foxtech.common.utils.MapUtils;
 import cn.foxtech.common.utils.file.FileTextUtils;
 import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.core.exception.ServiceException;
@@ -54,11 +55,17 @@ public class ManageConfigService {
                 String json = FileTextUtils.readTextFile(inputStream, StandardCharsets.UTF_8);
                 Map<String,Object> defaultConfig = JsonUtils.buildObject(json, Map.class);
 
+                Map<String,Object> configParam = (Map<String,Object>)MapUtils.getOrDefault(defaultConfig,"configParam",new HashMap<>());
+                Map<String,Object> configValue = (Map<String,Object>)MapUtils.getOrDefault(defaultConfig,"configValue",new HashMap<>());
+                String remark = (String) MapUtils.getOrDefault(defaultConfig,"remark","");
+
                 configEntity = new ConfigEntity();
                 configEntity.setServiceName(this.foxServiceName);
                 configEntity.setServiceType(this.foxServiceType);
                 configEntity.setConfigName(configName);
-                configEntity.setConfigParam(defaultConfig);
+                configEntity.setConfigParam(configParam);
+                configEntity.setConfigValue(configValue);
+                configEntity.setRemark(remark);
                 this.entityManageService.insertEntity(configEntity);
             }
 

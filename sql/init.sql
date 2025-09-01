@@ -37,6 +37,11 @@ flush privileges;
 #切换数据库
 USE `fox_edge`;
 
+SET NAMES utf8mb4;
+SET character_set_database = utf8mb4;
+SET character_set_server = utf8mb4;
+
+
 #刷入数据库脚本
 source /opt/fox-edge/sql/init_table.sql;
 source /opt/fox-edge/sql/ini_data.sql;
