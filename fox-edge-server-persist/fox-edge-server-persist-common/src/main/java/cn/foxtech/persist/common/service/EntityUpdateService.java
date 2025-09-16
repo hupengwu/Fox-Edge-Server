@@ -89,8 +89,8 @@ public class EntityUpdateService {
             }
 
             // 数据2: 设备的状态类型数据
-            Map<String, Object> statusValues = (Map<String, Object>) deviceValues.get(FoxEdgeOperate.status);
-            this.deviceStatusValueUpdater.updateDeviceStatusValue(deviceEntity, statusValues);
+            Object statusValues = deviceValues.get(FoxEdgeOperate.status);
+            this.deviceStatusValueUpdater.updateDeviceStatusValues(deviceEntity, statusValues);
 
             // 数据3: 设备的记录类数据
             List<Map<String, Object>> recordList = (List<Map<String, Object>>) deviceValues.get(FoxEdgeOperate.record);

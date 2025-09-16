@@ -136,6 +136,11 @@ public class OperateService {
             Object val = data.get(FoxEdgeOperate.record);
             dat.put(OperateRespondVO.data_value, val);
         }
+        if (data.containsKey(FoxEdgeOperate.sequence)) {
+            // 重新组织成持久化服务要求的数据结构
+            Object val = data.get(FoxEdgeOperate.sequence);
+            dat.put(OperateRespondVO.data_value, val);
+        }
         if (data.containsKey(FoxEdgeOperate.status)) {
             // 重新组织成持久化服务要求的数据结构
             Map<String, Object> val = new HashMap<>();

@@ -62,6 +62,8 @@ public class ReportService {
                 // 将解码结果，根据模式，用各自的字段带回
                 if (FoxEdgeOperate.record.equals(operateEntity.getDataType())) {
                     return this.engineOperator.decodeRecord(engine, operateEntity.getOperateName(), decodeMain, decodeScript);
+                } else if (FoxEdgeOperate.sequence.equals(operateEntity.getDataType())) {
+                    return this.engineOperator.decodeSequence(engine, operateEntity.getOperateName(), decodeMain, decodeScript);
                 } else if (FoxEdgeOperate.result.equals(operateEntity.getDataType())) {
                     return this.engineOperator.decodeResult(engine, operateEntity.getOperateName(), decodeMain, decodeScript);
                 } else {

@@ -7,6 +7,7 @@ package cn.foxtech.persist.common.service.updater;
 import cn.foxtech.common.entity.constant.DeviceMapperVOFieldConstant;
 import cn.foxtech.common.entity.entity.*;
 import cn.foxtech.common.entity.manager.EntityPublishManager;
+import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.common.utils.pair.Pair;
 import cn.foxtech.persist.common.history.IDeviceHistoryUpdater;
 import cn.foxtech.persist.common.history.IDeviceValueRecordUpdater;
@@ -43,15 +44,56 @@ public class DeviceStatusValueUpdater {
      * 更新值状态数据
      *
      * @param deviceEntity 设备实体信息
-     * @param statusValues 状态类数据信息
+     * @param values 状态类数据信息
      */
-    public void updateDeviceStatusValue(DeviceEntity deviceEntity, Map<String, Object> statusValues) {
-        if (statusValues == null || statusValues.isEmpty()) {
+    public void updateDeviceStatusValues(DeviceEntity deviceEntity, Object values) {
+        if (values == null) {
             return;
         }
 
+        if (values instanceof List) {
+            List<DeviceValueEntity> valueEntityList = new ArrayList<>();
 
+            List<Map<String,Object>> statusValues = (List)values;
+            for (Map<String,Object> statusValue : statusValues){
+                DeviceValueEntity valueEntity = this.updateDeviceStatusValue(deviceEntity, statusValue);
+                if (valueEntity == null) {
+                    continue;
+                }
+
+                valueEntityList.add(valueEntity);
+            }
+
+            // 将数值保存到设备数值记录
+           this.deviceValueRecordUpdater.saveDeviceValueRecord(valueEntityList);
+        }
+
+        if (values instanceof Map) {
+            List<DeviceValueEntity> valueEntityList = new ArrayList<>();
+
+            DeviceValueEntity valueEntity = this.updateDeviceStatusValue(deviceEntity, values);
+            if (valueEntity == null) {
+                return;
+            }
+            valueEntityList.add(valueEntity);
+
+            // 将数值保存到设备数值记录
+            this.deviceValueRecordUpdater.saveDeviceValueRecord(valueEntityList);
+        }
+
+    }
+
+    private DeviceValueEntity updateDeviceStatusValue(DeviceEntity deviceEntity, Object values) {
         try {
+            if (values == null) {
+                return null;
+            }
+
+            Map<String, Object> statusValues = (Map<String, Object>) values;
+            if (statusValues.isEmpty()) {
+                return null;
+            }
+
             // 预处理：对数值进行映射的处理
             statusValues = this.mappingStatusValues(deviceEntity, statusValues);
             // 预处理：对预处理的结果，再进行一次预处理，达到二次映射的效果。
@@ -73,10 +115,9 @@ public class DeviceStatusValueUpdater {
             // 步骤2：将数值保存到历史记录
             this.deviceHistoryEntityUpdater.saveHistoryEntity(existEntity, statusValues);
 
-            // 步骤3：将数值保存到设备数值记录
-            this.deviceValueRecordUpdater.saveDeviceValueRecord(valueEntity);
+            return valueEntity;
         } catch (Exception e) {
-            logger.error(e);
+            return null;
         }
     }
 
@@ -166,8 +207,6 @@ public class DeviceStatusValueUpdater {
      * @return 数值实体
      */
     private DeviceValueEntity buildValueEntity(DeviceEntity deviceEntity, Map<String, Object> statusValues) {
-        Long time = System.currentTimeMillis();
-
         // 构造更新数值
         DeviceValueEntity valueEntity = new DeviceValueEntity();
         valueEntity.setId(deviceEntity.getId());
@@ -175,9 +214,11 @@ public class DeviceStatusValueUpdater {
         valueEntity.setDeviceType(deviceEntity.getDeviceType());
         valueEntity.setManufacturer(deviceEntity.getManufacturer());
         for (String key : statusValues.keySet()) {
+            Map<String,Object> statusValue = (Map<String,Object>)statusValues.get(key);
+
             DeviceObjectValue deviceObjectValue = new DeviceObjectValue();
-            deviceObjectValue.setValue(statusValues.get(key));
-            deviceObjectValue.setTime(time);
+            deviceObjectValue.setValue(statusValue.get("value"));
+            deviceObjectValue.setTime(NumberUtils.makeLong(statusValue.get("time")));
             valueEntity.getParams().put(key, deviceObjectValue);
         }
 

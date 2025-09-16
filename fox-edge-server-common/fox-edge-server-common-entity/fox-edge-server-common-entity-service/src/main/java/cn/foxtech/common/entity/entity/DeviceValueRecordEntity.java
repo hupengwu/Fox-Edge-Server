@@ -23,6 +23,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,7 @@ public class DeviceValueRecordEntity extends DeviceValueRecordBase {
     /**
      * JSON数据
      */
-    private Map<String, Object> deviceValue = new HashMap<>();
+    private List<Map<String, Object>> deviceValue = new ArrayList<>();
 
     /**
      * 业务Key：这个可能不是唯一的，不要用它查找唯一性数据，可以用它来筛选数据

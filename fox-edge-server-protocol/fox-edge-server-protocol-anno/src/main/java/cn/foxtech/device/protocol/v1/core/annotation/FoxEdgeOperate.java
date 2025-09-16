@@ -47,6 +47,12 @@ public @interface FoxEdgeOperate {
      */
     public static final String result = "result";
 
+    /**
+     * 时序模式：比如某个探头设备，它会按时间高速的测量一组时序数据，然后它会将这个数据以数组的方式进行整批的返回
+     * 存储方式：这种数据应当作为时序记录，被插入到时序数据库之中
+     */
+    public static final String sequence = "sequence";
+
 
     /**
      * 名称

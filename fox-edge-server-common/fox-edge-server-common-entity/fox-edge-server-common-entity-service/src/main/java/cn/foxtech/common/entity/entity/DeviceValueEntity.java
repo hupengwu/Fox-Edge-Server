@@ -99,6 +99,25 @@ public class DeviceValueEntity extends BaseEntity {
         return map;
     }
 
+    /**
+     * 将带时间戳的params结构，转换为没时间戳的time-value
+     *
+     * @param params 带时间戳的数值对象
+     * @return 带时间戳的数值
+     */
+    public static Map<String, Object> buildTimeValue(Map<String, DeviceObjectValue> params) {
+        Map<String, Object> map = new HashMap<>();
+        for (String key : params.keySet()) {
+            DeviceObjectValue deviceObjectValue = (DeviceObjectValue) params.get(key);
+
+            Map<String, Object> value = new HashMap<>();
+            value.put(DeviceValueVOFieldConstant.field_value_time,deviceObjectValue.getTime());
+            value.put(DeviceValueVOFieldConstant.field_value_value,deviceObjectValue.getValue());
+            map.put(key, value);
+        }
+
+        return map;
+    }
 
     /**
      * 业务Key

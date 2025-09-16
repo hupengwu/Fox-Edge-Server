@@ -124,13 +124,111 @@ public class ScriptEngineOperator {
             // 执行JSP脚本中的函数
             Object data = engine.eval(decodeMain + "();");
 
-            //再将JSON格式的字符串，转换回Map
-            Map<String, Object> values = JsonUtils.buildObject((String) data, Map.class);
+            // 对返回的数据进行格式化处理
+            Object values = this.formatValues(engine, (String) data);
 
             Map<String, Object> result = new HashMap<>();
             result.put(FoxEdgeConstant.OPERATE_NAME_TAG, operateName);
             result.put(FoxEdgeOperate.status, values);
             return result;
+        } catch (InvalidFormatException ife) {
+            // 不打印JSON转换日志
+            throw new ProtocolException(ife.getMessage());
+        } catch (MismatchedInputException mie) {
+            // 不打印JSON转换日志
+            throw new ProtocolException(mie.getMessage());
+        } catch (Exception e) {
+            // 打印日志
+            this.printLogger(e.getMessage());
+
+            throw new ProtocolException(e.getMessage());
+        }
+    }
+
+    private Object formatValues(ScriptEngine engine, String jsn) throws Exception {
+        // 获得数据的格式
+        String format = this.format(engine);
+
+        if (format.equals("[time-value]")) {
+            //再将JSON格式的字符串，转换回List
+            List<Map<String, Object>> values = JsonUtils.buildObject(jsn, List.class);
+            for (Map<String, Object> value : values) {
+                for (String key : value.keySet()) {
+                    Map<String, Object> tv = (Map<String, Object>) value.get(key);
+                    if (!tv.containsKey("time") || !tv.containsKey("value")) {
+                        throw new RuntimeException("格式不正确");
+                    }
+                }
+            }
+
+            return values;
+        }
+        if (format.equals("time-value")) {
+            //再将JSON格式的字符串，转换回Map
+            Map<String, Object> value = JsonUtils.buildObject(jsn, Map.class);
+            for (String key : value.keySet()) {
+                Map<String, Object> tv = (Map<String, Object>) value.get(key);
+                if (!tv.containsKey("time") || !tv.containsKey("value")) {
+                    throw new RuntimeException("格式不正确");
+                }
+            }
+
+            return value;
+        }
+        if (format.equals("value")) {
+            //再将JSON格式的字符串，转换回Map
+            Map<String, Object> value = JsonUtils.buildObject(jsn, Map.class);
+
+            Map<String, Object> result = new HashMap<>();
+            long time = System.currentTimeMillis();
+            for (String key : value.keySet()) {
+                Map<String, Object> tv = new HashMap<>();
+                tv.put("time", time);
+                tv.put("value", value.get(key));
+
+                result.put(key, tv);
+            }
+
+            return result;
+        }
+
+        throw new RuntimeException("格式不正确");
+    }
+
+    private String format(ScriptEngine engine) {
+        try {
+            // 尝试执行函数
+            Object data = engine.eval("format();");
+            String fmt = data.toString();
+            if (fmt.equals("time-value") || fmt.equals("[time-value]")) {
+                return fmt;
+            }
+
+            return "value";
+        } catch (Exception e) {
+            return "value";
+        }
+    }
+
+    public Map<String, Object> decodeSequence(ScriptEngine engine, String operateName, String decodeMain, String decodeScript) {
+        try {
+            // 重新装载待待执行的脚本
+            engine.eval(decodeScript);
+
+            // 执行JSP脚本中的函数
+            Object data = engine.eval(decodeMain + "();");
+
+            //再将JSON格式的字符串，转换回Map
+            Map<String, Object> value = JsonUtils.buildObject((String) data, Map.class);
+
+            Map<String, Object> sequenceValue = new HashMap<>();
+            sequenceValue.put(FoxEdgeOperate.sequence, value);
+
+            Map<String, Object> result = new HashMap<>();
+            result.put(FoxEdgeConstant.OPERATE_NAME_TAG, operateName);
+            result.put(FoxEdgeOperate.sequence, sequenceValue);
+            return result;
+
         } catch (InvalidFormatException ife) {
             // 不打印JSON转换日志
             throw new ProtocolException(ife.getMessage());

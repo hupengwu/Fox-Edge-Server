@@ -230,6 +230,7 @@ public class EntityManageService extends EntityServiceManager {
         reader.add(DeviceMapperEntity.class.getSimpleName());
         writer.add(DeviceMapperEntity.class.getSimpleName());
         reader.add(OperateMonitorTaskEntity.class.getSimpleName());
+        writer.add(OperateMonitorTaskEntity.class.getSimpleName());
         reader.add(OperateManualTaskEntity.class.getSimpleName());
         writer.add(OperateManualTaskEntity.class.getSimpleName());
         reader.add(OperateChannelTaskEntity.class.getSimpleName());

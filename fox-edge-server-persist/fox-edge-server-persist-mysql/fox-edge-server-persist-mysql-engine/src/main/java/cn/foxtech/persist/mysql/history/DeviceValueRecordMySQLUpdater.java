@@ -5,10 +5,10 @@
 package cn.foxtech.persist.mysql.history;
 
 
-import cn.foxtech.common.entity.entity.DeviceObjectValue;
 import cn.foxtech.common.entity.entity.DeviceValueEntity;
 import cn.foxtech.common.entity.entity.DeviceValueRecordEntity;
 import cn.foxtech.common.entity.manager.InitialConfigService;
+import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.persist.common.history.IDeviceValueRecordUpdater;
 import cn.foxtech.persist.common.service.PersistManageService;
 import org.apache.log4j.Logger;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -37,9 +38,9 @@ public class DeviceValueRecordMySQLUpdater implements IDeviceValueRecordUpdater 
     private long lastTime = 0;
 
     @Override
-    public void saveDeviceValueRecord(DeviceValueEntity valueEntity) {
+    public void saveDeviceValueRecord(List<DeviceValueEntity> valueEntityList) {
         try {
-            if (valueEntity == null || valueEntity.getParams().isEmpty()) {
+            if (valueEntityList == null || valueEntityList.isEmpty()) {
                 return;
             }
 
@@ -51,6 +52,9 @@ public class DeviceValueRecordMySQLUpdater implements IDeviceValueRecordUpdater 
                 return;
             }
 
+            // 从第一个元素中，取得设备厂商、型号、名称信息
+            DeviceValueEntity valueEntity = valueEntityList.get(0);
+
             long time = System.currentTimeMillis();
 
             // 构造历史记录对象
@@ -60,6 +64,11 @@ public class DeviceValueRecordMySQLUpdater implements IDeviceValueRecordUpdater 
             deviceValueRecordEntity.setDeviceName(valueEntity.getDeviceName());
             deviceValueRecordEntity.setCreateTime(time);
             deviceValueRecordEntity.setCreateTime(time);
+
+            for (DeviceValueEntity entity : valueEntityList){
+                Map<String, Object> values = DeviceValueEntity.buildTimeValue(entity.getParams());
+                deviceValueRecordEntity.getDeviceValue().add(values);
+            }
 
             this.entityManageService.getDeviceValueRecordEntityService().insertEntity(deviceValueRecordEntity);
 

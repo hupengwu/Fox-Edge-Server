@@ -61,7 +61,7 @@ public class DeviceValueRecordMaker {
 
 
         try {
-            Map<String, Object> params = JsonUtils.buildObject(entity.getDeviceValue(), Map.class);
+            List<Map<String, Object>> params = JsonUtils.buildObject(entity.getDeviceValue(), List.class);
             if (params != null) {
                 result.setDeviceValue(params);
             } else {
