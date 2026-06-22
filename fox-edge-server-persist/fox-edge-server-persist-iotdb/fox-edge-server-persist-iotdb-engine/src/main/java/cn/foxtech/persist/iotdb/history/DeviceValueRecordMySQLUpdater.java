@@ -37,7 +37,7 @@ public class DeviceValueRecordMySQLUpdater implements IDeviceValueRecordUpdater 
     private long lastTime = 0;
 
     @Override
-    public void saveDeviceValueRecord(List<DeviceValueEntity> valueEntityList) {
+    public void saveDeviceValueRecord(List<DeviceValueEntity> valueEntityList, Map<String, Object> property) {
         try {
             if (valueEntityList == null || valueEntityList.isEmpty()) {
                 return;
@@ -64,7 +64,7 @@ public class DeviceValueRecordMySQLUpdater implements IDeviceValueRecordUpdater 
             deviceValueRecordEntity.setCreateTime(time);
             deviceValueRecordEntity.setCreateTime(time);
 
-            for (DeviceValueEntity entity : valueEntityList){
+            for (DeviceValueEntity entity : valueEntityList) {
                 Map<String, Object> values = DeviceValueEntity.buildTimeValue(entity.getParams());
                 deviceValueRecordEntity.getDeviceValue().add(values);
             }

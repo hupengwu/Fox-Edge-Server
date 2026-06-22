@@ -8,6 +8,7 @@ import cn.foxtech.common.entity.entity.BaseEntity;
 import cn.foxtech.common.entity.entity.DeviceRecordEntity;
 import cn.foxtech.common.entity.service.devicerecord.DeviceRecordEntityService;
 import cn.foxtech.common.tags.RedisTagService;
+import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.device.protocol.v1.core.constants.FoxEdgeConstant;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,12 @@ public class DeviceRecordValueUpdater {
             // 记录类型
             String recordType = (String) record.get(FoxEdgeConstant.RECORD_TYPE_TAG);
             if (recordType == null) {
-                continue;
+                recordType = "未命名事件";
+            }
+            // 记录时间
+            Long recordTime =  NumberUtils.makeLong(record.get("recordTime"));
+            if (recordTime == null) {
+                recordTime = System.currentTimeMillis();
             }
 
             DeviceRecordEntity recordEntity = new DeviceRecordEntity();
@@ -58,8 +64,7 @@ public class DeviceRecordValueUpdater {
             recordEntity.setDeviceType(deviceType);
             recordEntity.setManufacturer(manufacturer);
             recordEntity.setRecordName(recordType);
-
-            // MD5签名
+            recordEntity.setRecordTime(recordTime);
             recordEntity.setRecordData(record);
 
             // 保存到数据库

@@ -21,6 +21,7 @@ import java.util.Map;
 public class OperateRespondVO extends OperateRequestVO {
     public static final String data_mode = "mode";
     public static final String data_value = "value";
+    public static final String data_property = "property";
     public static final String data_comm_status = "commStatus";
     public static final String data_comm_status_failed_time = "commFailedTime";
     public static final String data_comm_status_success_time = "commSuccessTime";

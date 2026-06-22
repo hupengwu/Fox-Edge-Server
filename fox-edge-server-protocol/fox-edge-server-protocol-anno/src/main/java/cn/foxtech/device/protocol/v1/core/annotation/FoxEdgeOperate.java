@@ -25,6 +25,11 @@ public @interface FoxEdgeOperate {
     public static final String decoder = "decoder";
 
     /**
+     * 属性：解码器返回的属性信息，用于告知设备和持久化服务，该如何处理这个数据
+     */
+    public static final String property = "property";
+
+    /**
      * 模式：它决定了返回的消息结构是状态类型的，还是记录类型的
      */
     public static final String mode = "mode";

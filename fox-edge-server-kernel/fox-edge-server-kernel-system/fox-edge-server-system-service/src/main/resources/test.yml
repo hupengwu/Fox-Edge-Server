@@ -1,0 +1,12 @@
+network:
+  version: 2
+  renderer: networkd          # 服务器版默认即可
+  ethernets:
+    eth0: # 你的实际网卡名，见 ip link
+      dhcp4: no
+      addresses: [ 10.1.1.6/24 ]
+      routes:
+        - to: default
+          via: 10.1.1.1    # 网关
+      nameservers:
+        addresses: [ 8.8.8.8, 114.114.114.114 ]

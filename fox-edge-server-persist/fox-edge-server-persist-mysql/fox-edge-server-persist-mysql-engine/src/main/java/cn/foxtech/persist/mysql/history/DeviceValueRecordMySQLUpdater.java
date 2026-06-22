@@ -8,7 +8,6 @@ package cn.foxtech.persist.mysql.history;
 import cn.foxtech.common.entity.entity.DeviceValueEntity;
 import cn.foxtech.common.entity.entity.DeviceValueRecordEntity;
 import cn.foxtech.common.entity.manager.InitialConfigService;
-import cn.foxtech.common.utils.json.JsonUtils;
 import cn.foxtech.persist.common.history.IDeviceValueRecordUpdater;
 import cn.foxtech.persist.common.service.PersistManageService;
 import org.apache.log4j.Logger;
@@ -38,7 +37,7 @@ public class DeviceValueRecordMySQLUpdater implements IDeviceValueRecordUpdater 
     private long lastTime = 0;
 
     @Override
-    public void saveDeviceValueRecord(List<DeviceValueEntity> valueEntityList) {
+    public void saveDeviceValueRecord(List<DeviceValueEntity> valueEntityList, Map<String, Object> property) {
         try {
             if (valueEntityList == null || valueEntityList.isEmpty()) {
                 return;
@@ -65,15 +64,44 @@ public class DeviceValueRecordMySQLUpdater implements IDeviceValueRecordUpdater 
             deviceValueRecordEntity.setCreateTime(time);
             deviceValueRecordEntity.setCreateTime(time);
 
-            for (DeviceValueEntity entity : valueEntityList){
+            for (DeviceValueEntity entity : valueEntityList) {
                 Map<String, Object> values = DeviceValueEntity.buildTimeValue(entity.getParams());
                 deviceValueRecordEntity.getDeviceValue().add(values);
             }
 
-            this.entityManageService.getDeviceValueRecordEntityService().insertEntity(deviceValueRecordEntity);
+            this.insertEntity(deviceValueRecordEntity, property);
 
         } catch (Exception e) {
             logger.warn(e);
+        }
+    }
+
+    private void insertEntity(DeviceValueRecordEntity deviceValueRecordEntity, Map<String, Object> property) {
+        String mode = (String) property.getOrDefault("persist-mode", "");
+        if (mode.equals("")) {
+            this.insertEntity4DB(deviceValueRecordEntity);
+        }
+        if (mode.equals("redis")) {
+            this.insertEntity4RD(deviceValueRecordEntity);
+        }
+    }
+
+    private void insertEntity4DB(DeviceValueRecordEntity deviceValueRecordEntity) {
+        this.entityManageService.getDeviceValueRecordEntityService().insertEntity(deviceValueRecordEntity);
+    }
+
+    private void insertEntity4RD(DeviceValueRecordEntity deviceValueRecordEntity) {
+        Map<String, Object> configs = this.configService.getConfigParam("serverConfig");
+        Map<String, Object> params = (Map<String, Object>) configs.getOrDefault("deviceValueRedisRecord", new HashMap<>());
+
+        Boolean enable = (Boolean) params.getOrDefault("enable", false);
+        if (!enable) {
+            return;
+        }
+
+        Integer maxCount = (Integer) params.getOrDefault("maxCount", 1000);
+        if (maxCount > 10 * 10000) {
+            maxCount = 10 * 10000;
         }
     }
 

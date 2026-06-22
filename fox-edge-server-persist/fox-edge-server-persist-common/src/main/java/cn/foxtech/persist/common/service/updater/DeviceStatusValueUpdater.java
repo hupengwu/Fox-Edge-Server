@@ -44,9 +44,9 @@ public class DeviceStatusValueUpdater {
      * 更新值状态数据
      *
      * @param deviceEntity 设备实体信息
-     * @param values 状态类数据信息
+     * @param values       状态类数据信息
      */
-    public void updateDeviceStatusValues(DeviceEntity deviceEntity, Object values) {
+    public void updateDeviceStatusValues(DeviceEntity deviceEntity, Object values, Map<String, Object> property) {
         if (values == null) {
             return;
         }
@@ -54,8 +54,8 @@ public class DeviceStatusValueUpdater {
         if (values instanceof List) {
             List<DeviceValueEntity> valueEntityList = new ArrayList<>();
 
-            List<Map<String,Object>> statusValues = (List)values;
-            for (Map<String,Object> statusValue : statusValues){
+            List<Map<String, Object>> statusValues = (List) values;
+            for (Map<String, Object> statusValue : statusValues) {
                 DeviceValueEntity valueEntity = this.updateDeviceStatusValue(deviceEntity, statusValue);
                 if (valueEntity == null) {
                     continue;
@@ -65,7 +65,7 @@ public class DeviceStatusValueUpdater {
             }
 
             // 将数值保存到设备数值记录
-           this.deviceValueRecordUpdater.saveDeviceValueRecord(valueEntityList);
+            this.deviceValueRecordUpdater.saveDeviceValueRecord(valueEntityList, property);
         }
 
         if (values instanceof Map) {
@@ -78,7 +78,7 @@ public class DeviceStatusValueUpdater {
             valueEntityList.add(valueEntity);
 
             // 将数值保存到设备数值记录
-            this.deviceValueRecordUpdater.saveDeviceValueRecord(valueEntityList);
+            this.deviceValueRecordUpdater.saveDeviceValueRecord(valueEntityList, property);
         }
 
     }
@@ -214,7 +214,7 @@ public class DeviceStatusValueUpdater {
         valueEntity.setDeviceType(deviceEntity.getDeviceType());
         valueEntity.setManufacturer(deviceEntity.getManufacturer());
         for (String key : statusValues.keySet()) {
-            Map<String,Object> statusValue = (Map<String,Object>)statusValues.get(key);
+            Map<String, Object> statusValue = (Map<String, Object>) statusValues.get(key);
 
             DeviceObjectValue deviceObjectValue = new DeviceObjectValue();
             deviceObjectValue.setValue(statusValue.get("value"));

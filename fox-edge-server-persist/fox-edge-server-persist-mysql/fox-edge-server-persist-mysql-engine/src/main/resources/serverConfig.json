@@ -1,21 +1,28 @@
 {
   "configValue": {
     "operateRecord": {
-      "enable": false,
       "period": 3600,
       "maxCount": 10000
     },
-    "deviceHistory": {
-      "enable": false,
+    "deviceRecord": {
       "period": 3600,
-      "maxCount": 10000
+      "maxCount": 100000
     },
     "deviceValueRecord": {
       "enable": false,
       "period": 3600,
       "maxCount": 10000
+    },
+    "deviceSequenceRecord": {
+      "period": 3600,
+      "maxHour": 72
+    },
+    "deviceHistory": {
+      "enable": false,
+      "period": 3600,
+      "maxCount": 100000
     }
   },
   "configParam": {},
-  "remark": "这是持久化服务 persist-service 的配置参数\n\n配置参数说明：\n{\n     \"deviceHistory\": {------------------定期清理历史记录，防止数据库表过渡膨胀\n          \"period\": 3600,-----------------3600秒清理一次\n          \"maxCount\": 1000000----------最大保留1000000条记录\n     },\n     \"deviceValueRecord\": {------------定期清理设备数值记录，防止数据库表过渡膨胀\n          \"period\": 3600,-----------------3600秒清理一次\n          \"maxCount\": 10000----------最大保留10000条记录\n     },\n     \"operateRecord\": {------------------定期清理历史记录，防止数据库表过渡膨胀\n          \"period\": 3600,------------------3600秒清理一次\n          \"maxCount\": 10000-------------最大保留10000条记录\n     }\n}"
+  "remark": "这是持久化服务 persist-service 的配置参数\n\n配置参数说明：\n{\n     \"deviceHistory\": {------------------定期清理历史记录，防止数据库表过渡膨胀\n          \"enable\": false,-----------------是否开启记录功能，默认不记录，它可能会高速持续的产生数据\n          \"period\": 3600,-----------------3600秒清理一次\n          \"maxCount\": 1000000----------最大保留1000000条记录\n     },\n     \"deviceValueRecord\": {------------定期清理设备数值记录，防止数据库表过渡膨胀\n          \"enable\": false,-----------------是否开启记录功能，默认不记录，它可能会高速持续的产生数据\n          \"period\": 3600,-----------------3600秒清理一次\n          \"maxCount\": 1000000----------最大保留1000000条记录\n     },\n     \"deviceSequenceRecord\": {------------定期清理设备数值记录，防止数据库表过渡膨胀\n          \"period\": 3600,-----------------3600秒清理一次\n          \"maxHour\": 72------------------最大保留最近72小时条记录\n     },\n     \"deviceRecord\": {-------------------定期清理设备记录，防止数据库表过渡膨胀\n          \"period\": 3600,-----------------3600秒清理一次\n          \"maxCount\": 1000000----------最大保留1000000条记录\n     },\n     \"operateRecord\": {------------------定期清理历史记录，防止数据库表过渡膨胀\n          \"period\": 3600,------------------3600秒清理一次\n          \"maxCount\": 10000-------------最大保留10000条记录\n     }\n}"
 }

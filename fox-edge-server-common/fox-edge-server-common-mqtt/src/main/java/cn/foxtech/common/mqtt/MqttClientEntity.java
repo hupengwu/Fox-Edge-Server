@@ -71,6 +71,7 @@ public class MqttClientEntity {
         this.creator.keepAliveSecs(this.config.getKeepAliveSecs());
         this.creator.reInterval(this.config.getReInterval());
         this.creator.clientId(clientId);
+        this.creator.reconnect(true);
 
         // 连接broker服务器
         this.client = this.creator.connect();

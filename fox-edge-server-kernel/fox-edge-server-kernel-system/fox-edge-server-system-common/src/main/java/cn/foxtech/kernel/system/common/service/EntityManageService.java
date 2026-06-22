@@ -16,6 +16,7 @@ import cn.foxtech.common.entity.service.devicemapping.DeviceMapperEntityService;
 import cn.foxtech.common.entity.service.devicemodel.DeviceModelEntityService;
 import cn.foxtech.common.entity.service.deviceobject.DeviceObjectEntityService;
 import cn.foxtech.common.entity.service.devicerecord.DeviceRecordEntityService;
+import cn.foxtech.common.entity.service.devicesequence.DeviceSequenceEntityService;
 import cn.foxtech.common.entity.service.devicetemplate.DeviceTemplateEntityService;
 import cn.foxtech.common.entity.service.devicevalue.task.DeviceValueExTaskEntityService;
 import cn.foxtech.common.entity.service.devicevaluerecord.DeviceValueRecordEntityService;
@@ -110,7 +111,6 @@ public class EntityManageService extends EntityServiceManager {
     @Autowired
     protected DeviceTemplateEntityService deviceTemplateEntityService;
 
-
     @Autowired
     protected ConfigEntityService configEntityService;
 
@@ -181,7 +181,6 @@ public class EntityManageService extends EntityServiceManager {
         dBService.put(IotDeviceModelEntity.class.getSimpleName(), this.iotDeviceModelEntityService);
         dBService.put(IotTemplateEntity.class.getSimpleName(), this.iotTemplateEntityService);
         dBService.put(RepoCompEntity.class.getSimpleName(), this.repoCompEntityService);
-
 
         // 告知：生产者如何装载数据源
         this.getSourceMySQL().add(ChannelEntity.class.getSimpleName());

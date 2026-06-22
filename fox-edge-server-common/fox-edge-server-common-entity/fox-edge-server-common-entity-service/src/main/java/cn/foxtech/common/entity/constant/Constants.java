@@ -18,6 +18,7 @@ public class Constants {
     public static final String OperateEntity = "OperateEntity";
     public static final String UserEntity = "UserEntity";
     public static final String HistoryEntity = "DeviceHistoryEntity";
+    public static final String DeviceSequenceEntity = "DeviceSequenceEntity";
     public static final String DeviceValueRecordEntity = "DeviceValueRecordEntity";
 
     public static final String OPERATE_MODE_EXCHANGE = "exchange";

@@ -62,13 +62,10 @@ public class ScriptEngineOperator {
             // 接收数据，转成字符串
             if (recv instanceof Map) {
                 engine.put("fox_edge_data", JsonUtils.buildJson(recv));
-                return;
             } else if (recv instanceof List) {
                 engine.put("fox_edge_data", JsonUtils.buildJson(recv));
-                return;
             } else if (recv instanceof String) {
                 engine.put("fox_edge_data", recv);
-                return;
             } else {
                 engine.put("fox_edge_data", "");
             }
@@ -97,6 +94,7 @@ public class ScriptEngineOperator {
             recordValue.put(FoxEdgeOperate.record, values);
 
             Map<String, Object> result = new HashMap<>();
+            result.put(FoxEdgeOperate.property, this.property(engine));
             result.put(FoxEdgeConstant.OPERATE_NAME_TAG, operateName);
             result.put(FoxEdgeConstant.DATA_TAG, recordValue);
 
@@ -127,7 +125,9 @@ public class ScriptEngineOperator {
             // 对返回的数据进行格式化处理
             Object values = this.formatValues(engine, (String) data);
 
+
             Map<String, Object> result = new HashMap<>();
+            result.put(FoxEdgeOperate.property, this.property(engine));
             result.put(FoxEdgeConstant.OPERATE_NAME_TAG, operateName);
             result.put(FoxEdgeOperate.status, values);
             return result;
@@ -210,6 +210,18 @@ public class ScriptEngineOperator {
         }
     }
 
+    private Map<String, Object> property(ScriptEngine engine) {
+        try {
+            // 尝试执行函数
+            Object data = engine.eval("property();");
+            String jsn = data.toString();
+            Map<String, Object> result = JsonUtils.buildObject(jsn, Map.class);
+            return result;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public Map<String, Object> decodeSequence(ScriptEngine engine, String operateName, String decodeMain, String decodeScript) {
         try {
             // 重新装载待待执行的脚本
@@ -225,6 +237,7 @@ public class ScriptEngineOperator {
             sequenceValue.put(FoxEdgeOperate.sequence, value);
 
             Map<String, Object> result = new HashMap<>();
+            result.put(FoxEdgeOperate.property, this.property(engine));
             result.put(FoxEdgeConstant.OPERATE_NAME_TAG, operateName);
             result.put(FoxEdgeOperate.sequence, sequenceValue);
             return result;
@@ -255,6 +268,7 @@ public class ScriptEngineOperator {
             Map<String, Object> values = JsonUtils.buildObject((String) data, Map.class);
 
             Map<String, Object> result = new HashMap<>();
+            result.put(FoxEdgeOperate.property, this.property(engine));
             result.put(FoxEdgeConstant.OPERATE_NAME_TAG, operateName);
             result.put(FoxEdgeOperate.result, values);
             return result;

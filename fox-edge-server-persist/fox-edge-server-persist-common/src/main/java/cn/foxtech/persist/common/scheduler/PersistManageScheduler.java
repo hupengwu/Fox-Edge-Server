@@ -9,6 +9,8 @@ import cn.foxtech.common.entity.manager.InitialConfigService;
 import cn.foxtech.common.tags.RedisTagService;
 import cn.foxtech.common.utils.scheduler.singletask.PeriodTaskService;
 import cn.foxtech.persist.common.history.IDeviceHistoryUpdater;
+import cn.foxtech.persist.common.history.IDeviceSequenceRecordUpdater;
+import cn.foxtech.persist.common.history.IDeviceValueRecordUpdater;
 import cn.foxtech.persist.common.service.DeviceObjectMapper;
 import cn.foxtech.persist.common.service.PersistManageService;
 import org.apache.log4j.Logger;
@@ -38,13 +40,17 @@ public class PersistManageScheduler extends PeriodTaskService {
     private IDeviceHistoryUpdater hisdoryEntityUpdater;
 
     @Autowired
+    private IDeviceValueRecordUpdater deviceValueRecordUpdater;
+
+    @Autowired
+    private IDeviceSequenceRecordUpdater sequenceValueUpdater;
+
+    @Autowired
     private RedisTagService redisTagService;
 
-    /**
-     * 上次处理时间
-     */
-    private final long lastTimeHistory = 0;
     private long lastTimeOperate = 0;
+
+
 
     @Override
     public void execute(long threadId) throws Exception {
@@ -60,6 +66,12 @@ public class PersistManageScheduler extends PeriodTaskService {
 
         // 删除设备历史记录
         this.hisdoryEntityUpdater.clearHistoryEntity();
+
+        // 删除时序表的数据
+        this.sequenceValueUpdater.clearDeviceSequenceRecord();
+
+        // 删除设备数值记录
+        this.deviceValueRecordUpdater.clearDeviceValueRecordEntity();
 
         // 删除操作记录
         this.clearOperateRecord();

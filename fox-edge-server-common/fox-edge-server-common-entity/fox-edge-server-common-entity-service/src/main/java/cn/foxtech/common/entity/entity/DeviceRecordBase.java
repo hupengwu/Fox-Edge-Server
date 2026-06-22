@@ -34,6 +34,11 @@ public class DeviceRecordBase extends BaseEntity {
     private String recordName;
 
     /**
+     * 事件名称
+     */
+    private Long recordTime;
+
+    /**
      * 业务Key：这个可能不是唯一的，不要用它查找唯一性数据，可以用它来筛选数据
      *
      * @return 业务Key
@@ -72,6 +77,7 @@ public class DeviceRecordBase extends BaseEntity {
         this.deviceType = other.deviceType;
         this.manufacturer = other.manufacturer;
         this.recordName = other.recordName;
+        this.recordTime = other.recordTime;
 
         super.bind(other);
     }

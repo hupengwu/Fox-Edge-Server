@@ -52,7 +52,54 @@ public class DeviceManageController {
 
     @PostMapping("page")
     public AjaxResult selectEntityPage(@RequestBody Map<String, Object> body) {
-        return this.selectEntityListByPage(body);
+        return this.selectList(body, true);
+    }
+
+    private AjaxResult selectList(Map<String, Object> body, boolean isPage) {
+        List<BaseEntity> entityList = this.entityManageService.getEntityList(DeviceEntity.class, (Object value) -> {
+            DeviceEntity deviceEntity = (DeviceEntity) value;
+
+            boolean result = true;
+            if (body.containsKey(DeviceVOFieldConstant.field_id)) {
+                result &= deviceEntity.getId().equals(body.get(DeviceVOFieldConstant.field_id));
+            }
+            if (body.containsKey(DeviceVOFieldConstant.field_manufacturer)) {
+                result &= deviceEntity.getManufacturer().equals(body.get(DeviceVOFieldConstant.field_manufacturer));
+            }
+            if (body.containsKey(DeviceVOFieldConstant.field_device_type)) {
+                result &= deviceEntity.getDeviceType().equals(body.get(DeviceVOFieldConstant.field_device_type));
+            }
+            if (body.containsKey(DeviceVOFieldConstant.field_channel_name)) {
+                result &= deviceEntity.getChannelName().equals(body.get(DeviceVOFieldConstant.field_channel_name));
+            }
+            if (body.containsKey(DeviceVOFieldConstant.field_channel_type)) {
+                result &= deviceEntity.getChannelType().equals(body.get(DeviceVOFieldConstant.field_channel_type));
+            }
+            if (body.containsKey(DeviceVOFieldConstant.field_device_name)) {
+                result &= deviceEntity.getDeviceName().toLowerCase().contains(((String) body.get(DeviceVOFieldConstant.field_device_name)).toLowerCase());
+            }
+            if (body.containsKey("keyword")) {
+                boolean has = deviceEntity.getDeviceName().toLowerCase().contains(((String) body.get("keyword")).toLowerCase());
+                for (String key : deviceEntity.getExtendParam().keySet()) {
+                    Object v = deviceEntity.getExtendParam().get(key);
+                    if (!(v instanceof String)) {
+                        continue;
+                    }
+                    has |= ((String) v).contains((String) body.get("keyword"));
+                }
+                result &= has;
+            }
+
+            return result;
+
+        });
+
+        // 获得分页数据
+        if (isPage) {
+            return PageUtils.getPageList(entityList, body);
+        } else {
+            return AjaxResult.success(EntityVOBuilder.buildVOList(entityList));
+        }
     }
 
     private AjaxResult selectEntityListByPage(Map<String, Object> body) {

@@ -11,6 +11,7 @@ import cn.foxtech.common.entity.entity.DeviceEntity;
 import cn.foxtech.common.utils.number.NumberUtils;
 import cn.foxtech.device.domain.vo.OperateRespondVO;
 import cn.foxtech.device.protocol.v1.core.annotation.FoxEdgeOperate;
+import cn.foxtech.persist.common.history.IDeviceSequenceRecordUpdater;
 import cn.foxtech.persist.common.service.updater.DeviceCommStatusUpdater;
 import cn.foxtech.persist.common.service.updater.DeviceRecordValueUpdater;
 import cn.foxtech.persist.common.service.updater.DeviceStatusValueUpdater;
@@ -47,6 +48,9 @@ public class EntityUpdateService {
     @Autowired
     private OperateRecordValueUpdater operateRecordValueUpdater;
 
+    @Autowired
+    private IDeviceSequenceRecordUpdater deviceSequenceValueUpdater;
+
 
     /**
      * 将设备响应的信息更新到shujk和redis
@@ -56,7 +60,7 @@ public class EntityUpdateService {
     @SuppressWarnings("unchecked")
     public void updateDeviceRespond(OperateRespondVO operateRespondVO, String clientName) {
         try {
-            if (operateRespondVO.getData() == null){
+            if (operateRespondVO.getData() == null) {
                 return;
             }
 
@@ -78,26 +82,37 @@ public class EntityUpdateService {
             // 取出ID，后面需要用到
             deviceEntity.setId(NumberUtils.makeLong(deviceMap.get(DeviceVOFieldConstant.field_id)));
 
-            // 数据1: 设备通信状态
-            Map<String, Object> commStatus = (Map<String, Object>) operateRespondVO.getData().get(OperateRespondVO.data_comm_status);
-            this.deviceCommStatusUpdater.updateStatusEntity(deviceEntity.getId(), commStatus);
-
             // 提取数值
             Map<String, Object> deviceValues = (Map<String, Object>) operateRespondVO.getData().get(OperateRespondVO.data_value);
             if (deviceValues == null) {
                 return;
             }
 
-            // 数据2: 设备的状态类型数据
-            Object statusValues = deviceValues.get(FoxEdgeOperate.status);
-            this.deviceStatusValueUpdater.updateDeviceStatusValues(deviceEntity, statusValues);
+            // 数据1: 设备通信状态
+            Map<String, Object> commStatus = (Map<String, Object>) operateRespondVO.getData().get(OperateRespondVO.data_comm_status);
+            this.deviceCommStatusUpdater.updateStatusEntity(deviceEntity.getId(), commStatus);
 
-            // 数据3: 设备的记录类数据
+            // 数据2: 解码器传递过来的属性
+            Map<String, Object> property = (Map<String, Object>) operateRespondVO.getData().get(OperateRespondVO.data_property);
+            if (property == null) {
+                property = new HashMap<>();
+            }
+
+            // 数据3: 设备的状态类型数据
+            Object statusValues = deviceValues.get(FoxEdgeOperate.status);
+            this.deviceStatusValueUpdater.updateDeviceStatusValues(deviceEntity, statusValues, property);
+
+            // 数据4: 设备的事件记录类数据
             List<Map<String, Object>> recordList = (List<Map<String, Object>>) deviceValues.get(FoxEdgeOperate.record);
             this.deviceRecordValueUpdater.updateDeviceRecordValue(deviceName, manufacturer, deviceType, recordList);
 
-            // 数据4: 用户的操作记录类数据
+            // 数据5: 设备的时序类记录数据
+            Map<String, Object> sequence = (Map<String, Object>) deviceValues.get(FoxEdgeOperate.sequence);
+            this.deviceSequenceValueUpdater.updateDeviceSequenceValue(deviceName, manufacturer, deviceType, sequence);
+
+            // 数据5: 用户的操作记录类数据
             this.operateRecordValueUpdater.updateOperateRecordValue(clientName, operateRespondVO);
+
         } catch (Exception e) {
             logger.warn(e);
         }
